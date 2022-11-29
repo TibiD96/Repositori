@@ -1,4 +1,7 @@
 using System;
+using System.Linq;
+using System.Reflection;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Json
 {
@@ -11,19 +14,19 @@ namespace Json
 
         static bool IsDoubleQuoted(string input)
         {
-            int controlIndex;
-            const string backSlash = "\n";
-            if (input.Contains(backSlash))
+            int index = input.Length - 1;
+            const char controlCharacters = '\n';
+            if (input.Contains('\\') || input.Contains(controlCharacters))
             {
                 for (int i = 0; i < input.Length; i++)
                 {
-                    if (char.IsControl(input, i))
+                    if (char.IsControl(input, i) || input[i] == 'x' || input[index - 1] == '\\')
                     {
                         return false;
                     }
                 }
 
-                return true;
+                return input[index - 1] != 'u' && !char.IsDigit(input[index - 1]);
             }
 
             return input.StartsWith('"') && input.EndsWith('"');
