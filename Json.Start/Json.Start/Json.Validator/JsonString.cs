@@ -9,27 +9,58 @@ namespace Json
     {
         public static bool IsJsonString(string input)
         {
-            return !string.IsNullOrEmpty(input) && IsDoubleQuoted(input);
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
+            return StringChecker(input);
         }
 
-        static bool IsDoubleQuoted(string input)
+        static bool StringChecker(string input)
         {
-            int index = input.Length - 1;
-            const char controlCharacters = '\n';
-            if (input.Contains('\\') || input.Contains(controlCharacters))
+            if (input.StartsWith('"') && input.EndsWith('"'))
             {
-                for (int i = 0; i < input.Length; i++)
+                return StringQuoted(input);
+            }
+
+            if (!input.StartsWith('"') || !input.EndsWith('"'))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        static bool StringQuoted(string input)
+        {
+            const int asciiVerification = 127;
+            char[] controlCharacters = { '\t', '\n', '\v', '\f', '\r' };
+            for (int i = 0; i < input.Length; i++)
+            {
+                for (int j = 0; j < controlCharacters.Length; j++)
                 {
-                    if (char.IsControl(input, i) || input[i] == 'x' || input[index - 1] == '\\')
+                    if (input[i] == controlCharacters[j])
                     {
                         return false;
                     }
                 }
-
-                return input[index - 1] != 'u' && !char.IsDigit(input[index - 1]);
             }
 
-            return input.StartsWith('"') && input.EndsWith('"');
+            foreach (char character in input)
+            {
+                if (character > asciiVerification)
+                {
+                    return true;
+                }
+            }
+
+            if (input.Contains("\"") || input.Contains("\\"))
+            {
+                return true;
+            }
+
+            return true;
         }
     }
 }
