@@ -34,7 +34,6 @@ namespace Json
 
         static bool QuotedString(string input)
         {
-            const int asciiVerification = 127;
             if (!DontContainControlCharacter(input))
             {
                 return false;
@@ -50,7 +49,7 @@ namespace Json
                 return true;
             }
 
-            return false;
+            return true;
         }
 
         static bool DontContainControlCharacter(string input)
@@ -86,7 +85,7 @@ namespace Json
 
         static bool CheckEscapedCharacters(string input)
         {
-            string[] escapedCharacters = { @"\""", @"\\", @"\/", @"\b", @"\f", @"\n", @"\r", @"\t" };
+            string[] escapedCharacters = { @"\""", @"\\", @"\/", @"\b", @"\f", @"\n", @"\r", @"\t", @"\u26Be" };
             for (int i = 0; i < escapedCharacters.Length; i++)
             {
                 if (input.Contains(escapedCharacters[i]))

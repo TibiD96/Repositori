@@ -107,13 +107,13 @@ namespace Json.Facts
             Assert.True(IsJsonString(Quoted(@"a \u26Be b")));
         }
 
-        [Fact(Skip = "refraction")]
+        [Fact]
         public void CanContainAnyMultipleEscapeSequences()
         {
             Assert.True(IsJsonString(Quoted(@"\\\u1212\n\t\r\\\b")));
         }
 
-        [Fact(Skip = "refraction")]
+        [Fact]
         public void DoesNotContainUnrecognizedExcapceCharacters()
         {
             Assert.False(IsJsonString(Quoted(@"a\x")));
