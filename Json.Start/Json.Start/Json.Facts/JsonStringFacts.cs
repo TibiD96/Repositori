@@ -65,43 +65,43 @@ namespace Json.Facts
             Assert.True(IsJsonString(Quoted(@"a \\ b")));
         }
 
-        [Fact(Skip = "refraction")]
+        [Fact]
         public void CanContainEscapedSolidus()
         {
             Assert.True(IsJsonString(Quoted(@"a \/ b")));
         }
 
-        [Fact(Skip = "refraction")]
+        [Fact]
         public void CanContainEscapedBackspace()
         {
             Assert.True(IsJsonString(Quoted(@"a \b b")));
         }
 
-        [Fact(Skip = "refraction")]
+        [Fact]
         public void CanContainEscapedFormFeed()
         {
             Assert.True(IsJsonString(Quoted(@"a \f b")));
         }
 
-        [Fact(Skip = "refraction")]
+        [Fact]
         public void CanContainEscapedLineFeed()
         {
             Assert.True(IsJsonString(Quoted(@"a \n b")));
         }
 
-        [Fact(Skip = "refraction")]
+        [Fact]
         public void CanContainEscapedCarrigeReturn()
         {
             Assert.True(IsJsonString(Quoted(@"a \r b")));
         }
 
-        [Fact(Skip = "refraction")]
+        [Fact]
         public void CanContainEscapedHorizontalTab()
         {
             Assert.True(IsJsonString(Quoted(@"a \t b")));
         }
 
-        [Fact(Skip = "refraction")]
+        [Fact]
         public void CanContainEscapedUnicodeCharacters()
         {
             Assert.True(IsJsonString(Quoted(@"a \u26Be b")));

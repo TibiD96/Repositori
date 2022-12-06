@@ -21,7 +21,7 @@ namespace Json
         {
             if (input.StartsWith('"') && input.EndsWith('"'))
             {
-                return StringQuoted(input);
+                return QuotedString(input);
             }
 
             if (!input.StartsWith('"') || !input.EndsWith('"'))
@@ -32,9 +32,29 @@ namespace Json
             return true;
         }
 
-        static bool StringQuoted(string input)
+        static bool QuotedString(string input)
         {
             const int asciiVerification = 127;
+            if (!DontContainControlCharacter(input))
+            {
+                return false;
+            }
+
+            if (CanContainUnicodeCharacters(input))
+            {
+                return true;
+            }
+
+            if (CheckEscapedCharacters(input))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        static bool DontContainControlCharacter(string input)
+        {
             char[] controlCharacters = { '\t', '\n', '\v', '\f', '\r' };
             for (int i = 0; i < input.Length; i++)
             {
@@ -47,6 +67,12 @@ namespace Json
                 }
             }
 
+            return true;
+        }
+
+        static bool CanContainUnicodeCharacters(string input)
+        {
+            const int asciiVerification = 127;
             foreach (char character in input)
             {
                 if (character > asciiVerification)
@@ -55,12 +81,21 @@ namespace Json
                 }
             }
 
-            if (input.Contains("\"") || input.Contains("\\"))
+            return false;
+        }
+
+        static bool CheckEscapedCharacters(string input)
+        {
+            string[] escapedCharacters = { @"\""", @"\\", @"\/", @"\b", @"\f", @"\n", @"\r", @"\t" };
+            for (int i = 0; i < escapedCharacters.Length; i++)
             {
-                return true;
+                if (input.Contains(escapedCharacters[i]))
+                {
+                    return true;
+                }
             }
 
-            return true;
+            return false;
         }
     }
 }
