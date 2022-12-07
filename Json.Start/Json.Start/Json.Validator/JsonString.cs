@@ -24,12 +24,7 @@ namespace Json
                 return QuotedString(input);
             }
 
-            if (!input.StartsWith('"') || !input.EndsWith('"'))
-            {
-                return false;
-            }
-
-            return true;
+            return input.StartsWith('"') && input.EndsWith('"');
         }
 
         static bool QuotedString(string input)
@@ -44,12 +39,12 @@ namespace Json
                 return true;
             }
 
-            if (CheckEscapedCharacters(input))
+            if (!DontEndWithReverseSolidus(input))
             {
-                return true;
+                return false;
             }
 
-            return true;
+            return !input.Contains("\\") || CheckEscapedCharacters(input);
         }
 
         static bool DontContainControlCharacter(string input)
@@ -83,9 +78,15 @@ namespace Json
             return false;
         }
 
+        static bool DontEndWithReverseSolidus(string input)
+        {
+            int i = input.Length - 1;
+            return input[i - 1] != '\\';
+        }
+
         static bool CheckEscapedCharacters(string input)
         {
-            string[] escapedCharacters = { @"\""", @"\\", @"\/", @"\b", @"\f", @"\n", @"\r", @"\t", @"\u26Be" };
+            string[] escapedCharacters = { @"\""", @"\\", @"\/", @"\b", @"\f", @"\n", @"\r", @"\t" };
             for (int i = 0; i < escapedCharacters.Length; i++)
             {
                 if (input.Contains(escapedCharacters[i]))
@@ -94,7 +95,33 @@ namespace Json
                 }
             }
 
-            return false;
+            return CheckForValidEscapedUnicodeCharactersCheckToNotFinishWithAnUnifinishedHexNumber(input);
+        }
+
+        static bool CheckForValidEscapedUnicodeCharactersCheckToNotFinishWithAnUnifinishedHexNumber(string input)
+        {
+            int countHex = 0;
+            int lengthOfStringCountFrom0 = input.Length - 1;
+            const int numberOfAValidHex = 4;
+            for (int j = 0; j < input.Length; j++)
+            {
+                lengthOfStringCountFrom0--;
+                if (input[j] == 'u' && j < lengthOfStringCountFrom0)
+                {
+                    for (int i = j + 1; input[i] != ' '; i++)
+                    {
+                        countHex++;
+                    }
+
+                    break;
+                }
+                else if (input[j] == 'u' && j == lengthOfStringCountFrom0 - 1)
+                {
+                    return false;
+                }
+            }
+
+            return countHex >= numberOfAValidHex;
         }
     }
 }

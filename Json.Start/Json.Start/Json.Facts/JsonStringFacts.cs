@@ -119,13 +119,13 @@ namespace Json.Facts
             Assert.False(IsJsonString(Quoted(@"a\x")));
         }
 
-        [Fact(Skip = "refraction")]
+        [Fact]
         public void DoesNotEndWithReverseSolidus()
         {
             Assert.False(IsJsonString(Quoted(@"a\")));
         }
 
-        [Fact(Skip = "refraction")]
+        [Fact]
         public void DoesNotEndWithAnUnfinishedHexNumber()
         {
             Assert.False(IsJsonString(Quoted(@"a\u")));
