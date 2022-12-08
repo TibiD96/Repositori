@@ -21,22 +21,17 @@ namespace Json
         {
             if (input.StartsWith('"') && input.EndsWith('"'))
             {
-                return QuotedString(input);
+                return ValidateString(input);
             }
 
             return input.StartsWith('"') && input.EndsWith('"');
         }
 
-        static bool QuotedString(string input)
+        static bool ValidateString(string input)
         {
             if (!DontContainControlCharacter(input))
             {
                 return false;
-            }
-
-            if (CanContainUnicodeCharacters(input))
-            {
-                return true;
             }
 
             if (!DontEndWithReverseSolidus(input))
@@ -49,12 +44,12 @@ namespace Json
 
         static bool DontContainControlCharacter(string input)
         {
-            char[] controlCharacters = { '\t', '\n', '\v', '\f', '\r' };
+            string[] controlCharacters = { "\b", "\f", "\n", "\r", "\t" };
             for (int i = 0; i < input.Length; i++)
             {
                 for (int j = 0; j < controlCharacters.Length; j++)
                 {
-                    if (input[i] == controlCharacters[j])
+                    if (input.Contains(controlCharacters[j]))
                     {
                         return false;
                     }
@@ -62,20 +57,6 @@ namespace Json
             }
 
             return true;
-        }
-
-        static bool CanContainUnicodeCharacters(string input)
-        {
-            const int asciiVerification = 127;
-            foreach (char character in input)
-            {
-                if (character > asciiVerification)
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         static bool DontEndWithReverseSolidus(string input)
