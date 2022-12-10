@@ -14,17 +14,7 @@ namespace Json
                 return false;
             }
 
-            return StringChecker(input);
-        }
-
-        static bool StringChecker(string input)
-        {
-            if (input.StartsWith('"') && input.EndsWith('"'))
-            {
-                return ValidateString(input);
-            }
-
-            return input.StartsWith('"') && input.EndsWith('"');
+            return ValidateString(input);
         }
 
         static bool ValidateString(string input)
@@ -34,49 +24,58 @@ namespace Json
                 return false;
             }
 
-            if (!DontEndWithReverseSolidus(input))
+            if (CheckEscapedCharacters(input) && input.StartsWith('"') && input.EndsWith('"'))
+            {
+                return true;
+            }
+
+            if (CheckForValidEscapedUnicodeCharactersCheckToNotFinishWithAnUnifinishedHexNumber(input) && input.StartsWith('"') && input.EndsWith('"'))
+            {
+                return true;
+            }
+
+            if (!CheckForValidEscapedUnicodeCharactersCheckToNotFinishWithAnUnifinishedHexNumber(input) && input.Contains("\\"))
             {
                 return false;
             }
 
-            return !input.Contains("\\") || CheckEscapedCharacters(input);
+            return input.StartsWith('"') && input.EndsWith('"');
         }
 
         static bool DontContainControlCharacter(string input)
         {
             string[] controlCharacters = { "\b", "\f", "\n", "\r", "\t" };
-            for (int i = 0; i < input.Length; i++)
-            {
-                for (int j = 0; j < controlCharacters.Length; j++)
+            for (int j = 0; j < controlCharacters.Length; j++)
                 {
                     if (input.Contains(controlCharacters[j]))
                     {
                         return false;
                     }
-                }
             }
 
             return true;
         }
 
-        static bool DontEndWithReverseSolidus(string input)
-        {
-            int i = input.Length - 1;
-            return input[i - 1] != '\\';
-        }
-
         static bool CheckEscapedCharacters(string input)
         {
-            string[] escapedCharacters = { @"\""", @"\\", @"\/", @"\b", @"\f", @"\n", @"\r", @"\t" };
-            for (int i = 0; i < escapedCharacters.Length; i++)
+            char[] escapedCharacters = { '\\' };
+            char[] escapedCharactersToCheck = { '\"', '\\', '/', 'b', 'f', 'n', 'r', 't' };
+            for (int i = 0; i < input.Length; i++)
             {
-                if (input.Contains(escapedCharacters[i]))
+                if (input[i] == escapedCharacters[0])
                 {
-                    return true;
+                    int nextElement = i + 1;
+                    for (int j = 0; j < escapedCharactersToCheck.Length; j++)
+                    {
+                        if (input[nextElement] == escapedCharactersToCheck[j] && nextElement != input.Length - 1)
+                        {
+                            return true;
+                        }
+                    }
                 }
             }
 
-            return CheckForValidEscapedUnicodeCharactersCheckToNotFinishWithAnUnifinishedHexNumber(input);
+            return false;
         }
 
         static bool CheckForValidEscapedUnicodeCharactersCheckToNotFinishWithAnUnifinishedHexNumber(string input)
