@@ -24,7 +24,7 @@ namespace Json
                 return false;
             }
 
-            if (CheckEscapedCharacters(input) && input.StartsWith('"') && input.EndsWith('"'))
+            if (CheckEscapedCharacters(input))
             {
                 return true;
             }
@@ -58,21 +58,15 @@ namespace Json
 
         static bool CheckEscapedCharacters(string input)
         {
-            char[] escapedCharacters = { '\\' };
             char[] escapedCharactersToCheck = { '\"', '\\', '/', 'b', 'f', 'n', 'r', 't' };
-            for (int i = 0; i < input.Length; i++)
+            int i = input.IndexOf('\\');
+            int nextElement = i + 1;
+            for (int j = 0; j < escapedCharactersToCheck.Length; j++)
             {
-                if (input[i] == escapedCharacters[0])
-                {
-                    int nextElement = i + 1;
-                    for (int j = 0; j < escapedCharactersToCheck.Length; j++)
-                    {
                         if (input[nextElement] == escapedCharactersToCheck[j] && nextElement != input.Length - 1)
                         {
                             return true;
                         }
-                    }
-                }
             }
 
             return false;
