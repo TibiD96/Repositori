@@ -14,7 +14,12 @@ namespace Json
                 return false;
             }
 
-            return ValidateString(input);
+            if (input.StartsWith('"') && input.EndsWith('"'))
+            {
+                return ValidateString(input);
+            }
+
+            return false;
         }
 
         static bool ValidateString(string input)
@@ -29,7 +34,7 @@ namespace Json
                 return true;
             }
 
-            if (CheckForValidEscapedUnicodeCharactersCheckToNotFinishWithAnUnifinishedHexNumber(input) && input.StartsWith('"') && input.EndsWith('"'))
+            if (CheckForValidEscapedUnicodeCharactersCheckToNotFinishWithAnUnifinishedHexNumber(input))
             {
                 return true;
             }
