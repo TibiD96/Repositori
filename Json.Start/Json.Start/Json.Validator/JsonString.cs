@@ -13,8 +13,7 @@ namespace Json
             {
                 return false;
             }
-
-            if (input.StartsWith('"') && input.EndsWith('"'))
+            else if (input.StartsWith('"') && input.EndsWith('"'))
             {
                 return ValidateString(input);
             }
@@ -50,12 +49,21 @@ namespace Json
         static bool DontContainControlCharacter(string input)
         {
             string[] controlCharacters = { "\b", "\f", "\n", "\r", "\t" };
+            const int asciiVerification = 32;
             for (int j = 0; j < controlCharacters.Length; j++)
-                {
+            {
                     if (input.Contains(controlCharacters[j]))
                     {
                         return false;
                     }
+            }
+
+            foreach (char character in input)
+            {
+                if (character < asciiVerification)
+                {
+                    return false;
+                }
             }
 
             return true;
@@ -63,12 +71,12 @@ namespace Json
 
         static bool CheckEscapedCharacters(string input)
         {
-            char[] escapedCharactersToCheck = { '\"', '\\', '/', 'b', 'f', 'n', 'r', 't' };
+            string[] escapedCharactersToCheck = { @"\""", @"\\", @"\/", @"\b", @"\f", @"\n", @"\r", @"\t" };
             int i = input.IndexOf('\\');
-            int nextElement = i + 1;
+            int nextElementAfterBaxkSlach = i + 1;
             for (int j = 0; j < escapedCharactersToCheck.Length; j++)
             {
-                        if (input[nextElement] == escapedCharactersToCheck[j] && nextElement != input.Length - 1)
+                        if (input.Contains(escapedCharactersToCheck[j]) && nextElementAfterBaxkSlach != input.Length - 1)
                         {
                             return true;
                         }
