@@ -1,3 +1,4 @@
+using Microsoft.CodeAnalysis;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -33,12 +34,7 @@ namespace Json
                 return true;
             }
 
-            if (CheckForValidEscapedUnicodeCharactersCheckToNotFinishWithAnUnifinishedHexNumber(input))
-            {
-                return true;
-            }
-
-            if (!CheckForValidEscapedUnicodeCharactersCheckToNotFinishWithAnUnifinishedHexNumber(input) && input.Contains("\\"))
+            if (!CheckToNotFinishWithAnUnifinishedHexNumber(input) && input.Contains("\\"))
             {
                 return false;
             }
@@ -71,44 +67,58 @@ namespace Json
 
         static bool CheckEscapedCharacters(string input)
         {
-            string[] escapedCharactersToCheck = { @"\""", @"\\", @"\/", @"\b", @"\f", @"\n", @"\r", @"\t" };
+            string[] escapedCharactersToCheck = { @"\""", @"\\", @"\/", @"\b", @"\f", @"\n", @"\r", @"\t", @"\u" };
             int i = input.IndexOf('\\');
-            int nextElementAfterBaxkSlach = i + 1;
+            int nextElementAfterBackSlach = i + 1;
+            int lengthOfUnicode = 0;
+            const int corectLengthOfUnicode = 5;
             for (int j = 0; j < escapedCharactersToCheck.Length; j++)
             {
-                        if (input.Contains(escapedCharactersToCheck[j]) && nextElementAfterBaxkSlach != input.Length - 1)
-                        {
-                            return true;
-                        }
+               if (input.Contains(escapedCharactersToCheck[j]) && nextElementAfterBackSlach != input.Length - 1 && j < escapedCharactersToCheck.Length - 1)
+               {
+                 return true;
+               }
+               else if (input.Contains(escapedCharactersToCheck[j]) && j == escapedCharactersToCheck.Length - 1)
+                {
+                    i++;
+                    while (input[i] != ' ' && input[i] != '"')
+                    {
+                        i++;
+                        lengthOfUnicode++;
+                    }
+
+                    if (lengthOfUnicode == corectLengthOfUnicode)
+                    {
+                        return true;
+                    }
+                }
             }
 
             return false;
         }
 
-        static bool CheckForValidEscapedUnicodeCharactersCheckToNotFinishWithAnUnifinishedHexNumber(string input)
+        static bool CheckToNotFinishWithAnUnifinishedHexNumber(string input)
         {
-            int countHex = 0;
-            int lengthOfStringCountFrom0 = input.Length - 1;
-            const int numberOfAValidHex = 4;
-            for (int j = 0; j < input.Length; j++)
+            bool isHex;
+            for (int i = input.Length - 1; i < input.Length; i++)
             {
-                lengthOfStringCountFrom0--;
-                if (input[j] == 'u' && j < lengthOfStringCountFrom0)
+                isHex = input[i] >= '0' && input[i] <= '9' || input[i] >= 'a' && input[i] <= 'f';
+                if (!isHex)
                 {
-                    for (int i = j + 1; input[i] != ' '; i++)
-                    {
-                        countHex++;
-                    }
+                    isHex = input[i] >= 'A' && input[i] <= 'F';
 
-                    break;
+                    if (!isHex)
+                    {
+                        return false;
+                    }
                 }
-                else if (input[j] == 'u' && j == lengthOfStringCountFrom0 - 1)
+                else
                 {
-                    return false;
+                    return true;
                 }
             }
 
-            return countHex >= numberOfAValidHex;
+            return true;
         }
     }
 }
