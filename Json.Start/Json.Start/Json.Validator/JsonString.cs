@@ -1,7 +1,11 @@
-using Microsoft.CodeAnalysis;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime;
+using Microsoft.CodeAnalysis;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Json
@@ -14,7 +18,12 @@ namespace Json
             {
                 return false;
             }
-            else if (input.StartsWith('"') && input.EndsWith('"'))
+
+            if (StringIsJSONValid(input) && input == "\"\"")
+            {
+                return true;
+            }
+            else if (StringIsJSONValid(input))
             {
                 return ValidateString(input);
             }
@@ -34,7 +43,12 @@ namespace Json
                 return true;
             }
 
-            if (!CheckToNotFinishWithAnUnifinishedHexNumber(input) && input.Contains("\\"))
+            if (CanContainLargeUnicodeCharacters(input))
+            {
+                return true;
+            }
+
+            if (!CheckToNotFinishWithAnUnifinishedHexNumber(input))
             {
                 return false;
             }
@@ -100,7 +114,16 @@ namespace Json
         static bool CheckToNotFinishWithAnUnifinishedHexNumber(string input)
         {
             bool isHex;
-            for (int i = input.Length - 1; i < input.Length; i++)
+            const int largeUnicodeAscii = 127;
+            foreach (char element in input)
+            {
+                if (element < largeUnicodeAscii)
+                {
+                    return true;
+                }
+            }
+
+            for (int i = input.Length - 2; i < input.Length; i++)
             {
                 isHex = input[i] >= '0' && input[i] <= '9' || input[i] >= 'a' && input[i] <= 'f';
                 if (!isHex)
@@ -119,6 +142,34 @@ namespace Json
             }
 
             return true;
+        }
+
+        static bool CanContainLargeUnicodeCharacters(string input)
+        {
+            const int largeUnicodeAscii = 127;
+            foreach (char element in input)
+            {
+                if (element < largeUnicodeAscii)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        static bool StringIsJSONValid(string input)
+        {
+            try
+            {
+                JToken.Parse(input);
+                return true;
+            }
+            catch (JsonReaderException wrong)
+            {
+                Console.WriteLine(wrong);
+                return false;
+            }
         }
     }
 }
