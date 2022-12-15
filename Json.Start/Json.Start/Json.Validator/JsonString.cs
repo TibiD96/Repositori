@@ -19,8 +19,6 @@ namespace Json
                 return false;
             }
 
-            Console.WriteLine(input);
-
             if (StringIsJSONValid(input) && input == "\"\"")
             {
                 return true;
