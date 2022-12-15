@@ -19,6 +19,8 @@ namespace Json
                 return false;
             }
 
+            Console.WriteLine(input);
+
             if (StringIsJSONValid(input) && input == "\"\"")
             {
                 return true;
@@ -43,14 +45,9 @@ namespace Json
                 return true;
             }
 
-            if (CanContainLargeUnicodeCharacters(input))
+            if (ContainsLongUnicodeCharacter(input))
             {
                 return true;
-            }
-
-            if (!CheckToNotFinishWithAnUnifinishedHexNumber(input))
-            {
-                return false;
             }
 
             return input.StartsWith('"') && input.EndsWith('"');
@@ -111,51 +108,10 @@ namespace Json
             return false;
         }
 
-        static bool CheckToNotFinishWithAnUnifinishedHexNumber(string input)
+        static bool ContainsLongUnicodeCharacter(string input)
         {
-            bool isHex;
-            const int largeUnicodeAscii = 127;
-            foreach (char element in input)
-            {
-                if (element < largeUnicodeAscii)
-                {
-                    return true;
-                }
-            }
-
-            for (int i = input.Length - 2; i < input.Length; i++)
-            {
-                isHex = input[i] >= '0' && input[i] <= '9' || input[i] >= 'a' && input[i] <= 'f';
-                if (!isHex)
-                {
-                    isHex = input[i] >= 'A' && input[i] <= 'F';
-
-                    if (!isHex)
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return true;
-                }
-            }
-
-            return true;
-        }
-
-        static bool CanContainLargeUnicodeCharacters(string input)
-        {
-            const int largeUnicodeAscii = 127;
-            foreach (char element in input)
-            {
-                if (element < largeUnicodeAscii)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            const int MaximAnsi = 255;
+            return input.Any(element => element > MaximAnsi);
         }
 
         static bool StringIsJSONValid(string input)
