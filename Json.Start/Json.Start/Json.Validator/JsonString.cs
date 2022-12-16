@@ -1,12 +1,4 @@
 using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Runtime;
-using Microsoft.CodeAnalysis;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Json
 {
@@ -19,11 +11,11 @@ namespace Json
                 return false;
             }
 
-            if (StringIsJSONValid(input) && input == "\"\"")
+            if (input.StartsWith("\"") && input.EndsWith("\"") && input == "\"\"")
             {
                 return true;
             }
-            else if (StringIsJSONValid(input))
+            else if (input.StartsWith("\"") && input.EndsWith("\""))
             {
                 return ValidateString(input);
             }
@@ -109,21 +101,15 @@ namespace Json
         static bool ContainsLongUnicodeCharacter(string input)
         {
             const int MaximAnsi = 255;
-            return input.Any(element => element > MaximAnsi);
-        }
+            for (int i = 0; i < input.Length - 1; i++)
+            {
+                if (input[i] < MaximAnsi)
+                {
+                    return false;
+                }
+            }
 
-        static bool StringIsJSONValid(string input)
-        {
-            try
-            {
-                JToken.Parse(input);
-                return true;
-            }
-            catch (JsonReaderException wrong)
-            {
-                Console.WriteLine(wrong);
-                return false;
-            }
+            return true;
         }
     }
 }
