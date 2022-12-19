@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Json
 {
@@ -11,20 +12,16 @@ namespace Json
                 return false;
             }
 
-            if (input.StartsWith("\"") && input.EndsWith("\"") && input == "\"\"")
+            if (!input.StartsWith("\"") || !input.EndsWith("\""))
+            {
+                return false;
+            }
+
+            if (input == "\"\"")
             {
                 return true;
             }
-            else if (input.StartsWith("\"") && input.EndsWith("\""))
-            {
-                return ValidateString(input);
-            }
 
-            return false;
-        }
-
-        static bool ValidateString(string input)
-        {
             if (!DontContainControlCharacter(input))
             {
                 return false;
@@ -101,15 +98,7 @@ namespace Json
         static bool ContainsLongUnicodeCharacter(string input)
         {
             const int MaximAnsi = 255;
-            for (int i = 0; i < input.Length - 1; i++)
-            {
-                if (input[i] < MaximAnsi)
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return input.Any(element => element > MaximAnsi);
         }
     }
 }
