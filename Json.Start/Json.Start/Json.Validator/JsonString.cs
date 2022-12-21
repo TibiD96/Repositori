@@ -27,14 +27,14 @@ namespace Json
                 return false;
             }
 
-            if (CheckEscapedCharacters(input))
+            if (ContainsLongUnicodeCharacter(input))
             {
                 return true;
             }
 
-            if (ContainsLongUnicodeCharacter(input))
+            if (input.Contains('\\'))
             {
-                return true;
+                return CheckEscapedCharacters(input);
             }
 
             return input.StartsWith('"') && input.EndsWith('"');
@@ -42,15 +42,7 @@ namespace Json
 
         static bool DontContainControlCharacter(string input)
         {
-            string[] controlCharacters = { "\b", "\f", "\n", "\r", "\t" };
             const int asciiVerification = 32;
-            for (int j = 0; j < controlCharacters.Length; j++)
-            {
-                    if (input.Contains(controlCharacters[j]))
-                    {
-                        return false;
-                    }
-            }
 
             foreach (char character in input)
             {
@@ -76,19 +68,17 @@ namespace Json
                {
                  return true;
                }
-               else if (input.Contains(escapedCharactersToCheck[j]) && j == escapedCharactersToCheck.Length - 1)
+
+               while (nextElementAfterBackSlach < input.Length && input.Contains(escapedCharactersToCheck[j]) && j == escapedCharactersToCheck.Length - 1)
                 {
-                    i++;
-                    while (input[i] != ' ' && input[i] != '"')
+                    Console.WriteLine(input[nextElementAfterBackSlach]);
+                    if (input[nextElementAfterBackSlach] == ' ' && lengthOfUnicode == corectLengthOfUnicode)
                     {
-                        i++;
-                        lengthOfUnicode++;
+                            return true;
                     }
 
-                    if (lengthOfUnicode == corectLengthOfUnicode)
-                    {
-                        return true;
-                    }
+                    nextElementAfterBackSlach++;
+                    lengthOfUnicode++;
                 }
             }
 
