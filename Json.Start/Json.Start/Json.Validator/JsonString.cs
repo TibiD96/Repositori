@@ -58,8 +58,8 @@ namespace Json
         static bool CheckEscapedCharacters(string input)
         {
             string[] escapedCharactersToCheck = { @"\""", @"\\", @"\/", @"\b", @"\f", @"\n", @"\r", @"\t", @"\u" };
-            int i = input.IndexOf('\\');
-            int nextElementAfterBackSlach = i + 1;
+            int indexOfBackslash = input.IndexOf('\\');
+            int nextElementAfterBackSlach = indexOfBackslash + 1;
             int lengthOfUnicode = 0;
             const int corectLengthOfUnicode = 5;
             for (int j = 0; j < escapedCharactersToCheck.Length; j++)
@@ -71,7 +71,6 @@ namespace Json
 
                while (nextElementAfterBackSlach < input.Length && input.Contains(escapedCharactersToCheck[j]) && j == escapedCharactersToCheck.Length - 1)
                 {
-                    Console.WriteLine(input[nextElementAfterBackSlach]);
                     if (input[nextElementAfterBackSlach] == ' ' && lengthOfUnicode == corectLengthOfUnicode)
                     {
                             return true;
