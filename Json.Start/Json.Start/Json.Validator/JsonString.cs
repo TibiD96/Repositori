@@ -17,12 +17,7 @@ namespace Json
                 return false;
             }
 
-            if (input == "\"\"")
-            {
-                return true;
-            }
-
-            if (!DontContainControlCharacter(input))
+            if (ContainControlCharacter(input))
             {
                 return false;
             }
@@ -40,7 +35,7 @@ namespace Json
             return input.StartsWith('"') && input.EndsWith('"');
         }
 
-        static bool DontContainControlCharacter(string input)
+        static bool ContainControlCharacter(string input)
         {
             const int asciiVerification = 32;
 
@@ -48,11 +43,11 @@ namespace Json
             {
                 if (character < asciiVerification)
                 {
-                    return false;
+                    return true;
                 }
             }
 
-            return true;
+            return false;
         }
 
         static bool CheckEscapedCharacters(string input)
