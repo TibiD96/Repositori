@@ -1,5 +1,5 @@
 using System;
-using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Json
 {
@@ -81,8 +81,7 @@ namespace Json
 
         static bool ContainsLongUnicodeCharacter(string input)
         {
-            const int MaximAnsi = 255;
-            return input.Any(element => element > MaximAnsi);
+            return Regex.IsMatch(input, @"\p{IsMiscellaneousSymbols}");
         }
     }
 }
