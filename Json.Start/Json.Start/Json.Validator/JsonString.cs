@@ -81,7 +81,7 @@ namespace Json
 
         static bool ContainsLongUnicodeCharacter(string input)
         {
-            return Regex.IsMatch(input, @"\p{IsMiscellaneousSymbols}");
+            return Regex.IsMatch(input, @"[^\u2600-\u26FF]");
         }
     }
 }
