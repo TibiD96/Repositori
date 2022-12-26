@@ -79,6 +79,9 @@ namespace Json
             return false;
         }
 
-
+        static bool ContainsLongUnicodeCharacter(string input)
+        {
+            return Regex.IsMatch(input, @"[\u2600-\u26FF]");
+        }
     }
 }
