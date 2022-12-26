@@ -22,14 +22,14 @@ namespace Json
                 return false;
             }
 
-            if (ContainsLongUnicodeCharacter(input))
-            {
-                return true;
-            }
-
             if (input.Contains('\\'))
             {
                 return CheckEscapedCharacters(input);
+            }
+
+            if (ContainsLongUnicodeCharacter(input))
+            {
+                return true;
             }
 
             return input.StartsWith('"') && input.EndsWith('"');
@@ -81,7 +81,7 @@ namespace Json
 
         static bool ContainsLongUnicodeCharacter(string input)
         {
-            return Regex.IsMatch(input, @"[^\u2600-\u26FF]");
+            return Regex.IsMatch(input, @"[\u2600-\u26FF]");
         }
     }
 }
