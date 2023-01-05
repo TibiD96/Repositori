@@ -53,26 +53,30 @@ namespace Json
         static bool CheckEscapedCharacters(string input)
         {
             string[] escapedCharactersToCheck = { @"\""", @"\\", @"\/", @"\b", @"\f", @"\n", @"\r", @"\t", @"\u" };
+            char[] hexcharacter = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F' };
             int indexOfBackslash = input.IndexOf('\\');
+            const int hexNumbers = 4;
+            int hexCounter = 0;
             int nextElementAfterBackSlach = indexOfBackslash + 1;
-            int lengthOfUnicode = 0;
-            const int corectLengthOfUnicode = 5;
-            for (int j = 0; j < escapedCharactersToCheck.Length; j++)
+            for (int j = 0; j < escapedCharactersToCheck.Length - 1; j++)
             {
-               if (input.Contains(escapedCharactersToCheck[j]) && nextElementAfterBackSlach != input.Length - 1 && j < escapedCharactersToCheck.Length - 1)
-               {
-                 return true;
-               }
-
-               while (nextElementAfterBackSlach < input.Length && input.Contains(escapedCharactersToCheck[j]) && j == escapedCharactersToCheck.Length - 1)
+                if (input.Contains(escapedCharactersToCheck[j]) && nextElementAfterBackSlach != input.Length - 1)
                 {
-                    if (input[nextElementAfterBackSlach] == ' ' && lengthOfUnicode == corectLengthOfUnicode)
-                    {
-                            return true;
-                    }
+                    return true;
+                }
+            }
 
-                    nextElementAfterBackSlach++;
-                    lengthOfUnicode++;
+            nextElementAfterBackSlach++;
+            for (int i = nextElementAfterBackSlach; i < input.Length; i++)
+            {
+                if (Array.IndexOf(hexcharacter, input[i]) > -1)
+                {
+                    hexCounter++;
+                }
+
+                if (hexCounter == hexNumbers)
+                {
+                    return true;
                 }
             }
 
