@@ -6,19 +6,19 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
-            return !string.IsNullOrEmpty(input) && IsNumber(input);
-        }
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
 
-        public static bool IsNumber(string input)
-        {
             if (input.Contains('e') || input.Contains('E'))
             {
-                return StringContainExponent(input);
+                return CheckToBeACorrectStringWithExponent(input);
             }
 
             if (input.Contains('.'))
             {
-                return StringContainDot(input);
+                return CheckToBeACorrectFractionalNumberInStringForm(input);
             }
 
             if (input.StartsWith('0') && input.Length > 1)
@@ -26,10 +26,15 @@ namespace Json
                 return false;
             }
 
-            return DoesNotContainLetters(input);
+            if (DoesNotContainLetters(input))
+            {
+                return false;
+            }
+
+            return true;
         }
 
-        public static bool StringContainDot(string input)
+        public static bool CheckToBeACorrectFractionalNumberInStringForm(string input)
         {
             int dotCounter = 0;
             if (input.EndsWith('.'))
@@ -44,58 +49,69 @@ namespace Json
                     dotCounter++;
                 }
 
+                if (char.IsLetter(input, i))
+                {
+                    return false;
+                }
+
                 if (dotCounter > 1)
                 {
                     return false;
                 }
             }
 
-            return DoesNotContainLetters(input);
+            return true;
         }
 
-        public static bool StringContainExponent(string input)
+        public static bool CheckToBeACorrectStringWithExponent(string input)
         {
-            int exponentCounter = 0;
-            if (input.EndsWith('e') || input.EndsWith('-') || input.EndsWith('+'))
+            int letterCounter = 0;
+            if (!char.IsDigit(input, input.Length - 1))
             {
                 return false;
             }
 
             int indexOfExponent = input.IndexOf('e');
+            int indexOfCapitalEExponent = input.IndexOf('E');
             int indexOfDot = input.IndexOf('.');
 
-            if (input.Contains('e') && input.Contains('.') && indexOfExponent < indexOfDot)
+            if (input.Contains('e') && indexOfExponent < indexOfDot)
+            {
+                return false;
+            }
+
+            if (input.Contains('E') && indexOfCapitalEExponent < indexOfDot)
             {
                 return false;
             }
 
             for (int i = 0; i < input.Length; i++)
             {
-                if (input[i] == 'e')
+                if (char.IsLetter(input, i))
                 {
-                    exponentCounter++;
+                    letterCounter++;
                 }
 
-                if (exponentCounter > 1)
+                if (letterCounter > 1)
                 {
                     return false;
                 }
             }
 
-            return DoesNotContainLetters(input);
+            return true;
         }
 
         public static bool DoesNotContainLetters(string input)
         {
             for (int i = 0; i < input.Length; i++)
             {
-              if (!char.IsDigit(input, i) && input[i] != '.' && input[i] != 'e')
+              if (char.IsLetter(input, i))
               {
-                    return input[i] == 'E' || input[i] == '+' || input[i] == '-';
-                }
+                    return true;
+              }
             }
 
-            return true;
+            return false;
         }
     }
 }
