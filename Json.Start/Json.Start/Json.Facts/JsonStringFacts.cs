@@ -132,6 +132,12 @@ namespace Json.Facts
             Assert.False(IsJsonString(Quoted(@"a\u123")));
         }
 
+        [Fact]
+        public void DontContainEscapedWrongWritenUnicodeCharacters()
+        {
+            Assert.False(IsJsonString(Quoted(@"a \a26Be b")));
+        }
+
         public static string Quoted(string text)
             => $"\"{text}\"";
     }

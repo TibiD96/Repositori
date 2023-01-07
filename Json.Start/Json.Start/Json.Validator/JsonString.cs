@@ -67,7 +67,7 @@ namespace Json
             }
 
             nextElementAfterBackSlach++;
-            for (int i = nextElementAfterBackSlach; i < input.Length; i++)
+            for (int i = nextElementAfterBackSlach; i < input.Length && input.Contains(escapedCharactersToCheck[escapedCharactersToCheck.Length - 1]); i++)
             {
                 if (Array.IndexOf(hexcharacter, input[i]) > -1)
                 {
