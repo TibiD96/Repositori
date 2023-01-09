@@ -32,7 +32,7 @@ namespace Json
                 return true;
             }
 
-            return input.StartsWith('"') && input.EndsWith('"');
+            return true;
         }
 
         static bool ContainControlCharacter(string input)
