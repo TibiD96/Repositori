@@ -52,40 +52,77 @@ namespace Json
 
         static bool CheckEscapedCharacters(string input)
         {
-            string[] escapedCharactersToCheck = { @"\""", @"\\", @"\/", @"\b", @"\f", @"\n", @"\r", @"\t", @"\u" };
+            const string escapedCharactersToCheck = "\"/bfnrtu";
             char[] hexcharacter = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F' };
-            int indexOfBackslash = input.IndexOf('\\');
-            const int hexNumbers = 4;
-            int hexCounter = 0;
-            int nextElementAfterBackSlach = indexOfBackslash + 1;
-            for (int j = 0; j < escapedCharactersToCheck.Length - 1; j++)
+            int countCorrectEscapedCharacter = 0;
+            int j = 0;
+            while (j < input.Length)
             {
-                if (input.Contains(escapedCharactersToCheck[j]) && nextElementAfterBackSlach != input.Length - 1)
+                if (input[j] == '\\')
                 {
-                    return true;
+                    int nextElementAfterBack = j + 1;
+                    if (input[nextElementAfterBack] == '\\')
+                    {
+                        j++;
+                        countCorrectEscapedCharacter++;
+                    }
+                    else
+                    {
+                        CheckForRightCharacters(input, ref countCorrectEscapedCharacter, escapedCharactersToCheck, nextElementAfterBack);
+                    }
+
+                    if (countCorrectEscapedCharacter == 0)
+                    {
+                        return false;
+                    }
                 }
+
+                j++;
+                countCorrectEscapedCharacter = 0;
             }
 
-            nextElementAfterBackSlach++;
-            for (int i = nextElementAfterBackSlach; i < input.Length && input.Contains(escapedCharactersToCheck[escapedCharactersToCheck.Length - 1]); i++)
+            return true;
+        }
+
+        static bool ContainsLongUnicodeCharacter(string input)
+        {
+            return Regex.IsMatch(input, @"[\u2600-\u26FF]");
+        }
+
+        static void CheckForRightCharacters(string input, ref int countCorrectEscapedCharacter, string escapedCharactersToCheck, int nextElementAfterBack)
+        {
+            for (int x = 0; x < escapedCharactersToCheck.Length; x++)
+            {
+                if (input[nextElementAfterBack] == escapedCharactersToCheck[x] && x != escapedCharactersToCheck.Length - 1 && nextElementAfterBack != input.Length - 1)
+                {
+                    countCorrectEscapedCharacter++;
+                }
+
+                if (input[nextElementAfterBack] == escapedCharactersToCheck[x] && x == escapedCharactersToCheck.Length - 1)
+                {
+                    CheckForEscapedUnicode(input, nextElementAfterBack, ref countCorrectEscapedCharacter);
+                }
+            }
+        }
+
+        static void CheckForEscapedUnicode(string input, int nextElementAfterBack, ref int countCorrectEscapedCharacter)
+        {
+            const int minHexNumbers = 4;
+            const int maxHexNumbers = 6;
+            int hexCounter = 0;
+            char[] hexcharacter = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F' };
+            for (int i = nextElementAfterBack + 1; i < input.Length; i++)
             {
                 if (Array.IndexOf(hexcharacter, input[i]) > -1)
                 {
                     hexCounter++;
                 }
 
-                if (hexCounter == hexNumbers)
+                if (hexCounter >= minHexNumbers && hexCounter <= maxHexNumbers)
                 {
-                    return true;
+                    countCorrectEscapedCharacter++;
                 }
             }
-
-            return false;
-        }
-
-        static bool ContainsLongUnicodeCharacter(string input)
-        {
-            return Regex.IsMatch(input, @"[\u2600-\u26FF]");
         }
     }
 }

@@ -138,6 +138,12 @@ namespace Json.Facts
             Assert.False(IsJsonString(Quoted(@"a \a26Be b")));
         }
 
+        [Fact]
+        public void RecognizeIfInAStringWithCorrectEscapedCharactersAreUnrecognizedExcapceCharacters()
+        {
+            Assert.False(IsJsonString(Quoted(@"a \t \x")));
+        }
+
         public static string Quoted(string text)
             => $"\"{text}\"";
     }
