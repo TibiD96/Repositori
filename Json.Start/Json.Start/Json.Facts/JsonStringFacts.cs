@@ -144,6 +144,11 @@ namespace Json.Facts
             Assert.False(IsJsonString(Quoted(@"a \t \x")));
         }
 
+        [Fact]
+        public void CanContainLargeUnicodeCharactersAndShortUnicodeCharacters()
+        {
+            Assert.True(IsJsonString(Quoted("z⚾")));
+        }
         public static string Quoted(string text)
             => $"\"{text}\"";
     }

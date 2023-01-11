@@ -1,5 +1,4 @@
 using System;
-using System.Text.RegularExpressions;
 
 namespace Json
 {
@@ -53,22 +52,21 @@ namespace Json
         static bool CheckEscapedCharacters(string input)
         {
             const string escapedCharactersToCheck = "\"/bfnrtu";
-            char[] hexcharacter = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F' };
             int countCorrectEscapedCharacter = 0;
             int j = 0;
             while (j < input.Length)
             {
                 if (input[j] == '\\')
                 {
-                    int nextElementAfterBack = j + 1;
-                    if (input[nextElementAfterBack] == '\\')
+                    int nextElementAfterBackSlash = j + 1;
+                    if (input[nextElementAfterBackSlash] == '\\')
                     {
                         j++;
                         countCorrectEscapedCharacter++;
                     }
                     else
                     {
-                        CheckForRightCharacters(input, ref countCorrectEscapedCharacter, escapedCharactersToCheck, nextElementAfterBack);
+                        CheckForRightCharacters(input, ref countCorrectEscapedCharacter, escapedCharactersToCheck, nextElementAfterBackSlash);
                     }
 
                     if (countCorrectEscapedCharacter == 0)
@@ -86,21 +84,30 @@ namespace Json
 
         static bool ContainsLongUnicodeCharacter(string input)
         {
-            return Regex.IsMatch(input, @"[\u2600-\u26FF]");
+            const int AsciiTableElements = 127;
+            foreach (char element in input)
+            {
+                if (element > AsciiTableElements)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
-        static void CheckForRightCharacters(string input, ref int countCorrectEscapedCharacter, string escapedCharactersToCheck, int nextElementAfterBack)
+        static void CheckForRightCharacters(string input, ref int countCorrectEscapedCharacter, string escapedCharactersToCheck, int nextElementAfterBackSlash)
         {
             for (int x = 0; x < escapedCharactersToCheck.Length; x++)
             {
-                if (input[nextElementAfterBack] == escapedCharactersToCheck[x] && x != escapedCharactersToCheck.Length - 1 && nextElementAfterBack != input.Length - 1)
+                if (input[nextElementAfterBackSlash] == escapedCharactersToCheck[x] && x != escapedCharactersToCheck.Length - 1 && nextElementAfterBackSlash != input.Length - 1)
                 {
                     countCorrectEscapedCharacter++;
                 }
 
-                if (input[nextElementAfterBack] == escapedCharactersToCheck[x] && x == escapedCharactersToCheck.Length - 1)
+                if (input[nextElementAfterBackSlash] == escapedCharactersToCheck[x] && x == escapedCharactersToCheck.Length - 1)
                 {
-                    CheckForEscapedUnicode(input, nextElementAfterBack, ref countCorrectEscapedCharacter);
+                    CheckForEscapedUnicode(input, nextElementAfterBackSlash, ref countCorrectEscapedCharacter);
                 }
             }
         }
