@@ -21,17 +21,7 @@ namespace Json
                 return false;
             }
 
-            if (input.Contains('\\'))
-            {
-                return CheckEscapedCharacters(input);
-            }
-
-            if (ContainsLongUnicodeCharacter(input))
-            {
-                return true;
-            }
-
-            return true;
+            return !input.Contains('\\') || CheckEscapedCharacters(input);
         }
 
         static bool ContainControlCharacter(string input)
@@ -51,8 +41,6 @@ namespace Json
 
         static bool CheckEscapedCharacters(string input)
         {
-            const string escapedCharactersToCheck = "\"/bfnrtu";
-            int countCorrectEscapedCharacter = 0;
             int j = 0;
             while (j < input.Length)
             {
@@ -62,74 +50,66 @@ namespace Json
                     if (input[nextElementAfterBackSlash] == '\\')
                     {
                         j++;
-                        countCorrectEscapedCharacter++;
                     }
-                    else
-                    {
-                        CheckForRightCharacters(input, ref countCorrectEscapedCharacter, escapedCharactersToCheck, nextElementAfterBackSlash);
-                    }
-
-                    if (countCorrectEscapedCharacter == 0)
+                    else if (!CheckForRightEscapedCharacters(input, nextElementAfterBackSlash))
                     {
                         return false;
                     }
-                }
 
-                j++;
-                countCorrectEscapedCharacter = 0;
+                    j++;
+                }
+                else
+                {
+                    j++;
+                }
             }
 
             return true;
         }
 
-        static bool ContainsLongUnicodeCharacter(string input)
+        static bool CheckForRightEscapedCharacters(string input, int nextElementAfterBackSlash)
         {
-            const int AsciiTableElements = 127;
-            foreach (char element in input)
+            const string correctEscapedCharacters = "\"/bfnrtu";
+
+            for (int x = 0; x < correctEscapedCharacters.Length; x++)
             {
-                if (element > AsciiTableElements)
+                if (input[nextElementAfterBackSlash] == correctEscapedCharacters[x] && x != correctEscapedCharacters.Length - 1 && nextElementAfterBackSlash != input.Length - 1)
                 {
                     return true;
+                }
+
+                if (input[nextElementAfterBackSlash] == correctEscapedCharacters[x] && x == correctEscapedCharacters.Length - 1)
+                {
+                    return CheckForEscapedUnicode(input, nextElementAfterBackSlash);
                 }
             }
 
             return false;
         }
 
-        static void CheckForRightCharacters(string input, ref int countCorrectEscapedCharacter, string escapedCharactersToCheck, int nextElementAfterBackSlash)
-        {
-            for (int x = 0; x < escapedCharactersToCheck.Length; x++)
-            {
-                if (input[nextElementAfterBackSlash] == escapedCharactersToCheck[x] && x != escapedCharactersToCheck.Length - 1 && nextElementAfterBackSlash != input.Length - 1)
-                {
-                    countCorrectEscapedCharacter++;
-                }
-
-                if (input[nextElementAfterBackSlash] == escapedCharactersToCheck[x] && x == escapedCharactersToCheck.Length - 1)
-                {
-                    CheckForEscapedUnicode(input, nextElementAfterBackSlash, ref countCorrectEscapedCharacter);
-                }
-            }
-        }
-
-        static void CheckForEscapedUnicode(string input, int nextElementAfterBack, ref int countCorrectEscapedCharacter)
+        static bool CheckForEscapedUnicode(string input, int nextElementAfterBackSlash)
         {
             const int minHexNumbers = 4;
             const int maxHexNumbers = 6;
             int hexCounter = 0;
-            char[] hexcharacter = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F' };
-            for (int i = nextElementAfterBack + 1; i < input.Length; i++)
+            const string hexCharacters = "0123456789abcdefABCDEF";
+            for (int i = nextElementAfterBackSlash + 1; i < input.Length; i++)
             {
-                if (Array.IndexOf(hexcharacter, input[i]) > -1)
+                for (int j = 0; j < hexCharacters.Length; j++)
                 {
-                    hexCounter++;
+                    if (input[i] == hexCharacters[j])
+                    {
+                        hexCounter++;
+                    }
                 }
 
                 if (hexCounter >= minHexNumbers && hexCounter <= maxHexNumbers)
                 {
-                    countCorrectEscapedCharacter++;
+                    return true;
                 }
             }
+
+            return false;
         }
     }
 }
