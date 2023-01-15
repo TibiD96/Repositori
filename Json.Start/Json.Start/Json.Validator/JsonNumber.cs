@@ -65,34 +65,39 @@ namespace Json
 
         public static bool CheckToBeACorrectStringWithExponent(string input)
         {
-            int letterCounter = 0;
             if (!char.IsDigit(input, input.Length - 1))
             {
                 return false;
             }
 
-            int indexOfExponent = input.IndexOf('e');
-            int indexOfCapitalEExponent = input.IndexOf('E');
-            int indexOfDot = input.IndexOf('.');
-
-            if (input.Contains('e') && indexOfExponent < indexOfDot)
-            {
-                return false;
-            }
-
-            if (input.Contains('E') && indexOfCapitalEExponent < indexOfDot)
+            if (input.StartsWith('e') || input.StartsWith('E'))
             {
                 return false;
             }
 
             for (int i = 0; i < input.Length; i++)
             {
-                if (char.IsLetter(input, i))
+                if (input[i] == 'e' || input[i] == 'E')
                 {
-                    letterCounter++;
+                    int nextElementAfterExponent = i + 1;
+
+                    return CheckNextCharactersOfTheStringAfterExponent(input, nextElementAfterExponent);
+                }
+            }
+
+            return true;
+        }
+
+        static bool CheckNextCharactersOfTheStringAfterExponent(string input, int nextElementAfterExponent)
+        {
+            for (int j = nextElementAfterExponent; j < input.Length; j++)
+            {
+                if (input[j] == '.')
+                {
+                    return false;
                 }
 
-                if (letterCounter > 1)
+                if (char.IsLetter(input, j))
                 {
                     return false;
                 }
@@ -101,7 +106,7 @@ namespace Json
             return true;
         }
 
-        public static bool DoesNotContainLetters(string input)
+        static bool DoesNotContainLetters(string input)
         {
             for (int i = 0; i < input.Length; i++)
             {

@@ -146,5 +146,19 @@ namespace Json.Facts
         {
             Assert.False(IsJsonNumber("22e3.3"));
         }
+        [Fact]
+        public void TheExponentIsNotFirstElement()
+        {
+            Assert.False(IsJsonNumber("e233"));
+        }
+
+        [Fact]
+        public void DoesNotHasLettersAndNumbers()
+        {
+            Assert.False(IsJsonNumber("02asd33"));
+        }
+
+
+
     }
 }
