@@ -47,6 +47,11 @@ namespace Json
                 if (input[j] == '\\')
                 {
                     int nextElementAfterBackSlash = j + 1;
+                    if (nextElementAfterBackSlash == input.Length - 1)
+                    {
+                        return false;
+                    }
+
                     if (input[nextElementAfterBackSlash] == '\\')
                     {
                         j++;
@@ -70,46 +75,43 @@ namespace Json
         static bool CheckForRightEscapedCharacters(string input, int nextElementAfterBackSlash)
         {
             const string correctEscapedCharacters = "\"/bfnrtu";
-
-            for (int x = 0; x < correctEscapedCharacters.Length; x++)
+            if (correctEscapedCharacters.Contains(input[nextElementAfterBackSlash]) && input[nextElementAfterBackSlash] != correctEscapedCharacters[correctEscapedCharacters.Length - 1])
             {
-                if (input[nextElementAfterBackSlash] == correctEscapedCharacters[x] && x != correctEscapedCharacters.Length - 1 && nextElementAfterBackSlash != input.Length - 1)
+                    return true;
+            }
+
+            return correctEscapedCharacters.Contains(input[nextElementAfterBackSlash]) && CheckForEscapedUnicode(input, nextElementAfterBackSlash);
+        }
+
+        static bool CheckForEscapedUnicode(string input, int nextElementAfterBackSlash)
+        {
+            int hexCounter = 0;
+            for (int i = nextElementAfterBackSlash + 1; i < input.Length && input[i] != ' '; i++)
+            {
+                if (CheckToBeACorrectUnicode(input, i, ref hexCounter))
                 {
                     return true;
-                }
-
-                if (input[nextElementAfterBackSlash] == correctEscapedCharacters[x] && x == correctEscapedCharacters.Length - 1)
-                {
-                    return CheckForEscapedUnicode(input, nextElementAfterBackSlash);
                 }
             }
 
             return false;
         }
 
-        static bool CheckForEscapedUnicode(string input, int nextElementAfterBackSlash)
+        static bool CheckToBeACorrectUnicode(string input, int i, ref int hexCounter)
         {
             const int minHexNumbers = 4;
             const int maxHexNumbers = 6;
-            int hexCounter = 0;
-            const string hexCharacters = "0123456789abcdefABCDEF";
-            for (int i = nextElementAfterBackSlash + 1; i < input.Length; i++)
+            if ((input[i] >= 'a' && input[i] <= 'f') || (input[i] >= 'A' && input[i] <= 'F'))
             {
-                for (int j = 0; j < hexCharacters.Length; j++)
-                {
-                    if (input[i] == hexCharacters[j])
-                    {
-                        hexCounter++;
-                    }
-                }
-
-                if (hexCounter >= minHexNumbers && hexCounter <= maxHexNumbers)
-                {
-                    return true;
-                }
+                hexCounter++;
             }
 
-            return false;
+            if (input[i] >= '0' && input[i] <= '9')
+            {
+                hexCounter++;
+            }
+
+            return hexCounter >= minHexNumbers && hexCounter <= maxHexNumbers;
         }
     }
 }

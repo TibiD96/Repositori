@@ -149,6 +149,12 @@ namespace Json.Facts
         {
             Assert.True(IsJsonString(Quoted("z⚾")));
         }
+
+        [Fact]
+        public void UnfinishedUnicodeFollowedBySpaceOrAnyCharacterIsNotAccepted()
+        {
+            Assert.False(IsJsonString(Quoted(@"a \u26B b")));
+        }
         public static string Quoted(string text)
             => $"\"{text}\"";
     }
