@@ -41,12 +41,12 @@ namespace Json
 
         static bool CheckEscapedCharacters(string input)
         {
-            int j = 0;
-            while (j < input.Length)
+            for (int i = 0; i < input.Length; i++)
             {
-                if (input[j] == '\\')
+                if (input[i] == '\\')
                 {
-                    int nextElementAfterBackSlash = j + 1;
+                    int nextElementAfterBackSlash = i + 1;
+
                     if (nextElementAfterBackSlash == input.Length - 1)
                     {
                         return false;
@@ -54,18 +54,12 @@ namespace Json
 
                     if (input[nextElementAfterBackSlash] == '\\')
                     {
-                        j++;
+                        i++;
                     }
                     else if (!CheckForRightEscapedCharacters(input, nextElementAfterBackSlash))
                     {
                         return false;
                     }
-
-                    j++;
-                }
-                else
-                {
-                    j++;
                 }
             }
 
@@ -83,35 +77,30 @@ namespace Json
             return correctEscapedCharacters.Contains(input[nextElementAfterBackSlash]) && CheckForEscapedUnicode(input, nextElementAfterBackSlash);
         }
 
-        static bool CheckForEscapedUnicode(string input, int nextElementAfterBackSlash)
+        static bool CheckForEscapedUnicode(string input, int index)
         {
-            int hexCounter = 0;
-            for (int i = nextElementAfterBackSlash + 1; i < input.Length && input[i] != ' '; i++)
+            const int hexSequenceLength = 4;
+            if (input.Length - index < hexSequenceLength)
             {
-                if (CheckToBeACorrectUnicode(input, i, ref hexCounter))
+                return false;
+            }
+
+            for (int i = 1; i <= hexSequenceLength; i++)
+            {
+                if (!IsHexChar(input[i + index]))
                 {
-                    return true;
+                    return false;
                 }
             }
 
-            return false;
+            return true;
         }
 
-        static bool CheckToBeACorrectUnicode(string input, int i, ref int hexCounter)
+        static bool IsHexChar(char input)
         {
-            const int minHexNumbers = 4;
-            const int maxHexNumbers = 6;
-            if ((input[i] >= 'a' && input[i] <= 'f') || (input[i] >= 'A' && input[i] <= 'F'))
-            {
-                hexCounter++;
-            }
-
-            if (input[i] >= '0' && input[i] <= '9')
-            {
-                hexCounter++;
-            }
-
-            return hexCounter >= minHexNumbers && hexCounter <= maxHexNumbers;
+            input = char.ToLower(input);
+            return (input >= 'a' && input <= 'f')
+                || char.IsDigit(input);
         }
     }
 }

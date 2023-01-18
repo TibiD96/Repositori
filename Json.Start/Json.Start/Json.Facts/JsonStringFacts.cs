@@ -155,6 +155,12 @@ namespace Json.Facts
         {
             Assert.False(IsJsonString(Quoted(@"a \u26B b")));
         }
+
+        [Fact]
+        public void EscapedReverseSolidusFollowedByWrongEscapedCharacter()
+        {
+            Assert.False(IsJsonString(Quoted(@"a \\ \x b")));
+        }
         public static string Quoted(string text)
             => $"\"{text}\"";
     }
