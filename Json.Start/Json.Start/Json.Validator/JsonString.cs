@@ -41,22 +41,18 @@ namespace Json
 
         static bool CheckEscapedCharacters(string input)
         {
-            for (int i = 0; i < input.Length; i++)
+            for (int indexOfCurrentCaracter = 0; indexOfCurrentCaracter < input.Length; indexOfCurrentCaracter++)
             {
-                if (input[i] == '\\')
+                if (input[indexOfCurrentCaracter] == '\\')
                 {
-                    int nextElementAfterBackSlash = i + 1;
+                    int nextElementAfterBackSlash = indexOfCurrentCaracter + 1;
 
                     if (nextElementAfterBackSlash == input.Length - 1)
                     {
                         return false;
                     }
 
-                    if (input[nextElementAfterBackSlash] == '\\')
-                    {
-                        i++;
-                    }
-                    else if (!CheckForRightEscapedCharacters(input, nextElementAfterBackSlash))
+                    if (!CheckForRightEscapedCharacters(input, nextElementAfterBackSlash, ref indexOfCurrentCaracter))
                     {
                         return false;
                     }
@@ -66,9 +62,15 @@ namespace Json
             return true;
         }
 
-        static bool CheckForRightEscapedCharacters(string input, int nextElementAfterBackSlash)
+        static bool CheckForRightEscapedCharacters(string input, int nextElementAfterBackSlash, ref int indexOfNextCharacter)
         {
             const string correctEscapedCharacters = "\"/bfnrtu";
+            if (input[nextElementAfterBackSlash] == '\\')
+            {
+                indexOfNextCharacter++;
+                return true;
+            }
+
             if (correctEscapedCharacters.Contains(input[nextElementAfterBackSlash]) && input[nextElementAfterBackSlash] != correctEscapedCharacters[correctEscapedCharacters.Length - 1])
             {
                     return true;
