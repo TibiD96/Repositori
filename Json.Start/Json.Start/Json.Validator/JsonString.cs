@@ -71,12 +71,17 @@ namespace Json
                 return true;
             }
 
-            if (correctEscapedCharacters.Contains(input[nextElementAfterBackSlash]) && input[nextElementAfterBackSlash] != correctEscapedCharacters[correctEscapedCharacters.Length - 1])
+            if (!correctEscapedCharacters.Contains(input[nextElementAfterBackSlash]))
             {
-                    return true;
+                return false;
             }
 
-            return correctEscapedCharacters.Contains(input[nextElementAfterBackSlash]) && CheckForEscapedUnicode(input, nextElementAfterBackSlash);
+            if (input[nextElementAfterBackSlash] == correctEscapedCharacters[correctEscapedCharacters.Length - 1] && !CheckForEscapedUnicode(input, nextElementAfterBackSlash))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         static bool CheckForEscapedUnicode(string input, int index)
