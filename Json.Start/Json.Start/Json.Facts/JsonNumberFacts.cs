@@ -158,7 +158,11 @@ namespace Json.Facts
             Assert.False(IsJsonNumber("02asd33"));
         }
 
-
+        [Fact]
+        public void DoesNotHasMinusSignBeforeExponentSign()
+        {
+            Assert.False(IsJsonNumber("-1234E3"));
+        }
 
     }
 }

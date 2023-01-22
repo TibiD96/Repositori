@@ -36,25 +36,16 @@ namespace Json
 
         public static bool CheckToBeACorrectFractionalNumberInStringForm(string input)
         {
-            int dotCounter = 0;
             if (input.EndsWith('.'))
             {
                 return false;
             }
 
-            for (int i = 0; i < input.Length; i++)
+            int indexOfDot = input.IndexOf('.');
+
+            for (int i = indexOfDot + 1; i < input.Length; i++)
             {
-                if (input[i] == '.')
-                {
-                    dotCounter++;
-                }
-
-                if (char.IsLetter(input, i))
-                {
-                    return false;
-                }
-
-                if (dotCounter > 1)
+                if (!char.IsDigit(input, i))
                 {
                     return false;
                 }
@@ -65,10 +56,8 @@ namespace Json
 
         public static bool CheckToBeACorrectStringWithExponent(string input)
         {
-            if (!char.IsDigit(input, input.Length - 1))
-            {
-                return false;
-            }
+            int indexOfe = input.IndexOf('e');
+            int indexOfE = input.IndexOf('E');
 
             if (input.StartsWith('e') || input.StartsWith('E'))
             {
@@ -77,6 +66,11 @@ namespace Json
 
             for (int i = 0; i < input.Length; i++)
             {
+                if (!char.IsDigit(input, i) && (i < indexOfe || i < indexOfE) && input[i] != '.')
+                {
+                    return false;
+                }
+
                 if (input[i] == 'e' || input[i] == 'E')
                 {
                     int nextElementAfterExponent = i + 1;
@@ -90,14 +84,14 @@ namespace Json
 
         static bool CheckNextCharactersOfTheStringAfterExponent(string input, int nextElementAfterExponent)
         {
+            if (!char.IsDigit(input, input.Length - 1))
+            {
+                return false;
+            }
+
             for (int j = nextElementAfterExponent; j < input.Length; j++)
             {
-                if (input[j] == '.')
-                {
-                    return false;
-                }
-
-                if (char.IsLetter(input, j))
+                if (!char.IsDigit(input, j) && input[j] != '-' && input[j] != '+')
                 {
                     return false;
                 }
