@@ -64,24 +64,19 @@ namespace Json
 
         static bool CheckForRightEscapedCharacters(string input, int nextElementAfterBackSlash, ref int indexOfNextCharacter)
         {
-            const string correctEscapedCharacters = "\"/bfnrtu";
-            if (input[nextElementAfterBackSlash] == '\\')
-            {
-                indexOfNextCharacter++;
-                return true;
-            }
+            const string correctEscapedCharacters = "\"\\/bfnrtu";
 
             if (!correctEscapedCharacters.Contains(input[nextElementAfterBackSlash]))
             {
                 return false;
             }
 
-            if (input[nextElementAfterBackSlash] == correctEscapedCharacters[correctEscapedCharacters.Length - 1] && !CheckForEscapedUnicode(input, nextElementAfterBackSlash))
+            if (input[nextElementAfterBackSlash] == '\\')
             {
-                return false;
+                indexOfNextCharacter++;
             }
 
-            return true;
+            return input[nextElementAfterBackSlash] != correctEscapedCharacters[^1] || CheckForEscapedUnicode(input, nextElementAfterBackSlash);
         }
 
         static bool CheckForEscapedUnicode(string input, int index)
