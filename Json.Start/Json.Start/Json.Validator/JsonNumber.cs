@@ -6,11 +6,16 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
             var indexOfDot = input.IndexOf('.');
             const string exponentCharaters = "eE";
             var indexOfExponent = input.IndexOfAny(exponentCharaters.ToCharArray());
 
-            return IsInteger(Integers(input, indexOfDot, indexOfExponent)) && IsFraction(Fraction(input, indexOfDot, indexOfExponent));
+            return IsInteger(Integers(input, indexOfDot, indexOfExponent)) && IsFraction(Fraction(input, indexOfDot, indexOfExponent)) && IsExponent(Exponent(input, indexOfExponent));
         }
 
         private static bool IsInteger(bool integers)
@@ -21,6 +26,11 @@ namespace Json
         private static bool IsFraction(bool fraction)
         {
             return fraction;
+        }
+
+        private static bool IsExponent(bool exponent)
+        {
+            return exponent;
         }
 
         static bool Integers(string input, int indexOfDot, int indexOfExponent)
@@ -40,7 +50,7 @@ namespace Json
               return NumberIsNegative(input, indexOfDot, indexOfExponent);
             }
 
-            if (!IsDigit(input[0]))
+            if (!IsDigit(input[0]) || !IsDigit(input[input.Length - 1]))
             {
                 return false;
             }
@@ -50,25 +60,38 @@ namespace Json
 
         static bool Fraction(string input, int indexOfDot, int indexOfExponent)
         {
-            if (indexOfDot != -1 && input.Length > 1)
+          for (int i = indexOfDot + 1; i < input.Length && indexOfDot != -1; i++)
+          {
+            if (indexOfExponent != -1 && i == indexOfExponent)
             {
-                if (input.StartsWith('.') || input.EndsWith('.'))
+              return true;
+            }
+
+            if (!IsDigit(input[i]))
+            {
+              return false;
+            }
+          }
+
+          return true;
+        }
+
+        static bool Exponent(string input, int indexOfExponent)
+        {
+            for (int i = indexOfExponent + 1; i < input.Length && indexOfExponent != -1; i++)
+            {
+                if (i == indexOfExponent + 1 && (input[i] == '-' || input[i] == '+'))
+                {
+                    continue;
+                }
+
+                if (!IsDigit(input[i]))
                 {
                     return false;
                 }
-
-                for (int i = indexOfDot + 1; i < input.Length; i++)
-                {
-                    if (!IsDigit(input[i]))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
             }
 
-            return input.Length != 1 || IsDigit(input[0]);
+            return true;
         }
 
         static bool NumberIsNegative(string input, int indexOfDot, int indexOfExponent)
@@ -78,7 +101,12 @@ namespace Json
                 return false;
             }
 
-            if (indexOfDot != -1 && indexOfExponent == -1)
+            if (indexOfExponent != -1)
+            {
+                return false;
+            }
+
+            if (indexOfDot != -1)
             {
                 for (int i = 1; i < indexOfDot; i++)
                 {
@@ -91,7 +119,7 @@ namespace Json
                 return true;
             }
 
-            for (int i = 1; i < input.Length && (input[i] != 'e' || input[i] != 'E'); i++)
+            for (int i = 1; i < input.Length; i++)
             {
                 if (!IsDigit(input[i]))
                 {
@@ -104,7 +132,7 @@ namespace Json
 
         static bool NumberIsPozitiv(string input, int indexOfDot, int indexOfExponent)
         {
-            if (indexOfDot != -1 && indexOfExponent == -1)
+            if (indexOfDot != -1)
             {
                 for (int i = 0; i < indexOfDot; i++)
                 {
@@ -117,8 +145,13 @@ namespace Json
                 return true;
             }
 
-            for (int i = 0; i < input.Length && (input[i] != 'e' || input[i] != 'E'); i++)
+            for (int i = 0; i < input.Length; i++)
             {
+                if (indexOfExponent != -1 && i == indexOfExponent)
+                {
+                    return true;
+                }
+
                 if (!IsDigit(input[i]))
                 {
                     return false;
