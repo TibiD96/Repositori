@@ -50,16 +50,17 @@ namespace Json
               return NumberIsNegative(input, indexOfDot, indexOfExponent);
             }
 
-            if (!IsDigit(input[0]) || !IsDigit(input[input.Length - 1]))
-            {
-                return false;
-            }
-
             return NumberIsPozitiv(input, indexOfDot, indexOfExponent);
         }
 
         static bool Fraction(string input, int indexOfDot, int indexOfExponent)
         {
+
+          if (indexOfDot == input.Length - 1)
+          {
+            return false;
+          }
+
           for (int i = indexOfDot + 1; i < input.Length && indexOfDot != -1; i++)
           {
             if (indexOfExponent != -1 && i == indexOfExponent)
@@ -78,9 +79,14 @@ namespace Json
 
         static bool Exponent(string input, int indexOfExponent)
         {
+            if (indexOfExponent == input.Length - 1)
+            {
+                return false;
+            }
+
             for (int i = indexOfExponent + 1; i < input.Length && indexOfExponent != -1; i++)
             {
-                if (i == indexOfExponent + 1 && (input[i] == '-' || input[i] == '+'))
+                if (i == indexOfExponent + 1 && (input[i] == '-' || input[i] == '+') && i != input.Length - 1)
                 {
                     continue;
                 }
@@ -147,7 +153,7 @@ namespace Json
 
             for (int i = 0; i < input.Length; i++)
             {
-                if (indexOfExponent != -1 && i == indexOfExponent)
+                if (indexOfExponent != -1 && i == indexOfExponent && i > 0)
                 {
                     return true;
                 }
