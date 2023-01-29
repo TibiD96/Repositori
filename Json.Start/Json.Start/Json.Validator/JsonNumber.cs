@@ -55,7 +55,6 @@ namespace Json
 
         static bool Fraction(string input, int indexOfDot, int indexOfExponent)
         {
-
           if (indexOfDot == input.Length - 1)
           {
             return false;
@@ -102,16 +101,6 @@ namespace Json
 
         static bool NumberIsNegative(string input, int indexOfDot, int indexOfExponent)
         {
-            if (!IsDigit(input[1]))
-            {
-                return false;
-            }
-
-            if (indexOfExponent != -1)
-            {
-                return false;
-            }
-
             if (indexOfDot != -1)
             {
                 for (int i = 1; i < indexOfDot; i++)
@@ -127,6 +116,11 @@ namespace Json
 
             for (int i = 1; i < input.Length; i++)
             {
+                if (indexOfExponent != -1 && i == indexOfExponent && i > 0)
+                {
+                    return true;
+                }
+
                 if (!IsDigit(input[i]))
                 {
                     return false;
