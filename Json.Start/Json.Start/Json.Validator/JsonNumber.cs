@@ -1,3 +1,4 @@
+using Microsoft.CodeAnalysis;
 using System;
 
 namespace Json
@@ -18,14 +19,32 @@ namespace Json
             return IsInteger(Integers(input, indexOfDot, indexOfExponent)) && IsFraction(Fraction(input, indexOfDot, indexOfExponent)) && IsExponent(Exponent(input, indexOfExponent));
         }
 
-        private static bool IsInteger(bool integers)
+        private static bool IsInteger(string integerNumber)
         {
-            return integers;
+            if (integerNumber.Length == 1)
+            {
+                return IsDigit(integerNumber);
+            }
+
+            if (integerNumber.StartsWith('0') && integerNumber[1] != '.')
+            {
+                return false;
+            }
+
+            if (integerNumber.StartsWith('-'))
+            {
+                integerNumber = integerNumber.Remove(0, 1);
+            }
+
+            return IsDigit(integerNumber);
         }
 
-        private static bool IsFraction(bool fraction)
+        private static bool IsFraction(string fractionalNumber)
         {
-            return fraction;
+            if (fractionalNumber.Length == 1)
+            {
+                return IsDigit(fractionalNumber);
+            }
         }
 
         private static bool IsExponent(bool exponent)
@@ -33,47 +52,45 @@ namespace Json
             return exponent;
         }
 
-        static bool Integers(string input, int indexOfDot, int indexOfExponent)
+        static string Integers(string input, int indexOfDot, int indexOfExponent)
         {
             if (input.Length == 1)
             {
-                return IsDigit(input[0]);
+                return input;
             }
 
-            if (input.StartsWith('0') && indexOfDot == -1)
+            if (indexOfDot != -1)
             {
-                return false;
+                return input.Substring(0, indexOfDot);
             }
 
-            if (input.StartsWith('-'))
+            if (indexOfExponent != -1)
             {
-              return NumberIsNegative(input, indexOfDot, indexOfExponent);
+                return input.Substring(0, indexOfExponent);
             }
 
-            return NumberIsPozitiv(input, indexOfDot, indexOfExponent);
+            return input;
         }
 
-        static bool Fraction(string input, int indexOfDot, int indexOfExponent)
+        static string Fraction(string input, int indexOfDot, int indexOfExponent)
         {
-          if (indexOfDot == input.Length - 1)
-          {
-            return false;
-          }
-
-          for (int i = indexOfDot + 1; i < input.Length && indexOfDot != -1; i++)
-          {
-            if (indexOfExponent != -1 && i == indexOfExponent)
+            int countCharacters = 0;
+            if (indexOfDot != -1 && indexOfExponent != -1)
             {
-              return true;
+                for (int i = indexOfDot; i != indexOfExponent; i++)
+                {
+                    countCharacters++;
+                }
+
+                return input.Substring(indexOfDot, countCharacters);
             }
 
-            if (!IsDigit(input[i]))
+            for (int i = indexOfDot; i < input.Length; i++)
             {
-              return false;
+                countCharacters++;
             }
-          }
 
-          return true;
+            return input.Substring(indexOfDot, countCharacters + 1);
         }
 
         static bool Exponent(string input, int indexOfExponent)
@@ -99,71 +116,17 @@ namespace Json
             return true;
         }
 
-        static bool NumberIsNegative(string input, int indexOfDot, int indexOfExponent)
+        static bool IsDigit(string input)
         {
-            if (indexOfDot != -1)
+            foreach (char c in input)
             {
-                for (int i = 1; i < indexOfDot; i++)
-                {
-                    if (!IsDigit(input[i]))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-
-            for (int i = 1; i < input.Length; i++)
-            {
-                if (indexOfExponent != -1 && i == indexOfExponent && i > 0)
-                {
-                    return true;
-                }
-
-                if (!IsDigit(input[i]))
+                if (!char.IsDigit(input[c]))
                 {
                     return false;
                 }
             }
 
             return true;
-        }
-
-        static bool NumberIsPozitiv(string input, int indexOfDot, int indexOfExponent)
-        {
-            if (indexOfDot != -1)
-            {
-                for (int i = 0; i < indexOfDot; i++)
-                {
-                    if (!IsDigit(input[i]))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-
-            for (int i = 0; i < input.Length; i++)
-            {
-                if (indexOfExponent != -1 && i == indexOfExponent && i > 0)
-                {
-                    return true;
-                }
-
-                if (!IsDigit(input[i]))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        static bool IsDigit(char input)
-        {
-            return char.IsDigit(input);
         }
     }
 }
