@@ -1,4 +1,3 @@
-using Microsoft.CodeAnalysis;
 using System;
 
 namespace Json
@@ -16,7 +15,7 @@ namespace Json
             const string exponentCharaters = "eE";
             var indexOfExponent = input.IndexOfAny(exponentCharaters.ToCharArray());
 
-            return IsInteger(Integers(input, indexOfDot, indexOfExponent)) && IsFraction(Fraction(input, indexOfDot, indexOfExponent)) && IsExponent(Exponent(input, indexOfExponent));
+            return IsInteger(Integers(input, indexOfDot, indexOfExponent)) && IsFraction(Fraction(input, indexOfDot, indexOfExponent));
         }
 
         private static bool IsInteger(string integerNumber)
@@ -45,6 +44,18 @@ namespace Json
             {
                 return IsDigit(fractionalNumber);
             }
+
+            if (fractionalNumber.StartsWith('-'))
+            {
+                fractionalNumber = fractionalNumber.Remove(0, 1);
+            }
+
+            if (fractionalNumber.StartsWith('.'))
+            {
+                fractionalNumber = fractionalNumber.Remove(0, 1);
+            }
+
+            return IsDigit(fractionalNumber);
         }
 
         private static bool IsExponent(bool exponent)
@@ -85,42 +96,24 @@ namespace Json
                 return input.Substring(indexOfDot, countCharacters);
             }
 
-            for (int i = indexOfDot; i < input.Length; i++)
+            if (indexOfDot != -1)
             {
-                countCharacters++;
-            }
-
-            return input.Substring(indexOfDot, countCharacters + 1);
-        }
-
-        static bool Exponent(string input, int indexOfExponent)
-        {
-            if (indexOfExponent == input.Length - 1)
-            {
-                return false;
-            }
-
-            for (int i = indexOfExponent + 1; i < input.Length && indexOfExponent != -1; i++)
-            {
-                if (i == indexOfExponent + 1 && (input[i] == '-' || input[i] == '+') && i != input.Length - 1)
+                for (int i = indexOfDot; i < input.Length; i++)
                 {
-                    continue;
+                    countCharacters++;
                 }
 
-                if (!IsDigit(input[i]))
-                {
-                    return false;
-                }
+                return input.Substring(indexOfDot, countCharacters);
             }
 
-            return true;
+            return input;
         }
 
         static bool IsDigit(string input)
         {
             foreach (char c in input)
             {
-                if (!char.IsDigit(input[c]))
+                if (!char.IsDigit(c))
                 {
                     return false;
                 }
