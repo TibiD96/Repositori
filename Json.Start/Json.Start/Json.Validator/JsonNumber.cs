@@ -15,7 +15,7 @@ namespace Json
             const string exponentCharaters = "eE";
             var indexOfExponent = input.IndexOfAny(exponentCharaters.ToCharArray());
 
-            return IsInteger(Integers(input, indexOfDot, indexOfExponent)) && IsFraction(Fraction(input, indexOfDot, indexOfExponent)) && IsExponent(Exponent(input, indexOfExponent));
+            return IsInteger(Integers(input, indexOfDot, indexOfExponent)) && IsFraction(Fraction(input, indexOfDot, indexOfExponent)) && IsExponent(Exponent(input, indexOfExponent, indexOfDot));
         }
 
         private static bool IsInteger(string integerNumber)
@@ -23,6 +23,11 @@ namespace Json
             if (integerNumber.Length == 1)
             {
                 return IsDigit(integerNumber);
+            }
+
+            if (string.IsNullOrEmpty(integerNumber))
+            {
+                return false;
             }
 
             if (integerNumber.StartsWith('0') && integerNumber[1] != '.')
@@ -45,10 +50,14 @@ namespace Json
                 return IsDigit(fractionalNumber);
             }
 
-
             if (fractionalNumber.StartsWith('-'))
             {
                 fractionalNumber = fractionalNumber.Remove(0, 1);
+            }
+
+            if (!fractionalNumber.Contains('.'))
+            {
+                return true;
             }
 
             if (fractionalNumber.StartsWith('.'))
@@ -66,23 +75,14 @@ namespace Json
                 return IsDigit(exponentialNumber);
             }
 
-            if (exponentialNumber.StartsWith('-'))
-            {
-                exponentialNumber = exponentialNumber.Remove(0, 1);
-            }
-
-            if (exponentialNumber.StartsWith('e') && (exponentialNumber[1] == '-' || exponentialNumber[1] == '+'))
-            {
-                exponentialNumber = exponentialNumber.Remove(0, 1 + 1);
-
-                return IsDigit(exponentialNumber);
-            }
-
             if (exponentialNumber.StartsWith('e'))
             {
                 exponentialNumber = exponentialNumber.Remove(0, 1);
+            }
 
-                return IsDigit(exponentialNumber);
+            if (exponentialNumber.Length > 1 && (exponentialNumber.StartsWith('-') || exponentialNumber.StartsWith('+')))
+            {
+                exponentialNumber = exponentialNumber.Remove(0, 1);
             }
 
             return IsDigit(exponentialNumber);
@@ -111,30 +111,25 @@ namespace Json
         static string Fraction(string input, int indexOfDot, int indexOfExponent)
         {
             int countCharacters = 0;
-            if (indexOfDot != -1 && indexOfExponent != -1)
+            input = input.ToLower();
+            if (indexOfDot != -1)
             {
-                for (int i = indexOfDot; i != indexOfExponent; i++)
+                for (int i = indexOfDot; i < input.Length && input[i] != 'e'; i++)
                 {
                     countCharacters++;
                 }
 
                 return input.Substring(indexOfDot, countCharacters);
             }
-
-            if (indexOfDot != -1)
+            else if (indexOfExponent != -1)
             {
-                for (int i = indexOfDot; i < input.Length; i++)
-                {
-                    countCharacters++;
-                }
-
-                return input.Substring(indexOfDot, countCharacters);
+                return input.Substring(0, indexOfExponent);
             }
 
             return input;
         }
 
-        static string Exponent(string input, int indexOfExponent)
+        static string Exponent(string input, int indexOfExponent, int indexOfDot)
         {
             input = input.ToLower();
             int countCharacters = 0;
@@ -146,6 +141,10 @@ namespace Json
                 }
 
                 return input.Substring(indexOfExponent, countCharacters);
+            }
+            else if (indexOfDot != -1)
+            {
+                return input.Substring(0, indexOfDot);
             }
 
             return input;
