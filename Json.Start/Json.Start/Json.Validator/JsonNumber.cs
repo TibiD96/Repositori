@@ -15,7 +15,7 @@ namespace Json
             const string exponentCharaters = "eE";
             var indexOfExponent = input.IndexOfAny(exponentCharaters.ToCharArray());
 
-            return IsInteger(Integers(input, indexOfDot, indexOfExponent)) && IsFraction(Fraction(input, indexOfDot, indexOfExponent));
+            return IsInteger(Integers(input, indexOfDot, indexOfExponent)) && IsFraction(Fraction(input, indexOfDot, indexOfExponent)) && IsExponent(Exponent(input, indexOfExponent));
         }
 
         private static bool IsInteger(string integerNumber)
@@ -45,6 +45,7 @@ namespace Json
                 return IsDigit(fractionalNumber);
             }
 
+
             if (fractionalNumber.StartsWith('-'))
             {
                 fractionalNumber = fractionalNumber.Remove(0, 1);
@@ -58,9 +59,33 @@ namespace Json
             return IsDigit(fractionalNumber);
         }
 
-        private static bool IsExponent(bool exponent)
+        private static bool IsExponent(string exponentialNumber)
         {
-            return exponent;
+            if (exponentialNumber.Length == 1)
+            {
+                return IsDigit(exponentialNumber);
+            }
+
+            if (exponentialNumber.StartsWith('-'))
+            {
+                exponentialNumber = exponentialNumber.Remove(0, 1);
+            }
+
+            if (exponentialNumber.StartsWith('e') && (exponentialNumber[1] == '-' || exponentialNumber[1] == '+'))
+            {
+                exponentialNumber = exponentialNumber.Remove(0, 1 + 1);
+
+                return IsDigit(exponentialNumber);
+            }
+
+            if (exponentialNumber.StartsWith('e'))
+            {
+                exponentialNumber = exponentialNumber.Remove(0, 1);
+
+                return IsDigit(exponentialNumber);
+            }
+
+            return IsDigit(exponentialNumber);
         }
 
         static string Integers(string input, int indexOfDot, int indexOfExponent)
@@ -104,6 +129,23 @@ namespace Json
                 }
 
                 return input.Substring(indexOfDot, countCharacters);
+            }
+
+            return input;
+        }
+
+        static string Exponent(string input, int indexOfExponent)
+        {
+            input = input.ToLower();
+            int countCharacters = 0;
+            if (indexOfExponent != -1)
+            {
+                for (int i = indexOfExponent; i < input.Length; i++)
+                {
+                    countCharacters++;
+                }
+
+                return input.Substring(indexOfExponent, countCharacters);
             }
 
             return input;
