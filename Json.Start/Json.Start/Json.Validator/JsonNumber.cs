@@ -71,8 +71,6 @@ namespace Json
 
         private static bool IsExponent(string exponentialNumber)
         {
-            const string plusMinusSign = "-+";
-            var indexPlusMinusSign = exponentialNumber.IndexOfAny(plusMinusSign.ToCharArray());
             if (exponentialNumber.Length == 1)
             {
                 return IsDigit(exponentialNumber);
@@ -83,7 +81,10 @@ namespace Json
                 exponentialNumber = exponentialNumber.Remove(0, 1);
             }
 
-            if (indexPlusMinusSign != exponentialNumber.Length)
+            const string plusMinusSign = "-+";
+            var indexPlusMinusSign = exponentialNumber.IndexOfAny(plusMinusSign.ToCharArray());
+
+            if (indexPlusMinusSign == 0 && exponentialNumber.Length > 1)
             {
                 exponentialNumber = exponentialNumber.Remove(0, 1);
             }
