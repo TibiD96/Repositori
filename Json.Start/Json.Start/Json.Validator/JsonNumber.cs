@@ -15,7 +15,17 @@ namespace Json
             const string exponentCharaters = "eE";
             var indexOfExponent = input.IndexOfAny(exponentCharaters.ToCharArray());
 
-            return IsInteger(Integers(input, indexOfDot, indexOfExponent)) && IsFraction(Fraction(input, indexOfDot, indexOfExponent)) && IsExponent(Exponent(input, indexOfExponent, indexOfDot));
+            if (!IsInteger(Integers(input, indexOfDot, indexOfExponent)))
+            {
+                return false;
+            }
+
+            if (!IsFraction(Fraction(input, indexOfDot, indexOfExponent)))
+            {
+                return false;
+            }
+
+            return IsExponent(Exponent(input, indexOfExponent, indexOfDot));
         }
 
         private static bool IsInteger(string integerNumber)
@@ -50,26 +60,19 @@ namespace Json
                 return IsDigit(fractionalNumber);
             }
 
-            if (fractionalNumber.StartsWith('-'))
-            {
-                fractionalNumber = fractionalNumber.Remove(0, 1);
-            }
-
             if (!fractionalNumber.Contains('.'))
             {
                 return true;
             }
 
-            if (fractionalNumber.StartsWith('.'))
-            {
-                fractionalNumber = fractionalNumber.Remove(0, 1);
-            }
-
+            fractionalNumber = fractionalNumber.Remove(0, 1);
             return IsDigit(fractionalNumber);
         }
 
         private static bool IsExponent(string exponentialNumber)
         {
+            const string plusMinusSign = "-+";
+            var indexPlusMinusSign = exponentialNumber.IndexOfAny(plusMinusSign.ToCharArray());
             if (exponentialNumber.Length == 1)
             {
                 return IsDigit(exponentialNumber);
@@ -80,7 +83,7 @@ namespace Json
                 exponentialNumber = exponentialNumber.Remove(0, 1);
             }
 
-            if (exponentialNumber.Length > 1 && (exponentialNumber.StartsWith('-') || exponentialNumber.StartsWith('+')))
+            if (indexPlusMinusSign != exponentialNumber.Length)
             {
                 exponentialNumber = exponentialNumber.Remove(0, 1);
             }
