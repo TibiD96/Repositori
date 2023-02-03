@@ -159,10 +159,27 @@ namespace Json.Facts
         }
 
         [Fact]
-        public void DoesNotHasMinusSignBeforeExponentSign()
+        public void ExponentCanBeNegative()
         {
             Assert.True(IsJsonNumber("-1234E3"));
         }
 
+        [Fact]
+        public void TheFractionalIsNotTheFirstElement()
+        {
+            Assert.False(IsJsonNumber(".1234E3"));
+        }
+
+        [Fact]
+        public void DoesNotHasExponentNextAfterPoint()
+        {
+            Assert.False(IsJsonNumber(".e"));
+        }
+
+        [Fact]
+        public void DoesNotHasMultipleSIgnsInExponenPart()
+        {
+            Assert.False(IsJsonNumber("12.34E-+6-456-73"));
+        }
     }
 }
