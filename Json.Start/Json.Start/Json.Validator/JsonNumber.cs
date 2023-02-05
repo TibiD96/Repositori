@@ -15,17 +15,9 @@ namespace Json
             const string exponentCharaters = "eE";
             var indexOfExponent = input.IndexOfAny(exponentCharaters.ToCharArray());
 
-            if (!IsInteger(Integer(input, indexOfDot, indexOfExponent)))
-            {
-                return false;
-            }
-
-            if (!IsFraction(Fraction(input, indexOfDot, indexOfExponent)))
-            {
-                return false;
-            }
-
-            return IsExponent(Exponent(input, indexOfExponent, indexOfDot));
+            return IsInteger(Integer(input, indexOfDot, indexOfExponent))
+                   && IsFraction(Fraction(input, indexOfDot, indexOfExponent))
+                   && IsExponent(Exponent(input, indexOfExponent, indexOfDot));
         }
 
         private static bool IsInteger(string integerNumber)
