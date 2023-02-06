@@ -29,7 +29,7 @@ namespace Json
 
             if (integerNumber.StartsWith('-'))
             {
-                integerNumber = integerNumber.Remove(0, 1);
+                return IsDigits(integerNumber[1..]);
             }
 
             return IsDigits(integerNumber);
