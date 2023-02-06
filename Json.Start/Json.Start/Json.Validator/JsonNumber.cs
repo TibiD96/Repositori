@@ -17,7 +17,7 @@ namespace Json
 
             return IsInteger(Integer(input, indexOfDot, indexOfExponent))
                    && IsFraction(Fraction(input, indexOfDot, indexOfExponent))
-                   && IsExponent(Exponent(input, indexOfExponent, indexOfDot));
+                   && IsExponent(Exponent(input, indexOfExponent));
         }
 
         private static bool IsInteger(string integerNumber)
@@ -37,31 +37,28 @@ namespace Json
 
         private static bool IsFraction(string fractionalNumber)
         {
-            if (fractionalNumber.StartsWith('-'))
+            if (fractionalNumber == "")
             {
-                fractionalNumber = fractionalNumber.Remove(0, 1);
+                return true;
             }
 
-            if (fractionalNumber.StartsWith('.'))
-            {
-                return IsDigits(fractionalNumber[1..]);
-            }
-
-            return IsDigits(fractionalNumber);
+            return IsDigits(fractionalNumber[1..]);
         }
 
         private static bool IsExponent(string exponentialNumber)
         {
             exponentialNumber = exponentialNumber.ToLower();
 
-            if (exponentialNumber.StartsWith('e'))
+            if (exponentialNumber == "")
             {
-                exponentialNumber = exponentialNumber.Remove(0, 1);
+                return true;
             }
+
+            exponentialNumber = exponentialNumber.Remove(0, 1);
 
             if (exponentialNumber.StartsWith('-') || exponentialNumber.StartsWith('+'))
             {
-                return IsDigits(exponentialNumber[1..]);
+                return IsDigits(exponentialNumber[1 ..]);
             }
 
             return IsDigits(exponentialNumber);
@@ -71,12 +68,12 @@ namespace Json
         {
             if (indexOfDot != -1)
             {
-                return input.Substring(0, indexOfDot);
+                return input[..indexOfDot];
             }
 
             if (indexOfExponent != -1)
             {
-                return input.Substring(0, indexOfExponent);
+                return input[..indexOfExponent];
             }
 
             return input;
@@ -94,33 +91,22 @@ namespace Json
                     return input.Substring(indexOfDot, lengthOfSubstring);
                 }
 
-                lengthOfSubstring = input.Length - indexOfDot;
-
-                return input.Substring(indexOfDot, lengthOfSubstring);
+                return input[indexOfDot..];
             }
 
-            if (indexOfExponent != -1)
-            {
-                return input.Substring(0, indexOfExponent);
-            }
+            input = string.Empty;
 
             return input;
         }
 
-        static string Exponent(string input, int indexOfExponent, int indexOfDot)
+        static string Exponent(string input, int indexOfExponent)
         {
-            int lengthOfSubstring;
             if (indexOfExponent != -1)
             {
-                lengthOfSubstring = input.Length - indexOfExponent;
-
-                return input.Substring(indexOfExponent, lengthOfSubstring);
+                return input[indexOfExponent..];
             }
 
-            if (indexOfDot != -1)
-            {
-                return input.Substring(0, indexOfDot);
-            }
+            input = string.Empty;
 
             return input;
         }
