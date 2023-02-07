@@ -27,22 +27,14 @@ namespace Json
                 return false;
             }
 
-            if (integerNumber.StartsWith('-'))
-            {
-                return IsDigits(integerNumber[1..]);
-            }
-
-            return IsDigits(integerNumber);
+            return integerNumber.StartsWith('-')
+                   ? IsDigits(integerNumber[1..])
+                   : IsDigits(integerNumber);
         }
 
         private static bool IsFraction(string fractionalNumber)
         {
-            if (fractionalNumber == "")
-            {
-                return true;
-            }
-
-            return IsDigits(fractionalNumber[1..]);
+            return fractionalNumber == "" || IsDigits(fractionalNumber[1..]);
         }
 
         private static bool IsExponent(string exponentialNumber)
@@ -54,14 +46,9 @@ namespace Json
                 return true;
             }
 
-            exponentialNumber = exponentialNumber.Remove(0, 1);
+            exponentialNumber = exponentialNumber[1..];
 
-            if (exponentialNumber.StartsWith('-') || exponentialNumber.StartsWith('+'))
-            {
-                return IsDigits(exponentialNumber[1 ..]);
-            }
-
-            return IsDigits(exponentialNumber);
+            return IsDigits(exponentialNumber.StartsWith('-') || exponentialNumber.StartsWith('+') ? exponentialNumber[1..] : exponentialNumber);
         }
 
         static string Integer(string input, int indexOfDot, int indexOfExponent)
@@ -83,20 +70,15 @@ namespace Json
         {
             if (indexOfDot != -1)
             {
-                int lengthOfSubstring;
                 if (indexOfExponent != -1 && indexOfExponent > indexOfDot)
                 {
-                    lengthOfSubstring = indexOfExponent - indexOfDot;
-
-                    return input.Substring(indexOfDot, lengthOfSubstring);
+                    return input[indexOfDot..indexOfExponent];
                 }
 
                 return input[indexOfDot..];
             }
 
-            input = string.Empty;
-
-            return input;
+            return string.Empty;
         }
 
         static string Exponent(string input, int indexOfExponent)
@@ -106,9 +88,7 @@ namespace Json
                 return input[indexOfExponent..];
             }
 
-            input = string.Empty;
-
-            return input;
+            return string.Empty;
         }
 
         static bool IsDigits(string input)
