@@ -79,7 +79,6 @@ namespace Json
             }
 
             return input[indexOfDot..];
-
         }
 
         static string Exponent(string input, int indexOfExponent)
