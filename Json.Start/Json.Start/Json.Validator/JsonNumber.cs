@@ -68,27 +68,25 @@ namespace Json
 
         static string Fraction(string input, int indexOfDot, int indexOfExponent)
         {
-            if (indexOfDot != -1)
+            if (indexOfDot == -1)
             {
-                if (indexOfExponent != -1 && indexOfExponent > indexOfDot)
-                {
-                    return input[indexOfDot..indexOfExponent];
-                }
-
-                return input[indexOfDot..];
+                return string.Empty;
             }
 
-            return string.Empty;
+            if (indexOfExponent != -1 && indexOfExponent > indexOfDot)
+            {
+                return input[indexOfDot..indexOfExponent];
+            }
+
+            return input[indexOfDot..];
+
         }
 
         static string Exponent(string input, int indexOfExponent)
         {
-            if (indexOfExponent != -1)
-            {
-                return input[indexOfExponent..];
-            }
-
-            return string.Empty;
+            return indexOfExponent != -1
+                   ? input[indexOfExponent..]
+                   : string.Empty;
         }
 
         static bool IsDigits(string input)
