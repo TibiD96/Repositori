@@ -1,9 +1,8 @@
-using SoccerRanking;
 using Xunit;
 
 namespace SoccerRanking
 {
-    public class SoccerTeamFacts
+    public class TeamFacts
     {
         [Fact]
         public void Teams()
