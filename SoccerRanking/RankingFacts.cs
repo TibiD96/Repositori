@@ -16,7 +16,7 @@ namespace SoccerRanking
             ranking.AddTeam(secondTeam);
             ranking.AddTeam(thirdTeam);
 
-            Assert.Equal(secondTeam, ranking.teams[1]);
+            Assert.Equal(secondTeam, ranking.GetTheTeamFromASpecifiedPosition(ranking.GetThePositionInRank(secondTeam)));
         }
 
     }
