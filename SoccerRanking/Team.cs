@@ -10,5 +10,10 @@
             this.name = name;
             this.points = points;
         }
+
+        public void ModifyPoints(Team soccerTeam, int points)
+        {
+            soccerTeam.points = soccerTeam.points + points;
+        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using Xunit.Sdk;
 
 namespace SoccerRanking
 {
@@ -20,7 +19,7 @@ namespace SoccerRanking
 
         public int GetThePositionInRank(Team soccerTeam)
         {
-            int positionInRank = 0;
+           int positionInRank = 0;
            if (teams.Contains(soccerTeam))
             {
                 for (int i = 0; i < teams.Length; i++)
@@ -42,5 +41,28 @@ namespace SoccerRanking
         {
             return teams[position];
         }
+
+        public void UpdateTheRankingAfterAMatch (Team homeTeam, int homeTeamGoals, Team awayTeam, int awayTeamGoals)
+        {
+            int pointsForTheWiner = 3;
+            int pointsForEqual = 1;
+            if (homeTeamGoals > awayTeamGoals)
+            {
+                homeTeam.ModifyPoints(homeTeam, pointsForTheWiner);
+            }
+
+            if (awayTeamGoals > homeTeamGoals)
+            {
+                awayTeam.ModifyPoints(awayTeam, pointsForTheWiner);
+            }
+
+            if (homeTeamGoals == awayTeamGoals)
+            {
+                awayTeam.ModifyPoints(awayTeam, pointsForEqual);
+                homeTeam.ModifyPoints(homeTeam, pointsForEqual);
+            }
+        }
+
+
     }
 }
