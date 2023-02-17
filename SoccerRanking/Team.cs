@@ -11,9 +11,19 @@
             this.points = points;
         }
 
-        public void ModifyPoints(Team soccerTeam, int points)
+        public void ModifyPoints(int newPointsValue)
         {
-            soccerTeam.points = soccerTeam.points + points;
+            points += newPointsValue;
+        }
+
+        public bool CompareTeamsBasedOnPoints(Team secondTeamInOrder)
+        {
+            if (secondTeamInOrder == null)
+            {
+                return false;
+            }
+
+            return points < secondTeamInOrder.points;
         }
     }
 }

@@ -46,20 +46,37 @@ namespace SoccerRanking
         {
             int pointsForTheWiner = 3;
             int pointsForEqual = 1;
+            Team pivotTeam;
+            bool rankHasToBeSorted = true;
             if (homeTeamGoals > awayTeamGoals)
             {
-                homeTeam.ModifyPoints(homeTeam, pointsForTheWiner);
+                homeTeam.ModifyPoints(pointsForTheWiner);
             }
 
             if (awayTeamGoals > homeTeamGoals)
             {
-                awayTeam.ModifyPoints(awayTeam, pointsForTheWiner);
+                awayTeam.ModifyPoints(pointsForTheWiner);
             }
 
             if (homeTeamGoals == awayTeamGoals)
             {
-                awayTeam.ModifyPoints(awayTeam, pointsForEqual);
-                homeTeam.ModifyPoints(homeTeam, pointsForEqual);
+                awayTeam.ModifyPoints(pointsForEqual);
+                homeTeam.ModifyPoints(pointsForEqual);
+            }
+
+            while (rankHasToBeSorted)
+            {
+                rankHasToBeSorted = false;
+                for ( int i = 0; i < teams.Length - 1; i++)
+                {
+                    if (teams[i].CompareTeamsBasedOnPoints(teams[i + 1]))
+                    {
+                        pivotTeam = teams[i + 1];
+                        teams[i + 1] = teams[i];
+                        teams[i] = pivotTeam;
+                        rankHasToBeSorted = true;
+                    }
+                }
             }
         }
 
