@@ -2,7 +2,7 @@ using System;
 
 namespace JsonValidation
 {
-    class Character
+    class Character : IPattern
     {
         readonly char pattern;
 
@@ -14,7 +14,9 @@ namespace JsonValidation
         public bool Match(string text)
         {
             if (string.IsNullOrEmpty(text))
+            {
                 return false;
+            }
 
             return text[0] == pattern;
         }
