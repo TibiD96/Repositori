@@ -15,29 +15,29 @@ namespace SoccerRanking
         {
             Array.Resize(ref teams, teams.Length + 1);
             teams[teams.Length - 1] = soccerTeam;
+
+            Sorting();
         }
 
-        public int GetThePositionInRank(Team soccerTeam)
+        public int GetPosition(Team soccerTeam)
         {
            int positionInRank = 0;
-           if (teams.Contains(soccerTeam))
-            {
-                for (int i = 0; i < teams.Length; i++)
-                {
-                    if (teams[i] == soccerTeam)
-                    {
-                        positionInRank = i;
+           for (int i = 0; i < teams.Length; i++)
+           {
+             if (teams[i] == soccerTeam)
+             {
+               positionInRank = i;
 
-                        break;
-                    }
-                }
-            }
+               break;
+             }
+           }
+       
 
             return positionInRank;
 
         }
 
-        public Team GetTheTeamFromASpecifiedPosition(int position)
+        public Team TeamAtPosition(int position)
         {
             return teams[position];
         }
@@ -46,8 +46,6 @@ namespace SoccerRanking
         {
             int pointsForTheWiner = 3;
             int pointsForEqual = 1;
-            Team pivotTeam;
-            bool rankHasToBeSorted = true;
             if (homeTeamGoals > awayTeamGoals)
             {
                 homeTeam.ModifyPoints(pointsForTheWiner);
@@ -64,10 +62,18 @@ namespace SoccerRanking
                 homeTeam.ModifyPoints(pointsForEqual);
             }
 
+            Sorting();
+
+        }
+
+        public void Sorting()
+        {
+            Team pivotTeam;
+            bool rankHasToBeSorted = true;
             while (rankHasToBeSorted)
             {
                 rankHasToBeSorted = false;
-                for ( int i = 0; i < teams.Length - 1; i++)
+                for (int i = 0; i < teams.Length - 1; i++)
                 {
                     if (teams[i].CompareTeamsBasedOnPoints(teams[i + 1]))
                     {

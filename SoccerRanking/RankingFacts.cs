@@ -12,7 +12,7 @@ namespace SoccerRanking
             Ranking ranking = new Ranking();
             ranking.AddTeam(firstTeam);
 
-            Assert.Equal(firstTeam, ranking.GetTheTeamFromASpecifiedPosition(ranking.GetThePositionInRank(firstTeam)));
+            Assert.Equal(firstTeam, ranking.TeamAtPosition(ranking.GetPosition(firstTeam)));
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace SoccerRanking
             ranking.AddTeam(thirdTeam);
             ranking.AddTeam(fourthTeam);
 
-            Assert.Equal(2, ranking.GetThePositionInRank(thirdTeam));
+            Assert.Equal(0, ranking.GetPosition(thirdTeam));
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace SoccerRanking
             ranking.AddTeam(thirdTeam);
             ranking.AddTeam(fourthTeam);
 
-            Assert.Equal(fourthTeam, ranking.GetTheTeamFromASpecifiedPosition(3));
+            Assert.Equal(fourthTeam, ranking.TeamAtPosition(3));
         }
 
         [Fact]
@@ -59,8 +59,8 @@ namespace SoccerRanking
             ranking.AddTeam(thirdTeam);
             ranking.UpdateTheRankingAfterAMatch(firstTeam, 1, secondTeam, 2);
 
-            Assert.Equal(0, ranking.GetThePositionInRank(secondTeam));
-            Assert.Equal(1, ranking.GetThePositionInRank(firstTeam));
+            Assert.Equal(0, ranking.GetPosition(secondTeam));
+            Assert.Equal(1, ranking.GetPosition(firstTeam));
         }
 
         [Fact]
@@ -75,8 +75,8 @@ namespace SoccerRanking
             ranking.AddTeam(thirdTeam);
             ranking.UpdateTheRankingAfterAMatch(secondTeam, 1, thirdTeam, 1);
 
-            Assert.Equal(1, ranking.GetThePositionInRank(secondTeam));
-            Assert.Equal(2, ranking.GetThePositionInRank(thirdTeam));
+            Assert.Equal(1, ranking.GetPosition(secondTeam));
+            Assert.Equal(2, ranking.GetPosition(thirdTeam));
         }
 
         [Fact]
@@ -98,12 +98,12 @@ namespace SoccerRanking
             ranking.UpdateTheRankingAfterAMatch(fourthTeam, 4, sixthTeam, 1);
             ranking.UpdateTheRankingAfterAMatch(thirdTeam, 1, secondTeam, 1);
 
-            Assert.Equal(0, ranking.GetThePositionInRank(fourthTeam));
-            Assert.Equal(1, ranking.GetThePositionInRank(sixthTeam));
-            Assert.Equal(2, ranking.GetThePositionInRank(secondTeam));
-            Assert.Equal(3, ranking.GetThePositionInRank(thirdTeam));
-            Assert.Equal(4, ranking.GetThePositionInRank(firstTeam));
-            Assert.Equal(5, ranking.GetThePositionInRank(fifthTeam));
+            Assert.Equal(0, ranking.GetPosition(fourthTeam));
+            Assert.Equal(1, ranking.GetPosition(sixthTeam));
+            Assert.Equal(2, ranking.GetPosition(secondTeam));
+            Assert.Equal(3, ranking.GetPosition(thirdTeam));
+            Assert.Equal(4, ranking.GetPosition(firstTeam));
+            Assert.Equal(5, ranking.GetPosition(fifthTeam));
         }
 
     }
