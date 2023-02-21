@@ -10,7 +10,7 @@ namespace JsonValidation
         {
             string text = "sDgdfh";
             Character givenChar = new Character('s');
-            Assert.True(givenChar.Match(text));
+            Assert.True(givenChar.Match(text).Success());
         }
 
         [Fact]
@@ -19,7 +19,7 @@ namespace JsonValidation
         {
             string text = "s";
             Character givenChar = new Character('s');
-            Assert.True(givenChar.Match(text));
+            Assert.True(givenChar.Match(text).Success());
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace JsonValidation
         {
             string text = null;
             Character givenChar = new Character('s');
-            Assert.False(givenChar.Match(text));
+            Assert.False(givenChar.Match(text).Success());
         }
 
         [Fact]
@@ -37,7 +37,7 @@ namespace JsonValidation
         {
             string text = "";
             Character givenChar = new Character('s');
-            Assert.False(givenChar.Match(text));
+            Assert.False(givenChar.Match(text).Success());
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace JsonValidation
         {
             string text = "fDgdfh";
             Character givenChar = new Character('s');
-            Assert.False(givenChar.Match(text));
+            Assert.False(givenChar.Match(text).Success());
         }
     }
 }
