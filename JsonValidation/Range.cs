@@ -19,12 +19,7 @@ namespace JsonValidation
                 return false;
             }
 
-            if (text[0] >= start && text[0] <= end)
-            {
-                return true;
-            }
-
-            return false;
+            return text[0] >= start && text[0] <= end;
         }
     }
 }
