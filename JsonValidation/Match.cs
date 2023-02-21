@@ -2,7 +2,7 @@
 
 namespace JsonValidation
 {
-    internal class Match : IMatch
+    public class Match : IMatch
     {
         private readonly bool success;
         private readonly string remainingText;

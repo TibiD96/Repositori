@@ -2,7 +2,7 @@ using System;
 
 namespace JsonValidation
 {
-    class Character : IPattern
+    public class Character : IPattern
     {
         readonly char pattern;
 
