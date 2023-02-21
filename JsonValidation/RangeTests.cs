@@ -10,7 +10,7 @@ namespace JsonValidation
         {
             string text = "akljhbdofij";
             Range range = new Range('a', 'f');
-            Assert.True(range.Match(text));
+            Assert.True(range.Match(text).Success());
         }
 
         [Fact]
@@ -19,7 +19,7 @@ namespace JsonValidation
         {
             string text = "kkljhbdofij";
             Range range = new Range('a', 'f');
-            Assert.False(range.Match(text));
+            Assert.False(range.Match(text).Success());
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace JsonValidation
         {
             string text = null;
             Range range = new Range('a', 'f');
-            Assert.False(range.Match(text));
+            Assert.False(range.Match(text).Success());
         }
 
         [Fact]
@@ -37,7 +37,7 @@ namespace JsonValidation
         {
             string text = "";
             Range range = new Range('a', 'f');
-            Assert.False(range.Match(text));
+            Assert.False(range.Match(text).Success());
         }
     }
 }
