@@ -18,7 +18,7 @@ namespace JsonValidation
                 return new Match(false, text);
             }
 
-            return new Match(text[0] == pattern, text);
+            return new Match(text[0] == pattern, text[1..]);
         }
     }
 }
