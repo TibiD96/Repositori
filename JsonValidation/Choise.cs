@@ -14,15 +14,20 @@ namespace JsonValidation
 
         public IMatch Match(string text)
         {
+            if (string.IsNullOrEmpty(text))
+            {
+                return new Match(false, text);
+            }
+
             foreach (var pattern in patterns)
             {
                 if (pattern.Match(text).Success())
                 {
-                    return pattern.Match(text);
+                    return new Match(true, text[1..]);
                 }
             }
 
-            return new Match(false, text);
+            return new Match(false, text[1..]);
         }
     }
 }
