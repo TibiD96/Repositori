@@ -19,7 +19,7 @@ namespace JsonValidation
                 return new Match(false, text);
             }
 
-            return new Match(text[0] >= start && text[0] <= end, text);
+            return new Match(text[0] >= start && text[0] <= end, text[1..]);
         }
     }
 }

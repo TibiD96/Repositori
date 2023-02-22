@@ -5,12 +5,12 @@ namespace JsonValidation
     public class Match : IMatch
     {
         private readonly bool success;
-        private readonly string remainingText;
+        private readonly string text;
 
-        public Match(bool success, string remainigText)
+        public Match(bool success, string text)
         {
             this.success = success;
-            this.remainingText = remainingText;
+            this.text = text;
         }
 
         public bool Success()
@@ -20,7 +20,7 @@ namespace JsonValidation
 
         public string RemainingText()
         {
-            return remainingText;
+            return text;
         }
     }
 }
