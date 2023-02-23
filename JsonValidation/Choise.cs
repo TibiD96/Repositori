@@ -3,7 +3,7 @@
 
 namespace JsonValidation
 {
-    public class Choice
+    public class Choice : IPattern
     {
         private IPattern[] patterns;
 
