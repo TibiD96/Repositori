@@ -14,11 +14,6 @@ namespace JsonValidation
 
         public IMatch Match(string text)
         {
-            if (string.IsNullOrEmpty(text))
-            {
-                return new Match(false, text);
-            }
-
             foreach (var pattern in patterns)
             {
                 if (pattern.Match(text).Success())
@@ -27,7 +22,7 @@ namespace JsonValidation
                 }
             }
 
-            return new Match(false, text[1..]);
+            return new Match(false, text);
         }
     }
 }
