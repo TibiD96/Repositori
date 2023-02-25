@@ -21,7 +21,7 @@ namespace JsonValidation
             string text = "qkljhbdofij";
             Range range = new Range('a', 'f');
             Assert.False(range.Match(text).Success());
-            Assert.Equal(text[1..], range.Match(text).RemainingText());
+            Assert.Equal(text, range.Match(text).RemainingText());
         }
 
         [Fact]
