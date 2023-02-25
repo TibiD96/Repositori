@@ -18,7 +18,7 @@ namespace JsonValidation
                 return new Match(false, text);
             }
 
-            return new Match(false, text);
+            return accepted.Contains(text[0]) ? new Match(true, text[1..]) : new Match(false, text);
 
         }
     }
