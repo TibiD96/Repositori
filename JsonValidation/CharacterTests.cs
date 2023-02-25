@@ -51,7 +51,7 @@ namespace JsonValidation
             string text = "fDgdfh";
             Character givenChar = new Character('s');
             Assert.False(givenChar.Match(text).Success());
-            Assert.Equal(text[1..], givenChar.Match(text).RemainingText());
+            Assert.Equal(text, givenChar.Match(text).RemainingText());
         }
     }
 }
