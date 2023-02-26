@@ -9,12 +9,12 @@ namespace JsonValidation
         {
             var e = new Any("eE");
             Assert.False(e.Match(null).Success());
-            Assert.Equal(null, e.Match(null).RemainingText());
+            Assert.Null(e.Match(null).RemainingText());
             Assert.False(e.Match("").Success());
             Assert.Equal("", e.Match("").RemainingText());
             var sign = new Any("-+");
             Assert.False(sign.Match(null).Success());
-            Assert.Equal(null, sign.Match(null).RemainingText());
+            Assert.Null(sign.Match(null).RemainingText());
             Assert.False(sign.Match("").Success());
             Assert.Equal("", sign.Match("").RemainingText());
         }
