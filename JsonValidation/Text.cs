@@ -18,7 +18,7 @@ namespace JsonValidation
                 return new Match(false, text);
             }
 
-            return text.Substring(0, prefix.Length) == prefix ? new Match(true, text[prefix.Length..]) : new Match(false, text);
+            return text.Length < prefix.Length || text.Substring(0, prefix.Length) != prefix ? new Match(false, text) : new Match(true, text[prefix.Length..]);
         }
     }
 }

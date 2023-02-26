@@ -41,5 +41,18 @@ namespace JsonValidation
             Assert.True(boolFalse.Match("falseX").Success());
             Assert.Equal("X", boolFalse.Match("falseX").RemainingText());
         }
+
+        [Fact]
+
+        public void ReturnFalseWhenTheInputDontConatinTheGivenString()
+        {
+            var boolTrue = new Text("true");
+            Assert.False(boolTrue.Match("false").Success());
+            Assert.Equal("false", boolTrue.Match("false").RemainingText());
+
+            var boolFalse = new Text("false");
+            Assert.False(boolFalse.Match("true").Success());
+            Assert.Equal("true", boolFalse.Match("true").RemainingText());
+        }
     }
 }
