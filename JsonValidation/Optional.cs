@@ -2,7 +2,7 @@
 
 namespace JsonValidation
 {
-    internal class Optional : IPattern
+    public class Optional : IPattern
     {
         private readonly IPattern pattern;
 
