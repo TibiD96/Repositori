@@ -12,20 +12,20 @@ namespace JsonValidation
 
         public IMatch Match(string text)
         {
-            string oldText = text;           
+            IMatch variableMatch = new Match(true, text);           
 
             foreach (var pattern in patterns)
             {
-                if (!pattern.Match(text).Success())
-                {
-                    return new Match(false, oldText);
-                }
+                variableMatch = pattern.Match(variableMatch.RemainingText());
 
-                text = pattern.Match(text).RemainingText();
+                if (!variableMatch.Success())
+                {
+                    return new Match(false, text);
+                }
                 
             }
 
-            return new Match(true, text);
+            return variableMatch;
         }
     }
 }
