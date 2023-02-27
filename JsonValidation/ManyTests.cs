@@ -13,7 +13,7 @@ namespace JsonValidation
             Assert.Equal("bc", a.Match("abc").RemainingText());
 
             Assert.True(a.Match("aaabc").Success());
-            Assert.Equal("bc", a.Match("aaaabc").RemainingText());
+            Assert.Equal("bc", a.Match("aaabc").RemainingText());
 
             Assert.True(a.Match("bc").Success());
             Assert.Equal("bc", a.Match("bc").RemainingText());
@@ -23,6 +23,9 @@ namespace JsonValidation
 
             Assert.True(a.Match(null).Success());
             Assert.Null(a.Match(null).RemainingText());
+
+            Assert.True(a.Match("a").Success());
+            Assert.Equal("", a.Match("a").RemainingText());
         }
 
         [Fact]
@@ -35,6 +38,12 @@ namespace JsonValidation
 
             Assert.True(digits.Match("ab").Success());
             Assert.Equal("ab", digits.Match("ab").RemainingText());
+
+            Assert.True(digits.Match("").Success());
+            Assert.Equal("", digits.Match("").RemainingText());
+
+            Assert.True(digits.Match(null).Success());
+            Assert.Null(digits.Match(null).RemainingText());
         }
     }
 }

@@ -13,12 +13,14 @@ namespace JsonValidation
 
         public IMatch Match(string text)
         {
-            while (pattern.Match(text).Success())
+            IMatch variableMatch = new Match(true, text);
+
+            while (variableMatch.Success())
             {
-                text = text[1..];
+                variableMatch = pattern.Match(variableMatch.RemainingText());
             }
 
-            return new Match(true, text);
+            return new Match(true, variableMatch.RemainingText());
         }
     }
 }
