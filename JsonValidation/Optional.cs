@@ -13,7 +13,8 @@ namespace JsonValidation
 
         public IMatch Match(string text)
         {
-            return pattern.Match(text).Success() ? new Match(true, text[1..]) : new Match(true, text);
+            IMatch match = pattern.Match(text);
+            return match.Success() ? new Match(true, match.RemainingText()) : new Match(true, text);
         }
     }
 }
