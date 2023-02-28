@@ -18,7 +18,7 @@ namespace JsonValidation
             {
                 if (pattern.Match(text).Success())
                 {
-                    return new Match(true, text[1..]);
+                    return pattern.Match(text);
                 }
             }
 
