@@ -14,12 +14,9 @@ namespace JsonValidation
 
         public IMatch Match(string text)
         {
-            if (string.IsNullOrEmpty(text))
-            {
-                return new Match(false, text);
-            }
-
-            return text[0] >= start && text[0] <= end ? new Match(true, text[1..]) : new Match(false, text);
+            return !string.IsNullOrEmpty(text) && text[0] >= start && text[0] <= end 
+                    ? new Match(true, text[1..]) 
+                     : new Match(false, text);
         }
     }
 }
