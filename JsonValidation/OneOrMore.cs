@@ -8,7 +8,7 @@ class OneOrMore : IPattern
 
     public OneOrMore(IPattern pattern)
     {
-        this.pattern = ;
+        this.pattern = pattern;
     }
 
     public IMatch Match(string text)

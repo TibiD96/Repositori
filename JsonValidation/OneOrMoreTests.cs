@@ -1,12 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Xunit;
 
 namespace JsonValidation
 {
-    internal class OneOrMoreTests
+    public class OneOrMoreTests
     {
+        [Fact]
+
+        public void ReturnFalseIfInputIsNullOrEmpty()
+        {
+            var a = new OneOrMore(new Range('0', '9'));
+            Assert.False(a.Match("").Success());
+            Assert.Equal("", a.Match("").RemainingText());
+
+            Assert.False(a.Match(null).Success());
+            Assert.Null(a.Match(null).RemainingText());
+        }
+
+     
     }
 }
