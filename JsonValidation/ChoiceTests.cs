@@ -2,7 +2,7 @@
 
 namespace JsonValidation
 {
-    public class ChoiseTests
+    public class ChoiceTests
     {
         [Fact]
 

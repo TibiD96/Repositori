@@ -16,6 +16,15 @@ namespace JsonValidation
             Assert.Null(a.Match(null).RemainingText());
         }
 
-     
+        [Fact]
+
+        public void ReturnTrueIfInputStartingCharIsInsideRangeAndGetConsumed()
+        {
+            var a = new OneOrMore(new Range('0', '9'));
+            Assert.True(a.Match("123").Success());
+            Assert.Equal("", a.Match("123").RemainingText());
+
+        }
+
     }
 }
