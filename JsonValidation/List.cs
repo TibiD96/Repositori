@@ -8,7 +8,7 @@ namespace JsonValidation
 
         public List(IPattern element, IPattern separator)
         {
-            this.pattern = new Sequence(new Many(element), new Many(separator));
+            this.pattern = new Optional(new Sequence(element, new Many(separator)));
         }
 
         public IMatch Match(string text)
