@@ -10,7 +10,8 @@ namespace JsonValidation
         {
 
             var zeroToNine = new Range('0', '9');
-            this.pattern = new Sequence(zeroToNine);
+            var numbers = new OneOrMore(zeroToNine);
+            this.pattern = new Sequence(numbers);
         }
 
         public IMatch Match(string text)
