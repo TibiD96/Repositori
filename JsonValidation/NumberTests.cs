@@ -18,11 +18,20 @@ namespace JsonValidation
 
         [Fact]
 
-        public void ReturnTrueForSingleNUmber()
+        public void ReturnTrueForSingleNumber()
         {
             var number = new Number();
             Assert.True(number.Match("1").Success());
             Assert.Equal("", number.Match("1").RemainingText());
+        }
+
+        [Fact]
+
+        public void ReturnTrueForMultipleNUmbersString()
+        {
+            var number = new Number();
+            Assert.True(number.Match("123").Success());
+            Assert.Equal("", number.Match("123").RemainingText());
         }
     }
 }
