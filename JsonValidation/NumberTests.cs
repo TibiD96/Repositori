@@ -15,5 +15,14 @@ namespace JsonValidation
             Assert.False(number.Match(null).Success());
             Assert.Null(number.Match(null).RemainingText());
         }
+
+        [Fact]
+
+        public void ReturnTrueForSingleNUmber()
+        {
+            var number = new Number();
+            Assert.True(number.Match("1").Success());
+            Assert.Equal("", number.Match("1").RemainingText());
+        }
     }
 }
