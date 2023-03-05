@@ -9,9 +9,12 @@ namespace JsonValidation
         public Number()
         {
 
-            var zeroToNine = new Range('0', '9');
-            var numbers = new OneOrMore(zeroToNine);
-            this.pattern = new Sequence(numbers);
+            var oneToNine = new Range('1', '9');
+            var zero = new Character('0');
+            var startingNumber = new Choice(zero, oneToNine);
+            var number = new OneOrMore(startingNumber);
+            var integer = new Choice(new Sequence(startingNumber, number));
+            this.pattern = new Sequence(integer);
         }
 
         public IMatch Match(string text)

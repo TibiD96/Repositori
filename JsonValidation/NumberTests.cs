@@ -27,11 +27,20 @@ namespace JsonValidation
 
         [Fact]
 
-        public void ReturnTrueForMultipleNUmbersString()
+        public void ReturnTrueForMultipleNumbersString()
         {
             var number = new Number();
             Assert.True(number.Match("123").Success());
             Assert.Equal("", number.Match("123").RemainingText());
+        }
+
+        [Fact]
+
+        public void ReturnFalseForIntergerWhichStrtWithZero()
+        {
+            var number = new Number();
+            Assert.False(number.Match("01").Success());
+            Assert.Equal("01", number.Match("01").RemainingText());
         }
     }
 }
