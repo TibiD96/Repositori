@@ -11,9 +11,9 @@ namespace JsonValidation
 
             var oneToNine = new Range('1', '9');
             var zero = new Character('0');
-            var startingNumber = new Choice(zero, oneToNine);
-            var number = new OneOrMore(startingNumber);
-            var integer = new Choice(new Sequence(startingNumber, number));
+            var removeOne = new Choice(zero, oneToNine);
+            var numbers = new OneOrMore(removeOne);
+            var integer = new Choice(new Sequence(oneToNine, numbers), removeOne);
             this.pattern = new Sequence(integer);
         }
 

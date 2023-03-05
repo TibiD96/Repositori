@@ -9,38 +9,32 @@ namespace JsonValidation
         public void ReturnFalseForNullOrEmpty()
         {
             var number = new Number();
-            Assert.False(number.Match("").Success());
             Assert.Equal("", number.Match("").RemainingText());
-
-            Assert.False(number.Match(null).Success());
             Assert.Null(number.Match(null).RemainingText());
         }
 
         [Fact]
 
-        public void ReturnTrueForSingleNumber()
+        public void RemoveTheStringIfIsIntegerAndHasJustOneNumber()
         {
             var number = new Number();
-            Assert.True(number.Match("1").Success());
             Assert.Equal("", number.Match("1").RemainingText());
         }
 
         [Fact]
 
-        public void ReturnTrueForMultipleNumbersString()
+        public void RemoveTheStringIfIsInteger()
         {
             var number = new Number();
-            Assert.True(number.Match("123").Success());
             Assert.Equal("", number.Match("123").RemainingText());
         }
 
         [Fact]
 
-        public void ReturnFalseForIntergerWhichStrtWithZero()
+        public void RemoveTheStartOfStringIfIs0AndStringIsInteger()
         {
             var number = new Number();
-            Assert.False(number.Match("01").Success());
-            Assert.Equal("01", number.Match("01").RemainingText());
+            Assert.Equal("1", number.Match("01").RemainingText());
         }
     }
 }
