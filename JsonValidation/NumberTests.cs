@@ -36,5 +36,13 @@ namespace JsonValidation
             var number = new Number();
             Assert.Equal("1", number.Match("01").RemainingText());
         }
+
+        [Fact]
+
+        public void RemoveTheStringIfIsNegativeInteger()
+        {
+            var number = new Number();
+            Assert.Equal("", number.Match("-10").RemainingText());
+        }
     }
 }
