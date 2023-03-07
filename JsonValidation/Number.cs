@@ -15,7 +15,9 @@ namespace JsonValidation
             var numbers = new OneOrMore(removeOne);
             var integer = new Choice(new Sequence(oneToNine, numbers), removeOne);
             var sign = new Optional(new Any("+-"));
-            this.pattern = new Sequence(sign, integer);
+            var dot = new Optional(new Character('.'));
+            var fractional = new Choice(new Sequence(dot, numbers));
+            this.pattern = new Sequence(sign, integer, fractional);
         }
 
         public IMatch Match(string text)

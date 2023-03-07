@@ -44,5 +44,13 @@ namespace JsonValidation
             var number = new Number();
             Assert.Equal("", number.Match("-10").RemainingText());
         }
+
+        [Fact]
+
+        public void RemoveTheStringIfIsFractionalNumber()
+        {
+            var number = new Number();
+            Assert.Equal("", number.Match("0.56").RemainingText());
+        }
     }
 }
