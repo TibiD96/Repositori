@@ -20,7 +20,6 @@ namespace JsonValidation
             var fractionalPart = new Optional(new Sequence(dot, numbers));
 
             var exponentLetter = new Any("eE");
-            var exponentLetterAndSign = new Optional(new Sequence(exponentLetter, sign));
             var exponentFinal = new Optional(new Sequence(exponentLetter,sign, numbers));
             this.pattern = new Sequence(sign, integerPart, fractionalPart, exponentFinal);
         }
