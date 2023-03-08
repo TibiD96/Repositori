@@ -68,5 +68,61 @@ namespace JsonValidation
             var number = new Number();
             Assert.Equal("", number.Match("12.25e-3").RemainingText());
         }
+
+        [Fact]
+
+        public void ReturnStringIfItContainsJustLetters()
+        {
+            var number = new Number();
+            Assert.Equal("qwerty", number.Match("qwerty").RemainingText());
+        }
+
+        [Fact]
+
+        public void RemoveTheStringIfIs0()
+        {
+            var number = new Number();
+            Assert.Equal("", number.Match("0").RemainingText());
+        }
+
+        [Fact]
+
+        public void RemoveTheStringIfNegativValidNumber()
+        {
+            var number = new Number();
+            Assert.Equal("", number.Match("-100").RemainingText());
+        }
+
+        [Fact]
+
+        public void RemoveTheStringIfNegativ0()
+        {
+            var number = new Number();
+            Assert.Equal("", number.Match("-0").RemainingText());
+        }
+
+        [Fact]
+
+        public void RemoveTheIntegerPartOfInvalidFrationalNumber()
+        {
+            var number = new Number();
+            Assert.Equal(".", number.Match("123.").RemainingText());
+        }
+
+        [Fact]
+
+        public void RemoveTheValidPartOfFrationalNumber()
+        {
+            var number = new Number();
+            Assert.Equal(".567", number.Match("123.54.567").RemainingText());
+        }
+
+        [Fact]
+
+        public void RemoveTheValidPartOfExponentialNumber()
+        {
+            var number = new Number();
+            Assert.Equal("e567", number.Match("123e54e567").RemainingText());
+        }
     }
 }
