@@ -13,11 +13,16 @@ namespace JsonValidation
             var zero = new Character('0');
             var removeOne = new Choice(zero, oneToNine);
             var numbers = new OneOrMore(removeOne);
-            var integer = new Choice(new Sequence(oneToNine, numbers), removeOne);
+            var integerPart = new Choice(new Sequence(oneToNine, numbers), removeOne);
             var sign = new Optional(new Any("+-"));
+
             var dot = new Character('.');
-            var fractional = new Optional(new Sequence(dot, numbers));
-            this.pattern = new Sequence(sign, integer, fractional);
+            var fractionalPart = new Optional(new Sequence(dot, numbers));
+
+            var exponentLetter = new Any("eE");
+            var exponentLetterAndSign = new Optional(new Sequence(exponentLetter, sign));
+            var exponentFinal = new Optional(new Sequence(exponentLetter,sign, numbers));
+            this.pattern = new Sequence(sign, integerPart, fractionalPart, exponentFinal);
         }
 
         public IMatch Match(string text)
