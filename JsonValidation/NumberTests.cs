@@ -6,7 +6,7 @@ namespace JsonValidation
     {
         [Fact]
 
-        public void ReturnFalseForNullOrEmpty()
+        public void ReturnNullForNullAndEmptyForEmpty()
         {
             var number = new Number();
             Assert.Equal("", number.Match("").RemainingText());
