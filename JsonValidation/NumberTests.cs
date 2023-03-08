@@ -60,5 +60,13 @@ namespace JsonValidation
             var number = new Number();
             Assert.Equal("", number.Match("12e-3").RemainingText());
         }
+
+        [Fact]
+
+        public void RemoveTheStringIfIsExponentialNumberAndFractional()
+        {
+            var number = new Number();
+            Assert.Equal("", number.Match("12.25e-3").RemainingText());
+        }
     }
 }
