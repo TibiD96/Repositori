@@ -9,19 +9,19 @@ namespace JsonValidation
         public Number()
         {
 
-            var oneToNine = new Range('1', '9');
             var zero = new Character('0');
-            var removeOne = new Choice(zero, oneToNine);
-            var numbers = new OneOrMore(removeOne);
-            var integerPart = new Choice(new Sequence(oneToNine, numbers), removeOne);
+            var digit = new Choice(zero, new Range('1', '9'));
+            var digits = new OneOrMore(digit);
+            var minus = new Optional(new Character('-'));
+            var integer = new Sequence(minus, new Choice(zero, digits));
             var sign = new Optional(new Any("+-"));
 
             var dot = new Character('.');
-            var fractionalPart = new Optional(new Sequence(dot, numbers));
+            var fractionalPart = new Optional(new Sequence(dot, digits));
 
             var exponentLetter = new Any("eE");
-            var exponentFinal = new Optional(new Sequence(exponentLetter,sign, numbers));
-            this.pattern = new Sequence(sign, integerPart, fractionalPart, exponentFinal);
+            var exponentFinal = new Optional(new Sequence(exponentLetter,sign, digits));
+            this.pattern = new Sequence(integer, fractionalPart, exponentFinal);
         }
 
         public IMatch Match(string text)
