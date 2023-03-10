@@ -8,8 +8,9 @@ namespace JsonValidation
 
         public String()
         {
-            var letters = new Range('a', 'z');
-            this.pattern = new Sequence(letters);
+            var letters = new Many(new Range('a', 'z'));
+            var quotes = new Character('"');
+            this.pattern = new Sequence(quotes, letters, quotes);
         }
 
         public IMatch Match(string text)
