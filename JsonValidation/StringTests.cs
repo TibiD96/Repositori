@@ -43,6 +43,9 @@ namespace JsonValidation
 
             var stringWithEscapedHorizontalTab = new String();
             Assert.Equal("", stringWithEscapedHorizontalTab.Match(Quoted(@"a \t b")).RemainingText());
+
+            var stringWithEscapedUnicode = new String();
+            Assert.Equal("", stringWithEscapedUnicode.Match(Quoted(@"a \u26Be b")).RemainingText());
         }
 
         public static string Quoted(string text)
