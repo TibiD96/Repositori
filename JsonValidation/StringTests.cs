@@ -17,8 +17,11 @@ namespace JsonValidation
 
         public void ReturnEmptyStringIfStringIsJasonValid()
         {
-            var word = new String();
-            Assert.Equal("", word.Match(Quoted("qwerty")).RemainingText());
+            var simpleString = new String();
+            Assert.Equal("", simpleString.Match(Quoted("qwerty")).RemainingText());
+
+            var stringWithEscapedQuotationMark = new String();
+            Assert.Equal("", stringWithEscapedQuotationMark.Match(Quoted(@"\""a\"" b")).RemainingText());
 
 
         }

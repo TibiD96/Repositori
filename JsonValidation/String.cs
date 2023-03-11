@@ -10,7 +10,10 @@ namespace JsonValidation
         {
             var letters = new Many(new Range('a', 'z'));
             var quotes = new Character('"');
-            this.pattern = new Sequence(quotes, letters, quotes);
+            var backSlash = new Character('\\');
+            var escapedCharacters = new Sequence(backSlash, new Choice(new Any("\"\\/bfnrtu"), letters));
+            var character = new Many(escapedCharacters);
+            this.pattern = new Sequence(quotes, character, quotes);
         }
 
         public IMatch Match(string text)
