@@ -8,11 +8,12 @@ namespace JsonValidation
 
         public String()
         {
-            var letters = new Many(new Range('a', 'z'));
+            var letters = new Range('a', 'z');
             var quotes = new Character('"');
             var backSlash = new Character('\\');
             var escapedCharacters = new Sequence(backSlash, new Choice(new Any("\"\\/bfnrtu"), letters));
-            var character = new Many(escapedCharacters);
+            var stringChar = new Choice(new Range(' ', '!'), new Range('A', 'Z'), new Range('a', '~'), escapedCharacters);
+            var character = new Many(stringChar);
             this.pattern = new Sequence(quotes, character, quotes);
         }
 
