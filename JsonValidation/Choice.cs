@@ -28,5 +28,11 @@ namespace JsonValidation
 
             return new Match(false, text);
         }
+
+        public void Add(IPattern pattern)
+        {
+            Array.Resize(ref patterns, patterns.Length + 1);
+                
+        }
     }
 }
