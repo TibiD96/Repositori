@@ -1,12 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Xunit;
 
 namespace JsonValidation
 {
-    internal class ValueTests
+    public class ValueTests
     {
+        [Fact]
+
+        public void ReturnTrueAndEmptyForValidString()
+        {
+            var value = new Value();
+            Assert.True(value.Match(Quoted("asd")).Success());
+            Assert.Equal("", value.Match(Quoted("asd")).RemainingText());
+        }
+
+        [Fact]
+
+        public void ReturnTrueAndEmptyForValidNumber()
+        {
+            var value = new Value();
+            Assert.True(value.Match("123").Success());
+            Assert.Equal("", value.Match("123").RemainingText());
+        }
+
+        public static string Quoted(string text)
+           => $"\"{text}\"";
     }
 }

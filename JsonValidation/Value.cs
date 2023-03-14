@@ -13,8 +13,8 @@ namespace JsonValidation
             var value = new Choice(stringinput, number, new Text("true"), new Text("false"), new Text("null"));
             var ws = new Many(new Any(" \r\n\t"));
 
-            var array = ;
-            var obj = ;
+           // var array = ;
+           // var obj = ;
             pattern = value;
         }
 
