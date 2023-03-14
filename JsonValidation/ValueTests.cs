@@ -67,6 +67,15 @@ namespace JsonValidation
             Assert.Null(value.Match(null).RemainingText());
         }
 
+        [Fact]
+
+        public void ReturnEmptyForEmptyString()
+        {
+            var value = new Value();
+            Assert.True(value.Match(Quoted("")).Success());
+            Assert.Equal("", value.Match(Quoted("")).RemainingText());
+        }
+
         public static string Quoted(string text)
            => $"\"{text}\"";
     }
