@@ -8,18 +8,22 @@ namespace JsonValidation
 
         public Value()
         {
-            var stringinput = new String();
+            var stringInput = new String();
             var number = new Number();
-            var value = new Choice(stringinput, number, new Text("true"), new Text("false"), new Text("null"));
+            var value = new Choice(stringInput, number, new Text("true"), new Text("false"), new Text("null"));
             var ws = new Many(new Any(" \r\n\t"));
             var squareBrackets = new Many(new Any("[]"));
+            var brace = new Many(new Any("{}"));
             var element = new Sequence(ws, value, ws);
             var elements = new List(element, new Character(','));
+            var member = new Sequence(ws, stringInput, ws, new Character(':'), element);
+            var members = new List(member, new Character(','));
 
+            var obj = new Sequence(brace, members, brace);
             var array = new Sequence(squareBrackets, elements, squareBrackets);
-            // var obj = ;
+
+            value.Add(obj);
             value.Add(array);
-            //value.Add(obj);
             pattern = value;
         }
 

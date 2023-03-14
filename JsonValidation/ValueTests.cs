@@ -27,8 +27,17 @@ namespace JsonValidation
         public void ReturnTrueAndEmptyForValidArray()
         {
             var value = new Value();
-            Assert.True(value.Match(Quoted("[123]")).Success());
-            Assert.Equal("", value.Match("[123]").RemainingText());
+            Assert.True(value.Match("[ 123 ]").Success());
+            Assert.Equal("", value.Match("[ 123 ]").RemainingText());
+        }
+
+        [Fact]
+
+        public void ReturnTrueAndEmptyForValidObject()
+        {
+            var value = new Value();
+            Assert.True(value.Match("{ \"brand\" : \"nike\" }").Success());
+            Assert.Equal("", value.Match("{ \"brand\" : \"nike\" }").RemainingText());
         }
 
         public static string Quoted(string text)
