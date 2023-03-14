@@ -58,6 +58,15 @@ namespace JsonValidation
             Assert.Equal("", value.Match("[ 123, 256, 1, 100 ]").RemainingText());
         }
 
+        [Fact]
+
+        public void ReturnNullForNUllString()
+        {
+            var value = new Value();
+            Assert.False(value.Match(null).Success());
+            Assert.Null(value.Match(null).RemainingText());
+        }
+
         public static string Quoted(string text)
            => $"\"{text}\"";
     }
