@@ -22,6 +22,15 @@ namespace JsonValidation
             Assert.Equal("", value.Match("123").RemainingText());
         }
 
+        [Fact]
+
+        public void ReturnTrueAndEmptyForValidArray()
+        {
+            var value = new Value();
+            Assert.True(value.Match(Quoted("[123]")).Success());
+            Assert.Equal("", value.Match("[123]").RemainingText());
+        }
+
         public static string Quoted(string text)
            => $"\"{text}\"";
     }
