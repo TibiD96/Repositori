@@ -32,10 +32,6 @@ namespace JsonValidation
         public void Add(IPattern pattern)
         {
             Array.Resize(ref patterns, patterns.Length + 1);
-            for (int i = patterns.Length - 1; i > 0; i--)
-            {
-                patterns[i] = patterns[i - 1];
-            }
 
             patterns[patterns.Length - 1] = pattern;
         }
