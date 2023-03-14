@@ -17,11 +17,11 @@ namespace JsonValidation
             var sign = new Optional(new Any("+-"));
 
             var dot = new Character('.');
-            var fractionalPart = new Optional(new Sequence(dot, digits));
+            var fractional = new Optional(new Sequence(dot, digits));
 
             var exponentLetter = new Any("eE");
-            var exponentFinal = new Optional(new Sequence(exponentLetter,sign, digits));
-            this.pattern = new Sequence(integer, fractionalPart, exponentFinal);
+            var exponent = new Optional(new Sequence(exponentLetter,sign, digits));
+            this.pattern = new Sequence(integer, fractional, exponent);
         }
 
         public IMatch Match(string text)

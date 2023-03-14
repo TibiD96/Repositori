@@ -37,7 +37,7 @@ namespace JsonValidation
                 patterns[i] = patterns[i - 1];
             }
 
-            patterns[0] = pattern;
+            patterns[patterns.Length - 1] = pattern;
         }
     }
 }
