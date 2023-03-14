@@ -36,8 +36,8 @@ namespace JsonValidation
         public void ReturnTrueAndEmptyForValidObject()
         {
             var value = new Value();
-            Assert.True(value.Match("{ \"brand\" : \"nike\" }").Success());
-            Assert.Equal("", value.Match("{ \"brand\" : \"nike\" }").RemainingText());
+            Assert.True(value.Match("{ \"stores\" : 1000 }").Success());
+            Assert.Equal("", value.Match("{ \"stores\" : 1000 }").RemainingText());
         }
 
         public static string Quoted(string text)

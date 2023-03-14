@@ -14,13 +14,14 @@ namespace JsonValidation
             var ws = new Many(new Any(" \r\n\t"));
             var openSquareBracket = new Character('[');
             var closeSquareBracket = new Character(']');
-            var brace = new Many(new Any("{}"));
+            var openBrace = new Character('{');
+            var closeBrace = new Character('}');
             var element = new Sequence(ws, value, ws);
             var elements = new List(element, new Character(','));
             var member = new Sequence(ws, stringInput, ws, new Character(':'), element);
             var members = new List(member, new Character(','));
 
-            var obj = new Sequence(brace, members, brace);
+            var obj = new Sequence(openBrace, members, closeBrace);
             var array = new Sequence(openSquareBracket, elements, closeSquareBracket);
 
             value.Add(obj);
