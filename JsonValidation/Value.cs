@@ -21,12 +21,12 @@ namespace JsonValidation
             var member = new Sequence(ws, stringInput, ws, new Character(':'), element);
             var members = new List(member, new Character(','));
 
-            var obj = new Sequence(openBrace, members, closeBrace);
-            var array = new Sequence(openSquareBracket, elements, closeSquareBracket);
+            var obj = new Sequence(openBrace, ws, members, ws, closeBrace);
+            var array = new Sequence(openSquareBracket, ws, elements, ws, closeSquareBracket);
 
             value.Add(obj);
             value.Add(array);
-            pattern = value;
+            pattern = element;
         }
 
         public IMatch Match(string text)
