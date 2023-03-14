@@ -76,6 +76,27 @@ namespace JsonValidation
             Assert.Equal("", value.Match(Quoted("")).RemainingText());
         }
 
+        [Fact]
+
+        public void BooleanOperation()
+        {
+            var value = new Value();
+            Assert.True(value.Match("true").Success());
+            Assert.Equal("", value.Match("true").RemainingText());
+
+            Assert.True(value.Match("false").Success());
+            Assert.Equal("", value.Match("false").RemainingText());
+        }
+
+        [Fact]
+
+        public void Null()
+        {
+            var value = new Value();
+            Assert.True(value.Match("null").Success());
+            Assert.Equal("", value.Match("null").RemainingText());
+        }
+
         public static string Quoted(string text)
            => $"\"{text}\"";
     }
