@@ -4,7 +4,7 @@ namespace JsonValidation
 {
     class ReadFromFile
     {
-        static void Main(string[] args)
+        static void Main()
         {
             string text = System.IO.File.ReadAllText(@"E:\Modulul 2\JsonValidation\JSONText.txt");
             var value = new Value(); 
