@@ -18,7 +18,7 @@ namespace JsonValidation
             {
                 Console.WriteLine("Text from file is Json Valid");
             }
-            else if (args.Length > 0)
+            else
             {
                 Console.WriteLine("Text from file is not Json Valid");
             }
