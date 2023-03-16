@@ -4,15 +4,21 @@ namespace JsonValidation
 {
     class ReadFromFile
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            string text = System.IO.File.ReadAllText(@"E:\Modulul 2\JsonValidation\JSONText.txt");
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Add a input");
+                return;
+            }
+
+            string text = System.IO.File.ReadAllText(args[0]);
             var value = new Value(); 
-            if (value.Match(text).RemainingText() == "")
+            if (args.Length > 0 && value.Match(text).RemainingText() == "")
             {
                 Console.WriteLine("Text from file is Json Valid");
             }
-            else
+            else if (args.Length > 0)
             {
                 Console.WriteLine("Text from file is not Json Valid");
             }
