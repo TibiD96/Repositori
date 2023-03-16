@@ -14,7 +14,7 @@ namespace JsonValidation
 
             string text = System.IO.File.ReadAllText(args[0]);
             var value = new Value(); 
-            if (args.Length > 0 && value.Match(text).RemainingText() == "")
+            if (value.Match(text).RemainingText() == "")
             {
                 Console.WriteLine("Text from file is Json Valid");
             }
