@@ -15,9 +15,9 @@ namespace JsonValidation
             var openBrackets = new Character('(');
             var closeBrackets = new Character(')');
             var element = new Sequence(ws, value, ws);
-            var elements = new Choice(new List(element, sign), new List(sign, element));
+            var elements = new List(element, sign);
 
-            var ecuation = new Sequence(ws, elements, ws);
+            var ecuation = new Choice(new Sequence(openBrackets, ws, elements, ws, closeBrackets), new Sequence(ws, elements, ws));
 
             value.Add(ecuation);
             pattern = ecuation;
