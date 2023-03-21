@@ -19,16 +19,25 @@ namespace JsonValidation
         {
             var value = new Ecuation();
             Assert.True(value.Match("1").Success());
-            Assert.Equal("", value.Match("1 + 1").RemainingText());
+            Assert.Equal("", value.Match("1").RemainingText());
         }
 
         [Fact]
 
-        public void ReturnTrueAndEmptyForAMoreComplexOperationWithOneNumber()
+        public void ReturnTrueAndEmptyForAMoreComplexOperation()
         {
             var value = new Ecuation();
-            Assert.True(value.Match("1").Success());
-            Assert.Equal("", value.Match("1 + 1").RemainingText());
+            Assert.True(value.Match("1 + 1 + 1").Success());
+            Assert.Equal("", value.Match("1 + 1 + 1").RemainingText());
+        }
+
+        [Fact]
+
+        public void ReturnTrueAndEmptyForASimpelOperationWithBrackets()
+        {
+            var value = new Ecuation();
+            Assert.True(value.Match("(1 + 1)").Success());
+            Assert.Equal("", value.Match("(1 + 1)").RemainingText());
         }
     }
 }
