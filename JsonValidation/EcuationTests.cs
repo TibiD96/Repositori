@@ -8,7 +8,7 @@ namespace JsonValidation
 
         public void ReturnTrueAndEmptyForACorrectSimpleEcuation()
         {
-            var value = new Value();
+            var value = new Ecuation();
             Assert.True(value.Match("1 + 1").Success());
             Assert.Equal("", value.Match("1 + 1").RemainingText());
         }
