@@ -51,6 +51,15 @@ namespace JsonValidation
 
         [Fact]
 
+        public void ReturnFalseAndUnconsumedStringForAEcuationsWhichStartsWithOperator()
+        {
+            var value = new Ecuation();
+            Assert.True(value.Match("1 + 1 -").Success());
+            Assert.Equal("-", value.Match("1 + 1 -").RemainingText());
+        }
+
+        [Fact]
+
         public void ReturnTrueAndEmptyForASimpelOperationWithBrackets()
         {
             var value = new Ecuation();
