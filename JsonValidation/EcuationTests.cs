@@ -37,7 +37,16 @@ namespace JsonValidation
         {
             var value = new Ecuation();
             Assert.True(value.Match("1 + 1 + 1 / 2 - 5 * 4").Success());
-            Assert.Equal("", value.Match("1 + 1 + 1").RemainingText());
+            Assert.Equal("", value.Match("1 + 1 + 1 / 2 - 5 * 4").RemainingText());
+        }
+
+        [Fact]
+
+        public void ReturnFalseAndUnconsumedStringForAEcuationsWhichEndsWithOperator()
+        {
+            var value = new Ecuation();
+            Assert.True(value.Match("1 + 1 -").Success());
+            Assert.Equal("-", value.Match("1 + 1 -").RemainingText());
         }
 
         [Fact]
