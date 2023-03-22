@@ -18,7 +18,7 @@ namespace JsonValidation
         public void ReturnTrueAndEmptyForAOperationWithOneNumber()
         {
             var value = new Ecuation();
-            Assert.True(value.Match("1").Success());
+            Assert.True(value.Match(" 1 ").Success());
             Assert.Equal("", value.Match("1").RemainingText());
         }
 
@@ -36,8 +36,8 @@ namespace JsonValidation
         public void ReturnFalseAndReturnRemainingTextUncorrectEcuationNoBrackets()
         {
             var value = new Ecuation();
-            Assert.True(value.Match("1 + 1 -").Success());
-            Assert.Equal("-", value.Match("1 + 1 -").RemainingText());
+            Assert.True(value.Match("1 + 1 +").Success());
+            Assert.Equal(" +", value.Match("1 + 1 +").RemainingText());
         }
 
         [Fact]
@@ -45,8 +45,8 @@ namespace JsonValidation
         public void ReturnTrueAndEmptyForASimpelOperationWithBrackets()
         {
             var value = new Ecuation();
-            Assert.True(value.Match("(1 + 1)").Success());
-            Assert.Equal("", value.Match("(1 + 1)").RemainingText());
+            Assert.True(value.Match("( 1 + 1 )").Success());
+            Assert.Equal("", value.Match("( 1 + 1 )").RemainingText());
         }
 
         [Fact]
@@ -54,8 +54,8 @@ namespace JsonValidation
         public void ReturnTrueAndEmptyForEcuationWithOaneSetsOfBracketsAndComplexEcuation()
         {
             var value = new Ecuation();
-            Assert.True(value.Match("(1 + 1 + 1)").Success());
-            Assert.Equal("", value.Match("(1 + 1 + 1)").RemainingText());
+            Assert.True(value.Match("( 1 + 1 + 1 )").Success());
+            Assert.Equal("", value.Match("( 1 + 1 + 1 )").RemainingText());
         }
     }
 }

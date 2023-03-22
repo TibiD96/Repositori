@@ -14,13 +14,12 @@ namespace JsonValidation
             var sign = new Sequence(ws, new Any("+-*/"), ws);
             var openBrackets = new Character('(');
             var closeBrackets = new Character(')');
-            var element = new Sequence(ws, value, ws);
-            var elements = new List(element, sign);
+            var elements = new List(value, sign);
 
-            var ecuation = new Choice(new Sequence(openBrackets, ws, elements, ws, closeBrackets), new Sequence(ws, elements, ws));
+            var ecuation = new Sequence(openBrackets, ws, elements, ws, closeBrackets);
 
             value.Add(ecuation);
-            pattern = ecuation;
+            pattern = elements;
         }
 
         public IMatch Match(string text)
