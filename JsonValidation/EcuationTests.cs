@@ -88,7 +88,7 @@ namespace JsonValidation
             Assert.Equal("", value.Match("( 1 + 1 + 1 ) + ( ( 5 - 2 ) * 10 )").RemainingText());
 
             Assert.True(value.Match("( ( 5 + 10 ) )").Success());
-            Assert.Equal("( ( 5 + 10 ) )", value.Match("( ( 5 + 10 ) )").RemainingText());
+            Assert.Equal("", value.Match("( ( 5 + 10 ) )").RemainingText());
         }
 
         [Fact]
