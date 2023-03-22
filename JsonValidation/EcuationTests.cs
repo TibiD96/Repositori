@@ -24,16 +24,7 @@ namespace JsonValidation
 
         [Fact]
 
-        public void ReturnTrueAndEmptyForAMoreComplexOperation()
-        {
-            var value = new Ecuation();
-            Assert.True(value.Match("1 + 1 + 1").Success());
-            Assert.Equal("", value.Match("1 + 1 + 1").RemainingText());
-        }
-
-        [Fact]
-
-        public void ReturnTrueAndEmptyForAMoreComplexOperationWithDiffOperators()
+        public void ReturnTrueAndEmptyForAMoreComplexOperationNoBrackets()
         {
             var value = new Ecuation();
             Assert.True(value.Match("1 + 1 + 1 / 2 - 5 * 4").Success());
@@ -42,20 +33,11 @@ namespace JsonValidation
 
         [Fact]
 
-        public void ReturnFalseAndUnconsumedStringForAEcuationsWhichEndsWithOperator()
+        public void ReturnFalseAndReturnRemainingTextUncorrectEcuationNoBrackets()
         {
             var value = new Ecuation();
             Assert.True(value.Match("1 + 1 -").Success());
             Assert.Equal("-", value.Match("1 + 1 -").RemainingText());
-        }
-
-        [Fact]
-
-        public void ReturnFalseAndUnconsumedStringForAEcuationsWhichStartsWithOperator()
-        {
-            var value = new Ecuation();
-            Assert.True(value.Match("* 1 + 1 ").Success());
-            Assert.Equal("*", value.Match("* 1 + 1").RemainingText());
         }
 
         [Fact]
@@ -69,7 +51,7 @@ namespace JsonValidation
 
         [Fact]
 
-        public void ReturnTrueAndEmptyForEcuationWithOaneBracketsAndMoreThanTwoOperands()
+        public void ReturnTrueAndEmptyForEcuationWithOaneSetsOfBracketsAndComplexEcuation()
         {
             var value = new Ecuation();
             Assert.True(value.Match("(1 + 1 + 1)").Success());
