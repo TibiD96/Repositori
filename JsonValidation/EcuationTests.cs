@@ -45,7 +45,7 @@ namespace JsonValidation
         public void ReturnTrueAndEmptyForEcuationWithOaneBracketsAndMoreThanTwoOperands()
         {
             var value = new Ecuation();
-            Assert.True(value.Match("(1 + 1)").Success());
+            Assert.True(value.Match("(1 + 1 + 1)").Success());
             Assert.Equal("", value.Match("(1 + 1 + 1)").RemainingText());
         }
     }
