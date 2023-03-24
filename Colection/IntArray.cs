@@ -30,7 +30,7 @@ namespace CollectionData
 
         public void SetElement(int index, int element)
         {
-            // modifică valoarea elementului de la indexul dat
+            input[index] = element;
         }
 
         /*public bool Contains(int element)
