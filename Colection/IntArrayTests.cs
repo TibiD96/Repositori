@@ -30,5 +30,31 @@ namespace CollectionData
             input.SetElement(0, 1000);
             Assert.Equal(input.Element(0), correctValueAfterChanging);
         }
+
+        [Fact]
+
+        public void ReturnTrueIfElementIsInArray()
+        {
+            var input = new IntArray();
+            int numbertoCheck = 1000;
+            input.Add(5);
+            input.Add(10);
+            input.Add(1000);
+            input.Add(25);
+            Assert.True(input.Contains(numbertoCheck));
+        }
+
+        [Fact]
+
+        public void ReturnFalseIfElementIsNotInArray()
+        {
+            var input = new IntArray();
+            int numbertoCheck = 1000;
+            input.Add(5);
+            input.Add(10);
+            input.Add(30);
+            input.Add(25);
+            Assert.False(input.Contains(numbertoCheck));
+        }
     }
 }

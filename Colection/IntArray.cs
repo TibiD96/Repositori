@@ -33,12 +33,17 @@ namespace CollectionData
             input[index] = element;
         }
 
-        /*public bool Contains(int element)
+        public bool Contains(int element)
         {
-            // întoarce true dacă elementul dat există în șir
+            if (input.Contains(element))
+            {
+                return true;
+            }
+
+            return false;
         }
 
-        public int IndexOf(int element)
+        /*public int IndexOf(int element)
         {
             // întoarce indexul elementului sau -1 dacă elementul nu se
             // regăsește în șir
