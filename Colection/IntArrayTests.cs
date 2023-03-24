@@ -6,7 +6,7 @@ namespace CollectionData
     {
         [Fact]
 
-        public void ReturnNullForNullAndEmptyForEmpty()
+        public void AddElemetsInArrayPositioningItOnTheEnd()
         {
             var input = new IntArray();
             input.Add(5);
