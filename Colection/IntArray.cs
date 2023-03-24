@@ -28,12 +28,12 @@ namespace CollectionData
             return input[index];
         }
 
-        /*public void SetElement(int index, int element)
+        public void SetElement(int index, int element)
         {
             // modifică valoarea elementului de la indexul dat
         }
 
-        public bool Contains(int element)
+        /*public bool Contains(int element)
         {
             // întoarce true dacă elementul dat există în șir
         }
