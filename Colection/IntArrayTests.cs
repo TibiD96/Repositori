@@ -56,5 +56,18 @@ namespace CollectionData
             input.Add(25);
             Assert.False(input.Contains(numbertoCheck));
         }
+
+        [Fact]
+
+        public void ReturnTheIndexOfGivenNumberElseReturnMinusOne()
+        {
+            var input = new IntArray();
+            input.Add(5);
+            input.Add(10);
+            input.Add(40);
+            input.Add(25);
+            Assert.Equal(2, input.IndexOf(40));
+            Assert.Equal(-1, input.IndexOf(100));
+        }
     }
 }

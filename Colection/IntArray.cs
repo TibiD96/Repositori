@@ -43,11 +43,18 @@ namespace CollectionData
             return false;
         }
 
-        /*public int IndexOf(int element)
+        public int IndexOf(int element)
         {
-            // întoarce indexul elementului sau -1 dacă elementul nu se
-            // regăsește în șir
-        } */
+            for(int i = 0; i < input.Length; i++)
+            {
+                if (input[i] == element)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
 
         public void Insert(int index, int element)
         {
