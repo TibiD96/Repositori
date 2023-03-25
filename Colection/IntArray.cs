@@ -58,7 +58,6 @@ namespace CollectionData
 
         public void Insert(int index, int element)
         {
-            // adaugă un nou element pe poziția dată
             Array.Resize<int>(ref input, input.Length + 1);
             for(int i = input.Length - 1; i > index; i--)
             {
