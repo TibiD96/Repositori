@@ -59,6 +59,9 @@ namespace CollectionData
         public void Insert(int index, int element)
         {
             // adaugă un nou element pe poziția dată
+            Array.Resize<int>(ref input, input.Length + 1);
+            input[^1] = element;
+
         }
 
         public void Clear()

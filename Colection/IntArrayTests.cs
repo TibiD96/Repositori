@@ -69,5 +69,19 @@ namespace CollectionData
             Assert.Equal(2, input.IndexOf(40));
             Assert.Equal(-1, input.IndexOf(100));
         }
+
+        [Fact]
+
+        public void InsertTheNumberToTheSpecifiedPosition()
+        {
+            var input = new IntArray();
+            input.Add(0);
+            input.Add(1);
+            input.Add(2);
+            input.Add(3);
+            input.Insert(2, 3);
+            Assert.Equal(3, input.Element(2));
+            Assert.Equal(2, input.Element(3));
+        }
     }
 }
