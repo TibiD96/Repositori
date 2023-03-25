@@ -60,7 +60,11 @@ namespace CollectionData
         {
             // adaugă un nou element pe poziția dată
             Array.Resize<int>(ref input, input.Length + 1);
-            input[^1] = element;
+            for(int i = input.Length - 1; i > index; i--)
+            {
+                SetElement(i, input[i - 1]);
+            }
+            SetElement(index, element);
 
         }
 
