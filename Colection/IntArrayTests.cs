@@ -83,5 +83,18 @@ namespace CollectionData
             Assert.Equal(3, input.Element(2));
             Assert.Equal(2, input.Element(3));
         }
+
+        [Fact]
+
+        public void DeleteAllElementsFfromArray()
+        {
+            var input = new IntArray();
+            input.Add(0);
+            input.Add(1);
+            input.Add(2);
+            input.Add(3);
+            input.Clear();
+            Assert.Equal(0, input.Count());
+        }
     }
 }
