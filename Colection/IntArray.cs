@@ -69,7 +69,6 @@ namespace CollectionData
 
         public void Clear()
         {
-            // șterge toate elementele din șir
             Array.Resize<int>(ref input, 0);
         }
 
