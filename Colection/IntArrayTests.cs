@@ -119,7 +119,7 @@ namespace CollectionData
         public void DeleteTheElementFromTheGivenIndex()
         {
             var input = new IntArray();
-            int givenIndex = 2;
+            int givenIndex = 3;
             input.Add(0);
             input.Add(1);
             input.Add(3);
@@ -128,7 +128,7 @@ namespace CollectionData
             input.Add(5);
             input.RemoveAt(givenIndex);
             Assert.Equal(5, input.Count());
-            Assert.Equal(9, input.Element(2));
+            Assert.Equal(3, input.Element(3));
         }
     }
 }

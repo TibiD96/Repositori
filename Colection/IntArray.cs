@@ -92,7 +92,7 @@ namespace CollectionData
 
         public void RemoveAt(int index)
         {
-            // șterge elementul de pe poziția dată
+            MoveElements(index, ref input);
         }
 
     }
