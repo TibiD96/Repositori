@@ -96,5 +96,22 @@ namespace CollectionData
             input.Clear();
             Assert.Equal(0, input.Count());
         }
+
+        [Fact]
+
+        public void DeleteTheFirstAppearenceOfTheGivenElement()
+        {
+            var input = new IntArray();
+            int givenElelement = 3;
+            input.Add(0);
+            input.Add(1);
+            input.Add(3);
+            input.Add(9);
+            input.Add(3);
+            input.Add(5);
+            input.Remove(givenElelement);
+            Assert.Equal(5, input.Count());
+            Assert.Equal(9, input.Element(2));
+        }
     }
 }
