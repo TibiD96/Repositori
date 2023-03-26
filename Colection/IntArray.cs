@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace CollectionData
 {
@@ -63,6 +64,7 @@ namespace CollectionData
             {
                 SetElement(i, input[i - 1]);
             }
+
             SetElement(index, element);
 
         }
@@ -74,7 +76,12 @@ namespace CollectionData
 
         public void Remove(int element)
         {
-            // șterge prima apariție a elementului din șir	
+            int indexOfElementToBeRemoved = Array.IndexOf(input, element);
+            for (int i = indexOfElementToBeRemoved; i < input.Length - 1; i++)
+            {
+                SetElement(i, input[i + 1]);
+            }
+            Array.Resize<int>(ref input, input.Length - 1);
         }
 
         public void RemoveAt(int index)
