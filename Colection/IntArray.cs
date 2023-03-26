@@ -74,13 +74,20 @@ namespace CollectionData
             Array.Resize<int>(ref input, 0);
         }
 
-        public void Remove(int element)
+        private int[] MoveElements(int index, ref int[] input)
         {
-            int indexOfElementToBeRemoved = Array.IndexOf(input, element);
-            for (int i = indexOfElementToBeRemoved; i < input.Length - 1; i++)
+            for (int i = index; i < input.Length - 1; i++)
             {
                 SetElement(i, input[i + 1]);
             }
+
+            return input;
+        }
+
+        public void Remove(int element)
+        {
+            int indexOfElementToBeRemoved = Array.IndexOf(input, element);
+            MoveElements(indexOfElementToBeRemoved, ref input);
             Array.Resize<int>(ref input, input.Length - 1);
         }
 
