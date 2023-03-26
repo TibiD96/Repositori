@@ -113,5 +113,22 @@ namespace CollectionData
             Assert.Equal(5, input.Count());
             Assert.Equal(9, input.Element(2));
         }
+
+        [Fact]
+
+        public void DeleteTheElementFromTheGivenIndex()
+        {
+            var input = new IntArray();
+            int givenIndex = 2;
+            input.Add(0);
+            input.Add(1);
+            input.Add(3);
+            input.Add(9);
+            input.Add(3);
+            input.Add(5);
+            input.RemoveAt(givenIndex);
+            Assert.Equal(5, input.Count());
+            Assert.Equal(9, input.Element(2));
+        }
     }
 }
