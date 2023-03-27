@@ -54,7 +54,7 @@ namespace CollectionData
         public void Insert(int index, int element)
         {
             Resizing();
-            ShiftLeft(index);
+            ShiftRight(index);
             SetElement(index, element);
             position++;
         }
@@ -67,18 +67,19 @@ namespace CollectionData
         public void Remove(int element)
         {
             int indexOfElementToBeRemoved = IndexOf(element);
-            RemoveAt(indexOfElementToBeRemoved);
+            ShiftLeft(indexOfElementToBeRemoved);
+            position--;
         }
 
         public void RemoveAt(int index)
         {
-            ShiftRight(index);
+            ShiftLeft(index);
             position--;
         }
 
         private void ShiftLeft(int index)
         {
-            for (int i = index; i < position - 1; i++)
+            for (int i = index; i <= position - 1; i++)
             {
                 SetElement(i, input[i + 1]);
             }
@@ -86,9 +87,9 @@ namespace CollectionData
 
         private void ShiftRight(int index)
         {
-            for (int i = position - 1; i >= index; i--)
+            for (int i = position - 1; i >= index ; i--)
             {
-                SetElement(i, input[i - 1]);
+                SetElement(input[i + 1], i);
             }
         }
 
