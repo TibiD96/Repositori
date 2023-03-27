@@ -8,7 +8,28 @@ namespace CollectionData
 
         public IntArray()
         {
-            this.input = new int[0];
+            this.input = new int[4];
+        }
+
+        private void ShiftRight(int index)
+        {
+            for (int i = index; i < input.Length - 1; i++)
+            {
+                SetElement(i, input[i + 1]);
+            }
+        }
+
+        private void ShiftLeft(int index)
+        {
+            for (int i = input.Length - 1; i > index; i--)
+            {
+                SetElement(i, input[i - 1]);
+            }
+        }
+
+        private void ShortenTheArray(ref int[] input)
+        {
+            Array.Resize(ref input, input.Length - 1);
         }
 
         public void Add(int element)
@@ -53,11 +74,7 @@ namespace CollectionData
         public void Insert(int index, int element)
         {
             Array.Resize<int>(ref input, input.Length + 1);
-            for(int i = input.Length - 1; i > index; i--)
-            {
-                SetElement(i, input[i - 1]);
-            }
-
+            ShiftLeft(index);
             SetElement(index, element);
         }
 
@@ -66,29 +83,16 @@ namespace CollectionData
             Array.Resize(ref input, 0);
         }
 
-        private void Shift(int index)
-        {
-            for (int i = index; i < input.Length - 1; i++)
-            {
-                SetElement(i, input[i + 1]);
-            }
-        }
-
-        private void ShortenTheArray(ref int[] input)
-        {
-            Array.Resize(ref input, input.Length - 1);
-        }
-
         public void Remove(int element)
         {
             int indexOfElementToBeRemoved = Array.IndexOf(input, element);
-            Shift(indexOfElementToBeRemoved);
+            ShiftRight(indexOfElementToBeRemoved);
             ShortenTheArray(ref input);
         }
 
         public void RemoveAt(int index)
         {
-            Shift(index);
+            ShiftRight(index);
             ShortenTheArray(ref input);
         }
     }

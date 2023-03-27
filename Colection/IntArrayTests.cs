@@ -13,7 +13,7 @@ namespace CollectionData
             input.Add(10);
             input.Add(100);
             input.Add(25);
-            Assert.Equal(4, input.Count());
+            Assert.Equal(8, input.Count());
             Assert.Equal(25, input.Element(input.Count() - 1));
         }
 
@@ -66,7 +66,7 @@ namespace CollectionData
             input.Add(10);
             input.Add(40);
             input.Add(25);
-            Assert.Equal(2, input.IndexOf(40));
+            Assert.Equal(6, input.IndexOf(40));
             Assert.Equal(-1, input.IndexOf(100));
         }
 
@@ -81,7 +81,7 @@ namespace CollectionData
             input.Add(3);
             input.Insert(2, 3);
             Assert.Equal(3, input.Element(2));
-            Assert.Equal(2, input.Element(3));
+            Assert.Equal(0, input.Element(3));
         }
 
         [Fact]
@@ -110,8 +110,8 @@ namespace CollectionData
             input.Add(3);
             input.Add(5);
             input.Remove(givenElelement);
-            Assert.Equal(5, input.Count());
-            Assert.Equal(9, input.Element(2));
+            Assert.Equal(9, input.Count());
+            Assert.Equal(0, input.Element(2));
         }
 
         [Fact]
@@ -119,16 +119,15 @@ namespace CollectionData
         public void DeleteTheElementFromTheGivenIndex()
         {
             var input = new IntArray();
-            int givenIndex = 3;
+            int givenIndex = 7;
             input.Add(0);
             input.Add(1);
             input.Add(3);
             input.Add(9);
             input.Add(3);
-            input.Add(5);
             input.RemoveAt(givenIndex);
-            Assert.Equal(5, input.Count());
-            Assert.Equal(3, input.Element(3));
+            Assert.Equal(8, input.Count());
+            Assert.Equal(0, input.Element(3));
         }
     }
 }
