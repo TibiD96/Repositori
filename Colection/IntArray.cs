@@ -35,7 +35,7 @@ namespace CollectionData
 
         public bool Contains(int element)
         {
-            return input.Contains(element);
+            return IndexOf(element) < position && IndexOf(element)  >= 0;
         }
 
         public int IndexOf(int element)
