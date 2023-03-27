@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 
 namespace CollectionData
 {
@@ -16,7 +15,6 @@ namespace CollectionData
         {
             Array.Resize<int>(ref input, input.Length + 1);
             input[^1] = element;
-
         }
 
         public int Count()
@@ -36,12 +34,7 @@ namespace CollectionData
 
         public bool Contains(int element)
         {
-            if (input.Contains(element))
-            {
-                return true;
-            }
-
-            return false;
+            return input.Contains(element);
         }
 
         public int IndexOf(int element)
@@ -66,35 +59,37 @@ namespace CollectionData
             }
 
             SetElement(index, element);
-
         }
 
         public void Clear()
         {
-            Array.Resize<int>(ref input, 0);
+            Array.Resize(ref input, 0);
         }
 
-        private void MoveElements(int index, ref int[] input)
+        private void Shift(int index)
         {
             for (int i = index; i < input.Length - 1; i++)
             {
                 SetElement(i, input[i + 1]);
             }
+        }
 
-            Array.Resize<int>(ref input, input.Length - 1);
+        private void ShortenTheArray(ref int[] input)
+        {
+            Array.Resize(ref input, input.Length - 1);
         }
 
         public void Remove(int element)
         {
             int indexOfElementToBeRemoved = Array.IndexOf(input, element);
-            MoveElements(indexOfElementToBeRemoved, ref input);
+            Shift(indexOfElementToBeRemoved);
+            ShortenTheArray(ref input);
         }
 
         public void RemoveAt(int index)
         {
-            MoveElements(index, ref input);
+            Shift(index);
+            ShortenTheArray(ref input);
         }
-
     }
-
 }
