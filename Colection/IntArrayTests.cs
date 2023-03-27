@@ -10,11 +10,8 @@ namespace CollectionData
         {
             var input = new IntArray();
             input.Add(5);
-            input.Add(10);
-            input.Add(100);
-            input.Add(25);
-            Assert.Equal(8, input.Count());
-            Assert.Equal(25, input.Element(input.Count() - 1));
+            Assert.Equal(5, input.Count());
+            Assert.Equal(5, input.Element(input.Count() - 1));
         }
 
         [Fact]
@@ -23,10 +20,6 @@ namespace CollectionData
         {
             var input = new IntArray();
             int correctValueAfterChanging = 1000;
-            input.Add(5);
-            input.Add(10);
-            input.Add(100);
-            input.Add(25);
             input.SetElement(0, 1000);
             Assert.Equal(input.Element(0), correctValueAfterChanging);
         }

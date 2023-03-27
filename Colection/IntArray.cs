@@ -27,7 +27,7 @@ namespace CollectionData
             }
         }
 
-        private void ShortenTheArray(ref int[] input)
+        private void Resizing(ref int[] input)
         {
             Array.Resize(ref input, input.Length - 1);
         }
@@ -87,13 +87,13 @@ namespace CollectionData
         {
             int indexOfElementToBeRemoved = Array.IndexOf(input, element);
             ShiftRight(indexOfElementToBeRemoved);
-            ShortenTheArray(ref input);
+            Resizing(ref input);
         }
 
         public void RemoveAt(int index)
         {
             ShiftRight(index);
-            ShortenTheArray(ref input);
+            Resizing(ref input);
         }
     }
 }
