@@ -5,42 +5,22 @@ namespace CollectionData
     class IntArray
     {
         private int[] input;
+        private int position = 0;
 
         public IntArray()
         {
             this.input = new int[4];
         }
 
-        private void ShiftRight(int index)
-        {
-            for (int i = index; i < input.Length - 1; i++)
-            {
-                SetElement(i, input[i + 1]);
-            }
-        }
-
-        private void ShiftLeft(int index)
-        {
-            for (int i = input.Length - 1; i > index; i--)
-            {
-                SetElement(i, input[i - 1]);
-            }
-        }
-
-        private void Resizing(ref int[] input)
-        {
-            Array.Resize(ref input, input.Length - 1);
-        }
-
         public void Add(int element)
         {
-            Array.Resize<int>(ref input, input.Length + 1);
-            input[^1] = element;
+            Resizing();
+            input[position++] = element;
         }
 
         public int Count()
         {
-            return input.Length;
+            return position;
         }
 
         public int Element(int index)
@@ -73,27 +53,51 @@ namespace CollectionData
 
         public void Insert(int index, int element)
         {
-            Array.Resize<int>(ref input, input.Length + 1);
+            Resizing();
             ShiftLeft(index);
             SetElement(index, element);
+            position++;
         }
 
         public void Clear()
         {
-            Array.Resize(ref input, 0);
+            position = 0;
         }
 
         public void Remove(int element)
         {
-            int indexOfElementToBeRemoved = Array.IndexOf(input, element);
-            ShiftRight(indexOfElementToBeRemoved);
-            Resizing(ref input);
+            int indexOfElementToBeRemoved = IndexOf(element);
+            RemoveAt(indexOfElementToBeRemoved);
         }
 
         public void RemoveAt(int index)
         {
             ShiftRight(index);
-            Resizing(ref input);
+            position--;
+        }
+
+        private void ShiftLeft(int index)
+        {
+            for (int i = index; i < position - 1; i++)
+            {
+                SetElement(i, input[i + 1]);
+            }
+        }
+
+        private void ShiftRight(int index)
+        {
+            for (int i = position - 1; i >= index; i--)
+            {
+                SetElement(i, input[i - 1]);
+            }
+        }
+
+        private void Resizing()
+        {
+            if (position == input.Length)
+            {
+                Array.Resize(ref input, input.Length * 2);
+            }
         }
     }
 }
