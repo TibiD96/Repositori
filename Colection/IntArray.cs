@@ -67,8 +67,7 @@ namespace CollectionData
         public void Remove(int element)
         {
             int indexOfElementToBeRemoved = IndexOf(element);
-            ShiftLeft(indexOfElementToBeRemoved);
-            position--;
+            RemoveAt(indexOfElementToBeRemoved);
         }
 
         public void RemoveAt(int index)
