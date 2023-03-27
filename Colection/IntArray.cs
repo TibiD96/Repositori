@@ -40,7 +40,7 @@ namespace CollectionData
 
         public int IndexOf(int element)
         {
-            for(int i = 0; i < input.Length; i++)
+            for(int i = 0; i < position; i++)
             {
                 if (input[i] == element)
                 {
