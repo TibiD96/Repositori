@@ -10,8 +10,8 @@ namespace CollectionData
         {
             var input = new IntArray();
             input.Add(5);
-            Assert.Equal(1, input.Count());
-            Assert.Equal(5, input.Element(input.Count() - 1));
+            Assert.Equal(1, input.Count);
+            Assert.Equal(5, input.Element(input.Count - 1));
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace CollectionData
             input.Add(2);
             input.Add(3);
             input.Clear();
-            Assert.Equal(0, input.Count());
+            Assert.Equal(0, input.Count);
         }
 
         [Fact]
@@ -103,7 +103,7 @@ namespace CollectionData
             input.Add(3);
             input.Add(5);
             input.Remove(givenElelement);
-            Assert.Equal(5, input.Count());
+            Assert.Equal(5, input.Count);
             Assert.Equal(9, input.Element(2));
         }
 
@@ -119,7 +119,7 @@ namespace CollectionData
             input.Add(9);
             input.Add(3);
             input.RemoveAt(givenIndex);
-            Assert.Equal(4, input.Count());
+            Assert.Equal(4, input.Count);
             Assert.Equal(3, input.Element(3));
 
         }

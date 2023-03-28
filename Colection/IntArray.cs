@@ -18,10 +18,7 @@ namespace CollectionData
             input[count++] = element;
         }
 
-        public int Count()
-        {
-            return count;
-        }
+        public int Count { get; private set; }
 
         public int Element(int index)
         {
