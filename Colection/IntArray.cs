@@ -5,7 +5,7 @@ namespace CollectionData
     class IntArray
     {
         private int[] input;
-        private int position = 0;
+        private int count = 0;
 
         public IntArray()
         {
@@ -15,12 +15,12 @@ namespace CollectionData
         public void Add(int element)
         {
             Resizing();
-            input[position++] = element;
+            input[count++] = element;
         }
 
         public int Count()
         {
-            return position;
+            return count;
         }
 
         public int Element(int index)
@@ -35,12 +35,12 @@ namespace CollectionData
 
         public bool Contains(int element)
         {
-            return IndexOf(element) < position && IndexOf(element)  >= 0;
+            return IndexOf(element) > -1;
         }
 
         public int IndexOf(int element)
         {
-            for(int i = 0; i < position; i++)
+            for(int i = 0; i < count; i++)
             {
                 if (input[i] == element)
                 {
@@ -56,12 +56,12 @@ namespace CollectionData
             Resizing();
             ShiftRight(index);
             SetElement(index, element);
-            position++;
+            count++;
         }
 
         public void Clear()
         {
-            position = 0;
+            count = 0;
         }
 
         public void Remove(int element)
@@ -73,12 +73,12 @@ namespace CollectionData
         public void RemoveAt(int index)
         {
             ShiftLeft(index);
-            position--;
+            count--;
         }
 
         private void ShiftLeft(int index)
         {
-            for (int i = index; i <= position - 1; i++)
+            for (int i = index; i <= count - 1; i++)
             {
                 SetElement(i, input[i + 1]);
             }
@@ -86,7 +86,7 @@ namespace CollectionData
 
         private void ShiftRight(int index)
         {
-            for (int i = position - 1; i >= index ; i--)
+            for (int i = count - 1; i >= index ; i--)
             {
                 SetElement(input[i + 1], i);
             }
@@ -94,7 +94,7 @@ namespace CollectionData
 
         private void Resizing()
         {
-            if (position == input.Length)
+            if (count == input.Length)
             {
                 Array.Resize(ref input, input.Length * 2);
             }
