@@ -11,7 +11,7 @@ namespace CollectionData
             var input = new IntArray();
             input.Add(5);
             Assert.Equal(1, input.Count);
-            Assert.Equal(5, input.Element(input.Count - 1));
+            Assert.Equal(5, input[input.Count - 1]);
         }
 
         [Fact]
@@ -20,8 +20,8 @@ namespace CollectionData
         {
             var input = new IntArray();
             int correctValueAfterChanging = 1000;
-            input.SetElement(0, 1000);
-            Assert.Equal(input.Element(0), correctValueAfterChanging);
+            input[0] = 1000;
+            Assert.Equal(input[0], correctValueAfterChanging);
         }
 
         [Fact]
@@ -73,8 +73,8 @@ namespace CollectionData
             input.Add(2);
             input.Add(3);
             input.Insert(2, 3);
-            Assert.Equal(3, input.Element(2));
-            Assert.Equal(2, input.Element(3));
+            Assert.Equal(3, input[2]);
+            Assert.Equal(2, input[3]);
         }
 
         [Fact]
@@ -104,7 +104,7 @@ namespace CollectionData
             input.Add(5);
             input.Remove(givenElelement);
             Assert.Equal(5, input.Count);
-            Assert.Equal(9, input.Element(2));
+            Assert.Equal(9, input[2]);
         }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace CollectionData
             input.Add(3);
             input.RemoveAt(givenIndex);
             Assert.Equal(4, input.Count);
-            Assert.Equal(3, input.Element(3));
+            Assert.Equal(3, input[3]);
 
         }
     }
