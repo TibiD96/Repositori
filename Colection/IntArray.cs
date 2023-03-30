@@ -13,7 +13,7 @@ namespace CollectionData
 
         public int Count { get; private set; }
 
-        public int this[int index]
+        public virtual int this[int index]
         {
             get => input[index];
             set => input[index] = value;
