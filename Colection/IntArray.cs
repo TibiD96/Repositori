@@ -2,9 +2,9 @@
 
 namespace CollectionData
 {
-    class IntArray
+    public class IntArray
     {
-        private int[] input;
+        protected int[] input;
 
         public IntArray()
         {
@@ -19,7 +19,7 @@ namespace CollectionData
             set => input[index] = value;
         }
 
-        public void Add(int element)
+        public virtual void Add(int element)
         {
             Resizing();
             input[Count++] = element;

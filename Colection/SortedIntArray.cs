@@ -20,11 +20,19 @@ namespace CollectionData
             bool sorted = true;
             while(sorted)
             {
+                int length = Count;
                 sorted = false;
-                for (int i = 0; i < Count - 1; i++)
+                for (int i = 0; i < length - 1; i++)
                 {
-                    if (base.input[i])
+                    if (base.input[i] > input[i + 1])
+                    {
+                        int pivot = input[i];
+                        input[i] = input[i + 1];
+                        input[i + 1] = pivot;
+                        sorted = true;
+                    }
                 }
+                length--;
             }
         }
     }
