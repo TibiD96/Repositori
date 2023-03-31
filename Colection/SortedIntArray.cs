@@ -15,7 +15,19 @@ namespace CollectionData
             Sorting();
         }
 
-        public void Sorting()
+        public void Insert(int index, int element)
+        {
+            base.Insert(index, element);
+            Sorting();
+        }
+
+        public void Remove(int element)
+        {
+            base.Remove(element);
+            Sorting();
+        }
+
+        private void Sorting()
         {
             bool sorted = true;
             while(sorted)
@@ -24,11 +36,11 @@ namespace CollectionData
                 sorted = false;
                 for (int i = 0; i < length - 1; i++)
                 {
-                    if (base.input[i] > input[i + 1])
+                    if (base[i] > base[i + 1])
                     {
-                        int pivot = input[i];
-                        input[i] = input[i + 1];
-                        input[i + 1] = pivot;
+                        int pivot = base[i];
+                        base[i] = base[i + 1];
+                        base[i + 1] = pivot;
                         sorted = true;
                     }
                 }

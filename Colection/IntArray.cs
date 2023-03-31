@@ -4,7 +4,7 @@ namespace CollectionData
 {
     public class IntArray
     {
-        protected int[] input;
+        private int[] input;
 
         public IntArray()
         {
