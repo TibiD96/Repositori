@@ -55,7 +55,6 @@ namespace CollectionData
                         sorted = true;
                     }
                 }
-                length--;
             }
         }
     }
