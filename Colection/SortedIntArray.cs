@@ -24,7 +24,6 @@ namespace CollectionData
         public void Remove(int element)
         {
             base.Remove(element);
-            Sorting();
         }
 
         private void Sorting()
