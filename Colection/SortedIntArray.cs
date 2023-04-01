@@ -30,7 +30,12 @@ namespace CollectionData
 
         private bool CheckTheElementToNotBreakTheSorting(int index, int element)
         {
-            if (base[index] > element && base[index - 1] < element)
+            if (index == 0 && base[index] > element)
+            {
+                return true;
+            }
+
+            if (base[index] >= element && base[index - 1] < element)
             {
                 return true;
             }

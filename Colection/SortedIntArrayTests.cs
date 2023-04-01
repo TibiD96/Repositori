@@ -70,7 +70,7 @@ namespace CollectionData
             input.Add(10);
             input.Insert(0, 3);
             string correctOrder = input[0].ToString() + input[1].ToString() + input[2].ToString() + input[3].ToString() + input[4].ToString() +input[5].ToString();
-            Assert.Equal("510501002000", correctOrder);
+            Assert.Equal("3510501002000", correctOrder);
         }
 
         [Fact]
