@@ -17,13 +17,25 @@ namespace CollectionData
 
         public void Insert(int index, int element)
         {
-            base.Insert(index, element);
-            Sorting();
+            if (CheckTheElementToNotBreakTheSorting(index, element))
+            {
+                base.Insert(index, element);
+            }
         }
 
         public void Remove(int element)
         {
             base.Remove(element);
+        }
+
+        private bool CheckTheElementToNotBreakTheSorting(int index, int element)
+        {
+            if (base[index] > element && base[index - 1] < element)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private void Sorting()

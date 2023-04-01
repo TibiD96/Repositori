@@ -31,7 +31,7 @@ namespace CollectionData
 
         [Fact]
 
-        public void CorrectliInsertAndSort()
+        public void CorrectInsertAndSortIsNotBroken()
         {
             var input = new SortedIntArray();
             input.Add(5);
@@ -54,7 +54,7 @@ namespace CollectionData
             input.Add(50);
             input.Add(10);
             input.Insert(3, 500);
-            string correctOrder = input[0].ToString() + input[1].ToString() + input[2].ToString() + input[3].ToString() + input[4].ToString() + input[5].ToString();
+            string correctOrder = input[0].ToString() + input[1].ToString() + input[2].ToString() + input[3].ToString() + input[4].ToString();
             Assert.Equal("510501002000", correctOrder);
         }
 
