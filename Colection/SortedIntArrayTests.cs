@@ -130,7 +130,7 @@ namespace CollectionData
             input.Add(4000);
             input[0] = 3;
             string correctOrder = input[0].ToString() + input[1].ToString() + input[2].ToString() + input[3].ToString() + input[4].ToString();
-            Assert.Equal("51050020004000", correctOrder);
+            Assert.Equal("31050020004000", correctOrder);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Linq;
 
 namespace CollectionData
 {
@@ -13,6 +14,16 @@ namespace CollectionData
         {
             base.Add(element);
             Sorting();
+        }
+        public override int this[int index]
+        {
+            set
+            {
+                if (CheckTheElementToNotBreakTheSorting(index, value))
+                {
+                    base[index] = value;
+                }
+            }
         }
 
         public override void Insert(int index, int element)
