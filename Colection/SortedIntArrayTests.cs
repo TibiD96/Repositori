@@ -60,6 +60,21 @@ namespace CollectionData
 
         [Fact]
 
+        public void DontInsertOnFirstPositionIfTheSortIsBroken()
+        {
+            var input = new SortedIntArray();
+            input.Add(5);
+            input.Add(2000);
+            input.Add(100);
+            input.Add(50);
+            input.Add(10);
+            input.Insert(0, 500);
+            string correctOrder = input[0].ToString() + input[1].ToString() + input[2].ToString() + input[3].ToString() + input[4].ToString();
+            Assert.Equal("510501002000", correctOrder);
+        }
+
+        [Fact]
+
         public void InsertOnFirstPosition()
         {
             var input = new SortedIntArray();
@@ -125,12 +140,12 @@ namespace CollectionData
             var input = new SortedIntArray();
             input.Add(5);
             input.Add(2000);
-            input.Add(10);
+            input.Add(6);
             input.Add(500);
             input.Add(4000);
-            input[0] = 3;
+            input[0] = 8;
             string correctOrder = input[0].ToString() + input[1].ToString() + input[2].ToString() + input[3].ToString() + input[4].ToString();
-            Assert.Equal("31050020004000", correctOrder);
+            Assert.Equal("5650020004000", correctOrder);
         }
     }
 }

@@ -17,8 +17,13 @@ namespace CollectionData
         }
         public override int this[int index]
         {
-            set
+            get
             {
+                return base[index];
+            }
+
+            set
+             {
                 if (CheckTheElementToNotBreakTheSorting(index, value))
                 {
                     base[index] = value;
@@ -37,7 +42,7 @@ namespace CollectionData
 
         private bool CheckTheElementToNotBreakTheSorting(int index, int element)
         {
-            if (index == 0 && base[index] > element || base[index - 1] < element && base[index] >= element)
+            if (index == 0 && base[index] > element || index != 0 && base[index - 1] < element && base[index] >= element)
             {
                 return true;
             }
