@@ -15,7 +15,7 @@ namespace CollectionData
             Sorting();
         }
 
-        public void Insert(int index, int element)
+        public override void Insert(int index, int element)
         {
             if (CheckTheElementToNotBreakTheSorting(index, element))
             {
@@ -23,10 +23,6 @@ namespace CollectionData
             }
         }
 
-        public void Remove(int element)
-        {
-            base.Remove(element);
-        }
 
         private bool CheckTheElementToNotBreakTheSorting(int index, int element)
         {

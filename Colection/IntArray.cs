@@ -43,7 +43,7 @@ namespace CollectionData
             return -1;
         }
 
-        public void Insert(int index, int element)
+        public virtual void Insert(int index, int element)
         {
             Resizing();
             ShiftRight(index);
