@@ -9,7 +9,7 @@ namespace CollectionData
         {
         }
 
-        public void Add(int element)
+        public override void Add(int element)
         {
             base.Add(element);
             Sorting();
