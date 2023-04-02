@@ -102,5 +102,35 @@ namespace CollectionData
             string correctOrder = input[0].ToString() + input[1].ToString() + input[2].ToString() + input[3].ToString() + input[4].ToString();
             Assert.Equal("51050020004000", correctOrder);
         }
+
+        [Fact]
+
+        public void CanModifyAElementIfSortingIsNotAffected()
+        {
+            var input = new SortedIntArray();
+            input.Add(5);
+            input.Add(2000);
+            input.Add(10);
+            input.Add(500);
+            input.Add(4000);
+            input[0] = 3;
+            string correctOrder = input[0].ToString() + input[1].ToString() + input[2].ToString() + input[3].ToString() + input[4].ToString();
+            Assert.Equal("31050020004000", correctOrder);
+        }
+
+        [Fact]
+
+        public void CantModifyAElementIfSortingIsAffected()
+        {
+            var input = new SortedIntArray();
+            input.Add(5);
+            input.Add(2000);
+            input.Add(10);
+            input.Add(500);
+            input.Add(4000);
+            input[0] = 3;
+            string correctOrder = input[0].ToString() + input[1].ToString() + input[2].ToString() + input[3].ToString() + input[4].ToString();
+            Assert.Equal("51050020004000", correctOrder);
+        }
     }
 }
