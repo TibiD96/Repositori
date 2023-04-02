@@ -17,11 +17,6 @@ namespace CollectionData
         }
         public override int this[int index]
         {
-            get
-            {
-                return base[index];
-            }
-
             set
              {
                 if (CheckTheElementToNotBreakTheSorting(index, value))
