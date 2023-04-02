@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Xml.Linq;
 
 namespace CollectionData
 {
-    class SortedIntArray : IntArray
+    public class SortedIntArray : IntArray
     {
         public SortedIntArray()
             : base()
