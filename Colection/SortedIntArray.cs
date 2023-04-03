@@ -36,7 +36,7 @@ namespace CollectionData
 
         private bool CheckTheElementToNotBreakTheSorting(int index, int element)
         {
-            return index == 0 && base[index] >= element || index > 0 && base[index - 1] < element && base[index] >= element;
+            return index == 0 && base[index] >= element || index > 0 && base[index - 1] <= element && base[index] >= element;
         }
 
         private void Sorting()
