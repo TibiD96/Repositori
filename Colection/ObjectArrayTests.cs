@@ -2,7 +2,7 @@
 
 namespace CollectionData
 {
-    public class IntArrayTests
+    public class ObjectArrayTests
     {
         [Fact]
 
