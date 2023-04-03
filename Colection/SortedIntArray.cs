@@ -24,7 +24,7 @@ namespace CollectionData
                     base[index] = value;
                 }
 
-                if (index > 0 && base[index - 1] <= value && base[index + 1] >= value)
+                if (index == Count - 1 && base[index - 1] <= value || index > 0 && base[index - 1] <= value && base[index + 1] >= value)
                 {
                     base[index] = value;
                 }
