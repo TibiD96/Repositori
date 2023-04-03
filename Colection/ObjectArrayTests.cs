@@ -1,12 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Xunit;
 
 namespace CollectionData
 {
-    internal class ObjectArrayTests
+    public class IntArrayTests
     {
+        [Fact]
+
+        public void CheckIfConstructorWorks()
+        {
+            var obj = new ObjectArray();
+            Assert.Equal(0, obj.Count);
+        }
+
+        [Fact]
+
+        public void CheckIfAddMethodeWorks()
+        {
+            var obj = new ObjectArray();
+            obj.Add("qwerty");
+            obj.Add('a');
+            obj.Add('A');
+            obj.Add(123);
+            obj.Add(12.3);
+            Assert.Equal("qwerty", obj[0]);
+            Assert.Equal('a', obj[1]);
+            Assert.Equal('A', obj[2]);
+            Assert.Equal(123, obj[3]);
+            Assert.Equal(12.3, obj[4]);
+        }
     }
 }
