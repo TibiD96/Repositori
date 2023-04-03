@@ -166,14 +166,14 @@ namespace CollectionData
         [Fact]
         public void SetMoreThanOneElement()
         {
-            var sortedArr = new SortedIntArray();
-            sortedArr.Add(5);
-            sortedArr.Add(9);
-            sortedArr.Add(4);
-            sortedArr.Add(10);
-            sortedArr[0] = 2;
-            sortedArr[1] = 6;
-            string result = sortedArr[0].ToString() + sortedArr[1].ToString() + sortedArr[2].ToString() + sortedArr[3].ToString();
+            var input = new SortedIntArray();
+            input.Add(5);
+            input.Add(9);
+            input.Add(4);
+            input.Add(10);
+            input[0] = 2;
+            input[1] = 6;
+            string result = input[0].ToString() + input[1].ToString() + input[2].ToString() + input[3].ToString();
             Assert.Equal("26910", result);
         }
     }
