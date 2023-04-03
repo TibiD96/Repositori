@@ -176,5 +176,19 @@ namespace CollectionData
             string result = input[0].ToString() + input[1].ToString() + input[2].ToString() + input[3].ToString();
             Assert.Equal("26910", result);
         }
+
+        [Fact]
+        public void SetTheFirstAndLastElement()
+        {
+            var input = new SortedIntArray();
+            input.Add(3);
+            input.Add(5);
+            input.Add(20);
+            input.Add(15);
+            input[0] = 2;
+            input[3] = 40;
+            string result = input[0].ToString() + input[1].ToString() + input[2].ToString() + input[3].ToString();
+            Assert.Equal("251540", result);
+        }
     }
 }
