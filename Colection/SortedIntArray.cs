@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Linq;
 
 namespace CollectionData
 {
@@ -22,6 +23,11 @@ namespace CollectionData
                 {
                     base[index] = value;
                 }
+
+                if (index > 0 && base[index - 1] <= value && base[index + 1] >= value)
+                {
+                    base[index] = value;
+                }
             }
         }
 
@@ -41,22 +47,16 @@ namespace CollectionData
 
         private void Sorting()
         {
-            bool sorted = true;
-            while(sorted)
-            {
-                int length = Count;
-                sorted = false;
-                for (int i = 0; i < length - 1; i++)
-                {
-                    if (base[i] > base[i + 1])
-                    {
-                        int pivot = base[i];
-                        base[i] = base[i + 1];
-                        base[i + 1] = pivot;
-                        sorted = true;
-                    }
-                }
-            }
+           for (int i = 0; i < Count - 1; i++)
+           {
+             if (base[i] > base[i + 1])
+             {
+               int pivot = base[i];
+               base[i] = base[i + 1];
+               base[i + 1] = pivot;
+               Sorting();
+             }
+           }           
         }
     }
 }
