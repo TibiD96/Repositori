@@ -162,5 +162,19 @@ namespace CollectionData
             string correctOrder = input[0].ToString() + input[1].ToString() + input[2].ToString() + input[3].ToString() + input[4].ToString();
             Assert.Equal("5650020004000", correctOrder);
         }
+
+        [Fact]
+        public void SetMoreThanOneElement()
+        {
+            var sortedArr = new SortedIntArray();
+            sortedArr.Add(5);
+            sortedArr.Add(9);
+            sortedArr.Add(4);
+            sortedArr.Add(10);
+            sortedArr[0] = 2;
+            sortedArr[1] = 6;
+            string result = sortedArr[0].ToString() + sortedArr[1].ToString() + sortedArr[2].ToString() + sortedArr[3].ToString();
+            Assert.Equal("26910", result);
+        }
     }
 }
