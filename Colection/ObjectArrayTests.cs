@@ -28,5 +28,19 @@ namespace CollectionData
             Assert.Equal(123, obj[3]);
             Assert.Equal(12.3, obj[4]);
         }
+
+        [Fact]
+
+        public void ReturnTrueIfElementIsContained()
+        {
+            var obj = new ObjectArray();
+            string elementToCheck = "qwerty";
+            obj.Add("qwerty");
+            obj.Add('a');
+            obj.Add('A');
+            obj.Add(123);
+            obj.Add(12.3);
+            Assert.True(obj.Contains(elementToCheck));
+        }
     }
 }
