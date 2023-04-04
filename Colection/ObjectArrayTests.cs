@@ -67,7 +67,7 @@ namespace CollectionData
             obj.Add('A');
             obj.Add(123);
             obj.Add(12.3);
-            Assert.Equal(2, obj.IndexOf('A'));
+            Assert.Equal(1, obj.IndexOf('a'));
             Assert.Equal(-1, obj.IndexOf(25.5));
         }
 
@@ -81,7 +81,7 @@ namespace CollectionData
             obj.Add('A');
             obj.Add(123);
             obj.Add(12.3);
-            obj.Insert(2, 3);
+            obj.Insert(2, 'B');
             Assert.Equal('B', obj[2]);
             Assert.Equal('A', obj[3]);
         }

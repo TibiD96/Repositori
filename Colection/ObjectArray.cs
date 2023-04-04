@@ -34,13 +34,34 @@ namespace CollectionData
         {
             for (int i = 0; i < Count; i++)
             {
-                if (input[i] == element)
+                if (input[i].Equals(element))
                 {
                     return i;
                 }
             }
 
             return -1;
+        }
+
+        public void Insert(int index, object element)
+        {
+            Resizing();
+            ShiftRight(index);
+            input[index] = element;
+            Count++;
+        }
+
+        public void Clear()
+        {
+            Count = 0;
+        }
+
+        private void ShiftRight(int index)
+        {
+            for (int i = Count - 1; i >= index; i--)
+            {
+                input[i + 1] = input[i];
+            }
         }
 
         private void Resizing()
