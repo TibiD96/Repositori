@@ -19,9 +19,7 @@ namespace CollectionData
         {
             set
              {
-                if ((index == Count - 1 && base[index - 1] <= value || 
-                    index > 0 && base[index - 1] <= value && base[index + 1] >= value) || 
-                    CheckTheElementToNotBreakTheSorting(index, value))
+                if (ElementOrDefault(index - 1, value) <= value && ElementOrDefault(index + 1, value) >= value)
                 {
                     base[index] = value;
                 }
@@ -34,6 +32,11 @@ namespace CollectionData
             {
                 base.Insert(index, element);
             }
+        }
+
+        private int ElementOrDefault(int index, int actualValue)
+        {
+            return index >= 0 && index < Count ? base[index] : actualValue;
         }
 
 
