@@ -99,5 +99,38 @@ namespace CollectionData
             obj.Clear();
             Assert.Equal(0, obj.Count);
         }
+
+        [Fact]
+
+        public void DeleteTheFirstAppearenceOfTheGivenElement()
+        {
+            var obj = new ObjectArray();
+            char givenElelement = 'A';
+            obj.Add("qwerty");
+            obj.Add('a');
+            obj.Add('A');
+            obj.Add(123);
+            obj.Add('A');
+            obj.Remove(givenElelement);
+            Assert.Equal(4, obj.Count);
+            Assert.Equal(123, obj[2]);
+        }
+
+        [Fact]
+
+        public void DeleteTheElementFromTheGivenIndex()
+        {
+            var obj = new ObjectArray();
+            int givenIndex = 3;
+            obj.Add("qwerty");
+            obj.Add('a');
+            obj.Add('A');
+            obj.Add(123);
+            obj.Add('A');
+            obj.RemoveAt(givenIndex);
+            Assert.Equal(4, obj.Count);
+            Assert.Equal('A', obj[3]);
+
+        }
     }
 }
