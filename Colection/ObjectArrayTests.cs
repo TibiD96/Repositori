@@ -29,7 +29,7 @@ namespace CollectionData
             Assert.Equal(12.3, obj[4]);
         }
 
-        /*[Fact]
+        [Fact]
 
        public void ReturnTrueIfElementIsContained()
         {
@@ -41,6 +41,6 @@ namespace CollectionData
             obj.Add(123);
             obj.Add(12.3);
             Assert.True(obj.Contains(elementToCheck));
-        }*/
+        }
     }
 }

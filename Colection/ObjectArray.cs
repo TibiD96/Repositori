@@ -25,6 +25,24 @@ namespace CollectionData
             input[Count++] = element;
         }
 
+        public bool Contains(object element)
+        {
+            return IndexOf(element) > -1;
+        }
+
+        public int IndexOf(object element)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (input[i] == element)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
         private void Resizing()
         {
             if (Count == input.Length)
