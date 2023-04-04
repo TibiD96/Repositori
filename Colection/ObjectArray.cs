@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections;
 
 namespace CollectionData
 {
-    public class ObjectArray
+    public class ObjectArray : IEnumerable
     {
         private object[] input;
 
