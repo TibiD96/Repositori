@@ -56,11 +56,31 @@ namespace CollectionData
             Count = 0;
         }
 
+        public void Remove(object element)
+        {
+            int indexOfElementToBeRemoved = IndexOf(element);
+            RemoveAt(indexOfElementToBeRemoved);
+        }
+
+        public void RemoveAt(int index)
+        {
+            ShiftLeft(index);
+            Count--;
+        }
+
         private void ShiftRight(int index)
         {
             for (int i = Count - 1; i >= index; i--)
             {
                 input[i + 1] = input[i];
+            }
+        }
+
+        private void ShiftLeft(int index)
+        {
+            for (int i = index; i <= Count - 1; i++)
+            {
+                input[i] = input[i + 1];
             }
         }
 
