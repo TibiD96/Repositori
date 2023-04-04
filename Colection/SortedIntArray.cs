@@ -44,16 +44,22 @@ namespace CollectionData
 
         private void Sorting()
         {
-           for (int i = 0; i < Count - 1; i++)
-           {
-             if (base[i] > base[i + 1])
-             {
-               int pivot = base[i];
-               base[i] = base[i + 1];
-               base[i + 1] = pivot;
-               Sorting();
-             }
-           }           
+            bool sorted = true;
+            while (sorted)
+            {
+                int length = Count;
+                sorted = false;
+                for (int i = 0; i < length - 1; i++)
+                {
+                    if (base[i] > base[i + 1])
+                    {
+                        int pivot = base[i];
+                        base[i] = base[i + 1];
+                        base[i + 1] = pivot;
+                        sorted = true;
+                    }
+                }
+            }
         }
     }
 }
