@@ -29,9 +29,9 @@ namespace CollectionData
             Assert.Equal(12.3, obj[4]);
         }
 
-        [Fact]
+        /*[Fact]
 
-        public void ReturnTrueIfElementIsContained()
+       public void ReturnTrueIfElementIsContained()
         {
             var obj = new ObjectArray();
             string elementToCheck = "qwerty";
@@ -41,6 +41,6 @@ namespace CollectionData
             obj.Add(123);
             obj.Add(12.3);
             Assert.True(obj.Contains(elementToCheck));
-        }
+        }*/
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Xml.Linq;
 
 namespace CollectionData
@@ -28,21 +29,14 @@ namespace CollectionData
 
         public override void Insert(int index, int element)
         {
-            if (CheckTheElementToNotBreakTheSorting(index, element))
+            if (ElementOrDefault(index - 1, element) <= element && ElementOrDefault(index, element) >= element)
             {
                 base.Insert(index, element);
             }
         }
-
         private int ElementOrDefault(int index, int actualValue)
         {
             return index >= 0 && index < Count ? base[index] : actualValue;
-        }
-
-
-        private bool CheckTheElementToNotBreakTheSorting(int index, int element)
-        {
-            return index == 0 && base[index] >= element || index > 0 && base[index - 1] <= element && base[index] >= element;
         }
 
         private void Sorting()
