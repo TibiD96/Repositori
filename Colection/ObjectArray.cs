@@ -20,15 +20,18 @@ namespace CollectionData
             set => input[index] = value;
         }
 
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                yield return input[i];
+            }
+        }
+
         public void Add(object element)
         {
             Resizing();
             input[Count++] = element;
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return new ObjectEnumerator(this);
         }
 
         public bool Contains(object element)

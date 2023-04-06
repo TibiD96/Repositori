@@ -9,7 +9,7 @@ namespace CollectionData
         public void CheckIfConstructorWorks()
         {
             var objEnum = new ObjectArray {123, 'A', 'a', 'B', 'b', "asd"};
-            var enumerator = objEnum.GetEnumerator();
+            var enumerator = objEnum.GetIEnumerator();
 
             enumerator.MoveNext();
             Assert.Equal(123, enumerator.Current);
