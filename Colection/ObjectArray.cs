@@ -26,6 +26,11 @@ namespace CollectionData
             input[Count++] = element;
         }
 
+        public IEnumerator GetEnumerator()
+        {
+            return new ObjectEnumerator(this);
+        }
+
         public bool Contains(object element)
         {
             return IndexOf(element) > -1;

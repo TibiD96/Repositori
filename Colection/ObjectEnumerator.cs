@@ -13,14 +13,28 @@ namespace CollectionData
             this.objCollection = objCollection;
         }
 
+        public object Current
+        {
+            get
+            {
+                if (index < 0 || index >= objCollection.Count)
+                {
+                    return null;
+                }
+                else return objCollection[index];
+            }
+        }
+        
+
         public bool MoveNext()
         {
-            throw new NotImplementedException();
+            index++;
+            return index < objCollection.Count;
         }
 
         public void Reset()
         {
-            throw new NotImplementedException();
+            index = -1;
         }
     }
 }
