@@ -8,21 +8,17 @@ namespace CollectionData
 
         public void CheckIfConstructorWorks()
         {
-            var objEnum = new ObjectArray {123, 'A', 'a', 'B', 'b', "asd"};
-            var enumerator = objEnum.GetIEnumerator();
-
-            enumerator.MoveNext();
-            Assert.Equal(123, enumerator.Current);
-            enumerator.MoveNext();
-            Assert.Equal('A', enumerator.Current);
-            enumerator.MoveNext();
-            Assert.Equal('a', enumerator.Current);
-            enumerator.MoveNext();
-            Assert.Equal('B', enumerator.Current);
-            enumerator.MoveNext();
-            Assert.Equal('b', enumerator.Current);
-            enumerator.MoveNext();
-            Assert.Equal("asd", enumerator.Current);
+            var objEnum = new ObjectArray();
+            objEnum.Add("qwerty");
+            objEnum.Add('a');
+            objEnum.Add('A');
+            objEnum.Add(123);
+            objEnum.Add(12.3);
+            Assert.Equal("qwerty", objEnum[0]);
+            Assert.Equal('a', objEnum[1]);
+            Assert.Equal('A', objEnum[2]);
+            Assert.Equal(123, objEnum[3]);
+            Assert.Equal(12.3, objEnum[4]);
         }
     }
 }
