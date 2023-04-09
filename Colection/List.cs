@@ -3,24 +3,29 @@ using System.Collections;
 
 namespace CollectionData
 {
-    public class List<T> : IEnumerable
+    public class List<T> : IEnumerable<T>
     {
-        private object[] input;
+        private T[] input;
 
         public List()
         {
-            this.input = new object[4];
+            this.input = new T[4];
         }
 
         public int Count { get; private set; }
 
-        public object this[int index]
+        public T this[int index]
         {
             get => input[index];
             set => input[index] = value;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+
+        public IEnumerator<T> GetEnumerator()
         {
             for (int i = 0; i < Count; i++)
             {
