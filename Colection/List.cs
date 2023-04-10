@@ -14,7 +14,7 @@ namespace CollectionData
 
         public int Count { get; private set; }
 
-        public T this[int index]
+        public virtual T this[int index]
         {
             get => input[index];
             set => input[index] = value;
@@ -33,7 +33,7 @@ namespace CollectionData
             }
         }
 
-        public void Add(T element)
+        public virtual void Add(T element)
         {
             Resizing();
             input[Count++] = element;
@@ -44,7 +44,7 @@ namespace CollectionData
             return IndexOf(element) > -1;
         }
 
-        public int IndexOf(T element)
+        public virtual int IndexOf(T element)
         {
             for (int i = 0; i < Count; i++)
             {
@@ -57,7 +57,7 @@ namespace CollectionData
             return -1;
         }
 
-        public void Insert(int index, T element)
+        public virtual void Insert(int index, T element)
         {
             Resizing();
             ShiftRight(index);
