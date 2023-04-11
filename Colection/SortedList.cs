@@ -18,7 +18,7 @@ namespace CollectionData
         {
             set
             {
-                if (ElementOrDefault(index - 1, value) <= value && ElementOrDefault(index + 1, value) >= value)
+                if (ElementOrDefault(index - 1, value).CompareTo(value) <= 0 && ElementOrDefault(index + 1, value).CompareTo(value) >= 0)
                 {
                     base[index] = value;
                 }
@@ -27,7 +27,7 @@ namespace CollectionData
 
         public override void Insert(int index, T element)
         {
-            if (ElementOrDefault(index - 1, element) <= element && ElementOrDefault(index, element) >= element)
+            if (ElementOrDefault(index - 1, element).CompareTo(element) <= 0 && ElementOrDefault(index, element).CompareTo(element) >= 0)
             {
                 base.Insert(index, element);
             }
@@ -46,9 +46,9 @@ namespace CollectionData
                 sorted = false;
                 for (int i = 0; i < length - 1; i++)
                 {
-                    if (base[i] > base[i + 1])
+                    if (base[i].CompareTo(base[i + 1]) >= 0)
                     {
-                        int pivot = base[i];
+                        T pivot = base[i];
                         base[i] = base[i + 1];
                         base[i + 1] = pivot;
                         sorted = true;
