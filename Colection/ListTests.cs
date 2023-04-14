@@ -115,7 +115,7 @@ namespace CollectionData
             list.Add(10);
             list.Add(11);
             list.Add(8);
-            list.Remove(givenElelement);
+            Assert.True(list.Remove(givenElelement));
             Assert.Equal(4, list.Count);
             Assert.Equal(11, list[2]);
         }
@@ -135,6 +135,21 @@ namespace CollectionData
             Assert.Equal(4, list.Count);
             Assert.Equal(8, list[3]);
 
+        }
+
+        [Fact]
+
+        public void ReturnFalseIfTheGivenElementForRemoveIsNotPartOfTheArray()
+        {
+            var list = new List<int>();
+            int givenElelement = 80;
+            list.Add(2);
+            list.Add(5);
+            list.Add(10);
+            list.Add(11);
+            list.Add(8);
+            Assert.False(list.Remove(givenElelement));
+            Assert.Equal(5, list.Count);
         }
     }
 }

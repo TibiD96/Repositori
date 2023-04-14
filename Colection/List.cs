@@ -3,21 +3,23 @@ using System.Collections;
 
 namespace CollectionData
 {
-    public class List<T> : IEnumerable<T>
+    public class List<T> : IList<T>
     {
-        private T[] input;
+        private T[] inputArray;
 
         public List()
         {
-            this.input = new T[4];
+            this.inputArray = new T[4];
         }
 
         public int Count { get; private set; }
 
+        public bool IsReadOnly { get; }
+
         public virtual T this[int index]
         {
-            get => input[index];
-            set => input[index] = value;
+            get => inputArray[index];
+            set => inputArray[index] = value;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -29,14 +31,19 @@ namespace CollectionData
         {
             for (int i = 0; i < Count; i++)
             {
-                yield return input[i];
+                yield return inputArray[i];
             }
+        }
+
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            inputArray.CopyTo(array, arrayIndex);
         }
 
         public virtual void Add(T element)
         {
             Resizing();
-            input[Count++] = element;
+            inputArray[Count++] = element;
         }
 
         public bool Contains(T element)
@@ -48,7 +55,7 @@ namespace CollectionData
         {
             for (int i = 0; i < Count; i++)
             {
-                if (input[i].Equals(element))
+                if (inputArray[i].Equals(element))
                 {
                     return i;
                 }
@@ -61,7 +68,7 @@ namespace CollectionData
         {
             Resizing();
             ShiftRight(index);
-            input[index] = element;
+            inputArray[index] = element;
             Count++;
         }
 
@@ -70,10 +77,17 @@ namespace CollectionData
             Count = 0;
         }
 
-        public void Remove(T element)
+        public bool Remove(T element)
         {
+            if (!Contains(element))
+            {
+                return false;
+            }
+
             int indexOfElementToBeRemoved = IndexOf(element);
             RemoveAt(indexOfElementToBeRemoved);
+
+            return true;
         }
 
         public void RemoveAt(int index)
@@ -86,7 +100,7 @@ namespace CollectionData
         {
             for (int i = Count - 1; i >= index; i--)
             {
-                input[i + 1] = input[i];
+                inputArray[i + 1] = inputArray[i];
             }
         }
 
@@ -94,15 +108,15 @@ namespace CollectionData
         {
             for (int i = index; i <= Count - 1; i++)
             {
-                input[i] = input[i + 1];
+                inputArray[i] = inputArray[i + 1];
             }
         }
 
         private void Resizing()
         {
-            if (Count == input.Length)
+            if (Count == inputArray.Length)
             {
-                Array.Resize(ref input, input.Length * 2);
+                Array.Resize(ref inputArray, inputArray.Length * 2);
             }
         }
     }
