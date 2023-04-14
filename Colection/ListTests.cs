@@ -151,5 +151,15 @@ namespace CollectionData
             Assert.False(list.Remove(givenElelement));
             Assert.Equal(5, list.Count);
         }
+
+        [Fact]
+
+        public void VerrifieTheCopyToMethod()
+        {
+            int[] firstList = { 1, 2, 3};
+            int[] secondList = new int[3];
+            firstList.CopyTo(secondList, 0);
+            Assert.Equal(firstList, secondList);
+        }
     }
 }
