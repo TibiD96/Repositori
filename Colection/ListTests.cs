@@ -156,10 +156,34 @@ namespace CollectionData
 
         public void VerrifieTheCopyToMethod()
         {
-            int[] firstList = { 1, 2, 3};
-            int[] secondList = new int[3];
+            var firstList = new List<int>{ 1, 2, 3, 5};
+            int[] secondList = new int[4];
             firstList.CopyTo(secondList, 0);
             Assert.Equal(firstList, secondList);
+        }
+
+        [Fact]
+        public void CopyToMethodWhenSecondListIsNUll()
+        {
+            var firstList = new List<int>();
+            int[] secondList = null;
+            Assert.Throws<ArgumentNullException>(() => firstList.CopyTo(secondList, 0));
+        }
+
+        [Fact]
+        public void CopyToMethodWhenIndexIsNegative()
+        {
+            var firstList = new List<int>();
+            int[] secondList = new int[5];
+            Assert.Throws<ArgumentOutOfRangeException>(() => firstList.CopyTo(secondList, -1));
+        }
+
+        [Fact]
+        public void CopyToMethodArgExcept()
+        {
+            var firstList = new List<int>();
+            int[] secondList = new int[5];
+            Assert.Throws<ArgumentException>(() => firstList.CopyTo(secondList, 3));
         }
     }
 }
