@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Collections.Generic;
+using Xunit;
 
 namespace CollectionData
 {
@@ -184,6 +185,28 @@ namespace CollectionData
             var firstList = new List<int>();
             int[] secondList = new int[5];
             Assert.Throws<ArgumentException>(() => firstList.CopyTo(secondList, 3));
+        }
+
+        [Fact]
+        public void RemoveAtMethodOnANegativeIndex()
+        {
+            var list = new List<int>();
+            list.Add(2);
+            list.Add(5);
+            list.Add(10);
+            list.Add(11);
+            Assert.Throws<IndexOutOfRangeException>(() => list.RemoveAt(-2));
+        }
+
+        [Fact]
+        public void InsertMethodOnANegativeIndex()
+        {
+            var list = new List<int>();
+            list.Add(2);
+            list.Add(5);
+            list.Add(10);
+            list.Add(11);
+            Assert.Throws<IndexOutOfRangeException>(() => list.Insert(-2, 3));
         }
     }
 }
