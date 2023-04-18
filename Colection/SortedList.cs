@@ -18,7 +18,9 @@ namespace CollectionData
         {
             set
             {
-                if (ElementOrDefault(index - 1, value).CompareTo(value) <= 0 && ElementOrDefault(index + 1, value).CompareTo(value) >= 0)
+                T left = ElementOrDefault(index - 1, value);
+                T right = ElementOrDefault(index + 1, value);
+                if (left.CompareTo(value) <= 0 && right.CompareTo(value) >= 0)
                 {
                     base[index] = value;
                 }
@@ -27,7 +29,10 @@ namespace CollectionData
 
         public override void Insert(int index, T element)
         {
-            if (ElementOrDefault(index - 1, element).CompareTo(element) <= 0 && ElementOrDefault(index, element).CompareTo(element) >= 0)
+            T left = ElementOrDefault(index - 1, element);
+            T right = ElementOrDefault(index, element);
+
+            if (left.CompareTo(element) <= 0 && right.CompareTo(element) >= 0)
             {
                 base.Insert(index, element);
             }
