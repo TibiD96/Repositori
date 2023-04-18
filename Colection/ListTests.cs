@@ -157,8 +157,8 @@ namespace CollectionData
 
         public void VerrifieTheCopyToMethod()
         {
-            var firstList = new List<int>{ 1, 2, 3, 5};
-            int[] secondList = new int[4];
+            var firstList = new List<int>(){ 1, 2, 3, 5};
+            var secondList = new int[4];
             firstList.CopyTo(secondList, 0);
             Assert.Equal(firstList, secondList);
         }
@@ -166,7 +166,7 @@ namespace CollectionData
         [Fact]
         public void CopyToMethodWhenSecondListIsNUll()
         {
-            var firstList = new List<int>();
+            var firstList = new List<int>() { 1, 2, 3, 5 };
             int[] secondList = null;
             Assert.Throws<ArgumentNullException>(() => firstList.CopyTo(secondList, 0));
         }

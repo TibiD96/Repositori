@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace CollectionData
 {
@@ -37,7 +38,13 @@ namespace CollectionData
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            inputArray.CopyTo(array, arrayIndex);
+            if (Count <= (array.Length - arrayIndex + 1) && arrayIndex >= 0)
+            {
+                for (int i = 0; i < inputArray.Length; i++)
+                {
+                    array[arrayIndex + i] = inputArray[i];
+                }
+            }
         }
 
         public virtual void Add(T element)
