@@ -79,12 +79,13 @@ namespace CollectionData
 
         public bool Remove(T element)
         {
-            if (!Contains(element))
+            int indexOfElementToBeRemoved = IndexOf(element);
+            
+            if (indexOfElementToBeRemoved == -1)
             {
                 return false;
             }
 
-            int indexOfElementToBeRemoved = IndexOf(element);
             RemoveAt(indexOfElementToBeRemoved);
 
             return true;
