@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
-using System.Reflection;
+﻿using System.Collections;
 
 namespace CollectionData
 {
@@ -12,16 +9,6 @@ namespace CollectionData
         public List()
         {
             this.inputArray = new T[4];
-        }
-
-        public int Count { get; private set; }
-
-        public bool IsReadOnly { get; }
-
-        public virtual T this[int index]
-        {
-            get => inputArray[index];
-            set => inputArray[index] = value;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -35,6 +22,16 @@ namespace CollectionData
             {
                 yield return inputArray[i];
             }
+        }
+
+        public int Count { get; private set; }
+
+        public bool IsReadOnly { get; }
+
+        public virtual T this[int index]
+        {
+            get => inputArray[index];
+            set => inputArray[index] = value;
         }
 
         public void CopyTo(T[] array, int arrayIndex)
