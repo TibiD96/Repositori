@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Reflection;
 
 namespace CollectionData
 {
@@ -38,13 +39,13 @@ namespace CollectionData
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            if (Count <= (array.Length - arrayIndex + 1) && arrayIndex >= 0)
+            ArgumentNullException(array);
+            ArgumentOutOfRangeException(arrayIndex);
+            for (int i = 0; i < inputArray.Length; i++)
             {
-                for (int i = 0; i < inputArray.Length; i++)
-                {
-                    array[arrayIndex + i] = inputArray[i];
-                }
+              array[arrayIndex + i] = inputArray[i];
             }
+            
         }
 
         public virtual void Add(T element)
@@ -73,6 +74,7 @@ namespace CollectionData
 
         public virtual void Insert(int index, T element)
         {
+            ArgumentOutOfRangeException(index);
             Resizing();
             ShiftRight(index);
             inputArray[index] = element;
@@ -86,20 +88,21 @@ namespace CollectionData
 
         public bool Remove(T element)
         {
-            int indexOfElementToBeRemoved = IndexOf(element);
+            int index = IndexOf(element);
             
-            if (indexOfElementToBeRemoved == -1)
+            if (index == -1)
             {
                 return false;
             }
 
-            RemoveAt(indexOfElementToBeRemoved);
+            RemoveAt(index);
 
             return true;
         }
 
         public void RemoveAt(int index)
         {
+            ArgumentOutOfRangeException(index);
             ShiftLeft(index);
             Count--;
         }
@@ -126,6 +129,26 @@ namespace CollectionData
             {
                 Array.Resize(ref inputArray, inputArray.Length * 2);
             }
+        }
+
+        public void ArgumentNullException(T[] input)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException("can't be null");
+            }
+
+            return;
+        }
+
+        public void ArgumentOutOfRangeException(int index)
+        {
+            if (index >= Count || index < 0)
+            {
+                throw new ArgumentOutOfRangeException("ivalid index");
+            }
+
+            return;
         }
     }
 }

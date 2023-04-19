@@ -180,33 +180,50 @@ namespace CollectionData
         }
 
         [Fact]
-        public void CopyToMethodArgExcept()
+        public void CopyToMethodWhenIndexIsBiggerThanArray()
         {
             var firstList = new List<int>();
             int[] secondList = new int[5];
-            Assert.Throws<ArgumentException>(() => firstList.CopyTo(secondList, 3));
+            Assert.Throws<ArgumentOutOfRangeException>(() => firstList.CopyTo(secondList, 9));
         }
 
         [Fact]
-        public void RemoveAtMethodOnANegativeIndex()
+        public void InsertOutOfRangeExpIndexIsNegative()
         {
             var list = new List<int>();
             list.Add(2);
             list.Add(5);
             list.Add(10);
             list.Add(11);
-            Assert.Throws<IndexOutOfRangeException>(() => list.RemoveAt(-2));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.Insert(-2, 3));
         }
 
         [Fact]
-        public void InsertMethodOnANegativeIndex()
+
+        public void InsertOutOfRangeExpIndexBiggerThanArrayLength()
         {
             var list = new List<int>();
             list.Add(2);
             list.Add(5);
             list.Add(10);
             list.Add(11);
-            Assert.Throws<IndexOutOfRangeException>(() => list.Insert(-2, 3));
+            list.Add(8);
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.Insert(6, 100));
+        }
+
+        [Fact]
+
+        public void RemoveAtOutOfRangeExp()
+        {
+            var list = new List<int>();
+            int givenIndex = 6;
+            list.Add(2);
+            list.Add(5);
+            list.Add(10);
+            list.Add(11);
+            list.Add(8);
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.RemoveAt(givenIndex));
+
         }
     }
 }
