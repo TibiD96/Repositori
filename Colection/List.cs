@@ -26,12 +26,19 @@ namespace CollectionData
 
         public int Count { get; private set; }
 
-        public bool IsReadOnly { get; }
+        public bool IsReadOnly { get; private set; }
 
         public virtual T this[int index]
         {
             get => inputArray[index];
             set => inputArray[index] = value;
+        }
+
+        public List<T> ReadOnly()
+        {
+            List<T> inputArray = new List<T>();
+            inputArray.IsReadOnly = true;
+            return inputArray;
         }
 
         public void CopyTo(T[] array, int arrayIndex)

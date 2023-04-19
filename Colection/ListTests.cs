@@ -225,5 +225,20 @@ namespace CollectionData
             Assert.Throws<ArgumentOutOfRangeException>(() => list.RemoveAt(givenIndex));
 
         }
+
+        [Fact]
+        public void ReturnTrueIfReadOnly()
+        {
+            var list = new List<int>();
+            list = list.ReadOnly();
+            Assert.True(list.IsReadOnly);
+        }
+
+        [Fact]
+        public void ReturnFalseIfNotReadOnly()
+        {
+            var list = new List<int>();
+            Assert.False(list.IsReadOnly);
+        }
     }
 }
