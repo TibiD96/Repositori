@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Xunit;
+﻿using Xunit;
 
 namespace CollectionData
 {
@@ -9,11 +8,10 @@ namespace CollectionData
 
         public void CheckIfConstructorWorks()
         {
-            var list = new List<int>();
-            Assert.Equal(0, list.Count);
-            Assert.Equal(0, list[0]);
-            Assert.Equal(0, list[1]);
-            Assert.Equal(0, list[2]);
+            var list = new List<int>() { 1};
+            Assert.Equal(1, list[0]);
+            Assert.Throws<ArgumentOutOfRangeException>(() => Assert.Equal(0, list[1]));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Assert.Equal(0, list[2]));
 
         }
 
@@ -180,11 +178,11 @@ namespace CollectionData
         }
 
         [Fact]
-        public void CopyToMethodWhenIndexIsBiggerThanArray()
+        public void CopyToMethodWhenArgumentException()
         {
-            var firstList = new List<int>();
-            int[] secondList = new int[5];
-            Assert.Throws<ArgumentOutOfRangeException>(() => firstList.CopyTo(secondList, 9));
+            var firstList = new List<int>() { 1, 2, 3};
+            int[] secondList = { 4, 5, 6, 7, 8 };
+            Assert.Throws<ArgumentException>(() => firstList.CopyTo(secondList, 3));
         }
 
         [Fact]
@@ -239,6 +237,62 @@ namespace CollectionData
         {
             var list = new List<int>();
             Assert.False(list.IsReadOnly);
+        }
+
+        [Fact]
+        public void ReturnTrueIfReadOnlyArrayIsNotChanged()
+        {
+            var list = new List<int>() { 1, 2, 3, 4};
+            var originalList = list;
+            list = list.ReadOnly();
+            Assert.True(list.IsReadOnly);
+            Assert.Equal(originalList, list);
+        }
+
+        [Fact]
+        public void InsertIsReadonlyException()
+        {
+            var list = new List<int> { 1, 2, 3 };
+            list = list.ReadOnly();
+            Assert.Throws<NotSupportedException>(() => list.Insert(1, 2));
+        }
+
+        [Fact]
+        public void AddIsReadonlyException()
+        {
+            var list = new List<int>();
+            list = list.ReadOnly();
+            Assert.Throws<NotSupportedException>(() => list.Add(1));
+        }
+
+        [Fact]
+        public void ClearIsReadonlyException()
+        {
+            var list = new List<int>() { 1, 2, 3};
+            list = list.ReadOnly();
+            Assert.Throws<NotSupportedException>(() => list.Clear());
+        }
+
+        [Fact]
+        public void SetIsReadonlyException()
+        {
+            var list = new List<int>();
+            list = list.ReadOnly();
+            Assert.Throws<NotSupportedException>(() => list[0] = 1);
+        }
+
+        [Fact]
+        public void GetOutOfRangeExp()
+        {
+            var list = new List<int>();
+            Assert.Throws<ArgumentOutOfRangeException>(() => list[-1] == 1);
+        }
+
+        [Fact]
+        public void SetOutOfRangeExp()
+        {
+            var list = new List<int>();
+            Assert.Throws<ArgumentOutOfRangeException>(() => list[-1] = 1);
         }
     }
 }

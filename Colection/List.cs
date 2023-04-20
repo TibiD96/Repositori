@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 
 namespace CollectionData
 {
@@ -30,22 +31,39 @@ namespace CollectionData
 
         public virtual T this[int index]
         {
-            get => inputArray[index];
-            set => inputArray[index] = value;
+            get
+            {
+                ArgumentOutOfRangeException(index);
+                return inputArray[index];
+            }
+            set
+            {
+                NotSupportedException();
+                ArgumentOutOfRangeException(index);
+                inputArray[index] = value;
+            }
         }
 
         public List<T> ReadOnly()
         {
-            List<T> inputArray = new List<T>();
-            inputArray.IsReadOnly = true;
-            return inputArray;
+            List<T> readOnlyArray = new List<T>();
+
+            for(int i = 0; i < Count; i++)
+            {
+                readOnlyArray.Add(inputArray[i]);
+            }
+
+            readOnlyArray.IsReadOnly = true;
+            return readOnlyArray;
         }
 
         public void CopyTo(T[] array, int arrayIndex)
         {
             ArgumentNullException(array);
+            ArgumentException(array, arrayIndex);
             ArgumentOutOfRangeException(arrayIndex);
-            for (int i = 0; i < inputArray.Length; i++)
+
+            for (int i = 0; i < Count; i++)
             {
               array[arrayIndex + i] = inputArray[i];
             }
@@ -54,6 +72,7 @@ namespace CollectionData
 
         public virtual void Add(T element)
         {
+            NotSupportedException();
             Resizing();
             inputArray[Count++] = element;
         }
@@ -78,6 +97,7 @@ namespace CollectionData
 
         public virtual void Insert(int index, T element)
         {
+            NotSupportedException();
             ArgumentOutOfRangeException(index);
             Resizing();
             ShiftRight(index);
@@ -87,11 +107,13 @@ namespace CollectionData
 
         public void Clear()
         {
+            NotSupportedException();
             Count = 0;
         }
 
         public bool Remove(T element)
         {
+            NotSupportedException();
             int index = IndexOf(element);
             
             if (index == -1)
@@ -106,6 +128,7 @@ namespace CollectionData
 
         public void RemoveAt(int index)
         {
+            NotSupportedException();
             ArgumentOutOfRangeException(index);
             ShiftLeft(index);
             Count--;
@@ -135,7 +158,7 @@ namespace CollectionData
             }
         }
 
-        public void ArgumentNullException(T[] input)
+        private void ArgumentNullException(T[] input)
         {
             if (input == null)
             {
@@ -145,11 +168,31 @@ namespace CollectionData
             return;
         }
 
-        public void ArgumentOutOfRangeException(int index)
+        private void ArgumentOutOfRangeException(int index)
         {
             if (index >= Count || index < 0)
             {
                 throw new ArgumentOutOfRangeException("ivalid index");
+            }
+
+            return;
+        }
+
+        private void NotSupportedException()
+        {
+            if (IsReadOnly)
+            {
+                throw new NotSupportedException("Is Read-Only");
+            }
+
+            return;
+        }
+
+        private void ArgumentException(T[] array, int index)
+        {
+            if (array.Length - index < Count)
+            {
+                throw new ArgumentException("No space");
             }
 
             return;
