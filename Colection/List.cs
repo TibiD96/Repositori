@@ -48,9 +48,9 @@ namespace CollectionData
         {
             List<T> readOnlyArray = new List<T>();
 
-            for(int i = 0; i < Count; i++)
+            foreach (var element in this)
             {
-                readOnlyArray.Add(inputArray[i]);
+                readOnlyArray.Add(element);
             }
 
             readOnlyArray.IsReadOnly = true;
