@@ -228,8 +228,8 @@ namespace CollectionData
         public void ReturnTrueIfReadOnly()
         {
             var list = new List<int>();
-            list = list.ReadOnly();
-            Assert.True(list.IsReadOnly);
+            ReadOnlyArray<int> readOnlyList = list.ReadOnly();
+            Assert.True(readOnlyList.IsReadOnly);
         }
 
         [Fact]
@@ -244,8 +244,8 @@ namespace CollectionData
         {
             var list = new List<int>() { 1, 2, 3, 4};
             var originalList = list;
-            list = list.ReadOnly();
-            Assert.True(list.IsReadOnly);
+            ReadOnlyArray<int> readOnlyList = list.ReadOnly();
+            Assert.True(readOnlyList.IsReadOnly);
             Assert.Equal(originalList, list);
         }
 
@@ -253,32 +253,32 @@ namespace CollectionData
         public void InsertIsReadonlyException()
         {
             var list = new List<int> { 1, 2, 3 };
-            list = list.ReadOnly();
-            Assert.Throws<NotSupportedException>(() => list.Insert(1, 2));
+            ReadOnlyArray<int> readOnlyList = list.ReadOnly();
+            Assert.Throws<NotSupportedException>(() => readOnlyList.Insert(1, 2));
         }
 
         [Fact]
         public void AddIsReadonlyException()
         {
             var list = new List<int>();
-            list = list.ReadOnly();
-            Assert.Throws<NotSupportedException>(() => list.Add(1));
+            ReadOnlyArray<int> readOnlyList = list.ReadOnly();
+            Assert.Throws<NotSupportedException>(() => readOnlyList.Add(1));
         }
 
         [Fact]
         public void ClearIsReadonlyException()
         {
             var list = new List<int>() { 1, 2, 3};
-            list = list.ReadOnly();
-            Assert.Throws<NotSupportedException>(() => list.Clear());
+            ReadOnlyArray<int> readOnlyList = list.ReadOnly();
+            Assert.Throws<NotSupportedException>(() => readOnlyList.Clear());
         }
 
         [Fact]
         public void SetIsReadonlyException()
         {
             var list = new List<int>();
-            list = list.ReadOnly();
-            Assert.Throws<NotSupportedException>(() => list[0] = 1);
+            ReadOnlyArray<int> readOnlyList = list.ReadOnly();
+            Assert.Throws<NotSupportedException>(() => readOnlyList[0] = 1);
         }
 
         [Fact]

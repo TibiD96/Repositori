@@ -38,23 +38,15 @@ namespace CollectionData
             }
             set
             {
-                NotSupportedException();
                 ArgumentOutOfRangeException(index);
                 inputArray[index] = value;
             }
         }
 
-        public List<T> ReadOnly()
+        public ReadOnlyArray<T> ReadOnly()
         {
-            List<T> readOnlyArray = new List<T>();
-
-            foreach (var element in this)
-            {
-                readOnlyArray.Add(element);
-            }
-
-            readOnlyArray.IsReadOnly = true;
-            return readOnlyArray;
+            IsReadOnly = true;
+            return new ReadOnlyArray<T>(this);
         }
 
         public void CopyTo(T[] array, int arrayIndex)
@@ -72,7 +64,6 @@ namespace CollectionData
 
         public virtual void Add(T element)
         {
-            NotSupportedException();
             Resizing();
             inputArray[Count++] = element;
         }
@@ -97,7 +88,6 @@ namespace CollectionData
 
         public virtual void Insert(int index, T element)
         {
-            NotSupportedException();
             ArgumentOutOfRangeException(index);
             Resizing();
             ShiftRight(index);
@@ -107,13 +97,11 @@ namespace CollectionData
 
         public void Clear()
         {
-            NotSupportedException();
             Count = 0;
         }
 
         public bool Remove(T element)
         {
-            NotSupportedException();
             int index = IndexOf(element);
             
             if (index == -1)
@@ -128,7 +116,6 @@ namespace CollectionData
 
         public void RemoveAt(int index)
         {
-            NotSupportedException();
             ArgumentOutOfRangeException(index);
             ShiftLeft(index);
             Count--;
@@ -173,16 +160,6 @@ namespace CollectionData
             if (index >= Count || index < 0)
             {
                 throw new ArgumentOutOfRangeException("ivalid index");
-            }
-
-            return;
-        }
-
-        private void NotSupportedException()
-        {
-            if (IsReadOnly)
-            {
-                throw new NotSupportedException("Is Read-Only");
             }
 
             return;
