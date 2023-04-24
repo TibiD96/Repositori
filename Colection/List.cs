@@ -45,7 +45,6 @@ namespace CollectionData
 
         public ReadOnlyArray<T> ReadOnly()
         {
-            IsReadOnly = true;
             return new ReadOnlyArray<T>(this);
         }
 

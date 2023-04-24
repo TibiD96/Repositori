@@ -85,10 +85,7 @@ namespace CollectionData
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            for (int i = 0; i < Count; i++)
-            {
-                yield return inputArray[i];
-            }
+            return inputArray.GetEnumerator();
         }
     }
 }
