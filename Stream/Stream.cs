@@ -5,13 +5,20 @@ namespace Stream
 {
     public class Stream
     {
+        private readonly Stream file;
         public string Name { get; set; }
-        public int Length { get; set; }
         
-        public Stream(string name, int length)
+        public Stream(string name)
         {
             Name = name;
-            Length = length;
+        }
+
+        public void Writer(Stream file, string text)
+        {
+            using (StreamWriter writer = new StreamWriter(file.Name))
+            {
+                writer.Write(text);
+            }
         }
        
     }
