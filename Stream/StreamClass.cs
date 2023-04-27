@@ -3,17 +3,17 @@ using System.IO;
 
 namespace Stream
 {
-    public class Stream
+    public class StreamClass
     {
-        private readonly Stream file;
+        private readonly StreamClass file;
         public string Name { get; set; }
         
-        public Stream(string name)
+        public StreamClass(string name)
         {
             Name = name;
         }
 
-        public void Writer(Stream file, string text)
+        public void Writer(StreamClass file, string text)
         {
             using (StreamWriter writer = new StreamWriter(file.Name))
             {

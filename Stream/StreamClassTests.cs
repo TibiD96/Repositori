@@ -2,13 +2,13 @@
 
 namespace Stream
 {
-    public class StreamTests
+    public class StreamClassTests
     {
         [Fact]
 
         public void CheckIfConstructorWorks()
         {
-            Stream file = new Stream("test stream");
+            StreamClass file = new StreamClass("test stream");
             Assert.Equal("test stream", file.Name);
 
         }
@@ -17,7 +17,7 @@ namespace Stream
 
         public void CheckIfWriterMethodeWorks()
         {
-            Stream file = new Stream("test stream");
+            StreamClass file = new StreamClass("test stream");
             file.Writer(file, "test");
             var textFromFile = File.ReadAllText(file.Name);
             Assert.Equal("test", textFromFile);

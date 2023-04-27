@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stream", "Stream.csproj", "{D723BE07-0C92-4F07-8860-85AA50FCD9E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamClassProgram", "StreamClassProgram.csproj", "{D723BE07-0C92-4F07-8860-85AA50FCD9E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
