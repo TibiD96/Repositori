@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Stream
+namespace StreamClassProgram
 {
     public class StreamClassTests
     {
@@ -8,20 +8,19 @@ namespace Stream
 
         public void CheckIfConstructorWorks()
         {
-            StreamClass file = new StreamClass("test stream");
-            Assert.Equal("test stream", file.Name);
+            Stream file = new Stream();
+            Assert.NotNull(file.Memory);
 
         }
 
         [Fact]
 
-        public void CheckIfWriterMethodeWorks()
+        public void CheckIfWriterAndReaderMethodeWorks()
         {
-            StreamClass file = new StreamClass("test stream");
-            file.Writer(file, "test");
-            var textFromFile = File.ReadAllText(file.Name);
-            Assert.Equal("test", textFromFile);
-
+            Stream stream = new Stream();
+            stream.Writer(stream, "test");
+            string textToCheck = stream.Reader(stream);
+            Assert.Equal("test", textToCheck);
         }
     }
 }

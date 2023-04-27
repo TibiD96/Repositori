@@ -1,23 +1,32 @@
 ﻿using System;
 using System.IO;
 
-namespace Stream
+namespace StreamClassProgram
 {
-    public class StreamClass
+    public class Stream
     {
-        private readonly StreamClass file;
-        public string Name { get; set; }
+        public MemoryStream Memory { get; private set; }
         
-        public StreamClass(string name)
+        public Stream()
         {
-            Name = name;
+            Memory = new MemoryStream();
         }
 
-        public void Writer(StreamClass file, string text)
+        public void Writer(Stream input, string text)
         {
-            using (StreamWriter writer = new StreamWriter(file.Name))
+            using (StreamWriter writer = new StreamWriter(input.Memory, leaveOpen: true))
             {
                 writer.Write(text);
+                writer.Flush();
+            }
+        }
+
+        public string Reader(Stream input)
+        {
+            Memory.Seek(0, SeekOrigin.Begin);
+            using(StreamReader reader = new StreamReader(input.Memory))
+            {
+                return reader.ReadToEnd();
             }
         }
        
