@@ -18,9 +18,22 @@ namespace StreamClassProgram
         public void CheckIfWriterAndReaderMethodeWorks()
         {
             Stream stream = new Stream();
-            stream.Writer(stream, "test");
-            string textToCheck = stream.Reader(stream);
+            stream.Writer("test");
+            string textToCheck = stream.Reader();
             Assert.Equal("test", textToCheck);
+        }
+
+        [Fact]
+
+        public void CheckIfCompressAndDecompressMethodesWorks()
+        {
+            var stream = new Stream();
+            stream.Writer("test");
+            stream.CompressStream();
+            stream.DecompressStream();
+            string result = stream.Reader();
+
+            Assert.Equal("test", result);
         }
     }
 }

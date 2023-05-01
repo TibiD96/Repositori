@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 
 namespace StreamClassProgram
 {
@@ -12,21 +13,44 @@ namespace StreamClassProgram
             Memory = new MemoryStream();
         }
 
-        public void Writer(Stream input, string text)
+        public void Writer(string text)
         {
-            using (StreamWriter writer = new StreamWriter(input.Memory, leaveOpen: true))
+            using (StreamWriter writer = new StreamWriter(Memory, leaveOpen: true))
             {
                 writer.Write(text);
                 writer.Flush();
             }
         }
 
-        public string Reader(Stream input)
+        public string Reader()
         {
             Memory.Seek(0, SeekOrigin.Begin);
-            using(StreamReader reader = new StreamReader(input.Memory))
+            using(StreamReader reader = new StreamReader(Memory))
             {
                 return reader.ReadToEnd();
+            }
+        }
+
+        public void CompressStream()
+        {
+            using var compressor = new GZipStream(Memory, CompressionMode.Compress);
+        }
+
+        public void DecompressStream()
+        {
+            if (Memory.CanRead || !Memory.CanSeek)
+            {
+                Memory.Seek(0, SeekOrigin.Begin);
+                using var decompressor = new GZipStream(Memory, CompressionMode.Decompress);
+                var output = new MemoryStream();
+                decompressor.CopyTo(output);
+                Memory = output;
+                decompressor.Dispose();
+
+            }
+            else
+            {
+                throw new ArgumentException("Input is not compressed");
             }
         }
        
