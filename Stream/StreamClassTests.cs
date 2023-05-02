@@ -28,11 +28,8 @@ namespace StreamClassProgram
         public void CheckIfCompressAndDecompressMethodesWorks()
         {
             var stream = new Stream();
-            stream.Writer("test");
-            stream.CompressStream();
-            stream.DecompressStream();
-            string result = stream.Reader();
-
+            stream.Writer("test", true);
+            string result = stream.Reader(true);
             Assert.Equal("test", result);
         }
     }
