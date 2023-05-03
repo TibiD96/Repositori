@@ -25,13 +25,14 @@ namespace StreamClassProgram
 
             if (crypt)
             {
-                using Aes aes = Aes.Create();
-                aes.GenerateKey();
-                aes.GenerateIV();
+                using (Rijndael rijAlg = Rijndael.Create())
+                {
+                    rijAlg.GenerateKey();
+                    rijAlg.GenerateIV();
 
-                ICryptoTransform encryptor = aes.CreateEncryptor();
-
-                support = new CryptoStream(support, encryptor, CryptoStreamMode.Write, true);
+                    ICryptoTransform encryptor = rijAlg.CreateEncryptor(rijAlg.Key, rijAlg.IV);
+                    support = new CryptoStream(stream, encryptor, CryptoStreamMode.Write, true);   
+                }
             }
 
             writer = new StreamWriter(support, leaveOpen: true);
@@ -45,6 +46,7 @@ namespace StreamClassProgram
             stream.Seek(0, SeekOrigin.Begin);
             Stream support = stream;
 
+
             if (gzip)
             {
                 support = new GZipStream(stream, CompressionMode.Decompress, true);
@@ -52,14 +54,14 @@ namespace StreamClassProgram
             
             if (crypt)
             {
-                using Aes aes = Aes.Create();
-                byte[] iv = new byte[aes.IV.Length];
-                stream.Read(iv, 0, iv.Length);
-                aes.IV = iv;
+                using (Rijndael rijAlg = Rijndael.Create())
+                {
+                    rijAlg.GenerateKey();
+                    rijAlg.GenerateIV();
 
-                ICryptoTransform decryptor = aes.CreateDecryptor();
-
-                support = new CryptoStream(support, decryptor, CryptoStreamMode.Read, true);
+                    ICryptoTransform decryptor = rijAlg.CreateDecryptor(rijAlg.Key, rijAlg.IV);
+                    support = new CryptoStream(stream, decryptor, CryptoStreamMode.Read, true);
+                }
             }
             using var reader = new StreamReader(support);
             return reader.ReadToEnd();

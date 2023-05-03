@@ -34,11 +34,32 @@ namespace StreamClassProgram
 
         [Fact]
 
-        public void CheckIfCryptAndDecryptMethodesWorks()
+        public void CheckIfCryptAndDecryptMethodesWorksWithNoZip()
+        {
+            var stream = new MemoryStream();
+            StreamChapter.Writer(stream, "test", false, true);
+            stream.Seek(0, SeekOrigin.Begin);
+            string result = StreamChapter.Reader(stream, false, true);
+            Assert.Equal("test", result);
+        }
+
+        [Fact]
+
+        public void CheckIfCryptAndDecryptMethodesWorksWithZip()
         {
             var stream = new MemoryStream();
             StreamChapter.Writer(stream, "test", false, true);
             string result = StreamChapter.Reader(stream, false, true);
+            Assert.Equal("test", result);
+        }
+
+        [Fact]
+
+        public void CheckIfCryptMethodesWorks()
+        {
+            var stream = new MemoryStream();
+            StreamChapter.Writer(stream, "test", false, false);
+            string result = StreamChapter.Reader(stream, false, false);
             Assert.Equal("test", result);
         }
     }
