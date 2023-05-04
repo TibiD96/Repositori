@@ -48,8 +48,8 @@ namespace StreamClassProgram
         public void CheckIfCryptAndDecryptMethodesWorksWithZip()
         {
             var stream = new MemoryStream();
-            StreamChapter.Writer(stream, "test", false, true);
-            string result = StreamChapter.Reader(stream, false, true);
+            StreamChapter.Writer(stream, "test", true, true);
+            string result = StreamChapter.Reader(stream, true, true);
             Assert.Equal("test", result);
         }
 
