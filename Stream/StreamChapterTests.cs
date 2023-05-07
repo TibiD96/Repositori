@@ -18,8 +18,8 @@ namespace StreamClassProgram
         {
             var stream = new MemoryStream();
             StreamChapter.Writer(stream, "test");
-            string textToCheck = StreamChapter.Reader(stream);
-            Assert.Equal("test", textToCheck);
+            string result = StreamChapter.Reader(stream);
+            Assert.Equal("test", result);
         }
 
         [Fact]
@@ -32,13 +32,13 @@ namespace StreamClassProgram
             Assert.Equal("test", result);
         }
 
+
         [Fact]
 
         public void CheckIfCryptAndDecryptMethodesWorksWithNoZip()
         {
             var stream = new MemoryStream();
             StreamChapter.Writer(stream, "test", false, true);
-            stream.Seek(0, SeekOrigin.Begin);
             string result = StreamChapter.Reader(stream, false, true);
             Assert.Equal("test", result);
         }

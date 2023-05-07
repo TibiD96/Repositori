@@ -8,16 +8,23 @@ namespace StreamClassProgram
     public class StreamChapter
     {
         public MemoryStream Memory { get; private set; }
-        
+        public static byte[] Key = new byte[16];
+        public static byte[] Iv = new byte[16];
+
+        private static byte[] cryptedText;
+
         public StreamChapter()
         {
             Memory = new MemoryStream();
+
         }
 
         public static void Writer(Stream stream, string text, bool gzip = false, bool crypt = false)
         {
-            StreamWriter writer;
             Stream support = stream;
+            StreamWriter writer;
+            MemoryStream memorySuport = new MemoryStream();
+
             if (gzip)
             {
                support = new GZipStream(stream, CompressionMode.Compress, true);
@@ -25,27 +32,32 @@ namespace StreamClassProgram
 
             if (crypt)
             {
-                using (Rijndael rijAlg = Rijndael.Create())
+                using (Aes aes = Aes.Create())
                 {
-                    rijAlg.GenerateKey();
-                    rijAlg.GenerateIV();
+                    ICryptoTransform encryptor = aes.CreateEncryptor(Key, Iv);
+                    using (support = new CryptoStream(memorySuport, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter streamWriter = new StreamWriter(support))
+                        {
+                            streamWriter.Write(text);
+                        }
 
-                    ICryptoTransform encryptor = rijAlg.CreateEncryptor(rijAlg.Key, rijAlg.IV);
-                    support = new CryptoStream(stream, encryptor, CryptoStreamMode.Write, true);   
+                        cryptedText = memorySuport.ToArray();
+                    }
                 }
+
+                return;
             }
 
-            writer = new StreamWriter(support, leaveOpen: true);
+            writer = new StreamWriter(support);       
             writer.Write(text);
             writer.Flush();
-
         }
 
         public static string Reader(Stream stream, bool gzip = false, bool crypt = false)
         {
             stream.Seek(0, SeekOrigin.Begin);
             Stream support = stream;
-
 
             if (gzip)
             {
@@ -54,18 +66,23 @@ namespace StreamClassProgram
             
             if (crypt)
             {
-                using (Rijndael rijAlg = Rijndael.Create())
+                string simpletext = String.Empty;
+                using (Aes aes = Aes.Create())
                 {
-                    rijAlg.GenerateKey();
-                    rijAlg.GenerateIV();
-
-                    ICryptoTransform decryptor = rijAlg.CreateDecryptor(rijAlg.Key, rijAlg.IV);
-                    support = new CryptoStream(stream, decryptor, CryptoStreamMode.Read, true);
+                    ICryptoTransform decryptor = aes.CreateDecryptor(Key, Iv);
+                    using MemoryStream memoryStream = new MemoryStream(cryptedText);
+                    using (stream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
+                    {
+                        using StreamReader streamReader = new StreamReader(stream);
+                        simpletext = streamReader.ReadToEnd();
+                    }
                 }
+
+                return simpletext;
             }
-            using var reader = new StreamReader(support);
+
+            StreamReader reader = new StreamReader(support, true);
             return reader.ReadToEnd();
-            
         }
     }
 }
