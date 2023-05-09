@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
@@ -7,51 +7,32 @@ namespace StreamClassProgram
 {
     public class StreamChapter
     {
-        public MemoryStream Memory { get; private set; }
-        public static byte[] Key = new byte[16];
-        public static byte[] Iv = new byte[16];
-
-        private static byte[] cryptedText;
-
-        public StreamChapter()
-        {
-            Memory = new MemoryStream();
-
-        }
+        public static Aes aes { get; } = Aes.Create();
 
         public static void Writer(Stream stream, string text, bool gzip = false, bool crypt = false)
         {
             Stream support = stream;
             StreamWriter writer;
-            MemoryStream memorySuport = new MemoryStream();
 
             if (gzip)
             {
-               support = new GZipStream(stream, CompressionMode.Compress, true);
+                support = new GZipStream(support, CompressionMode.Compress, true);
             }
 
             if (crypt)
             {
-                using (Aes aes = Aes.Create())
-                {
-                    ICryptoTransform encryptor = aes.CreateEncryptor(Key, Iv);
-                    using (support = new CryptoStream(memorySuport, encryptor, CryptoStreamMode.Write))
-                    {
-                        using (StreamWriter streamWriter = new StreamWriter(support))
-                        {
-                            streamWriter.Write(text);
-                        }
-
-                        cryptedText = memorySuport.ToArray();
-                    }
-                }
-
-                return;
+                ICryptoTransform encryptor = aes.CreateEncryptor();
+                support = new CryptoStream(support, encryptor, CryptoStreamMode.Write, true);
             }
 
-            writer = new StreamWriter(support);       
+            writer = new StreamWriter(support);
             writer.Write(text);
             writer.Flush();
+
+            if (crypt)
+            {
+                writer.Dispose();
+            }
         }
 
         public static string Reader(Stream stream, bool gzip = false, bool crypt = false)
@@ -61,27 +42,16 @@ namespace StreamClassProgram
 
             if (gzip)
             {
-                support = new GZipStream(stream, CompressionMode.Decompress, true);
+                support = new GZipStream(support, CompressionMode.Decompress, true);
             }
-            
+
             if (crypt)
             {
-                string simpletext = String.Empty;
-                using (Aes aes = Aes.Create())
-                {
-                    ICryptoTransform decryptor = aes.CreateDecryptor(Key, Iv);
-                    using MemoryStream memoryStream = new MemoryStream(cryptedText);
-                    using (stream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
-                    {
-                        using StreamReader streamReader = new StreamReader(stream);
-                        simpletext = streamReader.ReadToEnd();
-                    }
-                }
-
-                return simpletext;
+                ICryptoTransform decryptor = aes.CreateDecryptor();
+                support = new CryptoStream(support, decryptor, CryptoStreamMode.Read);
             }
 
-            StreamReader reader = new StreamReader(support, true);
+            using StreamReader reader = new StreamReader(support);
             return reader.ReadToEnd();
         }
     }
