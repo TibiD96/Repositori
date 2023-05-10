@@ -16,13 +16,13 @@ namespace StreamClassProgram
 
             if (gzip)
             {
-                support = new GZipStream(support, CompressionMode.Compress, true);
+                support = new GZipStream(support, CompressionMode.Compress);
             }
 
             if (crypt)
             {
                 ICryptoTransform encryptor = aes.CreateEncryptor();
-                support = new CryptoStream(support, encryptor, CryptoStreamMode.Write, true);
+                support = new CryptoStream(support, encryptor, CryptoStreamMode.Write);
             }
 
             writer = new StreamWriter(support);
@@ -42,7 +42,7 @@ namespace StreamClassProgram
 
             if (gzip)
             {
-                support = new GZipStream(support, CompressionMode.Decompress, true);
+                support = new GZipStream(support, CompressionMode.Decompress);
             }
 
             if (crypt)

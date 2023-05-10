@@ -18,6 +18,7 @@ namespace StreamClassProgram
         {
             var stream = new MemoryStream();
             StreamChapter.Writer(stream, "test");
+            stream.Seek(0, SeekOrigin.Begin);
             string result = StreamChapter.Reader(stream);
             Assert.Equal("test", result);
         }
@@ -28,6 +29,7 @@ namespace StreamClassProgram
         {
             var stream = new MemoryStream();
             StreamChapter.Writer(stream, "test", true);
+            stream.Seek(0, SeekOrigin.Begin);
             string result = StreamChapter.Reader(stream, true);
             Assert.Equal("test", result);
         }
@@ -39,6 +41,7 @@ namespace StreamClassProgram
         {
             var stream = new MemoryStream();
             StreamChapter.Writer(stream, "test", false, true);
+            stream.Seek(0, SeekOrigin.Begin);
             string result = StreamChapter.Reader(stream, false, true);
             Assert.Equal("test", result);
         }
@@ -49,6 +52,7 @@ namespace StreamClassProgram
         {
             var stream = new MemoryStream();
             StreamChapter.Writer(stream, "test", true, true);
+            stream.Seek(0, SeekOrigin.Begin);
             string result = StreamChapter.Reader(stream, true, true);
             Assert.Equal("test", result);
         }
@@ -59,6 +63,7 @@ namespace StreamClassProgram
         {
             var stream = new MemoryStream();
             StreamChapter.Writer(stream, "test", false, false);
+            stream.Seek(0, SeekOrigin.Begin);
             string result = StreamChapter.Reader(stream, false, false);
             Assert.Equal("test", result);
         }
