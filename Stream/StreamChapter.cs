@@ -29,9 +29,9 @@ namespace StreamClassProgram
             writer.Write(text);
             writer.Flush();
 
-            if (crypt)
+            if (support is CryptoStream cryptoStream)
             {
-                writer.Dispose();
+                cryptoStream.FlushFinalBlock();
             }
         }
 
