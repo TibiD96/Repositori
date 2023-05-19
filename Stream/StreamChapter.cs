@@ -1,46 +1,47 @@
-﻿using System;
-using System.IO;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using System.Security.Cryptography;
 
 namespace StreamClassProgram
 {
-    public class StreamChapter : StreamBuilder
+    public class StreamChapter : IStreamBuilder
     {
-        public static void Writer(Stream stream, string text, bool gzip = false, bool crypt = false)
+        private readonly Aes aes;
+
+        public StreamChapter(Aes aes)
         {
-            if (gzip)
-            {
-                GzipedStream(stream);
-            }
-
-            if (crypt)
-            {
-                CryptStream(stream);
-            }
-
-            StreamWriter writer = new StreamWriter(stream);
-            writer.Write(text);
-            writer.Flush();
-            if (stream is CryptoStream cryptoStream)
-            {
-              cryptoStream.FlushFinalBlock();
-            }         
+            this.aes = aes;
         }
 
-        public static string Reader(Stream stream, bool gzip = false, bool crypt = false)
+        public Stream BuildStreamWriter(Stream stream, bool gzip = false, bool crypt = false)
         {
             if (gzip)
             {
-                UnzipedStream(stream);
+               stream = new GZipStream(stream, CompressionMode.Compress);
             }
 
             if (crypt)
             {
-                DecryptStream(stream);
+                ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+                stream = new CryptoStream(stream, encryptor, CryptoStreamMode.Write);
             }
-            using StreamReader reader = new StreamReader(stream); 
-            return reader.ReadToEnd();
+
+            return stream;        
+        }
+
+        public Stream BuildStreamReader(Stream stream, bool gzip = false, bool crypt = false)
+        {
+            if (gzip)
+            {
+                stream = new GZipStream(stream, CompressionMode.Decompress);
+            }
+
+            if (crypt)
+            {
+                var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+                stream = new CryptoStream(stream, decryptor, CryptoStreamMode.Read);
+            }
+
+            return stream;
                 
             
         }
