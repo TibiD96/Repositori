@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 
 
@@ -18,7 +19,7 @@ namespace ChainedList
         public bool IsReadOnly { get; private set; }
         public void Add(T item)
         {
-            throw new NotImplementedException();
+
         }
 
         public void Clear()
@@ -38,7 +39,10 @@ namespace ChainedList
 
         public IEnumerator<T> GetEnumerator()
         {
-            throw new NotImplementedException();
+            for (LinkedListNode<T> current = sentinel.Next; current != sentinel; current = current.Next)
+            {
+                yield return current.Value;
+            }
         }
 
         public bool Remove(T item)
@@ -48,7 +52,7 @@ namespace ChainedList
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return GetEnumerator();
         }
     }
 }
