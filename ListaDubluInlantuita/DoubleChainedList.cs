@@ -79,7 +79,7 @@ namespace ChainedList
             throw new NotImplementedException();
         }
 
-        public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> nodeItem)
+        public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> addThis)
         {
             throw new NotImplementedException();
         }
@@ -101,24 +101,24 @@ namespace ChainedList
 
         public void AddLast(T item)
         {
-            LinkedListNode<T> nodeItem = new LinkedListNode<T>(item);
-            AddLast(nodeItem);
+            LinkedListNode<T> addThis = new LinkedListNode<T>(item);
+            AddLast(addThis);
         }
 
-        public void AddLast(LinkedListNode<T> nodeItem)
+        public void AddLast(LinkedListNode<T> addThis)
         {
-            sentinel.Left.Right = nodeItem;
-            nodeItem.Left = sentinel.Left;
-            sentinel.Left = nodeItem;
-            nodeItem.Right = sentinel;
-            nodeItem.List = this;
+            AddBefore(sentinel, addThis);
+
+        }
+
+        public void AddBefore(LinkedListNode<T> node, LinkedListNode<T> addThis)
+        {
+            node.Left.Right = addThis;
+            addThis.Left = node.Left;
+            node.Left = addThis;
+            addThis.Right = node;
+            addThis.List = this;
             Count++;
-
-        }
-
-        public void AddBefore(LinkedListNode<T> node, LinkedListNode<T> nodeItem)
-        {
-            throw new NotImplementedException();
         }
 
         public void AddBefore(LinkedListNode<T> node, T item)
