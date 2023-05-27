@@ -61,12 +61,14 @@ namespace ChainedList
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            sentinel.Right = sentinel;
+            sentinel.Left = sentinel;
+            Count = 0;
         }
 
         public bool Contains(T item)
         {
-            throw new NotImplementedException();
+            return Find(item);
         }
 
         public void CopyTo(T[] array, int arrayIndex)
@@ -76,27 +78,35 @@ namespace ChainedList
 
         public bool Remove(T item)
         {
-            throw new NotImplementedException();
+            LinkedListNode<T> removeThis = new LinkedListNode<T>(item);
+            return Remove(removeThis);
         }
 
         public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> addThis)
         {
-            throw new NotImplementedException();
+            node.Right.Left = addThis;
+            addThis.Right = node.Right;
+            node.Right = addThis;
+            addThis.Left = node;
+            addThis.List = this;
+            Count++;
         }
 
         public void AddAfter(LinkedListNode<T> node, T item)
         {
-            throw new NotImplementedException();
+            LinkedListNode<T> addThis = new LinkedListNode<T>(item);
+            AddAfter(node, addThis);
         }
 
-        public void AddFirst(LinkedListNode<T> node)
+        public void AddFirst(LinkedListNode<T> addThis)
         {
-            throw new NotImplementedException();
+            AddAfter(sentinel, addThis);
         }
 
         public void AddFirst(T item)
         {
-            throw new NotImplementedException();
+            LinkedListNode<T> addThis = new LinkedListNode<T>(item);
+            AddFirst(addThis);
         }
 
         public void AddLast(T item)
@@ -123,22 +133,42 @@ namespace ChainedList
 
         public void AddBefore(LinkedListNode<T> node, T item)
         {
-            throw new NotImplementedException();
+            LinkedListNode<T> addThis = new LinkedListNode<T>(item);
+            AddBefore(node, addThis);
         }
 
-        public void Find(T item)
+        public bool Find(T item)
         {
-            throw new NotImplementedException();
+            for(LinkedListNode<T>input = sentinel.Right; input != sentinel; input = input.Right)
+            {
+                if (input.Value.Equals(item))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
-        public void FindLast(T item)
+        public bool FindLast(T item)
         {
-            throw new NotImplementedException();
+            for (LinkedListNode<T> input = sentinel.Left; input != sentinel; input = input.Left)
+            {
+                if (input.Value.Equals(item))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
-        public void Remove(LinkedListNode<T> node)
+        public bool Remove(LinkedListNode<T> node)
         {
-            throw new NotImplementedException();
+            node.Left.Right = node.Right;
+            node.Right.Left = node.Left;
+            Count--;
+            return true;
         }
 
         public void RemoveFirst()
