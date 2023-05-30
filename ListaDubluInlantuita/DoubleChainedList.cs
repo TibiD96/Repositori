@@ -68,8 +68,13 @@ namespace ChainedList
 
         public bool Remove(T item)
         {
-            LinkedListNode<T> removeThis = new LinkedListNode<T>(item);
-            return Remove(removeThis);
+            if (Contains(item))
+            {
+                LinkedListNode<T> removeThis = Find(item);
+                return Remove(removeThis);
+            }
+
+            return false;
         }
 
         public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> addThis)

@@ -176,9 +176,28 @@ namespace ChainedList
         public void CheckIfRemoveMethodesWork()
         {
             var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
-            var remove = new LinkedListNode<int>(2);
+            int remove = 2;
             linkedList.Remove(remove);
             Assert.Equal(2, linkedList.Count);
+            Assert.Equal(3, linkedList.First.Right.Value);
+        }
+
+        [Fact]
+        public void CheckIfRemoveFirstMethodesWork()
+        {
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
+            linkedList.RemoveFirst();
+            Assert.Equal(2, linkedList.Count);
+            Assert.Equal(2, linkedList.First.Value);
+        }
+
+        [Fact]
+        public void CheckIfRemoveLastMethodesWork()
+        {
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
+            linkedList.RemoveLast();
+            Assert.Equal(2, linkedList.Count);
+            Assert.Equal(2, linkedList.Last.Value);
         }
 
 
