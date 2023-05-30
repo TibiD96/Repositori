@@ -12,16 +12,6 @@ namespace ChainedList
             sentinel.Left = sentinel;
         }
 
-        public DoubleChainedList(T[] data)
-        {
-            sentinel.Right = sentinel;
-            sentinel.Left = sentinel;
-            foreach (var element in data)
-            {
-                Add(element);
-            }
-        }
-
         public IEnumerator<T> GetEnumerator()
         {
             for (LinkedListNode<T> current = sentinel.Right; current != sentinel; current = current.Right)
@@ -39,19 +29,19 @@ namespace ChainedList
 
         public bool IsReadOnly { get; private set; }
 
-        public LinkedListNode<T> GetFirst
+        public LinkedListNode<T> First
         {
             get
             {
-                return sentinel.Right;
+                return CheckIfEmptyList(sentinel.Right);
             }
         }
 
-        public LinkedListNode<T> GetLast
+        public LinkedListNode<T> Last
         {
             get
             {
-                return sentinel.Left;
+                return CheckIfEmptyList(sentinel.Left);
             }
         }
         public void Add(T item)
@@ -88,7 +78,6 @@ namespace ChainedList
             addThis.Right = node.Right;
             node.Right = addThis;
             addThis.Left = node;
-            addThis.List = this;
             Count++;
         }
 
@@ -179,6 +168,16 @@ namespace ChainedList
         public void RemoveLast()
         {
             throw new NotImplementedException();
+        }
+
+        public LinkedListNode<T> CheckIfEmptyList(LinkedListNode<T> node)
+        {
+            if (Count ==  0)
+            {
+                return null;
+            }
+
+            return node;
         }
     }
 }

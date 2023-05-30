@@ -10,17 +10,16 @@ namespace ChainedList
         public void CheckIfConstructorWorksDefault()
         {
             var linkedList = new DoubleChainedList<int>();
-            Assert.Empty(linkedList);
+            Assert.Null(linkedList.First);
         }
 
         [Fact]
 
         public void CheckIfConstructorWorksWithInputArray()
         {
-            int[] input = new[] {1, 2, 3};
-            var linkedList = new DoubleChainedList<int>(input);
-            Assert.Equal(1, linkedList.GetFirst.Value);
-            Assert.Equal(3, linkedList.GetLast.Value);
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
+            Assert.Equal(1, linkedList.First.Value);
+            Assert.Equal(3, linkedList.Last.Value);
             Assert.Equal(3, linkedList.Count);
         }
 
@@ -28,11 +27,10 @@ namespace ChainedList
 
         public void CheckIfAddAndAddLastMethodesWork()
         {
-            int[] input = new[] { 1, 2, 3 };
-            var linkedList = new DoubleChainedList<int>(input);
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
             int numberToAdd = 10;
             linkedList.Add(numberToAdd);
-            Assert.Equal(10, linkedList.GetLast.Value);
+            Assert.Equal(10, linkedList.Last.Value);
             Assert.Equal(4, linkedList.Count);
         }
 
@@ -40,12 +38,11 @@ namespace ChainedList
 
         public void CheckIfAddLasMethodesWorkWithNode()
         {
-            int[] input = new[] { 1, 2, 3 };
-            var linkedList = new DoubleChainedList<int>(input);
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
             int secondInput = 4;
             var secondLinkedList = new LinkedListNode<int>(secondInput);
             linkedList.AddLast(secondLinkedList);
-            Assert.Equal(4, linkedList.GetLast.Value);
+            Assert.Equal(4, linkedList.Last.Value);
             Assert.Equal(4, linkedList.Count);
         }
 
@@ -64,7 +61,7 @@ namespace ChainedList
             linkedList.AddLast(third);
             linkedList.AddLast(fourth);
             linkedList.AddBefore(first, add);
-            Assert.Equal(5, linkedList.GetFirst.Value);
+            Assert.Equal(5, linkedList.First.Value);
             Assert.Equal(5, linkedList.Count);
         }
 
@@ -83,15 +80,14 @@ namespace ChainedList
             linkedList.AddLast(third);
             linkedList.AddLast(fourth);
             linkedList.AddBefore(first, add);
-            Assert.Equal(5, linkedList.GetFirst.Value);
+            Assert.Equal(5, linkedList.First.Value);
             Assert.Equal(5, linkedList.Count);
         }
 
         [Fact]
         public void CheckIfClearMethodesWork()
         {
-            int[] input = new[] { 1, 2, 3 };
-            var linkedList = new DoubleChainedList<int>(input);
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
             linkedList.Clear();
             Assert.Empty(linkedList);
         }
@@ -99,8 +95,7 @@ namespace ChainedList
         [Fact]
         public void CheckIfFindMethodesWork()
         {
-            int[] input = new[] { 1, 2, 3 };
-            var linkedList = new DoubleChainedList<int>(input);
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
             Assert.True(linkedList.Find(2));
             Assert.False(linkedList.Find(5));
         }
@@ -108,8 +103,7 @@ namespace ChainedList
         [Fact]
         public void CheckIfFindLastMethodesWork()
         {
-            int[] input = new[] { 1, 2, 3 };
-            var linkedList = new DoubleChainedList<int>(input);
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
             Assert.True(linkedList.FindLast(3));
             Assert.False(linkedList.FindLast(5));
         }
@@ -117,8 +111,7 @@ namespace ChainedList
         [Fact]
         public void CheckIfContainMethodesWork()
         {
-            int[] input = new[] { 1, 2, 3 };
-            var linkedList = new DoubleChainedList<int>(input);
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
             Assert.Contains(3, linkedList);
             Assert.DoesNotContain(5, linkedList);
         }
@@ -138,8 +131,8 @@ namespace ChainedList
             linkedList.AddLast(third);
             linkedList.AddLast(fourth);
             linkedList.AddAfter(first, add);
-            Assert.Equal(5, linkedList.GetFirst.Right.Value);
-            Assert.Equal(2, linkedList.GetFirst.Right.Right.Value);
+            Assert.Equal(5, linkedList.First.Right.Value);
+            Assert.Equal(2, linkedList.First.Right.Right.Value);
             Assert.Equal(5, linkedList.Count);
         }
 
@@ -158,34 +151,31 @@ namespace ChainedList
             linkedList.AddLast(third);
             linkedList.AddLast(fourth);
             linkedList.AddAfter(first, add);
-            Assert.Equal(5, linkedList.GetFirst.Right.Value);
+            Assert.Equal(5, linkedList.First.Right.Value);
             Assert.Equal(5, linkedList.Count);
         }
 
         [Fact]
         public void CheckIfAddFirstWithLinkedListNodeMethodesWork()
         {
-            int[] input = new[] { 1, 2, 3 };
-            var linkedList = new DoubleChainedList<int>(input);
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
             var add = new LinkedListNode<int>(5);
             linkedList.AddFirst(add);
-            Assert.Equal(5, linkedList.GetFirst.Value);
+            Assert.Equal(5, linkedList.First.Value);
         }
 
         [Fact]
         public void CheckIfAddFirstWithElementMethodesWork()
         {
-            int[] input = new[] { 1, 2, 3 };
-            var linkedList = new DoubleChainedList<int>(input);;
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
             linkedList.AddFirst(5);
-            Assert.Equal(5, linkedList.GetFirst.Value);
+            Assert.Equal(5, linkedList.First.Value);
         }
 
         [Fact]
         public void CheckIfRemoveMethodesWork()
         {
-            int[] input = new[] { 1, 2, 3 };
-            var linkedList = new DoubleChainedList<int>(input);
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
             var remove = new LinkedListNode<int>(2);
             linkedList.Remove(remove);
             Assert.Equal(2, linkedList.Count);
