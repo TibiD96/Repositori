@@ -74,11 +74,7 @@ namespace ChainedList
 
         public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> addThis)
         {
-            node.Right.Left = addThis;
-            addThis.Right = node.Right;
-            node.Right = addThis;
-            addThis.Left = node;
-            Count++;
+            AddBefore(node.Right, addThis);
         }
 
         public void AddAfter(LinkedListNode<T> node, T item)
