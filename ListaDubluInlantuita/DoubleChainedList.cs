@@ -58,7 +58,7 @@ namespace ChainedList
 
         public bool Contains(T item)
         {
-            return Find(item);
+            return Find(item) != null;
         }
 
         public void CopyTo(T[] array, int arrayIndex)
@@ -126,30 +126,30 @@ namespace ChainedList
             AddBefore(node, addThis);
         }
 
-        public bool Find(T item)
+        public LinkedListNode<T> Find(T item)
         {
             for(LinkedListNode<T>input = sentinel.Right; input != sentinel; input = input.Right)
             {
                 if (input.Value.Equals(item))
                 {
-                    return true;
+                    return input;
                 }
             }
 
-            return false;
+            return null;
         }
 
-        public bool FindLast(T item)
+        public LinkedListNode<T> FindLast(T item)
         {
             for (LinkedListNode<T> input = sentinel.Left; input != sentinel; input = input.Left)
             {
                 if (input.Value.Equals(item))
                 {
-                    return true;
+                    return input;
                 }
             }
 
-            return false;
+            return null;
         }
 
         public bool Remove(LinkedListNode<T> node)

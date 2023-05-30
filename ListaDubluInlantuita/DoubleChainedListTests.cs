@@ -96,16 +96,16 @@ namespace ChainedList
         public void CheckIfFindMethodesWork()
         {
             var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
-            Assert.True(linkedList.Find(2));
-            Assert.False(linkedList.Find(5));
+            Assert.Equal(linkedList.First.Right, linkedList.Find(2));
+            Assert.Null(linkedList.Find(5));
         }
 
         [Fact]
         public void CheckIfFindLastMethodesWork()
         {
             var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
-            Assert.True(linkedList.FindLast(3));
-            Assert.False(linkedList.FindLast(5));
+            Assert.Equal(linkedList.Last, linkedList.FindLast(3));
+            Assert.Null(linkedList.FindLast(5));
         }
 
         [Fact]
