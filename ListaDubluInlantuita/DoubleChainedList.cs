@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Xml.Linq;
 
 
 namespace ChainedList
@@ -156,14 +157,16 @@ namespace ChainedList
             return true;
         }
 
-        public void RemoveFirst()
+        public bool RemoveFirst()
         {
-            throw new NotImplementedException();
+            LinkedListNode<T> input = sentinel.Right;
+            return CheckIfEmptyList(input)  != null ? Remove(input) : false;
         }
 
-        public void RemoveLast()
+        public bool RemoveLast()
         {
-            throw new NotImplementedException();
+            LinkedListNode<T> input = sentinel.Left;
+            return CheckIfEmptyList(input) != null ? Remove(input) : false;
         }
 
         public LinkedListNode<T> CheckIfEmptyList(LinkedListNode<T> node)

@@ -201,12 +201,28 @@ namespace ChainedList
         }
 
         [Fact]
+        public void CheckIfRemoveFirstMethodesWorkForEmptyList()
+        {
+            var linkedList = new DoubleChainedList<int> {};
+            Assert.Equal(0, linkedList.Count);
+            Assert.False(linkedList.RemoveFirst());
+        }
+
+        [Fact]
         public void CheckIfRemoveLastMethodesWork()
         {
-            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3, 5 };
             linkedList.RemoveLast();
-            Assert.Equal(2, linkedList.Count);
-            Assert.Equal(2, linkedList.Last.Value);
+            Assert.Equal(3, linkedList.Count);
+            Assert.Equal(3, linkedList.Last.Value);
+        }
+
+        [Fact]
+        public void CheckIfRemoveLastMethodesWorkWithEmptyList()
+        {
+            var linkedList = new DoubleChainedList<int> {};
+            Assert.Equal(0, linkedList.Count);
+            Assert.False(linkedList.RemoveLast());
         }
 
 
