@@ -173,13 +173,22 @@ namespace ChainedList
         }
 
         [Fact]
-        public void CheckIfRemoveMethodesWork()
+        public void CheckIfRemoveMethodesWorkForListWithElements()
         {
             var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
             int remove = 2;
             linkedList.Remove(remove);
             Assert.Equal(2, linkedList.Count);
             Assert.Equal(3, linkedList.First.Right.Value);
+        }
+
+        [Fact]
+        public void CheckIfRemoveMethodesWorkForEmptyList()
+        {
+            var linkedList = new DoubleChainedList<int> {};
+            int remove = 2;
+            linkedList.Remove(remove);
+            Assert.False(linkedList.Remove(remove));
         }
 
         [Fact]
