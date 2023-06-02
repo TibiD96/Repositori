@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Xml.Linq;
+using Xunit.Sdk;
 
 
 namespace ChainedList
@@ -109,6 +110,7 @@ namespace ChainedList
 
         public void AddBefore(LinkedListNode<T> node, LinkedListNode<T> addThis)
         {
+            NodeNUllException(addThis);
             node.Left.Right = addThis;
             addThis.Left = node.Left;
             node.Left = addThis;
@@ -177,6 +179,17 @@ namespace ChainedList
             }
 
             return node;
+        }
+
+        public void NodeNUllException(LinkedListNode<T> node)
+
+        {
+            if (node == null)
+            {
+                throw new ArgumentNullException("Node can't bee null");
+            }
+
+            return;
         }
     }
 }
