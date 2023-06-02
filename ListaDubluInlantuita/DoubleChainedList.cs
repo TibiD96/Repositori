@@ -81,6 +81,7 @@ namespace ChainedList
 
         public void AddAfter(LinkedListNode<T> node, T item)
         {
+            ItemNUllException(item);
             LinkedListNode<T> addThis = new LinkedListNode<T>(item);
             AddAfter(node, addThis);
         }
@@ -92,12 +93,14 @@ namespace ChainedList
 
         public void AddFirst(T item)
         {
+            ItemNUllException(item);
             LinkedListNode<T> addThis = new LinkedListNode<T>(item);
             AddFirst(addThis);
         }
 
         public void AddLast(T item)
         {
+            ItemNUllException(item);
             LinkedListNode<T> addThis = new LinkedListNode<T>(item);
             AddLast(addThis);
         }
@@ -121,6 +124,7 @@ namespace ChainedList
 
         public void AddBefore(LinkedListNode<T> node, T item)
         {
+            ItemNUllException(item);
             LinkedListNode<T> addThis = new LinkedListNode<T>(item);
             AddBefore(node, addThis);
         }
@@ -187,6 +191,17 @@ namespace ChainedList
             if (node == null)
             {
                 throw new ArgumentNullException("Node can't bee null");
+            }
+
+            return;
+        }
+
+        public void ItemNUllException(T item)
+
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException("Item can't bee null");
             }
 
             return;

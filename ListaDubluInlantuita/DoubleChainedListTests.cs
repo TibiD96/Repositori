@@ -235,5 +235,16 @@ namespace ChainedList
             Assert.Throws<ArgumentNullException>(() => linkedList.AddAfter(linkedList.First, nullNode));
             Assert.Throws<ArgumentNullException>(() => linkedList.AddBefore(linkedList.Last, nullNode));
         }
+
+        [Fact]
+        public void CheckIfArgumentNullExceptionWorksForItem()
+        {
+            var linkedList = new DoubleChainedList<int?> { 1, 2, 3 };
+            int? nullItem = null;
+            Assert.Throws<ArgumentNullException>(() => linkedList.AddFirst(nullItem));
+            Assert.Throws<ArgumentNullException>(() => linkedList.AddLast(nullItem));
+            Assert.Throws<ArgumentNullException>(() => linkedList.AddAfter(linkedList.First, nullItem));
+            Assert.Throws<ArgumentNullException>(() => linkedList.AddBefore(linkedList.Last, nullItem));
+        }
     }
 }
