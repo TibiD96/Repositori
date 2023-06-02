@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using Xunit.Sdk;
 
@@ -12,6 +13,7 @@ namespace ChainedList
         {
             sentinel.Right = sentinel;
             sentinel.Left = sentinel;
+            sentinel.List = this;
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -82,6 +84,7 @@ namespace ChainedList
         public void AddAfter(LinkedListNode<T> node, T item)
         {
             ItemNUllException(item);
+            InexistentNode(node);
             LinkedListNode<T> addThis = new LinkedListNode<T>(item);
             AddAfter(node, addThis);
         }
@@ -113,6 +116,7 @@ namespace ChainedList
 
         public void AddBefore(LinkedListNode<T> node, LinkedListNode<T> addThis)
         {
+            InexistentNode(node);
             NodeNUllException(addThis);
             node.Left.Right = addThis;
             addThis.Left = node.Left;
@@ -125,6 +129,7 @@ namespace ChainedList
         public void AddBefore(LinkedListNode<T> node, T item)
         {
             ItemNUllException(item);
+            InexistentNode(node);
             LinkedListNode<T> addThis = new LinkedListNode<T>(item);
             AddBefore(node, addThis);
         }
@@ -202,6 +207,16 @@ namespace ChainedList
             if (item == null)
             {
                 throw new ArgumentNullException("Item can't bee null");
+            }
+
+            return;
+        }
+
+        public void InexistentNode(LinkedListNode<T> node)
+        {
+            if(node.List != this)
+            {
+                throw new InvalidOperationException("Node is not part of the list");
             }
 
             return;

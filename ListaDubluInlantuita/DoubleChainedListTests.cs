@@ -50,18 +50,10 @@ namespace ChainedList
 
         public void CheckIfAddBeforeWithLinkedListNodeMethodesWork()
         {
-            var linkedList = new DoubleChainedList<int>();
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3, 4};
             var add = new LinkedListNode<int>(5);
-            var first = new LinkedListNode<int>(1);
-            var second = new LinkedListNode<int>(2);
-            var third = new LinkedListNode<int>(3);
-            var fourth = new LinkedListNode<int>(4);
-            linkedList.AddLast(first);
-            linkedList.AddLast(second);
-            linkedList.AddLast(third);
-            linkedList.AddLast(fourth);
-            linkedList.AddBefore(first, add);
-            Assert.Equal(5, linkedList.First.Value);
+            linkedList.AddBefore(linkedList.First.Right, add);
+            Assert.Equal(5, linkedList.First.Right.Value);
             Assert.Equal(5, linkedList.Count);
         }
 
@@ -245,6 +237,15 @@ namespace ChainedList
             Assert.Throws<ArgumentNullException>(() => linkedList.AddLast(nullItem));
             Assert.Throws<ArgumentNullException>(() => linkedList.AddAfter(linkedList.First, nullItem));
             Assert.Throws<ArgumentNullException>(() => linkedList.AddBefore(linkedList.Last, nullItem));
+        }
+
+        [Fact]
+        public void CheckIfInvalidOperationExceptionWork()
+        {
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
+            var item = new LinkedListNode<int>(5);
+            Assert.Throws<InvalidOperationException>(() => linkedList.AddAfter(item, 8));
+            Assert.Throws<InvalidOperationException>(() => linkedList.AddBefore(item, 8));
         }
     }
 }
