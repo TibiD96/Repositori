@@ -78,6 +78,8 @@ namespace ChainedList
 
         public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> addThis)
         {
+            InexistentNode(node);
+            NodeNUllException(addThis);
             AddBefore(node.Right, addThis);
         }
 
@@ -91,6 +93,7 @@ namespace ChainedList
 
         public void AddFirst(LinkedListNode<T> addThis)
         {
+            NodeNUllException(addThis);
             AddAfter(sentinel, addThis);
         }
 
@@ -110,6 +113,7 @@ namespace ChainedList
 
         public void AddLast(LinkedListNode<T> addThis)
         {
+            NodeNUllException(addThis);
             AddBefore(sentinel, addThis);
 
         }
