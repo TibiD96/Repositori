@@ -166,6 +166,7 @@ namespace ChainedList
 
         public bool Remove(LinkedListNode<T> node)
         {
+            NodeNUllException(node);
             node.Left.Right = node.Right;
             node.Right.Left = node.Left;
             Count--;
@@ -175,13 +176,13 @@ namespace ChainedList
         public bool RemoveFirst()
         {
             LinkedListNode<T> input = sentinel.Right;
-            return CheckIfEmptyList(input)  != null ? Remove(input) : false;
+            return CheckIfEmptyList(input) != null ? Remove(input) : throw new ArgumentNullException("Item can't bee null");
         }
 
         public bool RemoveLast()
         {
             LinkedListNode<T> input = sentinel.Left;
-            return CheckIfEmptyList(input) != null ? Remove(input) : false;
+            return CheckIfEmptyList(input) != null ? Remove(input) : throw new ArgumentNullException("Item can't bee null");
         }
 
         public LinkedListNode<T> CheckIfEmptyList(LinkedListNode<T> node)

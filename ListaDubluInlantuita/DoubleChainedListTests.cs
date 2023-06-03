@@ -197,7 +197,7 @@ namespace ChainedList
         {
             var linkedList = new DoubleChainedList<int> {};
             Assert.Equal(0, linkedList.Count);
-            Assert.False(linkedList.RemoveFirst());
+            Assert.Throws<ArgumentNullException>(() => linkedList.RemoveFirst());
         }
 
         [Fact]
@@ -214,7 +214,7 @@ namespace ChainedList
         {
             var linkedList = new DoubleChainedList<int> {};
             Assert.Equal(0, linkedList.Count);
-            Assert.False(linkedList.RemoveLast());
+            Assert.Throws<ArgumentNullException>(() => linkedList.RemoveLast());
         }
 
         [Fact]
@@ -226,6 +226,7 @@ namespace ChainedList
             Assert.Throws<ArgumentNullException>(() => linkedList.AddLast(nullNode));
             Assert.Throws<ArgumentNullException>(() => linkedList.AddAfter(linkedList.First, nullNode));
             Assert.Throws<ArgumentNullException>(() => linkedList.AddBefore(linkedList.Last, nullNode));
+            Assert.Throws<ArgumentNullException>(() => linkedList.Remove(nullNode));
         }
 
         [Fact]
