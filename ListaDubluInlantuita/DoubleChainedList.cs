@@ -1,7 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Linq;
-using Xunit.Sdk;
 
 
 namespace ChainedList
@@ -67,7 +66,12 @@ namespace ChainedList
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            int index = 0;
+            for (LinkedListNode<T> current = sentinel.Right; current != sentinel; current = current.Right)
+            {
+                array[index] = current.Value;
+                index++;
+            }
         }
 
         public bool Remove(T item)

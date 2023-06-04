@@ -249,5 +249,16 @@ namespace ChainedList
             Assert.Throws<InvalidOperationException>(() => linkedList.AddBefore(item, 8));
             Assert.Throws<InvalidOperationException>(() => linkedList.Remove(item));
         }
+
+        [Fact]
+        public void CheckICopyTWork()
+        {
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
+            var secondLinkedList = new int[3];
+            linkedList.CopyTo(secondLinkedList, 0);
+            Assert.Equal(linkedList.First.Value, secondLinkedList[0]);
+            Assert.Equal(linkedList.Last.Value, secondLinkedList[2]);
+
+        }
     }
 }
