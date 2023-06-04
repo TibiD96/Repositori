@@ -67,9 +67,9 @@ namespace ChainedList
         public void CopyTo(T[] array, int arrayIndex)
         {
             int index = 0;
-            for (LinkedListNode<T> current = sentinel.Right; current != sentinel; current = current.Right)
+            for (LinkedListNode<T> input = sentinel.Right; input != sentinel; input = input.Right)
             {
-                array[index] = current.Value;
+                array[index] = input.Value;
                 index++;
             }
         }
