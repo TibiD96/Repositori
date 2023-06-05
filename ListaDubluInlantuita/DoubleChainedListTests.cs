@@ -277,5 +277,14 @@ namespace ChainedList
             linkedList.IsReadOnly = true;
             Assert.Throws<NotSupportedException>(() => linkedList.Clear());
         }
+
+        [Fact]
+        public void CheckIfRemoveMethodesThrowWorks()
+        {
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
+            linkedList.IsReadOnly = true;
+            int remove = 2;
+            Assert.Throws<NotSupportedException>(() => linkedList.Remove(remove));
+        }
     }
 }

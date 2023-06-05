@@ -78,6 +78,7 @@ namespace ChainedList
 
         public bool Remove(T item)
         {
+            NotSupportedException();
             LinkedListNode<T> removeThis = Find(item);
             return removeThis != null ? Remove(removeThis) : false;
         }
