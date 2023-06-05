@@ -66,6 +66,7 @@ namespace ChainedList
 
         public void CopyTo(T[] array, int arrayIndex)
         {
+            ArrayNUllException(array);
             int index = 0;
             for (LinkedListNode<T> input = sentinel.Right; input != sentinel; input = input.Right)
             {
@@ -227,6 +228,17 @@ namespace ChainedList
             if(node.List != this)
             {
                 throw new InvalidOperationException("Node is not part of the list");
+            }
+
+            return;
+        }
+
+        public void ArrayNUllException(T[] array)
+
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException("Array can't bee null");
             }
 
             return;

@@ -260,5 +260,14 @@ namespace ChainedList
             Assert.Equal(linkedList.Last.Value, secondLinkedList[2]);
 
         }
+
+        [Fact]
+        public void CheckICopyTpThrowWork()
+        {
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
+            int[] secondLinkedList = null;
+            Assert.Throws<ArgumentNullException>(() => linkedList.CopyTo(secondLinkedList, 0));
+
+        }
     }
 }
