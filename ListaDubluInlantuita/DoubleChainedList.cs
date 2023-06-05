@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using System.Data;
 
 namespace ChainedList
 {
@@ -30,7 +30,7 @@ namespace ChainedList
 
         public int Count { get; private set; }
 
-        public bool IsReadOnly { get; private set; }
+        public bool IsReadOnly { get; set; }
 
         public LinkedListNode<T> First
         {
@@ -54,6 +54,7 @@ namespace ChainedList
 
         public void Clear()
         {
+            NotSupportedException();
             sentinel.Right = sentinel;
             sentinel.Left = sentinel;
             Count = 0;
@@ -239,6 +240,17 @@ namespace ChainedList
             if (array == null)
             {
                 throw new ArgumentNullException("Array can't bee null");
+            }
+
+            return;
+        }
+
+        public void NotSupportedException()
+
+        {
+            if (IsReadOnly)
+            {
+                throw new NotSupportedException("Is Read Only");
             }
 
             return;

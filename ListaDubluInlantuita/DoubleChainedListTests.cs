@@ -269,5 +269,13 @@ namespace ChainedList
             Assert.Throws<ArgumentNullException>(() => linkedList.CopyTo(secondLinkedList, 0));
 
         }
+
+        [Fact]
+        public void CheckIfClearMethodesThrowWork()
+        {
+            var linkedList = new DoubleChainedList<int> { 1, 2, 3 };
+            linkedList.IsReadOnly = true;
+            Assert.Throws<NotSupportedException>(() => linkedList.Clear());
+        }
     }
 }
