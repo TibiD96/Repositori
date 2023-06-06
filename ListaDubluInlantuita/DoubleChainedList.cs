@@ -161,6 +161,7 @@ namespace ChainedList
             node.Left.Right = node.Right;
             node.Right.Left = node.Left;
             Count--;
+            node.List = null;
             return true;
         }
 
