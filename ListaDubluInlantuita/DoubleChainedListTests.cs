@@ -28,7 +28,7 @@ namespace ChainedList
         public void CheckIfAddAndAddLastMethodesWork()
         {
             var linkedList = new DoubleChainedListCollection<int> { 1, 2, 3 };
-            int numberToAdd = 10;
+            const int numberToAdd = 10;
             linkedList.Add(numberToAdd);
             Assert.Equal(10, linkedList.Last.Value);
             Assert.Equal(4, linkedList.Count);
@@ -39,7 +39,7 @@ namespace ChainedList
         public void CheckIfAddLasMethodesWorkWithNode()
         {
             var linkedList = new DoubleChainedListCollection<int> { 1, 2, 3 };
-            int secondInput = 4;
+            const int secondInput = 4;
             var secondLinkedList = new LinkedListNode<int>(secondInput);
             linkedList.AddLast(secondLinkedList);
             Assert.Equal(4, linkedList.Last.Value);
@@ -62,7 +62,7 @@ namespace ChainedList
         public void CheckIfAddBeforeWithLinkedListNodeAndElementMethodesWork()
         {
             var linkedList = new DoubleChainedListCollection<int>();
-            int add = 5;
+            const int add = 5;
             var first = new LinkedListNode<int>(1);
             var second = new LinkedListNode<int>(2);
             var third = new LinkedListNode<int>(3);
@@ -133,7 +133,7 @@ namespace ChainedList
         public void CheckIfAddAfterWithLinkedListNodeAndElementMethodesWork()
         {
             var linkedList = new DoubleChainedListCollection<int>();
-            int add = 5;
+            const int add = 5;
             var first = new LinkedListNode<int>(1);
             var second = new LinkedListNode<int>(2);
             var third = new LinkedListNode<int>(3);
@@ -168,7 +168,7 @@ namespace ChainedList
         public void CheckIfRemoveMethodesWorkForListWithElements()
         {
             var linkedList = new DoubleChainedListCollection<int> { 1, 2, 3 };
-            int remove = 2;
+            const int remove = 2;
             linkedList.Remove(remove);
             Assert.Equal(2, linkedList.Count);
             Assert.Equal(3, linkedList.First.Right.Value);
@@ -178,7 +178,7 @@ namespace ChainedList
         public void CheckIfRemoveMethodesWorkForEmptyList()
         {
             var linkedList = new DoubleChainedListCollection<int> {};
-            int remove = 2;
+            const int remove = 2;
             linkedList.Remove(remove);
             Assert.False(linkedList.Remove(remove));
         }
@@ -258,7 +258,6 @@ namespace ChainedList
             linkedList.CopyTo(secondLinkedList, 0);
             Assert.Equal(linkedList.First.Value, secondLinkedList[0]);
             Assert.Equal(linkedList.Last.Value, secondLinkedList[2]);
-
         }
 
         [Fact]
@@ -267,7 +266,6 @@ namespace ChainedList
             var linkedList = new DoubleChainedListCollection<int> { 1, 2, 3 };
             int[] secondLinkedList = null;
             Assert.Throws<ArgumentNullException>(() => linkedList.CopyTo(secondLinkedList, 0));
-
         }
 
         [Fact]
@@ -283,7 +281,7 @@ namespace ChainedList
         {
             var linkedList = new DoubleChainedListCollection<int> { 1, 2, 3 };
             linkedList.IsReadOnly = true;
-            int remove = 2;
+            const int remove = 2;
             Assert.Throws<NotSupportedException>(() => linkedList.Remove(remove));
         }
     }

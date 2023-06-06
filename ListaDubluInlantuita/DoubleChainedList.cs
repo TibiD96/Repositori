@@ -66,7 +66,7 @@ namespace ChainedList
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            ArrayNUllException(array);
+            ArrayNullException(array);
             int index = 0;
             for (LinkedListNode<T> input = sentinel.Right; input != sentinel; input = input.Right)
             {
@@ -84,12 +84,13 @@ namespace ChainedList
 
         public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> addThis)
         {
+            InexistentNode(node);
             AddBefore(node.Right, addThis);
         }
 
         public void AddAfter(LinkedListNode<T> node, T item)
         {
-            ItemNUllException(item);
+            ItemNullException(item);
             InexistentNode(node);
             LinkedListNode<T> addThis = new LinkedListNode<T>(item);
             AddAfter(node, addThis);
@@ -102,14 +103,14 @@ namespace ChainedList
 
         public void AddFirst(T item)
         {
-            ItemNUllException(item);
+            ItemNullException(item);
             LinkedListNode<T> addThis = new LinkedListNode<T>(item);
             AddFirst(addThis);
         }
 
         public void AddLast(T item)
         {
-            ItemNUllException(item);
+            ItemNullException(item);
             LinkedListNode<T> addThis = new LinkedListNode<T>(item);
             AddLast(addThis);
         }
@@ -122,7 +123,7 @@ namespace ChainedList
         public void AddBefore(LinkedListNode<T> node, LinkedListNode<T> addThis)
         {
             InexistentNode(node);
-            NodeNUllException(addThis);
+            NodeNullException(addThis);
             node.Left.Right = addThis;
             addThis.Left = node.Left;
             node.Left = addThis;
@@ -133,7 +134,7 @@ namespace ChainedList
 
         public void AddBefore(LinkedListNode<T> node, T item)
         {
-            ItemNUllException(item);
+            ItemNullException(item);
             LinkedListNode<T> addThis = new LinkedListNode<T>(item);
             AddBefore(node, addThis);
         }
@@ -166,7 +167,7 @@ namespace ChainedList
 
         public bool Remove(LinkedListNode<T> node)
         {
-            NodeNUllException(node);
+            NodeNullException(node);
             InexistentNode(node);
             node.Left.Right = node.Right;
             node.Right.Left = node.Left;
@@ -196,7 +197,7 @@ namespace ChainedList
             return node;
         }
 
-        public void NodeNUllException(LinkedListNode<T> node)
+        public void NodeNullException(LinkedListNode<T> node)
         {
             if (node != null)
             {
@@ -206,7 +207,7 @@ namespace ChainedList
             throw new ArgumentNullException("node");
         }
 
-        public void ItemNUllException(T item)
+        public void ItemNullException(T item)
         {
             if (item != null)
             {
@@ -226,7 +227,7 @@ namespace ChainedList
             throw new InvalidOperationException("Node is not part of the list");
         }
 
-        public void ArrayNUllException(T[] array)
+        public void ArrayNullException(T[] array)
         {
             if (array != null)
             {
