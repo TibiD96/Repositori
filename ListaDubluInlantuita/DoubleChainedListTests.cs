@@ -230,27 +230,6 @@ namespace ChainedList
         }
 
         [Fact]
-        public void CheckIfArgumentNullExceptionWorksForItem()
-        {
-            var linkedList = new DoubleChainedListCollection<int?> { 1, 2, 3 };
-            int? nullItem = null;
-            Assert.Throws<ArgumentNullException>(() => linkedList.AddFirst(nullItem));
-            Assert.Throws<ArgumentNullException>(() => linkedList.AddLast(nullItem));
-            Assert.Throws<ArgumentNullException>(() => linkedList.AddAfter(linkedList.First, nullItem));
-            Assert.Throws<ArgumentNullException>(() => linkedList.AddBefore(linkedList.Last, nullItem));
-        }
-
-        [Fact]
-        public void CheckIfInvalidOperationExceptionWork()
-        {
-            var linkedList = new DoubleChainedListCollection<int> { 1, 2, 3 };
-            var item = new LinkedListNode<int>(5);
-            Assert.Throws<InvalidOperationException>(() => linkedList.AddAfter(item, 8));
-            Assert.Throws<InvalidOperationException>(() => linkedList.AddBefore(item, 8));
-            Assert.Throws<InvalidOperationException>(() => linkedList.Remove(item));
-        }
-
-        [Fact]
         public void CheckICopyTWork()
         {
             var linkedList = new DoubleChainedListCollection<int> { 1, 2, 3 };
