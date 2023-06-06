@@ -221,10 +221,12 @@ namespace ChainedList
         {
             var linkedList = new DoubleChainedListCollection<int> { 1, 2, 3 };
             LinkedListNode<int> nullNode = null;
+            var five = new LinkedListNode<int>(5);
             Assert.Throws<ArgumentNullException>(() => linkedList.AddFirst(nullNode));
             Assert.Throws<ArgumentNullException>(() => linkedList.AddLast(nullNode));
             Assert.Throws<ArgumentNullException>(() => linkedList.AddAfter(linkedList.First, nullNode));
             Assert.Throws<ArgumentNullException>(() => linkedList.AddBefore(linkedList.Last, nullNode));
+            Assert.Throws<ArgumentNullException>(() => linkedList.AddBefore(nullNode, five));
             Assert.Throws<ArgumentNullException>(() => linkedList.Remove(nullNode));
         }
 
@@ -261,6 +263,24 @@ namespace ChainedList
             linkedList.IsReadOnly = true;
             const int remove = 2;
             Assert.Throws<NotSupportedException>(() => linkedList.Remove(remove));
+        }
+
+        [Fact]
+        public void CheckIfInvalidOperationExceptionWork()
+        {
+            var linkedList = new DoubleChainedListCollection<int> { 1, 2, 3 };
+            var five = new LinkedListNode<int>(5);
+            Assert.Throws<InvalidOperationException>(() => linkedList.AddBefore(five, 8));
+        }
+
+        [Fact]
+        public void CheckIfInvalidOperationExceptionWorkForAddANodeTwice()
+        {
+            var linkedList = new DoubleChainedListCollection<int> { 1, 2, 3 };
+            var five = new LinkedListNode<int>(5);
+            var secondLinkedList = new DoubleChainedListCollection<int> { 4, 6, 7 };
+            secondLinkedList.AddLast(five);
+            Assert.Throws<InvalidOperationException>(() => linkedList.AddBefore(linkedList.First, five));
         }
     }
 }

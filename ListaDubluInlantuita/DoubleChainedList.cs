@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace ChainedList
 {
@@ -116,6 +117,9 @@ namespace ChainedList
         public void AddBefore(LinkedListNode<T> node, LinkedListNode<T> addThis)
         {
             NodeNullException(addThis);
+            NodeIsPartOfAnotherList(addThis);
+            NodeNullException(node);
+            InexistentNode(node);
             node.Left.Right = addThis;
             addThis.Left = node.Left;
             node.Left = addThis;
@@ -215,6 +219,26 @@ namespace ChainedList
             }
 
             throw new NotSupportedException("Is Read Only");
+        }
+
+        public void InexistentNode(LinkedListNode<T> node)
+        {
+            if (node.List == this)
+            {
+                return;
+            }
+
+            throw new InvalidOperationException("Node is not part of the list");
+        }
+
+        public void NodeIsPartOfAnotherList(LinkedListNode<T> node)
+        {
+            if (node.List == null)
+            {
+                return;
+            }
+
+            throw new InvalidOperationException("Node is  part of different list");
         }
     }
 }
