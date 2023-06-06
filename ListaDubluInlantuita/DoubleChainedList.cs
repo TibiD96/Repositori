@@ -2,27 +2,15 @@
 
 namespace ChainedList
 {
-    public class DoubleChainedList<T> : ICollection<T>
+    public class DoubleChainedListCollection<T> : ICollection<T>
     {
         private readonly LinkedListNode<T> sentinel = new LinkedListNode<T>(default);
-        public DoubleChainedList()
+
+        public DoubleChainedListCollection()
         {
             sentinel.Right = sentinel;
             sentinel.Left = sentinel;
             sentinel.List = this;
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            for (LinkedListNode<T> current = sentinel.Right; current != sentinel; current = current.Right)
-            {
-                yield return current.Value;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         public int Count { get; private set; }
@@ -44,6 +32,20 @@ namespace ChainedList
                 return CheckIfEmptyList(sentinel.Left);
             }
         }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            for (LinkedListNode<T> current = sentinel.Right; current != sentinel; current = current.Right)
+            {
+                yield return current.Value;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
         public void Add(T item)
         {
             AddLast(item);
@@ -77,7 +79,7 @@ namespace ChainedList
         {
             NotSupportedException();
             LinkedListNode<T> removeThis = Find(item);
-            return removeThis != null ? Remove(removeThis) : false;
+            return removeThis != null && Remove(removeThis);
         }
 
         public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> addThis)
@@ -138,7 +140,7 @@ namespace ChainedList
 
         public LinkedListNode<T> Find(T item)
         {
-            for(LinkedListNode<T>input = sentinel.Right; input != sentinel; input = input.Right)
+            for (LinkedListNode<T> input = sentinel.Right; input != sentinel; input = input.Right)
             {
                 if (input.Value.Equals(item))
                 {
@@ -175,18 +177,18 @@ namespace ChainedList
         public bool RemoveFirst()
         {
             LinkedListNode<T> input = sentinel.Right;
-            return CheckIfEmptyList(input) != null ? Remove(input) : false;
+            return CheckIfEmptyList(input) != null && Remove(input);
         }
 
         public bool RemoveLast()
         {
             LinkedListNode<T> input = sentinel.Left;
-            return CheckIfEmptyList(input) != null ? Remove(input) : false;
+            return CheckIfEmptyList(input) != null && Remove(input);
         }
 
         public LinkedListNode<T> CheckIfEmptyList(LinkedListNode<T> node)
         {
-            if (Count ==  0)
+            if (Count == 0)
             {
                 return null;
             }
@@ -195,57 +197,53 @@ namespace ChainedList
         }
 
         public void NodeNUllException(LinkedListNode<T> node)
-
         {
-            if (node == null)
+            if (node != null)
             {
-                throw new ArgumentNullException("Node can't bee null");
+                return;
             }
 
-            return;
+            throw new ArgumentNullException("node");
         }
 
         public void ItemNUllException(T item)
-
         {
-            if (item == null)
+            if (item != null)
             {
-                throw new ArgumentNullException("Item can't bee null");
+                return;
             }
 
-            return;
+            throw new ArgumentNullException("item");
         }
 
         public void InexistentNode(LinkedListNode<T> node)
         {
-            if(node.List != this)
+            if (node.List == this)
             {
-                throw new InvalidOperationException("Node is not part of the list");
+                return;
             }
 
-            return;
+            throw new InvalidOperationException("Node is not part of the list");
         }
 
         public void ArrayNUllException(T[] array)
-
         {
-            if (array == null)
+            if (array != null)
             {
-                throw new ArgumentNullException("Array can't bee null");
+                return;
             }
 
-            return;
+            throw new ArgumentNullException("array");
         }
 
         public void NotSupportedException()
-
         {
-            if (IsReadOnly)
+            if (!IsReadOnly)
             {
-                throw new NotSupportedException("Is Read Only");
+                return;
             }
 
-            return;
+            throw new NotSupportedException("Is Read Only");
         }
     }
 }
