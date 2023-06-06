@@ -212,7 +212,7 @@ namespace ChainedList
         [Fact]
         public void CheckIfRemoveLastMethodesWorkWithEmptyList()
         {
-            var linkedList = new DoubleChainedListCollection<int> {};
+            var linkedList = new DoubleChainedListCollection<int>();
             Assert.Equal(0, linkedList.Count);
             Assert.False(linkedList.RemoveLast());
         }

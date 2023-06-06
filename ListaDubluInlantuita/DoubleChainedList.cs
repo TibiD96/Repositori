@@ -84,6 +84,7 @@ namespace ChainedList
 
         public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> addThis)
         {
+            NodeNullException(node);
             AddBefore(node.Right, addThis);
         }
 
