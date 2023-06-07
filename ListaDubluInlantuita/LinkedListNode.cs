@@ -11,9 +11,9 @@ namespace ChainedList
 
         public T Value { get; set; }
 
-        public LinkedListNode<T> Right { get; set; }
+        public LinkedListNode<T> Right { get; internal set; }
 
-        public LinkedListNode<T> Left { get; set; }
+        public LinkedListNode<T> Left { get; internal set; }
 
         public DoubleChainedListCollection<T> List { get; internal set; }
     }
