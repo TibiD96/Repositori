@@ -23,7 +23,32 @@ namespace DictionaryCollection
 
         public bool IsReadOnly { get; set; }
 
-        public TValue this[TKey key] { get => items.Key.Value; set => items.Key.Value = value; }
+        public TValue this[TKey key]
+        {
+            get
+            {
+                int position = Convert.ToInt32(key);
+                if (ContainsKey(key))
+                {
+                    return items[position].Value;
+                }
+
+                throw new KeyNotFoundException("Key does not exist");
+            }
+
+            set
+            {
+                int position = Convert.ToInt32(key);
+                if (ContainsKey(key))
+                {
+                    items[position].Value = value;
+                }
+                else
+                {
+                    throw new KeyNotFoundException("Key does not exist");
+                }
+            }
+        }
 
         public void Add(TKey key, TValue value)
         {
