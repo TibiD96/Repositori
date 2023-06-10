@@ -5,17 +5,25 @@ namespace DictionaryCollection
 {
     public class Dictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
-        private readonly Dictionary<int, string> alfabet = new Dictionary<int, string>();
+        private int[] buckets;
 
-        public ICollection<TKey> Keys => throw new NotImplementedException();
+        private Item<TKey, TValue>[] items;
 
-        public ICollection<TValue> Values => throw new NotImplementedException();
+        public Dictionary(int dimension)
+        {
+            this.buckets = new int[dimension];
+            this.items = new Item<TKey, TValue>[dimension];
+        }
 
-        public int Count { get; }
+        public ICollection<TKey> Keys => new List<TKey>();
+
+        public ICollection<TValue> Values => new List<TValue>();
+
+        public int Count { get; set; }
 
         public bool IsReadOnly { get; set; }
 
-        public TValue this[TKey key] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public TValue this[TKey key] { get => items.Key.Value; set => items.Key.Value = value; }
 
         public void Add(TKey key, TValue value)
         {
