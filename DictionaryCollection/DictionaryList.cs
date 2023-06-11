@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DictionaryCollection
@@ -103,6 +104,12 @@ namespace DictionaryCollection
         IEnumerator IEnumerable.GetEnumerator()
         {
             throw new NotImplementedException();
+        }
+
+        public int BucketChooser(TKey key)
+        {
+            const int numberOfBuckets = 5;
+            return key.GetHashCode() % numberOfBuckets;
         }
     }
 }
