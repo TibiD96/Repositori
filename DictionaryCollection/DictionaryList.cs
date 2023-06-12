@@ -1,14 +1,13 @@
-﻿using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
-using System.Collections;
+﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DictionaryCollection
 {
     public class Dictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
-        private int[] buckets;
+        private readonly int[] buckets;
 
-        private Item<TKey, TValue>[] items;
+        private readonly Item<TKey, TValue>[] items;
 
         public Dictionary(int dimension)
         {
@@ -28,10 +27,12 @@ namespace DictionaryCollection
         {
             get
             {
-                int position = Convert.ToInt32(key);
-                if (ContainsKey(key))
+                for (int i = 0; i < Count; i++)
                 {
-                    return items[position].Value;
+                    if (items[i].Key.Equals(key))
+                    {
+                        return items[i].Value;
+                    }
                 }
 
                 throw new KeyNotFoundException("Key does not exist");
@@ -39,21 +40,28 @@ namespace DictionaryCollection
 
             set
             {
-                int position = Convert.ToInt32(key);
-                if (ContainsKey(key))
+                for (int i = 0; i < Count; i++)
                 {
-                    items[position].Value = value;
-                }
-                else
-                {
-                    throw new KeyNotFoundException("Key does not exist");
+                    if (items[i].Key.Equals(key))
+                    {
+                        items[i].Value = value;
+                        return;
+                    }
                 }
             }
         }
 
         public void Add(TKey key, TValue value)
         {
-            throw new NotImplementedException();
+            int bucketNumber = BucketChooser(key);
+            var item = new Item<TKey, TValue>();
+            item.Key = key;
+            item.Value = value;
+            items[Count] = item;
+            buckets[bucketNumber] = Count;
+            Keys.Add(key);
+            Values.Add(value);
+            Count++;
         }
 
         public void Add(KeyValuePair<TKey, TValue> item)
@@ -109,7 +117,7 @@ namespace DictionaryCollection
         public int BucketChooser(TKey key)
         {
             const int numberOfBuckets = 5;
-            return key.GetHashCode() % numberOfBuckets;
+            return Math.Abs(key.GetHashCode() % numberOfBuckets);
         }
     }
 }
