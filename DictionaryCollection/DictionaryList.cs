@@ -27,27 +27,12 @@ namespace DictionaryCollection
         {
             get
             {
-                for (int i = 0; i < Count; i++)
-                {
-                    if (items[i].Key.Equals(key))
-                    {
-                        return items[i].Value;
-                    }
-                }
-
-                throw new KeyNotFoundException("Key does not exist");
+                return items[buckets[BucketChooser(key)]].Value;
             }
 
             set
             {
-                for (int i = 0; i < Count; i++)
-                {
-                    if (items[i].Key.Equals(key))
-                    {
-                        items[i].Value = value;
-                        return;
-                    }
-                }
+              items[buckets[BucketChooser(key)]].Value = value;
             }
         }
 
@@ -71,7 +56,8 @@ namespace DictionaryCollection
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            Count = 0;
+            buckets.GetLength(0);
         }
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
