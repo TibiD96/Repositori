@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using Newtonsoft.Json.Linq;
+using Xunit;
 
 namespace DictionaryCollection
 {
@@ -32,6 +33,16 @@ namespace DictionaryCollection
             Assert.Equal(0, dictionary.BucketChooser(10));
             Assert.Equal(2, dictionary.BucketChooser(2));
             Assert.Equal(2, dictionary.BucketChooser(7));
+        }
+
+        [Fact]
+
+        public void AddBasedOnPairWork()
+        {
+            var dictionary = new Dictionary<int, string>(5);
+            var itemToAdd = new KeyValuePair<int, string>(12, "s");
+            dictionary.Add(itemToAdd);
+            Assert.Equal("s", dictionary[12]);
         }
     }
 }

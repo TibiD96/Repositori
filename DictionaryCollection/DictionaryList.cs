@@ -66,7 +66,7 @@ namespace DictionaryCollection
 
         public void Add(KeyValuePair<TKey, TValue> item)
         {
-            throw new NotImplementedException();
+            Add(item.Key, item.Value);
         }
 
         public void Clear()
