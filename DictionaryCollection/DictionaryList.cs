@@ -62,7 +62,15 @@ namespace DictionaryCollection
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i <= Count; i++)
+            {
+                if (items[buckets[i]].Key.Equals(item.Key) && items[buckets[i]].Value.Equals(item.Value))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public bool ContainsKey(TKey key)
