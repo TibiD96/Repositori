@@ -67,7 +67,6 @@ namespace DictionaryCollection
 
         public bool ContainsKey(TKey key)
         {
-            int indexOfBacket = BucketChooser(key);
             for (int i = 0; i <= Count; i++)
             {
                 if (items[buckets[i]].Key.Equals(key))
