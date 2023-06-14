@@ -67,7 +67,16 @@ namespace DictionaryCollection
 
         public bool ContainsKey(TKey key)
         {
-            throw new NotImplementedException();
+            int indexOfBacket = BucketChooser(key);
+            for (int i = 0; i <= Count; i++)
+            {
+                if (items[buckets[i]].Key.Equals(key))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)

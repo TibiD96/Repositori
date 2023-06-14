@@ -55,5 +55,16 @@ namespace DictionaryCollection
             dictionary.Clear();
             Assert.Equal(0, dictionary.Count);
         }
+
+        [Fact]
+
+        public void CheckIfContainKeyWork()
+        {
+            var dictionary = new Dictionary<int, string>(5);
+            dictionary.Add(7, "d");
+            dictionary.Add(12, "c");
+            Assert.True(dictionary.ContainsKey(7));
+            Assert.True(dictionary.ContainsKey(12));
+        }
     }
 }
