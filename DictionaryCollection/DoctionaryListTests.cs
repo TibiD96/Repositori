@@ -88,5 +88,20 @@ namespace DictionaryCollection
             Assert.True(dictionary.Contains(second));
             Assert.True(dictionary.Contains(third));
         }
+
+        [Fact]
+
+        public void CheckIfRemoveWork()
+        {
+            var dictionary = new Dictionary<int, string>(5);
+            var first = new KeyValuePair<int, string>(12, "a");
+            var second = new KeyValuePair<int, string>(5, "b");
+            var third = new KeyValuePair<int, string>(10, "c");
+            dictionary.Add(first);
+            dictionary.Add(second);
+            dictionary.Add(third);
+            Assert.False(dictionary.Remove(15));
+            Assert.True(dictionary.Remove(12));
+        }
     }
 }

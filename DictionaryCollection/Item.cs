@@ -6,6 +6,6 @@
 
         public TValue Value { get; set; }
 
-        public int Next { get; set; }
+        public int Next { get; set; } = -1;
     }
 }

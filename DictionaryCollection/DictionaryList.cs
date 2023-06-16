@@ -98,7 +98,20 @@ namespace DictionaryCollection
 
         public bool Remove(TKey key)
         {
-            throw new NotImplementedException();
+            int bucketNumber = BucketChooser(key);
+            int index = buckets[bucketNumber];
+            if (!ContainsKey(key))
+            {
+                return false;
+            }
+
+            if (items[index].Next == -1)
+            {
+                items[index] = null;
+                return true;
+            }
+
+            return false;
         }
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
