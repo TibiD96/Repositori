@@ -62,7 +62,7 @@ namespace DictionaryCollection
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
-            for (int i = 0; i <= Count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 if (items[buckets[i]].Key.Equals(item.Key) && items[buckets[i]].Value.Equals(item.Value))
                 {
@@ -75,9 +75,9 @@ namespace DictionaryCollection
 
         public bool ContainsKey(TKey key)
         {
-            for (int i = 0; i <= Count; i++)
+            for (int i = 0; i < Count; i++)
             {
-                if (items[buckets[i]].Key.Equals(key))
+                if (items[i].Key.Equals(key))
                 {
                     return true;
                 }
@@ -105,10 +105,17 @@ namespace DictionaryCollection
                 return false;
             }
 
-            if (items[index].Next == -1)
+            while (index >= 0)
             {
-                items[index] = null;
-                return true;
+                if (items[index].Next == -1 && items[index].Key.Equals(key))
+                {
+                    items[index].Key = default;
+                    items[index].Value = default;
+                    Count--;
+                    return true;
+                }
+
+                index--;
             }
 
             return false;
