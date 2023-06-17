@@ -93,7 +93,7 @@ namespace DictionaryCollection
 
         [Fact]
 
-        public void CheckIfRemoveWork()
+        public void CheckIfRemoveWorkKeyIsFirstInBucket()
         {
             var dictionary = new Dictionary<int, string>(5);
             var first = new KeyValuePair<int, string>(1, "a");
@@ -109,6 +109,46 @@ namespace DictionaryCollection
             Assert.False(dictionary.Remove(15));
             Assert.True(dictionary.Remove(12));
             Assert.True(dictionary.Remove(7));
+        }
+
+        [Fact]
+
+        public void CheckIfRemoveWorkKeyIsNotFirstInBucket()
+        {
+            var dictionary = new Dictionary<int, string>(5);
+            var first = new KeyValuePair<int, string>(1, "a");
+            var second = new KeyValuePair<int, string>(2, "b");
+            var third = new KeyValuePair<int, string>(10, "c");
+            var fourth = new KeyValuePair<int, string>(7, "d");
+            var fifth = new KeyValuePair<int, string>(12, "d");
+            dictionary.Add(first);
+            dictionary.Add(second);
+            dictionary.Add(third);
+            dictionary.Add(fourth);
+            dictionary.Add(fifth);
+            Assert.False(dictionary.Remove(15));
+            Assert.True(dictionary.Remove(7));
+        }
+
+        [Fact]
+
+        public void CheckIfRemovewithPairsWork()
+        {
+            var dictionary = new Dictionary<int, string>(5);
+            var first = new KeyValuePair<int, string>(1, "a");
+            var second = new KeyValuePair<int, string>(2, "b");
+            var third = new KeyValuePair<int, string>(10, "c");
+            var fourth = new KeyValuePair<int, string>(7, "d");
+            var fifth = new KeyValuePair<int, string>(12, "d");
+            var sixth = new KeyValuePair<int, string>(15, "d");
+            dictionary.Add(first);
+            dictionary.Add(second);
+            dictionary.Add(third);
+            dictionary.Add(fourth);
+            dictionary.Add(fifth);
+            Assert.False(dictionary.Remove(sixth));
+            Assert.True(dictionary.Remove(fifth));
+            Assert.True(dictionary.Remove(fourth));
         }
     }
 }

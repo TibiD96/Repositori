@@ -118,12 +118,20 @@ namespace DictionaryCollection
                 return false;
             }
 
-            while (index >= 0)
+            if (items[buckets[bucketNumber]].Key.Equals(key))
+            {
+                buckets[bucketNumber] = items[index].Next;
+                items[index] = default;
+                Count--;
+                return true;
+            }
+
+            while (items[index].Next != -1)
             {
                 if (items[index].Key.Equals(key))
                 {
-                    items[index].Key = default;
-                    items[index].Value = default;
+                    items[buckets[bucketNumber]].Next = items[index].Next;
+                    items[index] = default;
                     Count--;
                     return true;
                 }
@@ -153,6 +161,11 @@ namespace DictionaryCollection
         {
             const int numberOfBuckets = 5;
             return Math.Abs(key.GetHashCode() % numberOfBuckets);
+        }
+
+        private bool FirstElementFromBucket(TKey key)
+        {
+            return buckets[BucketChooser(key)].Equals(key);
         }
     }
 }
