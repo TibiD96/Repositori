@@ -162,10 +162,5 @@ namespace DictionaryCollection
             const int numberOfBuckets = 5;
             return Math.Abs(key.GetHashCode() % numberOfBuckets);
         }
-
-        private bool FirstElementFromBucket(TKey key)
-        {
-            return buckets[BucketChooser(key)].Equals(key);
-        }
     }
 }
