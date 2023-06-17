@@ -13,6 +13,10 @@ namespace DictionaryCollection
         {
             this.buckets = new int[dimension];
             this.items = new Item<TKey, TValue>[dimension];
+            for (int i = 0; i < dimension; i++)
+            {
+                this.buckets[i] = -1;
+            }
         }
 
         public ICollection<TKey> Keys => new List<TKey>();
@@ -27,7 +31,15 @@ namespace DictionaryCollection
         {
             get
             {
-                return items[buckets[BucketChooser(key)]].Value;
+                for (int i = buckets[BucketChooser(key)]; i >= 0; i--)
+                {
+                    if (items[i].Key.Equals(key))
+                    {
+                        return items[i].Value;
+                    }
+                }
+
+                throw new KeyNotFoundException();
             }
 
             set
@@ -42,10 +54,11 @@ namespace DictionaryCollection
             var item = new Item<TKey, TValue>();
             item.Key = key;
             item.Value = value;
-            items[Count] = item;
-            buckets[bucketNumber] = Count;
             Keys.Add(key);
             Values.Add(value);
+            items[Count] = item;
+            item.Next = buckets[bucketNumber];
+            buckets[bucketNumber] = Count;
             Count++;
         }
 
@@ -64,7 +77,7 @@ namespace DictionaryCollection
         {
             for (int i = 0; i < Count; i++)
             {
-                if (items[buckets[i]].Key.Equals(item.Key) && items[buckets[i]].Value.Equals(item.Value))
+                if (items[i].Key.Equals(item.Key) && items[i].Value.Equals(item.Value))
                 {
                     return true;
                 }
@@ -107,7 +120,7 @@ namespace DictionaryCollection
 
             while (index >= 0)
             {
-                if (items[index].Next == -1 && items[index].Key.Equals(key))
+                if (items[index].Key.Equals(key))
                 {
                     items[index].Key = default;
                     items[index].Value = default;

@@ -11,13 +11,15 @@ namespace DictionaryCollection
         {
             var dictionary = new Dictionary<int, string>(5);
             dictionary.Add(1, "a");
-            dictionary.Add(10, "b");
-            dictionary.Add(3, "c");
+            dictionary.Add(2, "b");
+            dictionary.Add(10, "c");
             dictionary.Add(7, "d");
+            dictionary.Add(12, "e");
             Assert.Equal("a", dictionary[1]);
-            Assert.Equal("b", dictionary[10]);
-            Assert.Equal("c", dictionary[3]);
+            Assert.Equal("b", dictionary[2]);
+            Assert.Equal("c", dictionary[10]);
             Assert.Equal("d", dictionary[7]);
+            Assert.Equal("e", dictionary[12]);
         }
 
         [Fact]
