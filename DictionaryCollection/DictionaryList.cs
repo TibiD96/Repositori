@@ -9,6 +9,8 @@ namespace DictionaryCollection
 
         private readonly Item<TKey, TValue>[] items;
 
+        private readonly int dimension = 5;
+
         public Dictionary(int dimension)
         {
             this.buckets = new int[dimension];
@@ -70,7 +72,10 @@ namespace DictionaryCollection
         public void Clear()
         {
             Count = 0;
-            buckets.GetLength(0);
+            for (int i = 0; i < dimension; i++)
+            {
+                this.buckets[i] = -1;
+            }
         }
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
@@ -144,7 +149,35 @@ namespace DictionaryCollection
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
-            throw new NotImplementedException();
+            int bucketNumber = BucketChooser(item.Key);
+            int index = buckets[bucketNumber];
+            if (!ContainsKey(item.Key))
+            {
+                return false;
+            }
+
+            if (items[buckets[bucketNumber]].Key.Equals(item.Key) && items[buckets[bucketNumber]].Value.Equals(item.Value))
+            {
+                buckets[bucketNumber] = items[index].Next;
+                items[index] = default;
+                Count--;
+                return true;
+            }
+
+            while (items[index].Next != -1)
+            {
+                if (items[buckets[bucketNumber]].Key.Equals(item.Key) && items[buckets[bucketNumber]].Value.Equals(item.Value))
+                {
+                    items[buckets[bucketNumber]].Next = items[index].Next;
+                    items[index] = default;
+                    Count--;
+                    return true;
+                }
+
+                index--;
+            }
+
+            return false;
         }
 
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
