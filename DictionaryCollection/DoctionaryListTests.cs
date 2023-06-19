@@ -132,7 +132,7 @@ namespace DictionaryCollection
 
         [Fact]
 
-        public void CheckIfRemovewithPairsWork()
+        public void CheckIfRemovewithPairsWorkIfPairIsFirst()
         {
             var dictionary = new Dictionary<int, string>(5);
             var first = new KeyValuePair<int, string>(1, "a");
@@ -148,6 +148,25 @@ namespace DictionaryCollection
             dictionary.Add(fifth);
             Assert.False(dictionary.Remove(sixth));
             Assert.True(dictionary.Remove(fifth));
+        }
+
+        [Fact]
+
+        public void CheckIfRemovewithPairsWorkIfPairIsNotFirst()
+        {
+            var dictionary = new Dictionary<int, string>(5);
+            var first = new KeyValuePair<int, string>(1, "a");
+            var second = new KeyValuePair<int, string>(2, "b");
+            var third = new KeyValuePair<int, string>(10, "c");
+            var fourth = new KeyValuePair<int, string>(7, "d");
+            var fifth = new KeyValuePair<int, string>(12, "d");
+            var sixth = new KeyValuePair<int, string>(15, "d");
+            dictionary.Add(first);
+            dictionary.Add(second);
+            dictionary.Add(third);
+            dictionary.Add(fourth);
+            dictionary.Add(fifth);
+            Assert.False(dictionary.Remove(sixth));
             Assert.True(dictionary.Remove(fourth));
         }
     }

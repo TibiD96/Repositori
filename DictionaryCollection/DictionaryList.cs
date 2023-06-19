@@ -166,7 +166,7 @@ namespace DictionaryCollection
 
             while (items[index].Next != -1)
             {
-                if (items[buckets[bucketNumber]].Key.Equals(item.Key) && items[buckets[bucketNumber]].Value.Equals(item.Value))
+                if (items[index].Key.Equals(item.Key) && items[index].Value.Equals(item.Value))
                 {
                     items[buckets[bucketNumber]].Next = items[index].Next;
                     items[index] = default;
@@ -194,6 +194,23 @@ namespace DictionaryCollection
         {
             const int numberOfBuckets = 5;
             return Math.Abs(key.GetHashCode() % numberOfBuckets);
+        }
+
+        public int FindItem(TKey key)
+        {
+            int bucketNumber = BucketChooser(key);
+            int index = buckets[bucketNumber];
+            while (items[index].Next != -1)
+            {
+                if (items[index].Key.Equals(key))
+                {
+                    return index;
+                }
+
+                index--;
+            }
+
+            return -1;
         }
     }
 }
