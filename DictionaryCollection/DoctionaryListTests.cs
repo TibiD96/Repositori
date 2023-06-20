@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using Xunit;
-using Xunit.Abstractions;
+﻿using Xunit;
 
 namespace DictionaryCollection
 {
@@ -193,7 +191,7 @@ namespace DictionaryCollection
 
         [Fact]
 
-        public void CheckIfTryGetValueWork()
+        public void CheckIfTryGetValueWorkForTrue()
         {
             var dictionary = new Dictionary<int, string>(5);
             var first = new KeyValuePair<int, string>(1, "a");
@@ -201,7 +199,6 @@ namespace DictionaryCollection
             var third = new KeyValuePair<int, string>(10, "c");
             var fourth = new KeyValuePair<int, string>(7, "d");
             var fifth = new KeyValuePair<int, string>(12, "d");
-            var sixth = new KeyValuePair<int, string>(15, "d");
             dictionary.Add(first);
             dictionary.Add(second);
             dictionary.Add(third);
@@ -209,6 +206,25 @@ namespace DictionaryCollection
             dictionary.Add(fifth);
             Assert.True(dictionary.TryGetValue(1, out string value));
             Assert.Equal(first.Value, value);
+        }
+
+        [Fact]
+
+        public void CheckIfTryGetValueWorkForFalse()
+        {
+            var dictionary = new Dictionary<int, string>(5);
+            var first = new KeyValuePair<int, string>(1, "a");
+            var second = new KeyValuePair<int, string>(2, "b");
+            var third = new KeyValuePair<int, string>(10, "c");
+            var fourth = new KeyValuePair<int, string>(7, "d");
+            var fifth = new KeyValuePair<int, string>(12, "d");
+            dictionary.Add(first);
+            dictionary.Add(second);
+            dictionary.Add(third);
+            dictionary.Add(fourth);
+            dictionary.Add(fifth);
+            Assert.False(dictionary.TryGetValue(3, out string value));
+            Assert.Null(value);
         }
     }
 }

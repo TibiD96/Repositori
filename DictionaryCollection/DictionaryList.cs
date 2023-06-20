@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 
 namespace DictionaryCollection
 {
@@ -45,12 +44,45 @@ namespace DictionaryCollection
 
             set
             {
-              items[buckets[BucketChooser(key)]].Value = value;
+              if (FindKey(key) == -1)
+              {
+                    throw new KeyNotFoundException();
+              }
+
+              items[FindKey(key)].Value = value;
+            }
+        }
+
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        {
+            KeyValuePair<TKey, TValue>[] components = new KeyValuePair<TKey, TValue>[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                components[i] = new KeyValuePair<TKey, TValue>(items[i].Key, items[i].Value);
+                yield return components[i];
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            foreach (var item in items)
+            {
+                yield return item;
             }
         }
 
         public void Add(TKey key, TValue value)
         {
+            if (key == null)
+            {
+                throw new ArgumentNullException("key can't be null");
+            }
+
+            if (FindKey(key) != -1)
+            {
+                throw new ArgumentException("Key allready Exist");
+            }
+
             int bucketNumber = BucketChooser(key);
             var item = new Item<TKey, TValue>();
             item.Key = key;
@@ -95,21 +127,27 @@ namespace DictionaryCollection
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
+            if (array == null)
+            {
+                throw new ArgumentNullException("array can't be null");
+            }
+
+            if (arrayIndex < 0 || arrayIndex > array.Length - 1)
+            {
+                throw new ArgumentOutOfRangeException("Index is outside range");
+            }
+
             for (int i = 0; i < Count; i++)
             {
                 array[arrayIndex + i] = new KeyValuePair<TKey, TValue>(items[i].Key, items[i].Value);
             }
         }
 
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
         public bool Remove(TKey key)
         {
-            int bucketNumber = BucketChooser(key);
+
             int keyPosition = FindKey(key);
+            int bucketNumber = BucketChooser(key);
 
             if (keyPosition == -1)
             {
@@ -155,11 +193,6 @@ namespace DictionaryCollection
             return false;
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
         public int BucketChooser(TKey key)
         {
             const int numberOfBuckets = 5;
@@ -168,6 +201,11 @@ namespace DictionaryCollection
 
         private int FindKey(TKey key)
         {
+            if (key == null)
+            {
+                throw new ArgumentNullException("array can't be null");
+            }
+
             int bucketNumber = BucketChooser(key);
             int index = buckets[bucketNumber];
             while (index != -1)
