@@ -95,7 +95,10 @@ namespace DictionaryCollection
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < Count; i++)
+            {
+                array[arrayIndex + i] = new KeyValuePair<TKey, TValue>(items[i].Key, items[i].Value);
+            }
         }
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
