@@ -142,9 +142,17 @@ namespace DictionaryCollection
             return items[keyPosition].Value.Equals(item.Value) && Remove(item.Key);
         }
 
-        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
+        public bool TryGetValue(TKey key, out TValue value)
         {
-            throw new NotImplementedException();
+            int keyPosition = FindKey(key);
+            if (keyPosition != -1)
+            {
+                value = items[keyPosition].Value;
+                return true;
+            }
+
+            value = default;
+            return false;
         }
 
         IEnumerator IEnumerable.GetEnumerator()

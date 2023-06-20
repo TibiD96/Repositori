@@ -181,7 +181,6 @@ namespace DictionaryCollection
             var third = new KeyValuePair<int, string>(10, "c");
             var fourth = new KeyValuePair<int, string>(7, "d");
             var fifth = new KeyValuePair<int, string>(12, "d");
-            var sixth = new KeyValuePair<int, string>(15, "d");
             dictionary.Add(first);
             dictionary.Add(second);
             dictionary.Add(third);
@@ -190,6 +189,26 @@ namespace DictionaryCollection
             dictionary.CopyTo(secondDictionary, 0);
             Assert.Equal(5, secondDictionary.Length);
             Assert.Equal(first.Key, secondDictionary[0].Key);
+        }
+
+        [Fact]
+
+        public void CheckIfTryGetValueWork()
+        {
+            var dictionary = new Dictionary<int, string>(5);
+            var first = new KeyValuePair<int, string>(1, "a");
+            var second = new KeyValuePair<int, string>(2, "b");
+            var third = new KeyValuePair<int, string>(10, "c");
+            var fourth = new KeyValuePair<int, string>(7, "d");
+            var fifth = new KeyValuePair<int, string>(12, "d");
+            var sixth = new KeyValuePair<int, string>(15, "d");
+            dictionary.Add(first);
+            dictionary.Add(second);
+            dictionary.Add(third);
+            dictionary.Add(fourth);
+            dictionary.Add(fifth);
+            Assert.True(dictionary.TryGetValue(1, out string value));
+            Assert.Equal(first.Value, value);
         }
     }
 }
