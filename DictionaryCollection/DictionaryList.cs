@@ -35,15 +35,12 @@ namespace DictionaryCollection
         {
             get
             {
-                for (int i = buckets[BucketChooser(key)]; i >= 0; i--)
+                if (FindKey(key) == -1)
                 {
-                    if (items[i].Key.Equals(key))
-                    {
-                        return items[i].Value;
-                    }
+                    throw new KeyNotFoundException();
                 }
 
-                throw new KeyNotFoundException();
+                return items[FindKey(key)].Value;
             }
 
             set
@@ -82,28 +79,18 @@ namespace DictionaryCollection
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
-            for (int i = 0; i < Count; i++)
+            int keyPosition = FindKey(item.Key);
+            if (keyPosition == -1)
             {
-                if (items[i].Key.Equals(item.Key) && items[i].Value.Equals(item.Value))
-                {
-                    return true;
-                }
+                return false;
             }
 
-            return false;
+            return items[keyPosition].Value.Equals(item.Value) && ContainsKey(item.Key);
         }
 
         public bool ContainsKey(TKey key)
         {
-            for (int i = 0; i < Count; i++)
-            {
-                if (items[i].Key.Equals(key))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return FindKey(key) != -1;
         }
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
