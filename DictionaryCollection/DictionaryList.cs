@@ -143,35 +143,13 @@ namespace DictionaryCollection
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
-            int bucketNumber = BucketChooser(item.Key);
-            int index = buckets[bucketNumber];
-            if (!ContainsKey(item.Key))
+            int keyPosition = FindKey(item.Key);
+            if (keyPosition == -1)
             {
                 return false;
             }
 
-            if (items[buckets[bucketNumber]].Key.Equals(item.Key) && items[buckets[bucketNumber]].Value.Equals(item.Value))
-            {
-                buckets[bucketNumber] = items[index].Next;
-                items[index] = default;
-                Count--;
-                return true;
-            }
-
-            while (items[index].Next != -1)
-            {
-                if (items[index].Key.Equals(item.Key) && items[index].Value.Equals(item.Value))
-                {
-                    items[buckets[bucketNumber]].Next = items[index].Next;
-                    items[index] = default;
-                    Count--;
-                    return true;
-                }
-
-                index--;
-            }
-
-            return false;
+            return items[keyPosition].Value.Equals(item.Value) && Remove(item.Key);
         }
 
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
