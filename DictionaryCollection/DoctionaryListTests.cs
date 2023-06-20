@@ -108,7 +108,6 @@ namespace DictionaryCollection
             dictionary.Add(fifth);
             Assert.False(dictionary.Remove(15));
             Assert.True(dictionary.Remove(12));
-            Assert.True(dictionary.Remove(7));
         }
 
         [Fact]

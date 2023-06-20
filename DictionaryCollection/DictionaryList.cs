@@ -11,6 +11,8 @@ namespace DictionaryCollection
 
         private readonly int dimension = 5;
 
+        private int passNextProperty = -1;
+
         public Dictionary(int dimension)
         {
             this.buckets = new int[dimension];
@@ -117,34 +119,26 @@ namespace DictionaryCollection
         public bool Remove(TKey key)
         {
             int bucketNumber = BucketChooser(key);
-            int index = buckets[bucketNumber];
-            if (!ContainsKey(key))
+            int keyPosition = FindKey(key);
+
+            if (keyPosition == -1)
             {
                 return false;
             }
 
             if (items[buckets[bucketNumber]].Key.Equals(key))
             {
-                buckets[bucketNumber] = items[index].Next;
-                items[index] = default;
+                buckets[bucketNumber] = items[keyPosition].Next;
+                items[keyPosition] = default;
                 Count--;
                 return true;
             }
 
-            while (items[index].Next != -1)
-            {
-                if (items[index].Key.Equals(key))
-                {
-                    items[buckets[bucketNumber]].Next = items[index].Next;
-                    items[index] = default;
-                    Count--;
-                    return true;
-                }
+            items[passNextProperty].Next = items[keyPosition].Next;
+            items[keyPosition] = default;
+            Count--;
 
-                index--;
-            }
-
-            return false;
+            return true;
         }
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
@@ -196,18 +190,19 @@ namespace DictionaryCollection
             return Math.Abs(key.GetHashCode() % numberOfBuckets);
         }
 
-        public int FindItem(TKey key)
+        private int FindKey(TKey key)
         {
             int bucketNumber = BucketChooser(key);
             int index = buckets[bucketNumber];
-            while (items[index].Next != -1)
+            while (index != -1)
             {
                 if (items[index].Key.Equals(key))
                 {
                     return index;
                 }
 
-                index--;
+                passNextProperty = index;
+                index = items[index].Next;
             }
 
             return -1;
