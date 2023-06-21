@@ -226,5 +226,32 @@ namespace DictionaryCollection
             Assert.False(dictionary.TryGetValue(3, out string value));
             Assert.Null(value);
         }
+
+        [Fact]
+
+        public void ReusePosition()
+        {
+            var dictionary = new Dictionary<int, string>(5);
+            var first = new KeyValuePair<int, string>(1, "a");
+            var second = new KeyValuePair<int, string>(2, "b");
+            var third = new KeyValuePair<int, string>(10, "c");
+            var fourth = new KeyValuePair<int, string>(7, "d");
+            var fifth = new KeyValuePair<int, string>(12, "e");
+            var sixth = new KeyValuePair<int, string>(17, "f");
+            var seventh = new KeyValuePair<int, string>(3, "g");
+            dictionary.Add(first);
+            dictionary.Add(second);
+            dictionary.Add(third);
+            dictionary.Add(fourth);
+            dictionary.Add(fifth);
+            dictionary.Remove(fourth);
+            dictionary.Remove(first);
+            dictionary.Add(sixth);
+            dictionary.Add(seventh);
+            Assert.Equal(dictionary.GetFirstElement().Key, sixth.Key);
+            Assert.Equal(dictionary.GetFirstElement().Value, sixth.Value);
+            Assert.Equal(dictionary.Items[3].Key, seventh.Key);
+            Assert.Equal(dictionary.Items[3].Value, seventh.Value);
+        }
     }
 }

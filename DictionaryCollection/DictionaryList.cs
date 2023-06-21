@@ -1,30 +1,52 @@
 ﻿using System.Collections;
+using System.Xml.Linq;
 
 namespace DictionaryCollection
 {
     public class Dictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
+        public readonly Item<TKey, TValue>[] Items;
+
         private readonly int[] buckets;
 
-        private readonly Item<TKey, TValue>[] items;
-
-        private readonly int dimension = 5;
-
         private int passNextProperty = -1;
+
+        private int freeIndex = -1;
 
         public Dictionary(int dimension)
         {
             this.buckets = new int[dimension];
-            this.items = new Item<TKey, TValue>[dimension];
-            for (int i = 0; i < dimension; i++)
+            this.Items = new Item<TKey, TValue>[dimension];
+            Array.Fill(this.buckets, -1);
+        }
+
+        public ICollection<TKey> Keys
+        {
+            get
             {
-                this.buckets[i] = -1;
+                var keys = new List<TKey>();
+                foreach (Item<TKey, TValue> item in Items)
+                {
+                    keys.Add(item.Key);
+                }
+
+                return keys;
             }
         }
 
-        public ICollection<TKey> Keys => new List<TKey>();
+        public ICollection<TValue> Values
+        {
+            get
+            {
+                var values = new List<TValue>();
+                foreach (Item<TKey, TValue> item in Items)
+                {
+                    values.Add(item.Value);
+                }
 
-        public ICollection<TValue> Values => new List<TValue>();
+                return values;
+            }
+        }
 
         public int Count { get; set; }
 
@@ -34,22 +56,24 @@ namespace DictionaryCollection
         {
             get
             {
-                if (FindKey(key) == -1)
+                int keyPosition = FindKey(key);
+                if (keyPosition == -1)
                 {
                     throw new KeyNotFoundException();
                 }
 
-                return items[FindKey(key)].Value;
+                return Items[keyPosition].Value;
             }
 
             set
             {
-              if (FindKey(key) == -1)
-              {
+                int keyPosition = FindKey(key);
+                if (keyPosition == -1)
+                {
                     throw new KeyNotFoundException();
-              }
+                }
 
-              items[FindKey(key)].Value = value;
+                Items[keyPosition].Value = value;
             }
         }
 
@@ -58,14 +82,14 @@ namespace DictionaryCollection
             KeyValuePair<TKey, TValue>[] components = new KeyValuePair<TKey, TValue>[Count];
             for (int i = 0; i < Count; i++)
             {
-                components[i] = new KeyValuePair<TKey, TValue>(items[i].Key, items[i].Value);
+                components[i] = new KeyValuePair<TKey, TValue>(Items[i].Key, Items[i].Value);
                 yield return components[i];
             }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            foreach (var item in items)
+            foreach (var item in Items)
             {
                 yield return item;
             }
@@ -85,14 +109,26 @@ namespace DictionaryCollection
 
             int bucketNumber = BucketChooser(key);
             var item = new Item<TKey, TValue>();
-            item.Key = key;
-            item.Value = value;
-            Keys.Add(key);
-            Values.Add(value);
-            items[Count] = item;
-            item.Next = buckets[bucketNumber];
-            buckets[bucketNumber] = Count;
-            Count++;
+            if (freeIndex == -1)
+            {
+                item.Key = key;
+                item.Value = value;
+                Items[Count] = item;
+                item.Next = buckets[bucketNumber];
+                buckets[bucketNumber] = Count;
+                Count++;
+            }
+            else
+            {
+                int newValueFreeIndex = Items[freeIndex].Next;
+                item.Key = key;
+                item.Value = value;
+                Items[freeIndex] = item;
+                item.Next = buckets[bucketNumber];
+                buckets[bucketNumber] = freeIndex;
+                freeIndex = newValueFreeIndex;
+                Count++;
+            }
         }
 
         public void Add(KeyValuePair<TKey, TValue> item)
@@ -103,10 +139,8 @@ namespace DictionaryCollection
         public void Clear()
         {
             Count = 0;
-            for (int i = 0; i < dimension; i++)
-            {
-                this.buckets[i] = -1;
-            }
+            Array.Fill(this.buckets, -1);
+            Array.Fill(Items, null);
         }
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
@@ -117,7 +151,7 @@ namespace DictionaryCollection
                 return false;
             }
 
-            return items[keyPosition].Value.Equals(item.Value) && ContainsKey(item.Key);
+            return Items[keyPosition].Value.Equals(item.Value) && ContainsKey(item.Key);
         }
 
         public bool ContainsKey(TKey key)
@@ -139,7 +173,7 @@ namespace DictionaryCollection
 
             for (int i = 0; i < Count; i++)
             {
-                array[arrayIndex + i] = new KeyValuePair<TKey, TValue>(items[i].Key, items[i].Value);
+                array[arrayIndex + i] = new KeyValuePair<TKey, TValue>(Items[i].Key, Items[i].Value);
             }
         }
 
@@ -154,16 +188,22 @@ namespace DictionaryCollection
                 return false;
             }
 
-            if (items[buckets[bucketNumber]].Key.Equals(key))
+            if (Items[buckets[bucketNumber]].Key.Equals(key))
             {
-                buckets[bucketNumber] = items[keyPosition].Next;
-                items[keyPosition] = default;
+                buckets[bucketNumber] = Items[keyPosition].Next;
+                Items[keyPosition].Key = default;
+                Items[keyPosition].Value = default;
+                Items[keyPosition].Next = freeIndex;
+                freeIndex = keyPosition;
                 Count--;
                 return true;
             }
 
-            items[passNextProperty].Next = items[keyPosition].Next;
-            items[keyPosition] = default;
+            Items[passNextProperty].Next = Items[keyPosition].Next;
+            Items[keyPosition].Key = default;
+            Items[keyPosition].Value = default;
+            Items[keyPosition].Next = freeIndex;
+            freeIndex = keyPosition;
             Count--;
 
             return true;
@@ -177,7 +217,7 @@ namespace DictionaryCollection
                 return false;
             }
 
-            return items[keyPosition].Value.Equals(item.Value) && Remove(item.Key);
+            return Items[keyPosition].Value.Equals(item.Value) && Remove(item.Key);
         }
 
         public bool TryGetValue(TKey key, out TValue value)
@@ -185,7 +225,7 @@ namespace DictionaryCollection
             int keyPosition = FindKey(key);
             if (keyPosition != -1)
             {
-                value = items[keyPosition].Value;
+                value = Items[keyPosition].Value;
                 return true;
             }
 
@@ -195,8 +235,17 @@ namespace DictionaryCollection
 
         public int BucketChooser(TKey key)
         {
-            const int numberOfBuckets = 5;
-            return Math.Abs(key.GetHashCode() % numberOfBuckets);
+            return Math.Abs(key.GetHashCode() % 5);
+        }
+
+        public Item<TKey, TValue> GetFirstElement()
+        {
+            if (Count == 0)
+            {
+                throw new InvalidOperationException("Dictionary is empty.");
+            }
+
+            return Items[0];
         }
 
         private int FindKey(TKey key)
@@ -210,13 +259,13 @@ namespace DictionaryCollection
             int index = buckets[bucketNumber];
             while (index != -1)
             {
-                if (items[index].Key.Equals(key))
+                if (Items[index].Key.Equals(key))
                 {
                     return index;
                 }
 
                 passNextProperty = index;
-                index = items[index].Next;
+                index = Items[index].Next;
             }
 
             return -1;
