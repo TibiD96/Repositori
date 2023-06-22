@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Security.Cryptography;
+using Xunit;
 
 namespace DictionaryCollection
 {
@@ -174,6 +175,7 @@ namespace DictionaryCollection
         {
             var dictionary = new Dictionary<int, string>(5);
             var secondDictionary = new KeyValuePair<int, string>[5];
+            var thirdDictionary = new KeyValuePair<int, string>[3];
             var first = new KeyValuePair<int, string>(1, "a");
             var second = new KeyValuePair<int, string>(2, "b");
             var third = new KeyValuePair<int, string>(10, "c");
@@ -187,6 +189,11 @@ namespace DictionaryCollection
             dictionary.CopyTo(secondDictionary, 0);
             Assert.Equal(5, secondDictionary.Length);
             Assert.Equal(first.Key, secondDictionary[0].Key);
+            dictionary.Remove(fourth);
+            dictionary.Remove(first);
+            dictionary.CopyTo(thirdDictionary, 0);
+            Assert.Equal(3, thirdDictionary.Length);
+            Assert.Equal(second.Key, thirdDictionary[0].Key);
         }
 
         [Fact]
@@ -250,8 +257,36 @@ namespace DictionaryCollection
             dictionary.Add(seventh);
             Assert.Equal(dictionary.GetFirstElement().Key, sixth.Key);
             Assert.Equal(dictionary.GetFirstElement().Value, sixth.Value);
-            Assert.Equal(dictionary.Items[3].Key, seventh.Key);
-            Assert.Equal(dictionary.Items[3].Value, seventh.Value);
+            Assert.Equal(dictionary.GetElement(seventh.Key).Key, seventh.Key);
+            Assert.Equal(dictionary.GetElement(seventh.Key).Value, seventh.Value);
+        }
+
+        [Fact]
+
+        public void KeysValues()
+        {
+            var dictionary = new Dictionary<int, string>(5);
+            var first = new KeyValuePair<int, string>(1, "a");
+            var second = new KeyValuePair<int, string>(2, "b");
+            var third = new KeyValuePair<int, string>(10, "c");
+            var fourth = new KeyValuePair<int, string>(7, "d");
+            var fifth = new KeyValuePair<int, string>(12, "e");
+            var sixth = new KeyValuePair<int, string>(17, "f");
+            dictionary.Add(first);
+            dictionary.Add(second);
+            dictionary.Add(third);
+            dictionary.Add(fourth);
+            dictionary.Add(fifth);
+            Assert.True(dictionary.Keys.Contains(7));
+            dictionary.Remove(fourth);
+            dictionary.Remove(first);
+            Assert.Equal(3, dictionary.Keys.Count);
+            Assert.False(dictionary.Keys.Contains(7));
+            Assert.False(dictionary.Keys.Contains(1));
+            dictionary.Add(sixth);
+            Assert.False(dictionary.Keys.Contains(7));
+            Assert.True(dictionary.Keys.Contains(17));
+            Assert.Equal(4, dictionary.Keys.Count);
         }
     }
 }

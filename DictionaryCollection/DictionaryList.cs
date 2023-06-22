@@ -1,22 +1,21 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Xml.Linq;
 
 namespace DictionaryCollection
 {
     public class Dictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
-        public readonly Item<TKey, TValue>[] Items;
+        private readonly Item<TKey, TValue>[] items;
 
         private readonly int[] buckets;
-
-        private int passNextProperty = -1;
 
         private int freeIndex = -1;
 
         public Dictionary(int dimension)
         {
             this.buckets = new int[dimension];
-            this.Items = new Item<TKey, TValue>[dimension];
+            this.items = new Item<TKey, TValue>[dimension];
             Array.Fill(this.buckets, -1);
         }
 
@@ -25,9 +24,12 @@ namespace DictionaryCollection
             get
             {
                 var keys = new List<TKey>();
-                foreach (Item<TKey, TValue> item in Items)
+                for (int i = 0; i < items.Length; i++)
                 {
-                    keys.Add(item.Key);
+                    if (items[i].Value != null)
+                    {
+                        keys.Add(items[i].Key);
+                    }
                 }
 
                 return keys;
@@ -39,9 +41,12 @@ namespace DictionaryCollection
             get
             {
                 var values = new List<TValue>();
-                foreach (Item<TKey, TValue> item in Items)
+                for (int i = 0; i < items.Length; i++)
                 {
-                    values.Add(item.Value);
+                    if (items[i].Value != null)
+                    {
+                        values.Add(items[i].Value);
+                    }
                 }
 
                 return values;
@@ -62,7 +67,7 @@ namespace DictionaryCollection
                     throw new KeyNotFoundException();
                 }
 
-                return Items[keyPosition].Value;
+                return items[keyPosition].Value;
             }
 
             set
@@ -73,7 +78,7 @@ namespace DictionaryCollection
                     throw new KeyNotFoundException();
                 }
 
-                Items[keyPosition].Value = value;
+                items[keyPosition].Value = value;
             }
         }
 
@@ -82,14 +87,14 @@ namespace DictionaryCollection
             KeyValuePair<TKey, TValue>[] components = new KeyValuePair<TKey, TValue>[Count];
             for (int i = 0; i < Count; i++)
             {
-                components[i] = new KeyValuePair<TKey, TValue>(Items[i].Key, Items[i].Value);
-                yield return components[i];
+               components[i] = new KeyValuePair<TKey, TValue>(items[i].Key, items[i].Value);
+               yield return components[i];
             }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            foreach (var item in Items)
+            foreach (var item in items)
             {
                 yield return item;
             }
@@ -109,26 +114,23 @@ namespace DictionaryCollection
 
             int bucketNumber = BucketChooser(key);
             var item = new Item<TKey, TValue>();
+            item.Key = key;
+            item.Value = value;
+            item.Next = buckets[bucketNumber];
             if (freeIndex == -1)
             {
-                item.Key = key;
-                item.Value = value;
-                Items[Count] = item;
-                item.Next = buckets[bucketNumber];
+                items[Count] = item;
                 buckets[bucketNumber] = Count;
-                Count++;
             }
             else
             {
-                int newValueFreeIndex = Items[freeIndex].Next;
-                item.Key = key;
-                item.Value = value;
-                Items[freeIndex] = item;
-                item.Next = buckets[bucketNumber];
+                int newValueFreeIndex = items[freeIndex].Next;
+                items[freeIndex] = item;
                 buckets[bucketNumber] = freeIndex;
                 freeIndex = newValueFreeIndex;
-                Count++;
             }
+
+            Count++;
         }
 
         public void Add(KeyValuePair<TKey, TValue> item)
@@ -140,7 +142,7 @@ namespace DictionaryCollection
         {
             Count = 0;
             Array.Fill(this.buckets, -1);
-            Array.Fill(Items, null);
+            Array.Fill(items, null);
         }
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
@@ -151,7 +153,7 @@ namespace DictionaryCollection
                 return false;
             }
 
-            return Items[keyPosition].Value.Equals(item.Value) && ContainsKey(item.Key);
+            return items[keyPosition].Value.Equals(item.Value);
         }
 
         public bool ContainsKey(TKey key)
@@ -161,26 +163,30 @@ namespace DictionaryCollection
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
+            int index = 0;
             if (array == null)
             {
-                throw new ArgumentNullException("array can't be null");
+                throw new ArgumentNullException("Array can't be null");
             }
 
             if (arrayIndex < 0 || arrayIndex > array.Length - 1)
             {
-                throw new ArgumentOutOfRangeException("Index is outside range");
+                throw new ArgumentOutOfRangeException("ArgumentOutOfRange");
             }
 
-            for (int i = 0; i < Count; i++)
+            for (int i = 0; i < items.Length; i++)
             {
-                array[arrayIndex + i] = new KeyValuePair<TKey, TValue>(Items[i].Key, Items[i].Value);
+                if (items[i].Value != null)
+                {
+                    array[arrayIndex + index] = new KeyValuePair<TKey, TValue>(items[i].Key, items[i].Value);
+                    index++;
+                }
             }
         }
 
         public bool Remove(TKey key)
         {
-
-            int keyPosition = FindKey(key);
+            int keyPosition = FindKeyPositionAndIndexItemBefore(key, out int previousElement);
             int bucketNumber = BucketChooser(key);
 
             if (keyPosition == -1)
@@ -188,21 +194,18 @@ namespace DictionaryCollection
                 return false;
             }
 
-            if (Items[buckets[bucketNumber]].Key.Equals(key))
+            if (items[buckets[bucketNumber]].Key.Equals(key))
             {
-                buckets[bucketNumber] = Items[keyPosition].Next;
-                Items[keyPosition].Key = default;
-                Items[keyPosition].Value = default;
-                Items[keyPosition].Next = freeIndex;
-                freeIndex = keyPosition;
-                Count--;
-                return true;
+                buckets[bucketNumber] = items[keyPosition].Next;
+            }
+            else
+            {
+                items[previousElement].Next = items[keyPosition].Next;
             }
 
-            Items[passNextProperty].Next = Items[keyPosition].Next;
-            Items[keyPosition].Key = default;
-            Items[keyPosition].Value = default;
-            Items[keyPosition].Next = freeIndex;
+            items[keyPosition].Key = default;
+            items[keyPosition].Value = default;
+            items[keyPosition].Next = freeIndex;
             freeIndex = keyPosition;
             Count--;
 
@@ -217,7 +220,7 @@ namespace DictionaryCollection
                 return false;
             }
 
-            return Items[keyPosition].Value.Equals(item.Value) && Remove(item.Key);
+            return items[FindKey(item.Key)].Value.Equals(item.Value) && Remove(item.Key);
         }
 
         public bool TryGetValue(TKey key, out TValue value)
@@ -225,7 +228,7 @@ namespace DictionaryCollection
             int keyPosition = FindKey(key);
             if (keyPosition != -1)
             {
-                value = Items[keyPosition].Value;
+                value = items[keyPosition].Value;
                 return true;
             }
 
@@ -245,27 +248,40 @@ namespace DictionaryCollection
                 throw new InvalidOperationException("Dictionary is empty.");
             }
 
-            return Items[0];
+            return items[0];
+        }
+
+        public Item<TKey, TValue> GetElement(TKey key)
+        {
+            if (Count == 0)
+            {
+                throw new InvalidOperationException("Dictionary is empty.");
+            }
+
+            return items[FindKey(key)];
         }
 
         private int FindKey(TKey key)
         {
+            return FindKeyPositionAndIndexItemBefore(key, out _);
+        }
+
+        private int FindKeyPositionAndIndexItemBefore(TKey key, out int indexItemBeforeItemsKey)
+        {
+            indexItemBeforeItemsKey = -1;
             if (key == null)
             {
-                throw new ArgumentNullException("array can't be null");
+                throw new ArgumentNullException("key can't be null");
             }
 
-            int bucketNumber = BucketChooser(key);
-            int index = buckets[bucketNumber];
-            while (index != -1)
+            for (int index = buckets[BucketChooser(key)]; index != -1; index = items[index].Next)
             {
-                if (Items[index].Key.Equals(key))
+                if (items[index].Key.Equals(key))
                 {
                     return index;
                 }
 
-                passNextProperty = index;
-                index = Items[index].Next;
+                indexItemBeforeItemsKey = index;
             }
 
             return -1;
