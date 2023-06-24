@@ -222,7 +222,7 @@ namespace DictionaryCollection
                 return false;
             }
 
-            return items[FindKey(item.Key)].Value.Equals(item.Value) && Remove(item.Key);
+            return items[keyPosition].Value.Equals(item.Value) && Remove(item.Key);
         }
 
         public bool TryGetValue(TKey key, out TValue value)
