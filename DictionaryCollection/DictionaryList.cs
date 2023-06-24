@@ -23,10 +23,15 @@ namespace DictionaryCollection
         {
             get
             {
+                int freeElement = freeIndex;
                 var keys = new List<TKey>();
                 for (int i = 0; i < items.Length; i++)
                 {
-                    if (items[i].Value != null)
+                    if (i == freeElement)
+                    {
+                        freeElement = items[freeElement].Next;
+                    }
+                    else
                     {
                         keys.Add(items[i].Key);
                     }
@@ -40,10 +45,15 @@ namespace DictionaryCollection
         {
             get
             {
+                int freeElement = freeIndex;
                 var values = new List<TValue>();
                 for (int i = 0; i < items.Length; i++)
                 {
-                    if (items[i].Value != null)
+                    if (i == freeElement)
+                    {
+                        freeElement = items[freeElement].Next;
+                    }
+                    else
                     {
                         values.Add(items[i].Value);
                     }
@@ -166,6 +176,7 @@ namespace DictionaryCollection
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
             int index = 0;
+            int freeElement = freeIndex;
             if (array == null)
             {
                 throw new ArgumentNullException("Array can't be null");
@@ -178,7 +189,11 @@ namespace DictionaryCollection
 
             for (int i = 0; i < items.Length; i++)
             {
-                if (items[i].Value != null)
+                if (i == freeElement)
+                {
+                    freeElement = items[freeElement].Next;
+                }
+                else
                 {
                     array[arrayIndex + index] = new KeyValuePair<TKey, TValue>(items[i].Key, items[i].Value);
                     index++;
