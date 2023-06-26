@@ -23,15 +23,21 @@ namespace DictionaryCollection
         {
             get
             {
-                int freeElement = freeIndex;
                 var keys = new List<TKey>();
                 for (int i = 0; i < items.Length; i++)
                 {
-                    if (i == freeElement)
+                    int freeElement = freeIndex;
+                    while (freeElement != -1)
                     {
+                        if (freeElement == i)
+                        {
+                            break;
+                        }
+
                         freeElement = items[freeElement].Next;
                     }
-                    else
+
+                    if (freeElement != i)
                     {
                         keys.Add(items[i].Key);
                     }
@@ -45,15 +51,21 @@ namespace DictionaryCollection
         {
             get
             {
-                int freeElement = freeIndex;
                 var values = new List<TValue>();
                 for (int i = 0; i < items.Length; i++)
                 {
-                    if (i == freeElement)
+                    int freeElement = freeIndex;
+                    while (freeElement != -1)
                     {
+                        if (freeElement == i)
+                        {
+                            break;
+                        }
+
                         freeElement = items[freeElement].Next;
                     }
-                    else
+
+                    if (freeElement != i)
                     {
                         values.Add(items[i].Value);
                     }
@@ -176,7 +188,6 @@ namespace DictionaryCollection
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
             int index = 0;
-            int freeElement = freeIndex;
             if (array == null)
             {
                 throw new ArgumentNullException("Array can't be null");
@@ -189,11 +200,18 @@ namespace DictionaryCollection
 
             for (int i = 0; i < items.Length; i++)
             {
-                if (i == freeElement)
+                int freeElement = freeIndex;
+                while (freeElement != -1)
                 {
+                    if (freeElement == i)
+                    {
+                        break;
+                    }
+
                     freeElement = items[freeElement].Next;
                 }
-                else
+
+                if (freeElement != i)
                 {
                     array[arrayIndex + index] = new KeyValuePair<TKey, TValue>(items[i].Key, items[i].Value);
                     index++;
