@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Xml.Linq;
+﻿using System.Collections;
 
 namespace DictionaryCollection
 {
@@ -24,22 +22,11 @@ namespace DictionaryCollection
             get
             {
                 var keys = new List<TKey>();
-                for (int i = 0; i < items.Length; i++)
+                for (int i = 0; i < buckets.Length; i++)
                 {
-                    int freeElement = freeIndex;
-                    while (freeElement != -1)
+                    for (int index = buckets[i]; index != -1; index = items[index].Next)
                     {
-                        if (freeElement == i)
-                        {
-                            break;
-                        }
-
-                        freeElement = items[freeElement].Next;
-                    }
-
-                    if (freeElement != i)
-                    {
-                        keys.Add(items[i].Key);
+                        keys.Add(items[index].Key);
                     }
                 }
 
@@ -52,22 +39,11 @@ namespace DictionaryCollection
             get
             {
                 var values = new List<TValue>();
-                for (int i = 0; i < items.Length; i++)
+                for (int i = 0; i < buckets.Length; i++)
                 {
-                    int freeElement = freeIndex;
-                    while (freeElement != -1)
+                    for (int index = buckets[i]; index != -1; index = items[index].Next)
                     {
-                        if (freeElement == i)
-                        {
-                            break;
-                        }
-
-                        freeElement = items[freeElement].Next;
-                    }
-
-                    if (freeElement != i)
-                    {
-                        values.Add(items[i].Value);
+                        values.Add(items[index].Value);
                     }
                 }
 
