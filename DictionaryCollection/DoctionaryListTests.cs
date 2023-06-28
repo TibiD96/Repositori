@@ -343,5 +343,29 @@ namespace DictionaryCollection
             Assert.True(dictionary.Keys.Contains(17));
             Assert.Equal(4, dictionary.Keys.Count);
         }
+
+        [Fact]
+        public void GetEnumeratorReturnsAllKeyValuePairs()
+        {
+            var dictionary = new Dictionary<int, string>(5);
+            dictionary.Add(1, "a");
+            dictionary.Add(2, "b");
+            dictionary.Add(10, "c");
+            dictionary.Add(7, "d");
+            dictionary.Add(12, "e");
+            dictionary.Remove(7);
+            dictionary.Remove(1);
+            var enumerator = dictionary.GetEnumerator();
+            var result = new List<KeyValuePair<int, string>>();
+            while (enumerator.MoveNext())
+            {
+                result.Add(enumerator.Current);
+            }
+
+            Assert.Equal(3, result.Count);
+            Assert.Contains(new KeyValuePair<int, string>(2, "b"), result);
+            Assert.Contains(new KeyValuePair<int, string>(10, "c"), result);
+            Assert.Contains(new KeyValuePair<int, string>(12, "e"), result);
+        }
     }
 }
