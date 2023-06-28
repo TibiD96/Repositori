@@ -278,14 +278,17 @@ namespace DictionaryCollection
                 throw new ArgumentNullException("key can't be null");
             }
 
-            for (int index = buckets[BucketChooser(key)]; index != -1; index = items[index].Next)
+            for (int i = 0; i < buckets.Length; i++)
             {
-                if (items[index].Key.Equals(key))
+                for (int index = buckets[i]; index != -1; index = items[index].Next)
                 {
-                    return index;
-                }
+                    if (items[index].Key.Equals(key))
+                    {
+                        return index;
+                    }
 
-                indexItemBeforeItemsKey = index;
+                    indexItemBeforeItemsKey = index;
+                }
             }
 
             return -1;
