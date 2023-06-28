@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Reflection;
 
 namespace DictionaryCollection
 {
@@ -22,12 +24,9 @@ namespace DictionaryCollection
             get
             {
                 var keys = new List<TKey>();
-                for (int i = 0; i < buckets.Length; i++)
+                foreach (var item in this)
                 {
-                    for (int index = buckets[i]; index != -1; index = items[index].Next)
-                    {
-                        keys.Add(items[index].Key);
-                    }
+                  keys.Add(item.Key);
                 }
 
                 return keys;
@@ -39,12 +38,9 @@ namespace DictionaryCollection
             get
             {
                 var values = new List<TValue>();
-                for (int i = 0; i < buckets.Length; i++)
+                foreach (var item in this)
                 {
-                    for (int index = buckets[i]; index != -1; index = items[index].Next)
-                    {
-                        values.Add(items[index].Value);
-                    }
+                    values.Add(item.Value);
                 }
 
                 return values;
