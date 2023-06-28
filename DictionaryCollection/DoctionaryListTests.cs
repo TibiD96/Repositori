@@ -282,8 +282,8 @@ namespace DictionaryCollection
             dictionary.Remove(first);
             dictionary.Add(sixth);
             dictionary.Add(seventh);
-            Assert.Equal(dictionary.GetFirstElement().Key, sixth.Key);
-            Assert.Equal(dictionary.GetFirstElement().Value, sixth.Value);
+            Assert.Equal(dictionary.GetElement(sixth.Key).Key, sixth.Key);
+            Assert.Equal(dictionary.GetElement(sixth.Key).Value, sixth.Value);
             Assert.Equal(dictionary.GetElement(seventh.Key).Key, seventh.Key);
             Assert.Equal(dictionary.GetElement(seventh.Key).Value, seventh.Value);
         }

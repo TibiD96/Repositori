@@ -252,16 +252,6 @@ namespace DictionaryCollection
             return Math.Abs(key.GetHashCode() % 5);
         }
 
-        public Item<TKey, TValue> GetFirstElement()
-        {
-            if (Count == 0)
-            {
-                throw new InvalidOperationException("Dictionary is empty.");
-            }
-
-            return items[0];
-        }
-
         public Item<TKey, TValue> GetElement(TKey key)
         {
             if (Count == 0)
