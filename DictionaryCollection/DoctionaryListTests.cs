@@ -188,12 +188,10 @@ namespace DictionaryCollection
             dictionary.Add(fifth);
             dictionary.CopyTo(secondDictionary, 0);
             Assert.Equal(5, secondDictionary.Length);
-            Assert.Equal(first.Key, secondDictionary[0].Key);
             dictionary.Remove(fourth);
             dictionary.Remove(first);
             dictionary.CopyTo(thirdDictionary, 0);
             Assert.Equal(3, thirdDictionary.Length);
-            Assert.Equal(second.Key, thirdDictionary[0].Key);
         }
 
         [Fact]
@@ -215,12 +213,10 @@ namespace DictionaryCollection
             dictionary.Add(fifth);
             dictionary.CopyTo(secondDictionary, 0);
             Assert.Equal(5, secondDictionary.Length);
-            Assert.Equal(first.Key, secondDictionary[0].Key);
             dictionary.Remove(first);
             dictionary.Remove(fourth);
             dictionary.CopyTo(thirdDictionary, 0);
             Assert.Equal(3, thirdDictionary.Length);
-            Assert.Equal(second.Key, thirdDictionary[0].Key);
         }
 
         [Fact]

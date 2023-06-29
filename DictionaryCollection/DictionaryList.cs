@@ -170,24 +170,10 @@ namespace DictionaryCollection
                 throw new ArgumentOutOfRangeException("ArgumentOutOfRange");
             }
 
-            for (int i = 0; i < items.Length; i++)
+            foreach (var item in this)
             {
-                int freeElement = freeIndex;
-                while (freeElement != -1)
-                {
-                    if (freeElement == i)
-                    {
-                        break;
-                    }
-
-                    freeElement = items[freeElement].Next;
-                }
-
-                if (freeElement != i)
-                {
-                    array[arrayIndex + index] = new KeyValuePair<TKey, TValue>(items[i].Key, items[i].Value);
-                    index++;
-                }
+                array[arrayIndex + index] = item;
+                index++;
             }
         }
 
