@@ -96,7 +96,7 @@ namespace DictionaryCollection
 
         public void Add(TKey key, TValue value)
         {
-            int indexWhereToAdd;
+            int indexWhereToAdd = Count;
             if (key == null)
             {
                 throw new ArgumentNullException("key can't be null");
@@ -112,18 +112,13 @@ namespace DictionaryCollection
             item.Key = key;
             item.Value = value;
             item.Next = buckets[bucketNumber];
-            if (freeIndex == -1)
+            if (freeIndex != -1)
             {
-                indexWhereToAdd = Count;
-                buckets[bucketNumber] = Count;
-            }
-            else
-            {
-                int newValueFreeIndex = items[freeIndex].Next;
                 indexWhereToAdd = freeIndex;
-                buckets[bucketNumber] = freeIndex;
-                freeIndex = newValueFreeIndex;
+                freeIndex = items[freeIndex].Next;
             }
+
+            buckets[bucketNumber] = indexWhereToAdd;
 
             items[indexWhereToAdd] = item;
             Count++;
