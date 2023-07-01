@@ -78,13 +78,11 @@ namespace DictionaryCollection
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            KeyValuePair<TKey, TValue>[] components = new KeyValuePair<TKey, TValue>[Count];
             for (int i = 0; i < buckets.Length; i++)
             {
                 for (int index = buckets[i]; index != -1; index = items[index].Next)
                 {
-                    components[i] = new KeyValuePair<TKey, TValue>(items[index].Key, items[index].Value);
-                    yield return components[i];
+                    yield return new KeyValuePair<TKey, TValue>(items[index].Key, items[index].Value);
                 }
             }
         }
