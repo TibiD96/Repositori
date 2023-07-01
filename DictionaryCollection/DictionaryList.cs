@@ -182,7 +182,7 @@ namespace DictionaryCollection
                 return false;
             }
 
-            if (items[buckets[bucketNumber]].Key.Equals(key))
+            if (previousElement == -1)
             {
                 buckets[bucketNumber] = items[keyPosition].Next;
             }
