@@ -246,13 +246,13 @@ namespace DictionaryCollection
 
         private int FindKeyPositionAndIndexItemBefore(TKey key, out int indexItemBeforeItemsKey)
         {
-            int bucketNumber = BucketChooser(key);
-            indexItemBeforeItemsKey = -1;
             if (key == null)
             {
                 throw new ArgumentNullException("key can't be null");
             }
 
+            int bucketNumber = BucketChooser(key);
+            indexItemBeforeItemsKey = -1;
             for (int index = buckets[bucketNumber]; index != -1; index = items[index].Next)
             {
                 if (items[index].Key.Equals(key))
