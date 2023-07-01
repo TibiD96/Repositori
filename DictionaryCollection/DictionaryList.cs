@@ -69,10 +69,12 @@ namespace DictionaryCollection
                 int keyPosition = FindKey(key);
                 if (keyPosition == -1)
                 {
-                    throw new KeyNotFoundException();
+                    Add(key, value);
                 }
-
-                items[keyPosition].Value = value;
+                else
+                {
+                    items[keyPosition].Value = value;
+                }
             }
         }
 
