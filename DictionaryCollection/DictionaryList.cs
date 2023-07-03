@@ -224,11 +224,6 @@ namespace DictionaryCollection
             return false;
         }
 
-        public int BucketChooser(TKey key)
-        {
-            return Math.Abs(key.GetHashCode() % 5);
-        }
-
         public Item<TKey, TValue> GetElement(TKey key)
         {
             if (Count == 0)
@@ -237,6 +232,11 @@ namespace DictionaryCollection
             }
 
             return items[FindKey(key)];
+        }
+
+        private int BucketChooser(TKey key)
+        {
+            return Math.Abs(key.GetHashCode() % buckets.Length);
         }
 
         private int FindKey(TKey key)
