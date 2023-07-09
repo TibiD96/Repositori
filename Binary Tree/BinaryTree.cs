@@ -6,7 +6,7 @@ namespace BinaryTreeCollection
     {
         private static Node node;
 
-        private int[] traversalResult;
+        private int index;
 
         private Node actual;
 
@@ -57,25 +57,61 @@ namespace BinaryTreeCollection
             Add(newNode.Value);
         }
 
-        public int[] Traversal(Node node)
+        public int[] Traversel(Node node, int traversalType)
         {
-            int index = 0;
-            traversalResult = new int[Count];
-            TraverseInOrder(node, ref index);
+            int[] traversalResult = new int[Count];
+            switch (traversalType)
+            {
+                case 1:
+                    TraverseInOrder(node, traversalResult);
+                    break;
+
+                case 2:
+                    TraversePreOrder(node, traversalResult);
+                    break;
+
+                case 3:
+                    TraversePostOrder(node, traversalResult);
+                    break;
+            }
+
             return traversalResult;
         }
 
-        private void TraverseInOrder(Node node, ref int index)
+        private void TraverseInOrder(Node node, int[] traversalResult)
         {
             if (node == null)
             {
                 return;
             }
 
-            TraverseInOrder(node.Left, ref index);
-            traversalResult[index] = node.Value;
-            index++;
-            TraverseInOrder(node.Right, ref index);
+            TraverseInOrder(node.Left, traversalResult);
+            traversalResult[index++] = node.Value;
+            TraverseInOrder(node.Right, traversalResult);
+        }
+
+        private void TraversePreOrder(Node node, int[] traversalResult)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            traversalResult[index++] = node.Value;
+            TraversePreOrder(node.Left, traversalResult);
+            TraversePreOrder(node.Right, traversalResult);
+        }
+
+        private void TraversePostOrder(Node node, int[] traversalResult)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            TraversePostOrder(node.Left, traversalResult);
+            TraversePostOrder(node.Right, traversalResult);
+            traversalResult[index++] = node.Value;
         }
     }
 }
