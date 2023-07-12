@@ -1,115 +1,52 @@
 ﻿using System;
+using System.Security.Cryptography;
 
 namespace BinaryTreeCollection
 {
-    public class BTreeGraph<T>
+    public class BTreeGraph<T> where T : IComparable<T>
     {
-        private static BTreeNode<T> node;
+        private static BTreeNode<T> root;
 
-        public BTreeGraph()
+        private readonly int order;
+
+        public BTreeGraph(int order)
         {
-            node = null;
+            root = null;
+            this.order = order;
         }
-
-        public BTreeNode Root => node;
 
         public int Count { get; set; }
 
-        public int KeysCount { get; set; }
-
-        public void Add(int data)
+        public void Add(T key)
         {
-            BTreeNode newNode = new BTreeNode(data);
-            if (node == null)
+            if (root == null)
             {
-                node = newNode;
-                Count++;
-                return;
-            }
-
-            actual ??= node;
-
-            BTreeNode parent = actual;
-
-            if (data < actual.Value)
-            {
-                actual = actual.Left;
-                if (actual == null)
-                {
-                    parent.Left = newNode;
-                    Count++;
-                    return;
-                }
+                root = new BTreeNode<T>(order);
+                root.Keys[0] = key;
+                root.KeyNumber = 1;
             }
             else
             {
-                actual = actual.Right;
-                if (actual == null)
+                if (root.KeyNumber < order - 1)
                 {
-                    parent.Right = newNode;
-                    Count++;
-                    return;
+                    int indexKeyInNod = 0;
+
+                    bool ordered = false;
+                    while (!ordered)
+                    {
+                        if (key.CompareTo(root.Keys[indexKeyInNod]) < 0)
+                        {
+                            T temp = root.Keys[indexKeyInNod];
+                            root.Keys[indexKeyInNod] = key;
+                            root.Keys[root.KeyNumber] = temp;
+                            root.KeyNumber++;
+                            ordered = true;
+                        }
+
+                        indexKeyInNod++;
+                    }
                 }
             }
-
-            Add(newNode.Value);
-        }
-
-        public int[] Traversel(BTreeNode node, int traversalType)
-        {
-            int[] traversalResult = new int[Count];
-            switch (traversalType)
-            {
-                case 1:
-                    TraverseInOrder(node, traversalResult);
-                    break;
-
-                case 2:
-                    TraversePreOrder(node, traversalResult);
-                    break;
-
-                case 3:
-                    TraversePostOrder(node, traversalResult);
-                    break;
-            }
-
-            return traversalResult;
-        }
-
-        private void TraverseInOrder(BTreeNode node, int[] traversalResult)
-        {
-            if (node == null)
-            {
-                return;
-            }
-
-            TraverseInOrder(node.Left, traversalResult);
-            traversalResult[index++] = node.Value;
-            TraverseInOrder(node.Right, traversalResult);
-        }
-
-        private void TraversePreOrder(BTreeNode node, int[] traversalResult)
-        {
-            if (node == null)
-            {
-                return;
-            }
-
-            traversalResult[index++] = node.Value;
-            TraversePreOrder(node.Left, traversalResult);
-            TraversePreOrder(node.Right, traversalResult);
-        }
-
-        private void TraversePostOrder(BTreeNode node, int[] traversalResult)
-        {
-            if (node == null)
-            {
-                return;
-            }
-
-            TraversePostOrder(node.Left, traversalResult);
-            TraversePostOrder(node.Right, traversalResult);
-            traversalResult[index++] = node.Value;
         }
     }
 }

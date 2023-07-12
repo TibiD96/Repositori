@@ -2,14 +2,17 @@
 {
     public class BTreeNode<T>
     {
-        public List<T>[] Keys;
+        public T[] Keys;
 
-        public List<BTreeNode<T>>[] Children;
+        public BTreeNode<T>[] Children;
+
+        public int KeyNumber;
 
         public BTreeNode(int order)
         {
-            Keys = new List<T>[order - 1];
-            Children = new List<BTreeNode<T>>[order];
+            KeyNumber = 0;
+            Keys = new T[order - 1];
+            Children = new BTreeNode<T>[order];
         }
     }
 }
