@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
+using System.Xml.Linq;
 
 namespace BinaryTreeCollection
 {
@@ -29,23 +30,48 @@ namespace BinaryTreeCollection
             {
                 if (root.KeyNumber < order - 1)
                 {
-                    int indexKeyInNod = 0;
-
-                    bool ordered = false;
-                    while (!ordered)
-                    {
-                        if (key.CompareTo(root.Keys[indexKeyInNod]) < 0)
-                        {
-                            T temp = root.Keys[indexKeyInNod];
-                            root.Keys[indexKeyInNod] = key;
-                            root.Keys[root.KeyNumber] = temp;
-                            root.KeyNumber++;
-                            ordered = true;
-                        }
-
-                        indexKeyInNod++;
-                    }
+                    NodeWithFreeSpaces(root, key);
                 }
+                else
+                {
+                    BTreeNode<T> newNode = new BTreeNode<T>(order);
+                    newNode.Children[0] = root;
+                    DivideChild(newNode, key);
+                }
+            }
+        }
+
+        private void NodeWithFreeSpaces(BTreeNode<T> node, T key)
+        {
+            int indexKeyInNod = 0;
+
+            bool ordered = false;
+            while (!ordered)
+            {
+                if (key.CompareTo(node.Keys[indexKeyInNod]) < 0)
+                {
+                    T temp = node.Keys[indexKeyInNod];
+                    root.Keys[indexKeyInNod] = key;
+                    root.Keys[node.KeyNumber] = temp;
+                    root.KeyNumber++;
+                    ordered = true;
+                }
+                else if (indexKeyInNod == node.KeyNumber)
+                {
+                    node.Keys[node.KeyNumber] = key;
+                    node.KeyNumber++;
+                    ordered = true;
+                }
+
+                indexKeyInNod++;
+            }
+        }
+
+        private void DivideChild(BTreeNode<T> node, T key)
+        {
+            for (int i = 0; i < node.Children.Length; i++)
+            {
+                //if (key.CompareTo(node.Children[i]))
             }
         }
     }
