@@ -36,7 +36,7 @@ namespace BinaryTreeCollection
                 {
                     BTreeNode<T> newNode = new BTreeNode<T>(order);
                     newNode.Children[0] = root;
-                    DivideChild(newNode, key);
+                    DivideChild(newNode, ref key);
                 }
             }
         }
@@ -67,12 +67,27 @@ namespace BinaryTreeCollection
             }
         }
 
-        private void DivideChild(BTreeNode<T> node, T key)
+        private void DivideChild(BTreeNode<T> node, ref T key)
         {
-            for (int i = 0; i < node.Children.Length; i++)
+            T keyNewValue = key;
+            BTreeNode<T> child = node.Children[0];
+            for (int i = 0; i < child.Keys.Length; i++)
             {
-                //if (key.CompareTo(node.Children[i]))
+                if (key.CompareTo(child.Keys[i]) < 0 && i == 0)
+                {
+                    T temp = child.Keys[i];
+                    child.Keys[i] = key;
+                    keyNewValue = temp;
+                }
+                else if (key.CompareTo(child.Keys[i]) > 0 && i > 0)
+                {
+                    T temp = child.Keys[i];
+                    child.Keys[i] = key;
+                    keyNewValue = temp;
+                }
             }
+
+            key = keyNewValue;
         }
     }
 }
