@@ -37,6 +37,8 @@ namespace BinaryTreeCollection
                     BTreeNode<T> newNode = new BTreeNode<T>(order);
                     newNode.Children[0] = root;
                     DivideChild(newNode, ref key);
+                    NodeWithFreeSpaces(newNode, key);
+                    root = newNode;
                 }
             }
         }
@@ -88,6 +90,11 @@ namespace BinaryTreeCollection
             }
 
             key = keyNewValue;
+            for (int j = 0; j < child.Keys.Length; j++)
+            {
+                node.Children[j] = new BTreeNode<T>(order);
+                NodeWithFreeSpaces(node.Children[j], child.Keys[j]);
+            }
         }
     }
 }
