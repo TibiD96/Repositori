@@ -14,5 +14,10 @@
             Keys = new T[order - 1];
             Children = new BTreeNode<T>[order];
         }
+
+        public bool IsLeaf
+        {
+            get { return Children[0] == null; }
+        }
     }
 }

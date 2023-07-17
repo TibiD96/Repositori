@@ -48,24 +48,31 @@ namespace BinaryTreeCollection
             int indexKeyInNod = 0;
 
             bool ordered = false;
-            while (!ordered)
+            if (node.IsLeaf)
             {
-                if (key.CompareTo(node.Keys[indexKeyInNod]) < 0)
+                while (!ordered)
                 {
-                    T temp = node.Keys[indexKeyInNod];
-                    root.Keys[indexKeyInNod] = key;
-                    root.Keys[node.KeyNumber] = temp;
-                    root.KeyNumber++;
-                    ordered = true;
-                }
-                else if (indexKeyInNod == node.KeyNumber)
-                {
-                    node.Keys[node.KeyNumber] = key;
-                    node.KeyNumber++;
-                    ordered = true;
-                }
+                    if (key.CompareTo(node.Keys[indexKeyInNod]) < 0)
+                    {
+                        T temp = node.Keys[indexKeyInNod];
+                        node.Keys[indexKeyInNod] = key;
+                        node.Keys[node.KeyNumber] = temp;
+                        node.KeyNumber++;
+                        ordered = true;
+                    }
+                    else if (indexKeyInNod == node.KeyNumber)
+                    {
+                        node.Keys[node.KeyNumber] = key;
+                        node.KeyNumber++;
+                        ordered = true;
+                    }
 
-                indexKeyInNod++;
+                    indexKeyInNod++;
+                }
+            }
+            else
+            {
+
             }
         }
 
