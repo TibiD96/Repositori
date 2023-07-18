@@ -46,33 +46,33 @@ namespace BinaryTreeCollection
         private void NodeWithFreeSpaces(BTreeNode<T> node, T key)
         {
             int indexKeyInNod = 0;
+            T temp;
+            bool increasingli = false;
 
-            bool ordered = false;
             if (node.IsLeaf)
             {
-                while (!ordered)
+                while (!increasingli && key.CompareTo(node.Keys[indexKeyInNod]) < 0)
                 {
-                    if (key.CompareTo(node.Keys[indexKeyInNod]) < 0)
-                    {
-                        T temp = node.Keys[indexKeyInNod];
-                        node.Keys[indexKeyInNod] = key;
-                        node.Keys[node.KeyNumber] = temp;
-                        node.KeyNumber++;
-                        ordered = true;
-                    }
-                    else if (indexKeyInNod == node.KeyNumber)
-                    {
-                        node.Keys[node.KeyNumber] = key;
-                        node.KeyNumber++;
-                        ordered = true;
-                    }
-
-                    indexKeyInNod++;
+                    temp = node.Keys[indexKeyInNod];
+                    node.Keys[indexKeyInNod + 1] = temp;
+                    indexKeyInNod--;
+                    increasingli = true;
                 }
+
+                node.Keys[node.KeyNumber + indexKeyInNod] = key;
+                node.KeyNumber++;
             }
             else
             {
+                while (key.CompareTo(node.Keys[indexKeyInNod]) > 0)
+                {
+                    indexKeyInNod++;
+                }
 
+                if (node.Children[indexKeyInNod].KeyNumber == order - 1)
+                {
+                    DivideChild(node.Children[indexKeyInNod], ref key);
+                }
             }
         }
 
