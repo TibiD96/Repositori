@@ -64,7 +64,7 @@ namespace BinaryTreeCollection
             }
             else
             {
-                while (key.CompareTo(node.Keys[indexKeyInNod]) > 0)
+                while (node.KeyNumber > indexKeyInNod && key.CompareTo(node.Keys[indexKeyInNod]) > 0)
                 {
                     indexKeyInNod++;
                 }
@@ -72,6 +72,16 @@ namespace BinaryTreeCollection
                 if (node.Children[indexKeyInNod].KeyNumber == order - 1)
                 {
                     DivideChild(node.Children[indexKeyInNod], ref key);
+                }
+
+                if (node.KeyNumber == 0)
+                {
+                    node.Keys[node.KeyNumber] = key;
+                    node.KeyNumber++;
+                }
+                else
+                {
+                    NodeWithFreeSpaces(node.Children[indexKeyInNod], key);
                 }
             }
         }
