@@ -71,7 +71,9 @@ namespace BinaryTreeCollection
 
                 if (node.Children[indexKeyInNod].KeyNumber == order - 1)
                 {
-                    DivideChild(node.Children[indexKeyInNod], ref key);
+                    BTreeNode<T> newnode = new BTreeNode<T>(order);
+                    newnode.Children[0] = node.Children[indexKeyInNod];
+                    DivideChild(newnode, ref key);
                 }
 
                 if (node.KeyNumber == 0)
