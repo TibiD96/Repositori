@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
-using System.Xml.Linq;
 
 namespace BinaryTreeCollection
 {
@@ -73,17 +71,21 @@ namespace BinaryTreeCollection
                 {
                     BTreeNode<T> newnode = new BTreeNode<T>(order);
                     newnode.Children[0] = node.Children[indexKeyInNod];
-                    DivideChild(node.Children[indexKeyInNod], ref key);
+                    DivideChild(newnode, ref key);
+                    node.Keys[node.KeyNumber] = key;
+                    node.KeyNumber++;
+                    node.Children[indexKeyInNod] = newnode.Children[0];
+                    node.Children[indexKeyInNod + 1] = newnode.Children[1];
+                }
+                else if (node.KeyNumber != 0)
+                {
+                    NodeWithFreeSpaces(node.Children[indexKeyInNod], key);
                 }
 
                 if (node.KeyNumber == 0)
                 {
                     node.Keys[node.KeyNumber] = key;
                     node.KeyNumber++;
-                }
-                else
-                {
-                    NodeWithFreeSpaces(node.Children[indexKeyInNod], key);
                 }
             }
         }
