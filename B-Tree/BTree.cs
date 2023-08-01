@@ -93,7 +93,27 @@ namespace BinaryTreeCollection
         private void DivideChild(BTreeNode<T> node, ref T key)
         {
             T keyNewValue = key;
+            int childNumber = 0;
             BTreeNode<T> child = node.Children[0];
+            while (!child.IsLeaf)
+            {
+                if (key.CompareTo(child.Keys[childNumber]) < 0 && childNumber == 0)
+                {
+                    child = child.Children[0];
+                    break;
+                }
+
+                if (key.CompareTo(child.Keys[childNumber]) > 0 && key.CompareTo(child.Keys[childNumber + 1]) < 0)
+                {
+                    child = child.Children[1];
+                    break;
+                }
+
+                child = child.Children[order - 1];
+
+                childNumber++;
+            }
+
             for (int i = 0; i < child.Keys.Length; i++)
             {
                 if (key.CompareTo(child.Keys[i]) < 0 && i == 0)
