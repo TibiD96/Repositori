@@ -10,7 +10,7 @@ namespace BinaryTreeCollection
 
         public BTreeGraph(int order)
         {
-            root = null;
+            root = new BTreeNode<T>(order);
             this.order = order;
         }
 
@@ -18,26 +18,17 @@ namespace BinaryTreeCollection
 
         public void Add(T key)
         {
-            if (root == null)
+            if (root.KeyNumber < order - 1)
             {
-                root = new BTreeNode<T>(order);
-                root.Keys[0] = key;
-                root.KeyNumber = 1;
+                NodeWithFreeSpaces(root, key);
             }
             else
             {
-                if (root.KeyNumber < order - 1)
-                {
-                    NodeWithFreeSpaces(root, key);
-                }
-                else
-                {
-                    BTreeNode<T> newNode = new BTreeNode<T>(order);
-                    newNode.Children[0] = root;
-                    DivideChild(newNode, 0, ref key);
-                    NodeWithFreeSpaces(newNode, key);
-                    root = newNode;
-                }
+                 BTreeNode<T> newNode = new BTreeNode<T>(order);
+                 newNode.Children[0] = root;
+                 DivideChild(newNode, 0, ref key);
+                 NodeWithFreeSpaces(newNode, key);
+                 root = newNode;
             }
         }
 
@@ -111,6 +102,7 @@ namespace BinaryTreeCollection
             }
 
             key = keyNewValue;
+
             for (int j = 0; j < nodeToSplit.Keys.Length; j++)
             {
                 node.Children[indexOfNodeToSplit] = new BTreeNode<T>(order);
