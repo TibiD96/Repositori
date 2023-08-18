@@ -79,7 +79,7 @@ namespace BinaryTreeCollection
             }
         }
 
-        private void DivideChild(BTreeNode<T> node, int indexOfNodeToSplit,T key)
+        private void DivideChild(BTreeNode<T> node, int indexOfNodeToSplit, T key)
         {
             BTreeNode<T> parentNode = node;
             BTreeNode<T> nodeToSplit = node.Children[indexOfNodeToSplit];
@@ -98,9 +98,15 @@ namespace BinaryTreeCollection
                         parentNode.Keys[parentNode.KeyNumber] = nodeToSplit.Keys[i];
                         parentNode.Children[indexOfNodeToSplit].KeyNumber--;
                         parentNode.KeyNumber++;
+                        nodeToSplit.Keys[i] = key;
                     }
-
-                    nodeToSplit.Keys[i] = key;
+                    else
+                    {
+                        BTreeNode<T> newNode = new BTreeNode<T>(order);
+                        newNode.Children[0] = parentNode;
+                        DivideChild(newNode, 0, key);
+                        parentNode = newNode;
+                    }
                 }
             }
 
