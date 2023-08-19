@@ -103,9 +103,8 @@ namespace BinaryTreeCollection
                     else
                     {
                         BTreeNode<T> newNode = new BTreeNode<T>(order);
-                        newNode.Children[0] = parentNode;
+                        newNode.Children[0] = nodeToSplit;
                         DivideChild(newNode, 0, key);
-                        parentNode = newNode;
                     }
                 }
             }
