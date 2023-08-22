@@ -105,6 +105,10 @@ namespace BinaryTreeCollection
                         BTreeNode<T> newNode = new BTreeNode<T>(order);
                         newNode.Children[0] = nodeToSplit;
                         DivideChild(newNode, 0, key);
+                        key = newNode.Keys[0];
+                        BTreeNode<T> newParent = new BTreeNode<T>(order);
+                        newParent.Children[0] = parentNode;
+                        DivideChild(newParent, 0, key);
                     }
                 }
             }
