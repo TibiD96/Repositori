@@ -16,6 +16,10 @@ namespace BinaryTreeCollection
             btree.Add(5);
             btree.Add(6);
             btree.Add(7);
+            btree.Add(8);
+            btree.Add(9);
+            btree.Add(10);
+            btree.Add(11);
         }
 
         [Fact]
