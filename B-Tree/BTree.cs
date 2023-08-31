@@ -18,12 +18,20 @@ namespace BinaryTreeCollection
 
         public void Add(T key)
         {
-            if (root.IsLeaf && root.KeyNumber == order - 1)
+            if (root.IsLeaf)
             {
-                BTreeNode<T> newNode = new BTreeNode<T>(order);
-                newNode.Children[0] = root;
-                DivideChild(ref newNode, 0, key);
-                root = newNode;
+                if (root.KeyNumber < order - 1)
+                {
+                    root.Keys[root.KeyNumber] = key;
+                    root.KeyNumber++;
+                }
+                else
+                {
+                    BTreeNode<T> newNode = new BTreeNode<T>(order);
+                    newNode.Children[0] = root;
+                    DivideChild(ref newNode, 0, key);
+                    root = newNode;
+                }
             }
             else
             {
@@ -36,13 +44,6 @@ namespace BinaryTreeCollection
             int indexKeyInNod = 0;
             T temp;
 
-            if (node.KeyNumber == 0)
-            {
-                node.Keys[indexKeyInNod] = key;
-                node.KeyNumber++;
-                return;
-            }
-
             while (key.CompareTo(node.Keys[indexKeyInNod]) >= 0)
             {
                 indexKeyInNod++;
@@ -52,29 +53,35 @@ namespace BinaryTreeCollection
                 }
             }
 
-            if (node.IsLeaf)
-            {
-                if (indexKeyInNod > 0)
-                {
-                    node.Keys[indexKeyInNod] = key;
-                    node.KeyNumber++;
-                    return;
-                }
+            BTreeNode<T> newnode = node.Children[indexKeyInNod];
 
-                temp = node.Keys[indexKeyInNod];
-                node.Keys[indexKeyInNod + 1] = temp;
-                node.Keys[indexKeyInNod] = key;
-                node.KeyNumber++;
-            }
-            else
+            if (newnode.IsLeaf)
             {
-                BTreeNode<T> newnode = node.Children[indexKeyInNod];
+                int indexOfNewKey = newnode.KeyNumber;
                 if (newnode.KeyNumber == order - 1)
                 {
                     DivideChild(ref node, indexKeyInNod, key);
-                    return;
                 }
-
+                else
+                {
+                    if (indexKeyInNod > 0)
+                    {
+                        newnode.Keys[indexOfNewKey] = key;
+                        node.Children[indexKeyInNod] = newnode;
+                        node.Children[indexKeyInNod].KeyNumber++;
+                    }
+                    else
+                    {
+                        temp = newnode.Keys[newnode.KeyNumber];
+                        newnode.Keys[newnode.KeyNumber + 1] = temp;
+                        newnode.Keys[newnode.KeyNumber] = key;
+                        node.Children[newnode.KeyNumber] = newnode;
+                        node.Children[indexKeyInNod].KeyNumber++;
+                    }
+                }
+            }
+            else
+            {
                 NodeWithFreeSpaces(ref node.Children[indexKeyInNod], key);
             }
         }
