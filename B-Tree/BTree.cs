@@ -86,7 +86,7 @@ namespace BinaryTreeCollection
             }
         }
 
-        private void DivideChild(ref BTreeNode<T> node, int indexOfNodeToSplit, T key)
+        private void DivideChild(ref BTreeNode<T> node, int indexOfNodeToSplit, T key) //here is the problem;
         {
             BTreeNode<T> parentNode = node;
             BTreeNode<T> nodeToSplit = node.Children[indexOfNodeToSplit];
