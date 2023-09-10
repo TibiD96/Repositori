@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Reflection;
 
 namespace BinaryTreeCollection
 {
     public class BTreeGraph<T> where T : IComparable<T>
     {
-        private static BTreeNode<T> root;
+        private BTreeNode<T> Root;
 
         private readonly int order;
 
         public BTreeGraph(int order)
         {
-            root = new BTreeNode<T>(order);
+            this.Root = new BTreeNode<T>(order);
             this.order = order;
         }
 
@@ -18,32 +19,32 @@ namespace BinaryTreeCollection
 
         public void Add(T key)
         {
-            if (root.IsLeaf)
+            if (this.Root.IsLeaf)
             {
-                if (root.KeyNumber < order - 1)
+                if (this.Root.KeyNumber < order - 1)
                 {
-                    root.Keys[root.KeyNumber] = key;
-                    root.KeyNumber++;
+                    this.Root.Keys[this.Root.KeyNumber] = key;
+                    this.Root.KeyNumber++;
                 }
                 else
                 {
-                    BTreeNode<T> newNode = new BTreeNode<T>(order);
-                    newNode.Children[0] = root;
-                    DivideChild(ref newNode, 0, key);
-                    root = newNode;
+                    this.Root.Keys[this.Root.KeyNumber] = key;
+                    BTreeNode<T> oldRoot = this.Root;
+                    this.Root = new BTreeNode<T>(order);
+                    this.Root.Children[0] = oldRoot;
+                    DivideChild(this.Root, 0, oldRoot);
                 }
             }
             else
             {
-                NodeWithFreeSpaces(ref root, key);
+                NodeWithFreeSpaces(this.Root, key);
             }
         }
 
-        private void NodeWithFreeSpaces(ref BTreeNode<T> node, T key)
+        private void NodeWithFreeSpaces(BTreeNode<T> node, T key)
         {
             int indexKeyInNod = 0;
             T temp;
-
             while (key.CompareTo(node.Keys[indexKeyInNod]) >= 0)
             {
                 indexKeyInNod++;
@@ -60,7 +61,7 @@ namespace BinaryTreeCollection
                 int indexOfNewKey = newnode.KeyNumber;
                 if (newnode.KeyNumber == order - 1)
                 {
-                    DivideChild(ref node, indexKeyInNod, key);
+                     DivideChild(node, indexKeyInNod, newnode);
                 }
                 else
                 {
@@ -82,55 +83,33 @@ namespace BinaryTreeCollection
             }
             else
             {
-                NodeWithFreeSpaces(ref node.Children[indexKeyInNod], key);
+                NodeWithFreeSpaces(node.Children[indexKeyInNod], key);
             }
         }
 
-        private void DivideChild(ref BTreeNode<T> node, int indexOfNodeToSplit, T key) //here is the problem;
+        private void DivideChild(BTreeNode<T> parentNode, int indexOfNodeToSplit, BTreeNode<T> nodetoBeSplited)
         {
-            BTreeNode<T> parentNode = node;
-            BTreeNode<T> nodeToSplit = node.Children[indexOfNodeToSplit];
-            T keyNewValue = key;
+            BTreeNode<T> newNode = new BTreeNode<T>(order);
+            parentNode.Keys[indexOfNodeToSplit] = nodetoBeSplited.Keys[order - 1];
+            parentNode.Children[parentNode.KeyNumber + 1] = newNode;
+            parentNode.KeyNumber++;
 
-            if (parentNode.KeyNumber == order - 1)
+            for (int j = 0; j < order - 1; j++)
             {
-                BTreeNode<T> newNode = new BTreeNode<T>(order);
-                newNode.Children[0] = nodeToSplit;
-                DivideChild(ref newNode, 0, keyNewValue);
-                parentNode.Children[indexOfNodeToSplit] = default;
-                keyNewValue = newNode.Keys[0];
-                BTreeNode<T> newParent = new BTreeNode<T>(order);
-                newParent.Children[0] = parentNode;
-                DivideChild(ref newParent, 0, keyNewValue);
-                newParent.Children[1] = newNode;
-                node = newParent;
+                newNode.Keys[j] = nodetoBeSplited.Keys[j + order];
+                nodetoBeSplited.Keys[j + order] = default(T);
             }
-            else
+
+            if (!nodetoBeSplited.IsLeaf)
             {
-                for (int i = 0; i < nodeToSplit.Keys.Length; i++)
+                for (int j = 0; j < order; j++)
                 {
-                    if (key.CompareTo(nodeToSplit.Keys[i]) < 0 && i == 0)
-                    {
-                        keyNewValue = nodeToSplit.Keys[i];
-                        nodeToSplit.Keys[i] = key;
-                    }
-                    else if (key.CompareTo(nodeToSplit.Keys[i]) > 0 && i > 0)
-                    {
-                        keyNewValue = nodeToSplit.Keys[i];
-                        nodeToSplit.Keys[i] = key;
-                    }
+                    newNode.Children[j] = nodetoBeSplited.Children[j + order];
+                    nodetoBeSplited.Children[j + order] = null;
                 }
-
-                int rightNode = indexOfNodeToSplit + 1;
-                parentNode.Keys[parentNode.KeyNumber] = keyNewValue;
-                parentNode.Children[indexOfNodeToSplit].KeyNumber--;
-                parentNode.Children[rightNode] = new BTreeNode<T>(order);
-                parentNode.Children[rightNode].Keys[0] = nodeToSplit.Keys[1];
-                parentNode.Children[rightNode].KeyNumber++;
-                parentNode.Children[indexOfNodeToSplit].Keys[parentNode.Children[indexOfNodeToSplit].KeyNumber] = default;
-                parentNode.KeyNumber++;
-                node = parentNode;
             }
+
+            nodetoBeSplited.KeyNumber = order - 1;
         }
     }
 }

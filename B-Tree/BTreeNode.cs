@@ -11,7 +11,7 @@
         public BTreeNode(int order)
         {
             KeyNumber = 0;
-            Keys = new T[order - 1];
+            Keys = new T[order];
             Children = new BTreeNode<T>[order];
         }
 
