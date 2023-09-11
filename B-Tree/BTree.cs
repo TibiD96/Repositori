@@ -90,26 +90,22 @@ namespace BinaryTreeCollection
         private void DivideChild(BTreeNode<T> parentNode, int indexOfNodeToSplit, BTreeNode<T> nodetoBeSplited)
         {
             BTreeNode<T> newNode = new BTreeNode<T>(order);
-            parentNode.Keys[indexOfNodeToSplit] = nodetoBeSplited.Keys[order - 1];
+            parentNode.Keys[indexOfNodeToSplit] = nodetoBeSplited.Keys[(order - 1) / 2];
+            nodetoBeSplited.Keys[(order - 1) / 2] = default(T);
             parentNode.Children[parentNode.KeyNumber + 1] = newNode;
             parentNode.KeyNumber++;
 
-            for (int j = 0; j < order - 1; j++)
-            {
-                newNode.Keys[j] = nodetoBeSplited.Keys[j + order];
-                nodetoBeSplited.Keys[j + order] = default(T);
-            }
+            newNode.Keys[0] = nodetoBeSplited.Keys[order - 1];
+            newNode.KeyNumber++;
+            nodetoBeSplited.Keys[order - 1] = default(T);
 
             if (!nodetoBeSplited.IsLeaf)
             {
-                for (int j = 0; j < order; j++)
-                {
-                    newNode.Children[j] = nodetoBeSplited.Children[j + order];
-                    nodetoBeSplited.Children[j + order] = null;
-                }
+                newNode.Children[0] = nodetoBeSplited.Children[order - 1];
+                nodetoBeSplited.Children[order - 1] = null;
             }
 
-            nodetoBeSplited.KeyNumber = order - 1;
+            nodetoBeSplited.KeyNumber--;
         }
     }
 }
