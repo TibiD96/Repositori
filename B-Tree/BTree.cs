@@ -61,7 +61,8 @@ namespace BinaryTreeCollection
                 int indexOfNewKey = newnode.KeyNumber;
                 if (newnode.KeyNumber == order - 1)
                 {
-                     DivideChild(node, indexKeyInNod, newnode);
+                    newnode.Keys[indexOfNewKey] = key;
+                    DivideChild(node, indexKeyInNod, newnode);
                 }
                 else
                 {
