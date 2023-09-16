@@ -63,6 +63,14 @@ namespace BinaryTreeCollection
                 {
                     newnode.Keys[indexOfNewKey] = key;
                     DivideChild(node, indexKeyInNod, newnode);
+
+                    if (node.KeyNumber == 3)
+                    {
+                        BTreeNode<T> newParentNode = node;
+                        node = new BTreeNode<T>(order);
+                        node.Children[0] = newParentNode;
+                        DivideChild(node, 0, newParentNode);
+                    }
                 }
                 else
                 {
