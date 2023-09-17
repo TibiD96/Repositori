@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Xml.Linq;
 
 namespace BinaryTreeCollection
 {
@@ -63,14 +64,6 @@ namespace BinaryTreeCollection
                 {
                     newnode.Keys[indexOfNewKey] = key;
                     DivideChild(node, indexKeyInNod, newnode);
-
-                    if (node.KeyNumber == 3)
-                    {
-                        BTreeNode<T> newParentNode = node;
-                        node = new BTreeNode<T>(order);
-                        node.Children[0] = newParentNode;
-                        DivideChild(node, 0, newParentNode);
-                    }
                 }
                 else
                 {
@@ -110,11 +103,26 @@ namespace BinaryTreeCollection
 
             if (!nodetoBeSplited.IsLeaf)
             {
-                newNode.Children[0] = nodetoBeSplited.Children[order - 1];
-                nodetoBeSplited.Children[order - 1] = null;
+                for (int i = order - 1; i <= order; i++)
+                {
+                    newNode.Children[0] = nodetoBeSplited.Children[i];
+                    nodetoBeSplited.Children[i] = null;
+                }
             }
 
             nodetoBeSplited.KeyNumber--;
+
+            if (parentNode.KeyNumber != order)
+            {
+                return;
+            }
+
+            BTreeNode<T> oldParent = parentNode;
+            parentNode = new BTreeNode<T>(order);
+            parentNode.Keys[0] = oldParent.Keys[(order - 1) / 2];
+            parentNode.Children[0].Keys[0] = oldParent.Keys[(order / 2) - 1];
+            parentNode.Children[1].Keys[0] = oldParent.Keys[order - 1];
+            DivideChild(parentNode, 0, oldParent);
         }
     }
 }
