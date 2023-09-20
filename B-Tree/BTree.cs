@@ -103,7 +103,7 @@ namespace BinaryTreeCollection
             {
                 for (int i = order - 1; i <= order; i++)
                 {
-                    newNode.Children[0] = nodetoBeSplited.Children[i];
+                    newNode.Children[i - 2] = nodetoBeSplited.Children[i];
                     nodetoBeSplited.Children[i] = null;
                 }
             }
@@ -115,22 +115,10 @@ namespace BinaryTreeCollection
                 return;
             }
 
-            BTreeNode<T> oldParent = parentNode;
+            BTreeNode<T> oldRoot = parentNode;
             parentNode = new BTreeNode<T>(order);
-            parentNode.Keys[0] = oldParent.Keys[(order - 1) / 2];
-            parentNode.KeyNumber++;
-            BTreeNode<T> leftHalf = new BTreeNode<T>(order);
-            leftHalf.Keys[0] = oldParent.Keys[(order / 2) - 1];
-            leftHalf.KeyNumber++;
-            leftHalf.Children[0] = oldParent.Children[0];
-            leftHalf.Children[1] = oldParent.Children[1];
-            BTreeNode<T> rightHalf = new BTreeNode<T>(order);
-            rightHalf.Keys[0] = oldParent.Keys[order - 1];
-            rightHalf.KeyNumber++;
-            rightHalf.Children[0] = oldParent.Children[order - 1];
-            rightHalf.Children[1] = oldParent.Children[order];
-            parentNode.Children[0] = leftHalf;
-            parentNode.Children[1] = rightHalf;
+            parentNode.Children[0] = oldRoot;
+            DivideChild(ref parentNode, 0, oldRoot);
         }
     }
 }
