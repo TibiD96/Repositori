@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Security.Cryptography;
+using System.Xml.Linq;
 
 namespace BinaryTreeCollection
 {
@@ -37,6 +39,13 @@ namespace BinaryTreeCollection
             else
             {
                 NodeWithFreeSpaces(ref this.Root, key);
+                if (this.Root.KeyNumber == 3)
+                {
+                    BTreeNode<T> oldNode = this.Root;
+                    this.Root = new BTreeNode<T>(order);
+                    this.Root.Children[0] = oldNode;
+                    DivideChild(ref this.Root, 0, oldNode);
+                }
             }
         }
 
@@ -57,17 +66,16 @@ namespace BinaryTreeCollection
 
             if (newnode.IsLeaf)
             {
-                int indexOfNewKey = newnode.KeyNumber;
                 if (newnode.KeyNumber == order - 1)
                 {
-                    newnode.Keys[indexOfNewKey] = key;
+                    newnode.Keys[newnode.KeyNumber] = key;
                     DivideChild(ref node, indexKeyInNod, newnode);
                 }
                 else
                 {
                     if (indexKeyInNod > 0)
                     {
-                        newnode.Keys[indexOfNewKey] = key;
+                        newnode.Keys[newnode.KeyNumber] = key;
                         node.Children[indexKeyInNod] = newnode;
                         node.Children[indexKeyInNod].KeyNumber++;
                     }
@@ -84,6 +92,14 @@ namespace BinaryTreeCollection
             else
             {
                 NodeWithFreeSpaces(ref node.Children[indexKeyInNod], key);
+            }
+
+            if (node.Children[indexKeyInNod].KeyNumber == 3)
+            {
+                BTreeNode<T> oldNode = node;
+                node = new BTreeNode<T>(order);
+                node.Children[0] = oldNode;
+                DivideChild(ref node, 1, oldNode);
             }
         }
 
@@ -109,16 +125,6 @@ namespace BinaryTreeCollection
             }
 
             nodetoBeSplited.KeyNumber--;
-
-            if (parentNode.KeyNumber != order)
-            {
-                return;
-            }
-
-            BTreeNode<T> oldRoot = parentNode;
-            parentNode = new BTreeNode<T>(order);
-            parentNode.Children[0] = oldRoot;
-            DivideChild(ref parentNode, 0, oldRoot);
         }
     }
 }
