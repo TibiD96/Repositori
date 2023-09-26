@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
-using System.Xml.Linq;
 
 namespace BinaryTreeCollection
 {
@@ -22,31 +20,36 @@ namespace BinaryTreeCollection
         {
             if (this.Root.IsLeaf)
             {
-                if (this.Root.KeyNumber < order - 1)
+                if (this.Root.KeyNumber < order)
                 {
                     this.Root.Keys[this.Root.KeyNumber] = key;
                     this.Root.KeyNumber++;
                 }
-                else
+
+                for (int i = 0; i < this.Root.KeyNumber - 1; i++)
                 {
-                    this.Root.Keys[this.Root.KeyNumber] = key;
-                    BTreeNode<T> oldRoot = this.Root;
-                    this.Root = new BTreeNode<T>(order);
-                    this.Root.Children[0] = oldRoot;
-                    DivideChild(ref this.Root, 0, oldRoot);
+                    if (this.Root.Keys[i].CompareTo(this.Root.Keys[i + 1]) > 0)
+                    {
+                        T temp = this.Root.Keys[i + 1];
+                        this.Root.Keys[i + 1] = this.Root.Keys[i];
+                        this.Root.Keys[i] = temp;
+                    }
                 }
             }
             else
             {
                 NodeWithFreeSpaces(ref this.Root, key);
-                if (this.Root.KeyNumber == 3)
-                {
-                    BTreeNode<T> oldNode = this.Root;
-                    this.Root = new BTreeNode<T>(order);
-                    this.Root.Children[0] = oldNode;
-                    DivideChild(ref this.Root, 0, oldNode);
-                }
             }
+
+            if (this.Root.KeyNumber != 3)
+            {
+                return;
+            }
+
+            BTreeNode<T> oldNode = this.Root;
+            this.Root = new BTreeNode<T>(order);
+            this.Root.Children[0] = oldNode;
+            DivideChild(ref this.Root, 0, oldNode);
         }
 
         private void NodeWithFreeSpaces(ref BTreeNode<T> node, T key)
@@ -96,10 +99,8 @@ namespace BinaryTreeCollection
 
             if (node.Children[indexKeyInNod].KeyNumber == 3)
             {
-                BTreeNode<T> oldNode = node;
-                node = new BTreeNode<T>(order);
-                node.Children[0] = oldNode;
-                DivideChild(ref node, 1, oldNode);
+                BTreeNode<T> oldNode = node.Children[indexKeyInNod];
+                DivideChild(ref node, indexKeyInNod, oldNode);
             }
         }
 
