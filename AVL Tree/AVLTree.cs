@@ -27,11 +27,25 @@ namespace BinaryTreeCollection
         {
             if (key.CompareTo(node.Key) < 0)
             {
-                node.LeftChild = new AVLTreeNode<T>(key, node);
+                if (node.LeftChild == null)
+                {
+                    node.LeftChild = new AVLTreeNode<T>(key, node);
+                }
+                else
+                {
+                    InsertChild(node.LeftChild, key);
+                }
             }
             else
             {
-                node.RightChild = new AVLTreeNode<T>(key, node);
+                if (node.RightChild == null)
+                {
+                    node.RightChild = new AVLTreeNode<T>(key, node);
+                }
+                else
+                {
+                    InsertChild(node.RightChild, key);
+                }
             }
         }
     }
