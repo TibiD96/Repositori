@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Security.Cryptography;
+using System.Collections.Generic;
+using System.Text;
 
 namespace BinaryTreeCollection
 {
@@ -25,6 +26,7 @@ namespace BinaryTreeCollection
 
         public void InsertChild(AVLTreeNode<T> node, T key)
         {
+            int balanceFactor;
             if (key.CompareTo(node.Key) < 0)
             {
                 if (node.LeftChild == null)
@@ -47,6 +49,35 @@ namespace BinaryTreeCollection
                     InsertChild(node.RightChild, key);
                 }
             }
+
+            balanceFactor = BalanceFactor(node);
+
+            if (balanceFactor >= -1 && balanceFactor <= 1)
+            {
+                return;
+            }
+
+            //Rotate(node, balanceFactor);
         }
+
+        public int BalanceFactor(AVLTreeNode<T> node)
+        {
+            return HightOfNode(node.LeftChild) - HightOfNode(node.RightChild);
+        }
+
+        public int HightOfNode(AVLTreeNode<T> node)
+        {
+            if (node != null)
+            {
+                return 1 + Math.Max(HightOfNode(node.LeftChild), HightOfNode(node.RightChild));
+            }
+
+            return 0;
+        }
+
+        //private void Rotate(AVLTreeNode<T> node, int balanceFactor)
+        //{
+
+        //}
     }
 }
