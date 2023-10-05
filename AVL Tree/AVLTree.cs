@@ -57,7 +57,7 @@ namespace BinaryTreeCollection
                 return;
             }
 
-            //Rotate(node, balanceFactor);
+            Rotate(ref node, ref balanceFactor, key);
         }
 
         public int BalanceFactor(AVLTreeNode<T> node)
@@ -75,9 +75,33 @@ namespace BinaryTreeCollection
             return 0;
         }
 
-        //private void Rotate(AVLTreeNode<T> node, int balanceFactor)
-        //{
+        private void Rotate(ref AVLTreeNode<T> node, ref int balanceFactor, T key)
+        {
+            if (balanceFactor > 1 && key.CompareTo(node.LeftChild.Key) < 0)
+            {
+                RotateToRight(node);
 
-        //}
+                balanceFactor = BalanceFactor(node);
+            }
+
+            if (balanceFactor < -1 && key.CompareTo(node.RightChild.Key) > 0)
+            {
+               // RotateToLeft(node);
+
+                balanceFactor = BalanceFactor(node);
+            }
+        }
+
+        private AVLTreeNode<T> RotateToRight(AVLTreeNode<T> node)
+        {
+            AVLTreeNode<T> pivot = node.LeftChild;
+            node.LeftChild = pivot.RightChild;
+            pivot.Parent = node.Parent;
+            Root = pivot;
+            pivot.RightChild = node;
+            node.Parent = pivot;
+
+            return pivot;
+        }
     }
 }
