@@ -12,9 +12,9 @@ namespace BinaryTreeCollection
             avltree.Insert(4);
             avltree.Insert(6);
             avltree.Insert(7);
-            Assert.Equal(4, avltree.Root.Key);
-            Assert.Equal(6, avltree.Root.RightChild.Key);
-            Assert.Equal(7, avltree.Root.RightChild.RightChild.Key);
+            Assert.Equal(6, avltree.Root.Key);
+            Assert.Equal(7, avltree.Root.RightChild.Key);
+            Assert.Equal(4, avltree.Root.LeftChild.Key);
         }
 
         [Fact]
@@ -26,8 +26,8 @@ namespace BinaryTreeCollection
             avltree.Insert(6);
             avltree.Insert(7);
             Assert.Null(avltree.Root.Parent);
-            Assert.Equal(4, avltree.Root.RightChild.Parent.Key);
-            Assert.Equal(6, avltree.Root.RightChild.RightChild.Parent.Key);
+            Assert.Equal(6, avltree.Root.RightChild.Parent.Key);
+            Assert.Equal(7, avltree.Root.RightChild.Key);
         }
 
         [Fact]
@@ -42,6 +42,20 @@ namespace BinaryTreeCollection
             Assert.Equal(5, avltree.Root.RightChild.Parent.Key);
             Assert.Equal(12, avltree.Root.RightChild.Key);
             Assert.Equal(4, avltree.Root.LeftChild.Key);
+        }
+
+        [Fact]
+
+        public void RRRotationCheck()
+        {
+            AVLTree<int> avltree = new AVLTree<int>();
+            avltree.Insert(12);
+            avltree.Insert(15);
+            avltree.Insert(19);
+            Assert.Null(avltree.Root.Parent);
+            Assert.Equal(15, avltree.Root.RightChild.Parent.Key);
+            Assert.Equal(19, avltree.Root.RightChild.Key);
+            Assert.Equal(12, avltree.Root.LeftChild.Key);
         }
     }
 }

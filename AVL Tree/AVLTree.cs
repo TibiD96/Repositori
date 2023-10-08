@@ -86,7 +86,7 @@ namespace BinaryTreeCollection
 
             if (balanceFactor < -1 && key.CompareTo(node.RightChild.Key) > 0)
             {
-               // RotateToLeft(node);
+                RotateToLeft(node);
 
                 balanceFactor = BalanceFactor(node);
             }
@@ -99,6 +99,18 @@ namespace BinaryTreeCollection
             pivot.Parent = node.Parent;
             Root = pivot;
             pivot.RightChild = node;
+            node.Parent = pivot;
+
+            return pivot;
+        }
+
+        private AVLTreeNode<T> RotateToLeft(AVLTreeNode<T> node)
+        {
+            AVLTreeNode<T> pivot = node.RightChild;
+            node.RightChild = pivot.LeftChild;
+            pivot.Parent = node.Parent;
+            Root = pivot;
+            pivot.LeftChild = node;
             node.Parent = pivot;
 
             return pivot;
