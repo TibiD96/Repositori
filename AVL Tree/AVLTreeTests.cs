@@ -85,5 +85,27 @@ namespace BinaryTreeCollection
             Assert.Equal(8, avltree.Root.RightChild.Key);
             Assert.Equal(5, avltree.Root.LeftChild.Key);
         }
+
+        [Fact]
+
+        public void MoreComplexTreeInsertAndRebalance()
+        {
+            AVLTree<int> avltree = new AVLTree<int>();
+            avltree.Insert(1);
+            avltree.Insert(2);
+            avltree.Insert(3);
+            avltree.Insert(4);
+            avltree.Insert(5);
+            avltree.Insert(6);
+            avltree.Insert(7);
+            Assert.Null(avltree.Root.Parent);
+            Assert.Equal(4, avltree.Root.Key);
+            Assert.Equal(6, avltree.Root.RightChild.Key);
+            Assert.Equal(2, avltree.Root.LeftChild.Key);
+            Assert.Equal(1, avltree.Root.LeftChild.LeftChild.Key);
+            Assert.Equal(3, avltree.Root.LeftChild.RightChild.Key);
+            Assert.Equal(7, avltree.Root.RightChild.RightChild.Key);
+            Assert.Equal(5, avltree.Root.RightChild.LeftChild.Key);
+        }
     }
 }

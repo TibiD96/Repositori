@@ -57,7 +57,7 @@ namespace BinaryTreeCollection
                 return;
             }
 
-            Rotate(ref node, ref balanceFactor, key);
+            Rotate(node, ref balanceFactor, key);
         }
 
         public int BalanceFactor(AVLTreeNode<T> node)
@@ -75,7 +75,7 @@ namespace BinaryTreeCollection
             return 0;
         }
 
-        private void Rotate(ref AVLTreeNode<T> node, ref int balanceFactor, T key)
+        private void Rotate(AVLTreeNode<T> node, ref int balanceFactor, T key)
         {
             if (balanceFactor > 1 && key.CompareTo(node.LeftChild.Key) < 0)
             {
