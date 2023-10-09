@@ -57,5 +57,33 @@ namespace BinaryTreeCollection
             Assert.Equal(19, avltree.Root.RightChild.Key);
             Assert.Equal(12, avltree.Root.LeftChild.Key);
         }
+
+        [Fact]
+
+        public void LRRotationCheck()
+        {
+            AVLTree<int> avltree = new AVLTree<int>();
+            avltree.Insert(5);
+            avltree.Insert(2);
+            avltree.Insert(4);
+            Assert.Null(avltree.Root.Parent);
+            Assert.Equal(4, avltree.Root.RightChild.Parent.Key);
+            Assert.Equal(5, avltree.Root.RightChild.Key);
+            Assert.Equal(2, avltree.Root.LeftChild.Key);
+        }
+
+        [Fact]
+
+        public void RLRotationCheck()
+        {
+            AVLTree<int> avltree = new AVLTree<int>();
+            avltree.Insert(5);
+            avltree.Insert(8);
+            avltree.Insert(7);
+            Assert.Null(avltree.Root.Parent);
+            Assert.Equal(7, avltree.Root.RightChild.Parent.Key);
+            Assert.Equal(8, avltree.Root.RightChild.Key);
+            Assert.Equal(5, avltree.Root.LeftChild.Key);
+        }
     }
 }

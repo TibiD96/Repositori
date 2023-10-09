@@ -84,36 +84,88 @@ namespace BinaryTreeCollection
                 balanceFactor = BalanceFactor(node);
             }
 
+            if (balanceFactor > 1 && key.CompareTo(node.LeftChild.Key) > 0)
+            {
+                RotateToLeft(node.LeftChild);
+
+                RotateToRight(node);
+
+                balanceFactor = BalanceFactor(node);
+            }
+
             if (balanceFactor < -1 && key.CompareTo(node.RightChild.Key) > 0)
             {
                 RotateToLeft(node);
 
                 balanceFactor = BalanceFactor(node);
             }
+
+            if (balanceFactor < -1 && key.CompareTo(node.RightChild.Key) < 0)
+            {
+                RotateToRight(node.RightChild);
+
+                RotateToLeft(node);
+
+                balanceFactor = BalanceFactor(node);
+            }
         }
 
-        private AVLTreeNode<T> RotateToRight(AVLTreeNode<T> node)
+        private void RotateToRight(AVLTreeNode<T> node)
         {
             AVLTreeNode<T> pivot = node.LeftChild;
             node.LeftChild = pivot.RightChild;
+
+            if (pivot.RightChild != null)
+            {
+                pivot.RightChild.Parent = node;
+            }
+
             pivot.Parent = node.Parent;
-            Root = pivot;
+
+            if (node.Parent == null)
+            {
+                Root = pivot;
+            }
+            else if (node == node.Parent.LeftChild)
+            {
+                node.Parent.LeftChild = pivot;
+            }
+            else
+            {
+                node.Parent.RightChild = pivot;
+            }
+
             pivot.RightChild = node;
             node.Parent = pivot;
-
-            return pivot;
         }
 
-        private AVLTreeNode<T> RotateToLeft(AVLTreeNode<T> node)
+        private void RotateToLeft(AVLTreeNode<T> node)
         {
             AVLTreeNode<T> pivot = node.RightChild;
             node.RightChild = pivot.LeftChild;
+
+            if (pivot.LeftChild != null)
+            {
+                pivot.LeftChild.Parent = node;
+            }
+
             pivot.Parent = node.Parent;
-            Root = pivot;
+
+            if (node.Parent == null)
+            {
+                Root = pivot;
+            }
+            else if (node == node.Parent.LeftChild)
+            {
+                node.Parent.LeftChild = pivot;
+            }
+            else
+            {
+                node.Parent.RightChild = pivot;
+            }
+
             pivot.LeftChild = node;
             node.Parent = pivot;
-
-            return pivot;
         }
     }
 }
