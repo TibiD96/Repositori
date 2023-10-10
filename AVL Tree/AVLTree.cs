@@ -29,24 +29,24 @@ namespace BinaryTreeCollection
             int balanceFactor;
             if (key.CompareTo(node.Key) < 0)
             {
-                if (node.LeftChild == null)
+                if (node.Left == null)
                 {
-                    node.LeftChild = new AVLTreeNode<T>(key, node);
+                    node.Left = new AVLTreeNode<T>(key, node);
                 }
                 else
                 {
-                    InsertChild(node.LeftChild, key);
+                    InsertChild(node.Left, key);
                 }
             }
             else
             {
-                if (node.RightChild == null)
+                if (node.Right == null)
                 {
-                    node.RightChild = new AVLTreeNode<T>(key, node);
+                    node.Right = new AVLTreeNode<T>(key, node);
                 }
                 else
                 {
-                    InsertChild(node.RightChild, key);
+                    InsertChild(node.Right, key);
                 }
             }
 
@@ -60,16 +60,37 @@ namespace BinaryTreeCollection
             Rotate(node, ref balanceFactor, key);
         }
 
+        public bool Delete(AVLTreeNode<T> nodeToRemove)
+        {
+            return nodeToRemove != null;
+        }
+
+        public bool FindNode(AVLTreeNode<T> nodeToFind)
+        {
+            AVLTreeNode<T> nodeToComapreWith = Root;
+            while (nodeToComapreWith != nodeToFind)
+            {
+                nodeToComapreWith = nodeToFind.Key.CompareTo(nodeToComapreWith.Key) < 0 ? nodeToComapreWith.Left : nodeToComapreWith.Right;
+
+                if (nodeToComapreWith == null)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public int BalanceFactor(AVLTreeNode<T> node)
         {
-            return HightOfNode(node.LeftChild) - HightOfNode(node.RightChild);
+            return HightOfNode(node.Left) - HightOfNode(node.Right);
         }
 
         public int HightOfNode(AVLTreeNode<T> node)
         {
             if (node != null)
             {
-                return 1 + Math.Max(HightOfNode(node.LeftChild), HightOfNode(node.RightChild));
+                return 1 + Math.Max(HightOfNode(node.Left), HightOfNode(node.Right));
             }
 
             return 0;
@@ -77,32 +98,32 @@ namespace BinaryTreeCollection
 
         private void Rotate(AVLTreeNode<T> node, ref int balanceFactor, T key)
         {
-            if (balanceFactor > 1 && key.CompareTo(node.LeftChild.Key) < 0)
+            if (balanceFactor > 1 && key.CompareTo(node.Left.Key) < 0)
             {
                 RotateToRight(node);
 
                 balanceFactor = BalanceFactor(node);
             }
 
-            if (balanceFactor > 1 && key.CompareTo(node.LeftChild.Key) > 0)
+            if (balanceFactor > 1 && key.CompareTo(node.Left.Key) > 0)
             {
-                RotateToLeft(node.LeftChild);
+                RotateToLeft(node.Left);
 
                 RotateToRight(node);
 
                 balanceFactor = BalanceFactor(node);
             }
 
-            if (balanceFactor < -1 && key.CompareTo(node.RightChild.Key) > 0)
+            if (balanceFactor < -1 && key.CompareTo(node.Right.Key) > 0)
             {
                 RotateToLeft(node);
 
                 balanceFactor = BalanceFactor(node);
             }
 
-            if (balanceFactor < -1 && key.CompareTo(node.RightChild.Key) < 0)
+            if (balanceFactor < -1 && key.CompareTo(node.Right.Key) < 0)
             {
-                RotateToRight(node.RightChild);
+                RotateToRight(node.Right);
 
                 RotateToLeft(node);
 
@@ -112,12 +133,12 @@ namespace BinaryTreeCollection
 
         private void RotateToRight(AVLTreeNode<T> node)
         {
-            AVLTreeNode<T> pivot = node.LeftChild;
-            node.LeftChild = pivot.RightChild;
+            AVLTreeNode<T> pivot = node.Left;
+            node.Left = pivot.Right;
 
-            if (pivot.RightChild != null)
+            if (pivot.Right != null)
             {
-                pivot.RightChild.Parent = node;
+                pivot.Right.Parent = node;
             }
 
             pivot.Parent = node.Parent;
@@ -126,27 +147,27 @@ namespace BinaryTreeCollection
             {
                 Root = pivot;
             }
-            else if (node == node.Parent.LeftChild)
+            else if (node == node.Parent.Left)
             {
-                node.Parent.LeftChild = pivot;
+                node.Parent.Left = pivot;
             }
             else
             {
-                node.Parent.RightChild = pivot;
+                node.Parent.Right = pivot;
             }
 
-            pivot.RightChild = node;
+            pivot.Right = node;
             node.Parent = pivot;
         }
 
         private void RotateToLeft(AVLTreeNode<T> node)
         {
-            AVLTreeNode<T> pivot = node.RightChild;
-            node.RightChild = pivot.LeftChild;
+            AVLTreeNode<T> pivot = node.Right;
+            node.Right = pivot.Left;
 
-            if (pivot.LeftChild != null)
+            if (pivot.Left != null)
             {
-                pivot.LeftChild.Parent = node;
+                pivot.Left.Parent = node;
             }
 
             pivot.Parent = node.Parent;
@@ -155,16 +176,16 @@ namespace BinaryTreeCollection
             {
                 Root = pivot;
             }
-            else if (node == node.Parent.LeftChild)
+            else if (node == node.Parent.Left)
             {
-                node.Parent.LeftChild = pivot;
+                node.Parent.Left = pivot;
             }
             else
             {
-                node.Parent.RightChild = pivot;
+                node.Parent.Right = pivot;
             }
 
-            pivot.LeftChild = node;
+            pivot.Left = node;
             node.Parent = pivot;
         }
     }

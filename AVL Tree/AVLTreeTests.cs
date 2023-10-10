@@ -13,8 +13,8 @@ namespace BinaryTreeCollection
             avltree.Insert(6);
             avltree.Insert(7);
             Assert.Equal(6, avltree.Root.Key);
-            Assert.Equal(7, avltree.Root.RightChild.Key);
-            Assert.Equal(4, avltree.Root.LeftChild.Key);
+            Assert.Equal(7, avltree.Root.Right.Key);
+            Assert.Equal(4, avltree.Root.Left.Key);
         }
 
         [Fact]
@@ -26,8 +26,8 @@ namespace BinaryTreeCollection
             avltree.Insert(6);
             avltree.Insert(7);
             Assert.Null(avltree.Root.Parent);
-            Assert.Equal(6, avltree.Root.RightChild.Parent.Key);
-            Assert.Equal(7, avltree.Root.RightChild.Key);
+            Assert.Equal(6, avltree.Root.Right.Parent.Key);
+            Assert.Equal(7, avltree.Root.Right.Key);
         }
 
         [Fact]
@@ -39,9 +39,9 @@ namespace BinaryTreeCollection
             avltree.Insert(5);
             avltree.Insert(4);
             Assert.Null(avltree.Root.Parent);
-            Assert.Equal(5, avltree.Root.RightChild.Parent.Key);
-            Assert.Equal(12, avltree.Root.RightChild.Key);
-            Assert.Equal(4, avltree.Root.LeftChild.Key);
+            Assert.Equal(5, avltree.Root.Right.Parent.Key);
+            Assert.Equal(12, avltree.Root.Right.Key);
+            Assert.Equal(4, avltree.Root.Left.Key);
         }
 
         [Fact]
@@ -53,9 +53,9 @@ namespace BinaryTreeCollection
             avltree.Insert(15);
             avltree.Insert(19);
             Assert.Null(avltree.Root.Parent);
-            Assert.Equal(15, avltree.Root.RightChild.Parent.Key);
-            Assert.Equal(19, avltree.Root.RightChild.Key);
-            Assert.Equal(12, avltree.Root.LeftChild.Key);
+            Assert.Equal(15, avltree.Root.Right.Parent.Key);
+            Assert.Equal(19, avltree.Root.Right.Key);
+            Assert.Equal(12, avltree.Root.Left.Key);
         }
 
         [Fact]
@@ -67,9 +67,9 @@ namespace BinaryTreeCollection
             avltree.Insert(2);
             avltree.Insert(4);
             Assert.Null(avltree.Root.Parent);
-            Assert.Equal(4, avltree.Root.RightChild.Parent.Key);
-            Assert.Equal(5, avltree.Root.RightChild.Key);
-            Assert.Equal(2, avltree.Root.LeftChild.Key);
+            Assert.Equal(4, avltree.Root.Right.Parent.Key);
+            Assert.Equal(5, avltree.Root.Right.Key);
+            Assert.Equal(2, avltree.Root.Left.Key);
         }
 
         [Fact]
@@ -81,9 +81,9 @@ namespace BinaryTreeCollection
             avltree.Insert(8);
             avltree.Insert(7);
             Assert.Null(avltree.Root.Parent);
-            Assert.Equal(7, avltree.Root.RightChild.Parent.Key);
-            Assert.Equal(8, avltree.Root.RightChild.Key);
-            Assert.Equal(5, avltree.Root.LeftChild.Key);
+            Assert.Equal(7, avltree.Root.Right.Parent.Key);
+            Assert.Equal(8, avltree.Root.Right.Key);
+            Assert.Equal(5, avltree.Root.Left.Key);
         }
 
         [Fact]
@@ -100,12 +100,31 @@ namespace BinaryTreeCollection
             avltree.Insert(7);
             Assert.Null(avltree.Root.Parent);
             Assert.Equal(4, avltree.Root.Key);
-            Assert.Equal(6, avltree.Root.RightChild.Key);
-            Assert.Equal(2, avltree.Root.LeftChild.Key);
-            Assert.Equal(1, avltree.Root.LeftChild.LeftChild.Key);
-            Assert.Equal(3, avltree.Root.LeftChild.RightChild.Key);
-            Assert.Equal(7, avltree.Root.RightChild.RightChild.Key);
-            Assert.Equal(5, avltree.Root.RightChild.LeftChild.Key);
+            Assert.Equal(6, avltree.Root.Right.Key);
+            Assert.Equal(2, avltree.Root.Left.Key);
+            Assert.Equal(1, avltree.Root.Left.Left.Key);
+            Assert.Equal(3, avltree.Root.Left.Right.Key);
+            Assert.Equal(7, avltree.Root.Right.Right.Key);
+            Assert.Equal(5, avltree.Root.Right.Left.Key);
+        }
+
+        [Fact]
+
+        public void FindMethodeShouldReturnTrue()
+        {
+            AVLTree<int> avltree = new AVLTree<int>();
+            avltree.Insert(1);
+            avltree.Insert(2);
+            avltree.Insert(3);
+            avltree.Insert(4);
+            avltree.Insert(5);
+            avltree.Insert(6);
+            avltree.Insert(7);
+            AVLTree<int> compareWith = new AVLTree<int>();
+            compareWith.Insert(6);
+            compareWith.Insert(5);
+            compareWith.Insert(7);
+            Assert.True(avltree.FindNode(compareWith.Root));
         }
     }
 }
