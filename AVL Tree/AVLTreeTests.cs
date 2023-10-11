@@ -126,5 +126,24 @@ namespace BinaryTreeCollection
             compareWith.Insert(7);
             Assert.True(avltree.FindNode(compareWith.Root));
         }
+
+        [Fact]
+
+        public void FindMethodeShouldReturnFalse()
+        {
+            AVLTree<int> avltree = new AVLTree<int>();
+            avltree.Insert(1);
+            avltree.Insert(2);
+            avltree.Insert(3);
+            avltree.Insert(4);
+            avltree.Insert(5);
+            avltree.Insert(6);
+            avltree.Insert(7);
+            AVLTree<int> compareWith = new AVLTree<int>();
+            compareWith.Insert(5);
+            compareWith.Insert(10);
+            compareWith.Insert(15);
+            Assert.False(avltree.FindNode(compareWith.Root));
+        }
     }
 }

@@ -68,7 +68,7 @@ namespace BinaryTreeCollection
         public bool FindNode(AVLTreeNode<T> nodeToFind)
         {
             AVLTreeNode<T> nodeToComapreWith = Root;
-            while (nodeToComapreWith != nodeToFind)
+            while (nodeToFind.Key.CompareTo(nodeToComapreWith.Key) < 0 || nodeToFind.Key.CompareTo(nodeToComapreWith.Key) > 0)
             {
                 nodeToComapreWith = nodeToFind.Key.CompareTo(nodeToComapreWith.Key) < 0 ? nodeToComapreWith.Left : nodeToComapreWith.Right;
 
