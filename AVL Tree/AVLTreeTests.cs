@@ -124,7 +124,7 @@ namespace BinaryTreeCollection
             compareWith.Insert(6);
             compareWith.Insert(5);
             compareWith.Insert(7);
-            Assert.True(avltree.FindNode(compareWith.Root));
+            Assert.Equal(avltree.FindNode(compareWith.Root).Key, avltree.Root.Right.Key);
         }
 
         [Fact]
@@ -143,7 +143,24 @@ namespace BinaryTreeCollection
             compareWith.Insert(5);
             compareWith.Insert(10);
             compareWith.Insert(15);
-            Assert.False(avltree.FindNode(compareWith.Root));
+            Assert.Null(avltree.FindNode(compareWith.Root));
+        }
+
+        [Fact]
+
+        public void CheckDeleteForANodeWhichIsLeaf()
+        {
+            AVLTree<int> avltree = new AVLTree<int>();
+            avltree.Insert(1);
+            avltree.Insert(2);
+            avltree.Insert(3);
+            AVLTree<int> compareWith = new AVLTree<int>();
+            compareWith.Insert(3);
+            avltree.Delete(compareWith.Root);
+            Assert.Null(avltree.Root.Right);
+            compareWith.Insert(1);
+            avltree.Delete(compareWith.Root.Left);
+            Assert.Null(avltree.Root.Left);
         }
     }
 }

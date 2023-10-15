@@ -60,12 +60,39 @@ namespace BinaryTreeCollection
             Rotate(node, ref balanceFactor, key);
         }
 
-        public bool Delete(AVLTreeNode<T> nodeToRemove)
+        public void Delete(AVLTreeNode<T> nodeToRemove)
         {
-            return nodeToRemove != null;
+            nodeToRemove = FindNode(nodeToRemove);
+            if (nodeToRemove != null)
+            {
+                if (nodeToRemove.IsLeaf)
+                {
+                    RemoveNode(nodeToRemove);
+                }
+                else if (nodeToRemove.Left == null || nodeToRemove.Right == null)
+                {
+
+                }
+            }
         }
 
-        public bool FindNode(AVLTreeNode<T> nodeToFind)
+        public void RemoveNode(AVLTreeNode<T> nodeToRemove)
+        {
+            if (nodeToRemove.Parent == null)
+            {
+                Root = null;
+            }
+            else if (nodeToRemove == nodeToRemove.Parent.Left)
+            {
+                nodeToRemove.Parent.Left = null;
+            }
+            else
+            {
+                nodeToRemove.Parent.Right = null;
+            }
+        }
+
+        public AVLTreeNode<T> FindNode(AVLTreeNode<T> nodeToFind)
         {
             AVLTreeNode<T> nodeToComapreWith = Root;
             while (nodeToFind.Key.CompareTo(nodeToComapreWith.Key) < 0 || nodeToFind.Key.CompareTo(nodeToComapreWith.Key) > 0)
@@ -74,11 +101,11 @@ namespace BinaryTreeCollection
 
                 if (nodeToComapreWith == null)
                 {
-                    return false;
+                    return null;
                 }
             }
 
-            return true;
+            return nodeToComapreWith;
         }
 
         public int BalanceFactor(AVLTreeNode<T> node)
