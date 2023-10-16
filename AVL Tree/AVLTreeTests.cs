@@ -154,13 +154,29 @@ namespace BinaryTreeCollection
             avltree.Insert(1);
             avltree.Insert(2);
             avltree.Insert(3);
-            AVLTree<int> compareWith = new AVLTree<int>();
-            compareWith.Insert(3);
-            avltree.Delete(compareWith.Root);
+            AVLTree<int> deleteNode = new AVLTree<int>();
+            deleteNode.Insert(3);
+            avltree.Delete(deleteNode.Root);
             Assert.Null(avltree.Root.Right);
-            compareWith.Insert(1);
-            avltree.Delete(compareWith.Root.Left);
+            deleteNode.Insert(1);
+            avltree.Delete(deleteNode.Root.Left);
             Assert.Null(avltree.Root.Left);
+        }
+
+        [Fact]
+
+        public void CheckDeleteForANodeWhichOneChild()
+        {
+            AVLTree<int> avltree = new AVLTree<int>();
+            avltree.Insert(4);
+            avltree.Insert(3);
+            avltree.Insert(2);
+            avltree.Insert(1);
+            AVLTree<int> deleteNode = new AVLTree<int>();
+            deleteNode.Insert(2);
+            avltree.Delete(deleteNode.Root);
+            Assert.Equal(1, avltree.Root.Left.Key);
+            Assert.Equal(3, avltree.Root.Left.Parent.Key);
         }
     }
 }

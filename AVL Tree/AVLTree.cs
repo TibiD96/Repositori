@@ -71,8 +71,11 @@ namespace BinaryTreeCollection
                 }
                 else if (nodeToRemove.Left == null || nodeToRemove.Right == null)
                 {
-
+                    AVLTreeNode<T> replaceWith = nodeToRemove.Left ?? nodeToRemove.Right;
+                    Replace(nodeToRemove, replaceWith);
                 }
+
+                Count--;
             }
         }
 
@@ -89,6 +92,19 @@ namespace BinaryTreeCollection
             else
             {
                 nodeToRemove.Parent.Right = null;
+            }
+        }
+
+        public void Replace(AVLTreeNode<T> nodeToRemove, AVLTreeNode<T> replaceWith)
+        {
+            if (nodeToRemove.Parent == null)
+            {
+                Root = replaceWith;
+            }
+            else if (nodeToRemove == nodeToRemove.Parent.Left)
+            {
+                replaceWith.Parent = nodeToRemove.Parent;
+                nodeToRemove.Parent.Left = replaceWith;
             }
         }
 
