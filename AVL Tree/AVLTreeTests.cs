@@ -165,7 +165,7 @@ namespace BinaryTreeCollection
 
         [Fact]
 
-        public void CheckDeleteForANodeWhichOneChild()
+        public void CheckDeleteForANodeWhichOneChildNoRebalanceNeeded()
         {
             AVLTree<int> avltree = new AVLTree<int>();
             avltree.Insert(4);

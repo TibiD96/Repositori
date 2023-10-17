@@ -74,6 +74,10 @@ namespace BinaryTreeCollection
                     AVLTreeNode<T> replaceWith = nodeToRemove.Left ?? nodeToRemove.Right;
                     Replace(nodeToRemove, replaceWith);
                 }
+                else
+                {
+
+                }
 
                 Count--;
             }
