@@ -68,18 +68,25 @@ namespace BinaryTreeCollection
                 if (nodeToRemove.IsLeaf)
                 {
                     RemoveNode(nodeToRemove);
+                    Count--;
                 }
                 else if (nodeToRemove.Left == null || nodeToRemove.Right == null)
                 {
                     AVLTreeNode<T> replaceWith = nodeToRemove.Left ?? nodeToRemove.Right;
                     Replace(nodeToRemove, replaceWith);
+                    Count--;
                 }
                 else
                 {
+                    AVLTreeNode<T> nextNode = nodeToRemove.Left;
+                    while (nextNode.Right != null)
+                    {
+                        nextNode = nextNode.Right;
+                    }
 
+                    Delete(nextNode);
+                    nodeToRemove.Key = nextNode.Key;
                 }
-
-                Count--;
             }
         }
 

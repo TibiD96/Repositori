@@ -144,6 +144,7 @@ namespace BinaryTreeCollection
             compareWith.Insert(10);
             compareWith.Insert(15);
             Assert.Null(avltree.FindNode(compareWith.Root));
+            Assert.Equal(7, avltree.Count);
         }
 
         [Fact]
@@ -161,11 +162,12 @@ namespace BinaryTreeCollection
             deleteNode.Insert(1);
             avltree.Delete(deleteNode.Root.Left);
             Assert.Null(avltree.Root.Left);
+            Assert.Equal(1, avltree.Count);
         }
 
         [Fact]
 
-        public void CheckDeleteForANodeWhichOneChildNoRebalanceNeeded()
+        public void CheckDeleteForANodeWithOneChildNoRebalanceNeeded()
         {
             AVLTree<int> avltree = new AVLTree<int>();
             avltree.Insert(4);
@@ -177,6 +179,49 @@ namespace BinaryTreeCollection
             avltree.Delete(deleteNode.Root);
             Assert.Equal(1, avltree.Root.Left.Key);
             Assert.Equal(3, avltree.Root.Left.Parent.Key);
+            Assert.Equal(3, avltree.Count);
+        }
+
+        [Fact]
+
+        public void CheckDeleteForANodeWithTwoChildWhichAreLeafsNoRebalanceNeeded()
+        {
+            AVLTree<int> avltree = new AVLTree<int>();
+            avltree.Insert(20);
+            avltree.Insert(25);
+            avltree.Insert(30);
+            avltree.Insert(35);
+            avltree.Insert(40);
+            avltree.Insert(45);
+            avltree.Insert(50);
+            AVLTree<int> deleteNode = new AVLTree<int>();
+            deleteNode.Insert(45);
+            avltree.Delete(deleteNode.Root);
+            Assert.Equal(40, avltree.Root.Right.Key);
+            Assert.Equal(40, avltree.Root.Right.Right.Parent.Key);
+            Assert.Equal(6, avltree.Count);
+        }
+
+        [Fact]
+
+        public void CheckDeleteForANodeWithTwoChildNoRebalanceNeeded()
+        {
+            AVLTree<int> avltree = new AVLTree<int>();
+            avltree.Insert(20);
+            avltree.Insert(25);
+            avltree.Insert(30);
+            avltree.Insert(35);
+            avltree.Insert(40);
+            avltree.Insert(45);
+            avltree.Insert(50);
+            avltree.Insert(43);
+            AVLTree<int> deleteNode = new AVLTree<int>();
+            deleteNode.Insert(45);
+            avltree.Delete(deleteNode.Root);
+            Assert.Equal(43, avltree.Root.Right.Key);
+            Assert.Equal(43, avltree.Root.Right.Right.Parent.Key);
+            Assert.Equal(40, avltree.Root.Right.Left.Key);
+            Assert.Equal(7, avltree.Count);
         }
     }
 }
