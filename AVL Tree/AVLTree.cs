@@ -25,7 +25,83 @@ namespace BinaryTreeCollection
             Count++;
         }
 
-        public void InsertChild(AVLTreeNode<T> node, T key)
+        public void Delete(AVLTreeNode<T> nodeToRemove)
+        {
+            nodeToRemove = FindKey(nodeToRemove.Key);
+            if (nodeToRemove != null)
+            {
+                if (nodeToRemove.IsLeaf)
+                {
+                    RemoveNode(nodeToRemove);
+                    Count--;
+                }
+                else if (nodeToRemove.Left == null || nodeToRemove.Right == null)
+                {
+                    AVLTreeNode<T> replaceWith = nodeToRemove.Left ?? nodeToRemove.Right;
+                    Replace(nodeToRemove, replaceWith);
+                    Count--;
+                }
+                else
+                {
+                    AVLTreeNode<T> nextNode = nodeToRemove.Left;
+                    while (nextNode.Right != null)
+                    {
+                        nextNode = nextNode.Right;
+                    }
+
+                    Delete(nextNode);
+                    nodeToRemove.Key = nextNode.Key;
+                }
+            }
+
+            Rebalance(nodeToRemove.Parent);
+        }
+
+        public AVLTreeNode<T> FindKey(T key)
+        {
+            AVLTreeNode<T> nodeToCompareWith = Root;
+            while (nodeToCompareWith != null)
+            {
+                int comparison = key.CompareTo(nodeToCompareWith.Key);
+                if (comparison == 0)
+                {
+                    return nodeToCompareWith;
+                }
+                else if (comparison < 0)
+                {
+                    nodeToCompareWith = nodeToCompareWith.Left;
+                }
+                else
+                {
+                    nodeToCompareWith = nodeToCompareWith.Right;
+                }
+            }
+
+            return null;
+        }
+
+        public void Clear()
+        {
+            Root = null;
+            Count = 0;
+        }
+
+        private int BalanceFactor(AVLTreeNode<T> node)
+        {
+            return HightOfNode(node.Left) - HightOfNode(node.Right);
+        }
+
+        private int HightOfNode(AVLTreeNode<T> node)
+        {
+            if (node != null)
+            {
+                return 1 + Math.Max(HightOfNode(node.Left), HightOfNode(node.Right));
+            }
+
+            return 0;
+        }
+
+        private void InsertChild(AVLTreeNode<T> node, T key)
         {
             int balanceFactor;
             if (key.CompareTo(node.Key) < 0)
@@ -61,39 +137,7 @@ namespace BinaryTreeCollection
             Rotate(node, balanceFactor);
         }
 
-        public void Delete(AVLTreeNode<T> nodeToRemove)
-        {
-            nodeToRemove = FindKey(nodeToRemove.Key);
-            if (nodeToRemove != null)
-            {
-                if (nodeToRemove.IsLeaf)
-                {
-                    RemoveNode(nodeToRemove);
-                    Count--;
-                }
-                else if (nodeToRemove.Left == null || nodeToRemove.Right == null)
-                {
-                    AVLTreeNode<T> replaceWith = nodeToRemove.Left ?? nodeToRemove.Right;
-                    Replace(nodeToRemove, replaceWith);
-                    Count--;
-                }
-                else
-                {
-                    AVLTreeNode<T> nextNode = nodeToRemove.Left;
-                    while (nextNode.Right != null)
-                    {
-                        nextNode = nextNode.Right;
-                    }
-
-                    Delete(nextNode);
-                    nodeToRemove.Key = nextNode.Key;
-                }
-            }
-
-            Rebalance(nodeToRemove.Parent);
-        }
-
-        public void Rebalance(AVLTreeNode<T> node)
+        private void Rebalance(AVLTreeNode<T> node)
         {
             while (node != null)
             {
@@ -128,13 +172,7 @@ namespace BinaryTreeCollection
             }
         }
 
-        public void Clear()
-        {
-            Root = null;
-            Count = 0;
-        }
-
-        public void RemoveNode(AVLTreeNode<T> nodeToRemove)
+        private void RemoveNode(AVLTreeNode<T> nodeToRemove)
         {
             if (nodeToRemove.Parent == null)
             {
@@ -150,7 +188,7 @@ namespace BinaryTreeCollection
             }
         }
 
-        public void Replace(AVLTreeNode<T> nodeToRemove, AVLTreeNode<T> replaceWith)
+        private void Replace(AVLTreeNode<T> nodeToRemove, AVLTreeNode<T> replaceWith)
         {
             if (nodeToRemove.Parent == null)
             {
@@ -166,44 +204,6 @@ namespace BinaryTreeCollection
                 replaceWith.Parent = nodeToRemove.Parent;
                 nodeToRemove.Parent.Right = replaceWith;
             }
-        }
-
-        public AVLTreeNode<T> FindKey(T key)
-        {
-            AVLTreeNode<T> nodeToCompareWith = Root;
-            while (nodeToCompareWith != null)
-            {
-                int comparison = key.CompareTo(nodeToCompareWith.Key);
-                if (comparison == 0)
-                {
-                    return nodeToCompareWith;
-                }
-                else if (comparison < 0)
-                {
-                    nodeToCompareWith = nodeToCompareWith.Left;
-                }
-                else
-                {
-                    nodeToCompareWith = nodeToCompareWith.Right;
-                }
-            }
-
-            return null;
-        }
-
-        public int BalanceFactor(AVLTreeNode<T> node)
-        {
-            return HightOfNode(node.Left) - HightOfNode(node.Right);
-        }
-
-        public int HightOfNode(AVLTreeNode<T> node)
-        {
-            if (node != null)
-            {
-                return 1 + Math.Max(HightOfNode(node.Left), HightOfNode(node.Right));
-            }
-
-            return 0;
         }
 
         private void Rotate(AVLTreeNode<T> node, int balanceFactor)
