@@ -57,7 +57,7 @@ namespace BinaryTreeCollection
                 return;
             }
 
-            Rotate(node, balanceFactor, key);
+            Rotate(node, balanceFactor);
         }
 
         public void Delete(AVLTreeNode<T> nodeToRemove)
@@ -157,36 +157,33 @@ namespace BinaryTreeCollection
             return 0;
         }
 
-        private void Rotate(AVLTreeNode<T> node, int balanceFactor, T key)
+        private void Rotate(AVLTreeNode<T> node, int balanceFactor)
         {
-            if (balanceFactor > 1 && key.CompareTo(node.Left.Key) < 0)
+            if (balanceFactor > 1)
             {
-                RotateToLeft(node);
+                if (node.Left.Left != null)
+                {
+                    RotateToLeft(node);
+                }
+                else
+                {
+                    RotateToRight(node.Left);
 
-                balanceFactor = BalanceFactor(node);
+                    RotateToLeft(node);
+                }
             }
-
-            if (balanceFactor > 1 && key.CompareTo(node.Left.Key) > 0)
+            else if (balanceFactor < -1)
             {
-                RotateToRight(node.Left);
+                if (node.Right.Right != null)
+                {
+                    RotateToRight(node);
+                }
+                else
+                {
+                    RotateToLeft(node.Right);
 
-                RotateToLeft(node);
-
-                balanceFactor = BalanceFactor(node);
-            }
-
-            if (balanceFactor < -1 && key.CompareTo(node.Right.Key) > 0)
-            {
-                RotateToRight(node);
-
-                balanceFactor = BalanceFactor(node);
-            }
-
-            if (balanceFactor < -1 && key.CompareTo(node.Right.Key) < 0)
-            {
-                RotateToLeft(node.Right);
-
-                RotateToRight(node);
+                    RotateToRight(node);
+                }
             }
         }
 
