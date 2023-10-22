@@ -18,6 +18,7 @@ namespace BinaryTreeCollection
             }
             else
             {
+                ArgumentException(key);
                 InsertChild(Root, key);
             }
 
@@ -62,8 +63,7 @@ namespace BinaryTreeCollection
 
         public void Delete(AVLTreeNode<T> nodeToRemove)
         {
-            nodeToRemove = FindNode(nodeToRemove);
-            AVLTreeNode<T> rebalance = nodeToRemove.Parent;
+            nodeToRemove = FindKey(nodeToRemove.Key);
             if (nodeToRemove != null)
             {
                 if (nodeToRemove.IsLeaf)
@@ -88,6 +88,43 @@ namespace BinaryTreeCollection
                     Delete(nextNode);
                     nodeToRemove.Key = nextNode.Key;
                 }
+            }
+
+            Rebalance(nodeToRemove.Parent);
+        }
+
+        public void Rebalance(AVLTreeNode<T> node)
+        {
+            while (node != null)
+            {
+                int balanceFactor = BalanceFactor(node);
+
+                if (balanceFactor > 1)
+                {
+                    if (node.Left.Left != null)
+                    {
+                        RotateToLeft(node);
+                    }
+                    else
+                    {
+                        RotateToRight(node.Left);
+                        RotateToLeft(node);
+                    }
+                }
+                else if (balanceFactor < -1)
+                {
+                    if (node.Right.Right != null && node.Right.Left == null)
+                    {
+                        RotateToRight(node);
+                    }
+                    else
+                    {
+                        RotateToLeft(node.Right);
+                        RotateToRight(node);
+                    }
+                }
+
+                node = node.Parent;
             }
         }
 
@@ -124,22 +161,34 @@ namespace BinaryTreeCollection
                 replaceWith.Parent = nodeToRemove.Parent;
                 nodeToRemove.Parent.Left = replaceWith;
             }
+            else
+            {
+                replaceWith.Parent = nodeToRemove.Parent;
+                nodeToRemove.Parent.Right = replaceWith;
+            }
         }
 
-        public AVLTreeNode<T> FindNode(AVLTreeNode<T> nodeToFind)
+        public AVLTreeNode<T> FindKey(T key)
         {
-            AVLTreeNode<T> nodeToComapreWith = Root;
-            while (nodeToFind.Key.CompareTo(nodeToComapreWith.Key) < 0 || nodeToFind.Key.CompareTo(nodeToComapreWith.Key) > 0)
+            AVLTreeNode<T> nodeToCompareWith = Root;
+            while (nodeToCompareWith != null)
             {
-                nodeToComapreWith = nodeToFind.Key.CompareTo(nodeToComapreWith.Key) < 0 ? nodeToComapreWith.Left : nodeToComapreWith.Right;
-
-                if (nodeToComapreWith == null)
+                int comparison = key.CompareTo(nodeToCompareWith.Key);
+                if (comparison == 0)
                 {
-                    return null;
+                    return nodeToCompareWith;
+                }
+                else if (comparison < 0)
+                {
+                    nodeToCompareWith = nodeToCompareWith.Left;
+                }
+                else
+                {
+                    nodeToCompareWith = nodeToCompareWith.Right;
                 }
             }
 
-            return nodeToComapreWith;
+            return null;
         }
 
         public int BalanceFactor(AVLTreeNode<T> node)
@@ -243,6 +292,16 @@ namespace BinaryTreeCollection
 
             pivot.Left = node;
             node.Parent = pivot;
+        }
+
+        private void ArgumentException(T key)
+        {
+            if (FindKey(key) != null)
+            {
+                throw new ArgumentException("Don't allow duplicate values");
+            }
+
+            return;
         }
     }
 }
