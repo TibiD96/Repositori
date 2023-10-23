@@ -6,7 +6,7 @@ namespace BinaryTreeCollection
 {
     public class AVLTree<T> where T : IComparable<T>
     {
-        public AVLTreeNode<T> Root;
+        internal AVLTreeNode<T> Root;
 
         public int Count { get; set; }
 
@@ -27,31 +27,29 @@ namespace BinaryTreeCollection
 
         public void Delete(AVLTreeNode<T> nodeToRemove)
         {
+            ArgumentNullException(nodeToRemove);
             nodeToRemove = FindKey(nodeToRemove.Key);
-            if (nodeToRemove != null)
+            if (nodeToRemove.IsLeaf)
             {
-                if (nodeToRemove.IsLeaf)
-                {
-                    RemoveNode(nodeToRemove);
-                    Count--;
-                }
-                else if (nodeToRemove.Left == null || nodeToRemove.Right == null)
-                {
-                    AVLTreeNode<T> replaceWith = nodeToRemove.Left ?? nodeToRemove.Right;
-                    Replace(nodeToRemove, replaceWith);
-                    Count--;
-                }
-                else
-                {
-                    AVLTreeNode<T> nextNode = nodeToRemove.Left;
-                    while (nextNode.Right != null)
-                    {
-                        nextNode = nextNode.Right;
-                    }
+              RemoveNode(nodeToRemove);
+              Count--;
+            }
+            else if (nodeToRemove.Left == null || nodeToRemove.Right == null)
+            {
+              AVLTreeNode<T> replaceWith = nodeToRemove.Left ?? nodeToRemove.Right;
+              Replace(nodeToRemove, replaceWith);
+              Count--;
+            }
+            else
+            {
+              AVLTreeNode<T> nextNode = nodeToRemove.Left;
+              while (nextNode.Right != null)
+              {
+                nextNode = nextNode.Right;
+              }
 
-                    Delete(nextNode);
-                    nodeToRemove.Key = nextNode.Key;
-                }
+              Delete(nextNode);
+              nodeToRemove.Key = nextNode.Key;
             }
 
             Rebalance(nodeToRemove.Parent);
@@ -299,6 +297,16 @@ namespace BinaryTreeCollection
             if (FindKey(key) != null)
             {
                 throw new ArgumentException("Don't allow duplicate values");
+            }
+
+            return;
+        }
+
+        private void ArgumentNullException(AVLTreeNode<T> node)
+        {
+            if (FindKey(node.Key) == null)
+            {
+                throw new ArgumentNullException("Node is not present in tree");
             }
 
             return;

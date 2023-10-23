@@ -302,5 +302,18 @@ namespace BinaryTreeCollection
             avltree.Insert(3);
             Assert.Throws<ArgumentException>(() => avltree.Insert(3));
         }
+
+        [Fact]
+
+        public void ThrowArgumentForInexistentKeyInTree()
+        {
+            AVLTree<int> avltree = new AVLTree<int>();
+            avltree.Insert(1);
+            avltree.Insert(2);
+            avltree.Insert(3);
+            AVLTree<int> deleteNode1 = new AVLTree<int>();
+            deleteNode1.Insert(4);
+            Assert.Throws<ArgumentNullException>(() => avltree.Delete(deleteNode1.Root));
+        }
     }
 }
