@@ -15,6 +15,7 @@ namespace BinaryTreeCollection
             Assert.Equal(6, avltree.Root.Key);
             Assert.Equal(7, avltree.Root.Right.Key);
             Assert.Equal(4, avltree.Root.Left.Key);
+            Assert.Equal(3, avltree.Count);
         }
 
         [Fact]
@@ -28,6 +29,7 @@ namespace BinaryTreeCollection
             Assert.Null(avltree.Root.Parent);
             Assert.Equal(6, avltree.Root.Right.Parent.Key);
             Assert.Equal(7, avltree.Root.Right.Key);
+            Assert.Equal(3, avltree.Count);
         }
 
         [Fact]
@@ -42,6 +44,7 @@ namespace BinaryTreeCollection
             Assert.Equal(5, avltree.Root.Right.Parent.Key);
             Assert.Equal(12, avltree.Root.Right.Key);
             Assert.Equal(4, avltree.Root.Left.Key);
+            Assert.Equal(3, avltree.Count);
         }
 
         [Fact]
@@ -56,6 +59,7 @@ namespace BinaryTreeCollection
             Assert.Equal(15, avltree.Root.Right.Parent.Key);
             Assert.Equal(19, avltree.Root.Right.Key);
             Assert.Equal(12, avltree.Root.Left.Key);
+            Assert.Equal(3, avltree.Count);
         }
 
         [Fact]
@@ -70,6 +74,7 @@ namespace BinaryTreeCollection
             Assert.Equal(4, avltree.Root.Right.Parent.Key);
             Assert.Equal(5, avltree.Root.Right.Key);
             Assert.Equal(2, avltree.Root.Left.Key);
+            Assert.Equal(3, avltree.Count);
         }
 
         [Fact]
@@ -84,6 +89,7 @@ namespace BinaryTreeCollection
             Assert.Equal(7, avltree.Root.Right.Parent.Key);
             Assert.Equal(8, avltree.Root.Right.Key);
             Assert.Equal(5, avltree.Root.Left.Key);
+            Assert.Equal(3, avltree.Count);
         }
 
         [Fact]
@@ -106,6 +112,7 @@ namespace BinaryTreeCollection
             Assert.Equal(3, avltree.Root.Left.Right.Key);
             Assert.Equal(7, avltree.Root.Right.Right.Key);
             Assert.Equal(5, avltree.Root.Right.Left.Key);
+            Assert.Equal(7, avltree.Count);
         }
 
         [Fact]
@@ -124,7 +131,8 @@ namespace BinaryTreeCollection
             compareWith.Insert(6);
             compareWith.Insert(5);
             compareWith.Insert(7);
-            Assert.Equal(avltree.FindKey(compareWith.Root.Key).Key, avltree.Root.Right.Key);
+            Assert.Equal(avltree.FindKeyNode(compareWith.Root.Key).Key, avltree.Root.Right.Key);
+            Assert.Equal(7, avltree.Count);
         }
 
         [Fact]
@@ -143,7 +151,7 @@ namespace BinaryTreeCollection
             compareWith.Insert(5);
             compareWith.Insert(10);
             compareWith.Insert(15);
-            Assert.Null(avltree.FindKey(compareWith.Root.Key));
+            Assert.Null(avltree.FindKeyNode(compareWith.Root.Key));
             Assert.Equal(7, avltree.Count);
         }
 
@@ -290,6 +298,7 @@ namespace BinaryTreeCollection
             deleteNode1.Insert(4);
             avltree.Delete(deleteNode1.Root);
             Assert.Equal(3, avltree.Root.Key);
+            Assert.Equal(6, avltree.Count);
         }
 
         [Fact]
@@ -301,6 +310,7 @@ namespace BinaryTreeCollection
             avltree.Insert(2);
             avltree.Insert(3);
             Assert.Throws<ArgumentException>(() => avltree.Insert(3));
+            Assert.Equal(3, avltree.Count);
         }
 
         [Fact]
@@ -314,6 +324,7 @@ namespace BinaryTreeCollection
             AVLTree<int> deleteNode1 = new AVLTree<int>();
             deleteNode1.Insert(4);
             Assert.Throws<ArgumentNullException>(() => avltree.Delete(deleteNode1.Root));
+            Assert.Equal(3, avltree.Count);
         }
     }
 }

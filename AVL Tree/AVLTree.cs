@@ -18,7 +18,11 @@ namespace BinaryTreeCollection
             }
             else
             {
-                ArgumentException(key);
+                if (Contain(key))
+                {
+                    throw new ArgumentException("Don't allow duplicate values");
+                }
+
                 InsertChild(Root, key);
             }
 
@@ -27,8 +31,13 @@ namespace BinaryTreeCollection
 
         public void Delete(AVLTreeNode<T> nodeToRemove)
         {
-            ArgumentNullException(nodeToRemove);
-            nodeToRemove = FindKey(nodeToRemove.Key);
+            if (nodeToRemove.Key == null || !Contain(nodeToRemove.Key))
+            {
+                throw new ArgumentNullException("Node is not present in tree");
+            }
+
+            nodeToRemove = FindKeyNode(nodeToRemove.Key);
+
             if (nodeToRemove.IsLeaf)
             {
               RemoveNode(nodeToRemove);
@@ -37,7 +46,15 @@ namespace BinaryTreeCollection
             else if (nodeToRemove.Left == null || nodeToRemove.Right == null)
             {
               AVLTreeNode<T> replaceWith = nodeToRemove.Left ?? nodeToRemove.Right;
-              Replace(nodeToRemove, replaceWith);
+              if (nodeToRemove == Root)
+              {
+                Root = replaceWith;
+              }
+              else
+              {
+                Replace(nodeToRemove, replaceWith);
+              }
+
               Count--;
             }
             else
@@ -55,7 +72,7 @@ namespace BinaryTreeCollection
             Rebalance(nodeToRemove.Parent);
         }
 
-        public AVLTreeNode<T> FindKey(T key)
+        public AVLTreeNode<T> FindKeyNode(T key)
         {
             AVLTreeNode<T> nodeToCompareWith = Root;
             while (nodeToCompareWith != null)
@@ -82,6 +99,11 @@ namespace BinaryTreeCollection
         {
             Root = null;
             Count = 0;
+        }
+
+        private bool Contain(T key)
+        {
+            return FindKeyNode(key) != null;
         }
 
         private int BalanceFactor(AVLTreeNode<T> node)
@@ -188,18 +210,14 @@ namespace BinaryTreeCollection
 
         private void Replace(AVLTreeNode<T> nodeToRemove, AVLTreeNode<T> replaceWith)
         {
-            if (nodeToRemove.Parent == null)
+            replaceWith.Parent = nodeToRemove.Parent;
+
+            if (nodeToRemove == nodeToRemove.Parent.Left)
             {
-                Root = replaceWith;
-            }
-            else if (nodeToRemove == nodeToRemove.Parent.Left)
-            {
-                replaceWith.Parent = nodeToRemove.Parent;
                 nodeToRemove.Parent.Left = replaceWith;
             }
             else
             {
-                replaceWith.Parent = nodeToRemove.Parent;
                 nodeToRemove.Parent.Right = replaceWith;
             }
         }
@@ -290,26 +308,6 @@ namespace BinaryTreeCollection
 
             pivot.Left = node;
             node.Parent = pivot;
-        }
-
-        private void ArgumentException(T key)
-        {
-            if (FindKey(key) != null)
-            {
-                throw new ArgumentException("Don't allow duplicate values");
-            }
-
-            return;
-        }
-
-        private void ArgumentNullException(AVLTreeNode<T> node)
-        {
-            if (FindKey(node.Key) == null)
-            {
-                throw new ArgumentNullException("Node is not present in tree");
-            }
-
-            return;
         }
     }
 }
