@@ -167,24 +167,24 @@ namespace BinaryTreeCollection
                 {
                     if (node.Left.Left != null)
                     {
-                        RotateToLeft(node);
+                        RotateToRight(node);
                     }
                     else
                     {
-                        RotateToRight(node.Left);
-                        RotateToLeft(node);
+                        RotateToLeft(node.Left);
+                        RotateToRight(node);
                     }
                 }
                 else if (balanceFactor < -1)
                 {
                     if (node.Right.Right != null && node.Right.Left == null)
                     {
-                        RotateToRight(node);
+                        RotateToLeft(node);
                     }
                     else
                     {
-                        RotateToLeft(node.Right);
-                        RotateToRight(node);
+                        RotateToRight(node.Right);
+                        RotateToLeft(node);
                     }
                 }
 
@@ -228,31 +228,31 @@ namespace BinaryTreeCollection
             {
                 if (node.Left.Left != null)
                 {
-                    RotateToLeft(node);
+                    RotateToRight(node);
                 }
                 else
                 {
-                    RotateToRight(node.Left);
+                    RotateToLeft(node.Left);
 
-                    RotateToLeft(node);
+                    RotateToRight(node);
                 }
             }
             else if (balanceFactor < -1)
             {
                 if (node.Right.Right != null)
                 {
-                    RotateToRight(node);
+                    RotateToLeft(node);
                 }
                 else
                 {
-                    RotateToLeft(node.Right);
+                    RotateToRight(node.Right);
 
-                    RotateToRight(node);
+                    RotateToLeft(node);
                 }
             }
         }
 
-        private void RotateToLeft(AVLTreeNode<T> node)
+        private void RotateToRight(AVLTreeNode<T> node)
         {
             AVLTreeNode<T> pivot = node.Left;
             node.Left = pivot.Right;
@@ -281,7 +281,7 @@ namespace BinaryTreeCollection
             node.Parent = pivot;
         }
 
-        private void RotateToRight(AVLTreeNode<T> node)
+        private void RotateToLeft(AVLTreeNode<T> node)
         {
             AVLTreeNode<T> pivot = node.Right;
             node.Right = pivot.Left;
