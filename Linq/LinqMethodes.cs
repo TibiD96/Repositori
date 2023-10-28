@@ -60,5 +60,10 @@ namespace Linq
 
             throw new InvalidOperationException("No element respect condition");
         }
+
+        public static IEnumerable<TResult> Select<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector)
+        {
+
+        }
     }
 }
