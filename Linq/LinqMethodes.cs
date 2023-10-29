@@ -9,10 +9,8 @@ namespace Linq
     {
         public static bool All<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            if (source == null || predicate == null)
-            {
-                throw new ArgumentNullException("Can't be null");
-            }
+            CheckIfNull(source);
+            CheckIfNull(predicate);
 
             foreach (var element in source)
             {
@@ -27,10 +25,8 @@ namespace Linq
 
         public static bool Any<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            if (source == null || predicate == null)
-            {
-                throw new ArgumentNullException("Can't be null");
-            }
+            CheckIfNull(source);
+            CheckIfNull(predicate);
 
             foreach (var element in source)
             {
@@ -45,10 +41,8 @@ namespace Linq
 
         public static TSource First<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            if (source == null || predicate == null)
-            {
-                throw new ArgumentNullException("Can't be null");
-            }
+            CheckIfNull(source);
+            CheckIfNull(predicate);
 
             foreach (var element in source)
             {
@@ -63,7 +57,37 @@ namespace Linq
 
         public static IEnumerable<TResult> Select<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector)
         {
+            CheckIfNull(source);
+            CheckIfNull(selector);
 
+            foreach (var element in source)
+            {
+                yield return selector(element);
+            }
+        }
+
+        public static IEnumerable<TResult> SelectMany<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, IEnumerable<TResult>> selector)
+        {
+            CheckIfNull(source);
+            CheckIfNull(selector);
+
+            foreach (var element in source)
+            {
+                foreach (var item in selector(element))
+                {
+                    yield return item;
+                }
+            }
+        }
+
+        static void CheckIfNull<T>(T input)
+        {
+            if (input != null)
+            {
+                return;
+            }
+
+            throw new ArgumentNullException("null");
         }
     }
 }
