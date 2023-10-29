@@ -80,6 +80,20 @@ namespace Linq
             }
         }
 
+        public static IEnumerable<TSource> Where<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
+        {
+            CheckIfNull(source);
+            CheckIfNull(predicate);
+
+            foreach (var element in source)
+            {
+                if (predicate(element))
+                {
+                    yield return element;
+                }
+            }
+        }
+
         static void CheckIfNull<T>(T input)
         {
             if (input != null)

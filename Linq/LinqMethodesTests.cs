@@ -130,5 +130,22 @@ namespace Linq
             var result = first.SelectMany(x => x.Select(y => y.ToString()));
             Assert.Equal(final, result);
         }
+
+        [Fact]
+
+        public void CheckWhereMethode()
+        {
+            var first = new int[4];
+            first[0] = 2;
+            first[1] = 3;
+            first[2] = 4;
+            first[3] = 7;
+
+            var final = new int[2];
+            final[0] = 2;
+            final[1] = 4;
+            var result = first.Where(x => x % 2 == 0);
+            Assert.Equal(final, result);
+        }
     }
 }
