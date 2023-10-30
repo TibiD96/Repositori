@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net.Cache;
 using System.Runtime.ConstrainedExecution;
 using Linq;
 using Xunit;
@@ -146,6 +147,36 @@ namespace Linq
             final[1] = 4;
             var result = first.Where(x => x % 2 == 0);
             Assert.Equal(final, result);
+        }
+
+        [Fact]
+
+        public void CheckToDictionaryMethode()
+        {
+            var workers = new List<Employes>
+            {
+               new Employes { Name = "Andre", Age = 20 },
+
+               new Employes { Name = "Cristi", Age = 40 },
+
+               new Employes { Name = "Ana", Age = 25 },
+
+               new Employes { Name = "Ilie", Age = 50 }
+            };
+
+            var dictionar = workers.ToDictionary(employes => employes.Name, employes => employes.Age);
+
+            Assert.Equal(50, dictionar["Ilie"]);
+            Assert.Equal(25, dictionar["Ana"]);
+            Assert.Equal(40, dictionar["Cristi"]);
+            Assert.Equal(20, dictionar["Andre"]);
+        }
+
+        private class Employes
+        {
+            public string Name { get; set; }
+
+            public int Age { get; set; }
         }
     }
 }

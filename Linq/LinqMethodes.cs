@@ -9,8 +9,8 @@ namespace Linq
     {
         public static bool All<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            CheckIfNull(source);
-            CheckIfNull(predicate);
+            CheckIfNull(source, nameof(source));
+            CheckIfNull(predicate, nameof(predicate));
 
             foreach (var element in source)
             {
@@ -25,8 +25,8 @@ namespace Linq
 
         public static bool Any<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            CheckIfNull(source);
-            CheckIfNull(predicate);
+            CheckIfNull(source, nameof(source));
+            CheckIfNull(predicate, nameof(predicate));
 
             foreach (var element in source)
             {
@@ -41,8 +41,8 @@ namespace Linq
 
         public static TSource First<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            CheckIfNull(source);
-            CheckIfNull(predicate);
+            CheckIfNull(source, nameof(source));
+            CheckIfNull(predicate, nameof(predicate));
 
             foreach (var element in source)
             {
@@ -57,8 +57,8 @@ namespace Linq
 
         public static IEnumerable<TResult> Select<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector)
         {
-            CheckIfNull(source);
-            CheckIfNull(selector);
+            CheckIfNull(source, nameof(source));
+            CheckIfNull(selector, nameof(selector));
 
             foreach (var element in source)
             {
@@ -68,8 +68,8 @@ namespace Linq
 
         public static IEnumerable<TResult> SelectMany<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, IEnumerable<TResult>> selector)
         {
-            CheckIfNull(source);
-            CheckIfNull(selector);
+            CheckIfNull(source, nameof(source));
+            CheckIfNull(selector, nameof(selector));
 
             foreach (var element in source)
             {
@@ -82,8 +82,8 @@ namespace Linq
 
         public static IEnumerable<TSource> Where<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            CheckIfNull(source);
-            CheckIfNull(predicate);
+            CheckIfNull(source, nameof(source));
+            CheckIfNull(predicate, nameof(predicate));
 
             foreach (var element in source)
             {
@@ -94,14 +94,35 @@ namespace Linq
             }
         }
 
-        static void CheckIfNull<T>(T input)
+        public static Dictionary<TKey, TElement> ToDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,Func<TSource, TElement> elementSelector)
+        {
+            CheckIfNull(source, nameof(source));
+            CheckIfNull(keySelector, nameof(keySelector));
+            CheckIfNull(elementSelector, nameof(elementSelector));
+
+            var dictionary = new Dictionary<TKey, TElement>();
+
+            foreach (var element in source)
+            {
+                dictionary.Add(keySelector(element), elementSelector(element));
+            }
+
+            return dictionary;
+        }
+
+        public static IEnumerable<TResult> Zip<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> resultSelector)
+        {
+
+        }
+
+        static void CheckIfNull<T>(T input, string nullReturn)
         {
             if (input != null)
             {
                 return;
             }
 
-            throw new ArgumentNullException("null");
+            throw new ArgumentNullException(nullReturn);
         }
     }
 }
