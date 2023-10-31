@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Cache;
 using System.Runtime.ConstrainedExecution;
 using Linq;
@@ -170,6 +171,30 @@ namespace Linq
             Assert.Equal(25, dictionar["Ana"]);
             Assert.Equal(40, dictionar["Cristi"]);
             Assert.Equal(20, dictionar["Andre"]);
+        }
+
+        [Fact]
+
+        public void CheckToZipMethode()
+        {
+            var workers = new[]
+            {
+                "Alex", "Maria", "Cristina", "Bogdan"
+            };
+
+            var salary = new[]
+            {
+               2000, 3000, 1500
+            };
+
+            var zip = workers.Zip(salary, (first, second) => first + " " + second);
+
+            var result = new[]
+            {
+                "Alex 2000", "Maria 3000", "Cristina 1500"
+            };
+
+            Assert.Equal(result, zip);
         }
 
         private class Employes

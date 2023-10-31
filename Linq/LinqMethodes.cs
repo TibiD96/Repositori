@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -112,7 +113,21 @@ namespace Linq
 
         public static IEnumerable<TResult> Zip<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> resultSelector)
         {
+            CheckIfNull(first, nameof(first));
+            CheckIfNull(second, nameof(second));
+            CheckIfNull(resultSelector, nameof(resultSelector));
 
+            var zip = new List<TResult>();
+            using (var firstList = first.GetEnumerator())
+            using (var secondList = second.GetEnumerator())
+            {
+                while (firstList.MoveNext() && secondList.MoveNext())
+                {
+                    zip.Add(resultSelector(firstList.Current, secondList.Current));
+                }
+            }
+
+            return zip;
         }
 
         static void CheckIfNull<T>(T input, string nullReturn)
