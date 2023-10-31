@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
 using System.Linq.Expressions;
+using Xunit;
 
 namespace Linq
 {
@@ -128,6 +129,20 @@ namespace Linq
             }
 
             return zip;
+        }
+
+        public static TAccumulate Aggregate<TSource, TAccumulate>(this IEnumerable<TSource> source, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> func)
+        {
+            CheckIfNull(source, nameof(source));
+            CheckIfNull(seed, nameof(seed));
+            CheckIfNull(func, nameof(func));
+
+            foreach (var element in source)
+            {
+                seed = func(seed, element);
+            }
+
+            return seed;
         }
 
         static void CheckIfNull<T>(T input, string nullReturn)

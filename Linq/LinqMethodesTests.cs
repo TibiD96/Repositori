@@ -175,7 +175,7 @@ namespace Linq
 
         [Fact]
 
-        public void CheckToZipMethode()
+        public void CheckZipMethode()
         {
             var workers = new[]
             {
@@ -195,6 +195,22 @@ namespace Linq
             };
 
             Assert.Equal(result, zip);
+        }
+
+        [Fact]
+
+        public void CheckAgregateMethode()
+        {
+            var workers = new[]
+            {
+                "Ion", "Maria", "Cristina", "Adi"
+            };
+
+            var agregate = workers.Aggregate("Mihai", (longest, next) => next.Length > longest.Length ? next : longest);
+
+            const string result = "Cristina";
+
+            Assert.Equal(result, agregate);
         }
 
         private class Employes
