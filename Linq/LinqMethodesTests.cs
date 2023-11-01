@@ -231,7 +231,7 @@ namespace Linq
             List<Rise> bonus = new List<Rise> { tenPercent, fifteenPercent, twentyPercent, fivePercent };
 
             var join = workers.Join(bonus, employes => employes.Name, rise => rise.Name, (employes, bonus) => employes.Name + " " + bonus.Amount);
-            var result = new List<string> { "Andre 10%", "Cristi 15%", "Ana 20%", "Ilie 5" };
+            var result = new List<string> { "Andre 10%", "Cristi 15%", "Ana 20%", "Ilie 5%" };
             Assert.Equal(result, join);
         }
 

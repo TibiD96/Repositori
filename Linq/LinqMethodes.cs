@@ -152,7 +152,16 @@ namespace Linq
             Func<TInner, TKey> innerKeySelector,
             Func<TOuter, TInner, TResult> resultSelector)
         {
-
+            foreach (var element in outer)
+            {
+                foreach (var item in inner)
+                {
+                    if (outerKeySelector(element).Equals(innerKeySelector(item)))
+                    {
+                        yield return resultSelector(element, item);
+                    }
+                }
+            }
         }
 
         static void CheckIfNull<T>(T input, string nullReturn)
