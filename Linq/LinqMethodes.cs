@@ -145,6 +145,16 @@ namespace Linq
             return seed;
         }
 
+        public static IEnumerable<TResult> Join<TOuter, TInner, TKey, TResult>(
+            this IEnumerable<TOuter> outer,
+            IEnumerable<TInner> inner,
+            Func<TOuter, TKey> outerKeySelector,
+            Func<TInner, TKey> innerKeySelector,
+            Func<TOuter, TInner, TResult> resultSelector)
+        {
+
+        }
+
         static void CheckIfNull<T>(T input, string nullReturn)
         {
             if (input != null)

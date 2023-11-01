@@ -213,11 +213,40 @@ namespace Linq
             Assert.Equal(result, agregate);
         }
 
+        [Fact]
+
+        public void CheckJoinMethode()
+        {
+            Employes andre = new Employes { Name = "Andre", Age = 20 };
+            Employes cristi = new Employes { Name = "Cristi", Age = 20 };
+            Employes ana = new Employes { Name = "Ana", Age = 20 };
+            Employes ilie = new Employes { Name = "Ilie", Age = 20 };
+
+            Rise tenPercent = new Rise { Name = "Andre", Amount = "10%" };
+            Rise fifteenPercent = new Rise { Name = "Cristi", Amount = "15%" };
+            Rise twentyPercent = new Rise { Name = "Ana", Amount = "20%" };
+            Rise fivePercent = new Rise { Name = "Ilie", Amount = "5%" };
+
+            List<Employes> workers = new List<Employes> { andre, cristi, ana, ilie };
+            List<Rise> bonus = new List<Rise> { tenPercent, fifteenPercent, twentyPercent, fivePercent };
+
+            var join = workers.Join(bonus, employes => employes.Name, rise => rise.Name, (employes, bonus) => employes.Name + " " + bonus.Amount);
+            var result = new List<string> { "Andre 10%", "Cristi 15%", "Ana 20%", "Ilie 5" };
+            Assert.Equal(result, join);
+        }
+
         private class Employes
         {
             public string Name { get; set; }
 
             public int Age { get; set; }
+        }
+
+        private class Rise
+        {
+            public string Name { get; set; }
+
+            public string Amount { get; set; }
         }
     }
 }
