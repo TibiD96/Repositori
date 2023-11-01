@@ -118,17 +118,13 @@ namespace Linq
             CheckIfNull(second, nameof(second));
             CheckIfNull(resultSelector, nameof(resultSelector));
 
-            var zip = new List<TResult>();
-            using (var firstList = first.GetEnumerator())
-            using (var secondList = second.GetEnumerator())
-            {
-                while (firstList.MoveNext() && secondList.MoveNext())
-                {
-                    zip.Add(resultSelector(firstList.Current, secondList.Current));
-                }
-            }
+            var firstList = first.GetEnumerator();
+            var secondList = second.GetEnumerator();
 
-            return zip;
+            while (firstList.MoveNext() && secondList.MoveNext())
+            {
+               yield return resultSelector(firstList.Current, secondList.Current);
+            }
         }
 
         public static TAccumulate Aggregate<TSource, TAccumulate>(this IEnumerable<TSource> source, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> func)
@@ -152,6 +148,12 @@ namespace Linq
             Func<TInner, TKey> innerKeySelector,
             Func<TOuter, TInner, TResult> resultSelector)
         {
+            CheckIfNull(outer, nameof(outer));
+            CheckIfNull(inner, nameof(inner));
+            CheckIfNull(outerKeySelector, nameof(outerKeySelector));
+            CheckIfNull(innerKeySelector, nameof(innerKeySelector));
+            CheckIfNull(resultSelector, nameof(resultSelector));
+
             foreach (var element in outer)
             {
                 foreach (var item in inner)
