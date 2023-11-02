@@ -134,12 +134,14 @@ namespace Linq
             CheckIfNull(seed, nameof(seed));
             CheckIfNull(func, nameof(func));
 
+            TAccumulate agregate = seed;
+
             foreach (var element in source)
             {
-                seed = func(seed, element);
+                agregate = func(agregate, element);
             }
 
-            return seed;
+            return agregate;
         }
 
         public static IEnumerable<TResult> Join<TOuter, TInner, TKey, TResult>(
