@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Cache;
+using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
+using System.Runtime.Serialization;
 using Linq;
 using Xunit;
 
@@ -233,6 +235,25 @@ namespace Linq
             var join = workers.Join(bonus, employes => employes.Name, rise => rise.Name, (employes, bonus) => employes.Name + " " + bonus.Amount);
             var result = new List<string> { "Andre 10%", "Cristi 15%", "Ana 20%", "Ilie 5%" };
             Assert.Equal(result, join);
+        }
+
+        [Fact]
+
+        public void CheckToDistincMethode()
+        {
+            var workers = new[]
+            {
+               "ana", "andrei", "ana", "alin", "andrei", "cristi", "marian", "cristi"
+            };
+
+            var result = new[]
+            {
+               "ana", "andrei", "alin", "cristi", "marian"
+            };
+
+            var distinct = workers.Distinct();
+
+            Assert.Equal(result, distinct);
         }
 
         private class Employes

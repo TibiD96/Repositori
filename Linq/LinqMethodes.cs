@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Xunit;
 
 namespace Linq
@@ -162,6 +163,27 @@ namespace Linq
                     {
                         yield return resultSelector(element, item);
                     }
+                }
+            }
+        }
+
+        public static IEnumerable<TSource> Distinct<TSource>(
+            this IEnumerable<TSource> source,
+            IEqualityComparer<TSource> comparer)
+        {
+            CheckIfNull(source, nameof(source));
+            CheckIfNull(comparer, nameof(comparer));
+
+            foreach (var element in source)
+            {
+                foreach (var item in source)
+                {
+                    if (comparer.Equals(element, item))
+                    {
+                        break;
+                    }
+
+                    yield return element;
                 }
             }
         }
