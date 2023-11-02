@@ -256,6 +256,30 @@ namespace Linq
             Assert.Equal(result, distinct);
         }
 
+        [Fact]
+
+        public void CheckToUnionMethode()
+        {
+            var first = new[]
+            {
+               "ana", "maria", "claudia", "laura", "cristi"
+            };
+
+            var second = new[]
+            {
+               "mihai", "cristi", "ionut", "daniel", "maria"
+            };
+
+            var result = new[]
+            {
+               "ana", "maria", "claudia", "laura", "cristi", "mihai", "ionut", "daniel"
+            };
+
+            var distinct = first.Union(second);
+
+            Assert.Equal(result, distinct);
+        }
+
         private class Employes
         {
             public string Name { get; set; }

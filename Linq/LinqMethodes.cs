@@ -188,6 +188,29 @@ namespace Linq
             }
         }
 
+        public static IEnumerable<TSource> Union<TSource>(
+            this IEnumerable<TSource> first,
+            IEnumerable<TSource> second,
+            IEqualityComparer<TSource> comparer)
+        {
+            CheckIfNull(first, nameof(first));
+            CheckIfNull(second, nameof(second));
+            CheckIfNull(comparer, nameof(comparer));
+
+            foreach (var element in first)
+            {
+                foreach (var item in second)
+                {
+                    if (comparer.Equals(element, item))
+                    {
+                        break;
+                    }
+
+                    yield return element;
+                }
+            }
+        }
+
         static void CheckIfNull<T>(T input, string nullReturn)
         {
             if (input != null)
