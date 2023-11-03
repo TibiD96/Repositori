@@ -176,18 +176,7 @@ namespace Linq
             CheckIfNull(source, nameof(source));
             CheckIfNull(comparer, nameof(comparer));
 
-            foreach (var element in source)
-            {
-                foreach (var item in source)
-                {
-                    if (comparer.Equals(element, item))
-                    {
-                        break;
-                    }
-
-                    yield return element;
-                }
-            }
+            return new HashSet<TSource>(source, comparer);
         }
 
         public static IEnumerable<TSource> Union<TSource>(
@@ -199,18 +188,8 @@ namespace Linq
             CheckIfNull(second, nameof(second));
             CheckIfNull(comparer, nameof(comparer));
 
-            foreach (var element in first)
-            {
-                foreach (var item in second)
-                {
-                    if (comparer.Equals(element, item))
-                    {
-                        break;
-                    }
-
-                    yield return element;
-                }
-            }
+            var result = new HashSet<TSource>(first, comparer);
+            return new HashSet<TSource>(result, comparer);
         }
 
         public static IEnumerable<TSource> Intersect<TSource>(
@@ -222,16 +201,8 @@ namespace Linq
             CheckIfNull(second, nameof(second));
             CheckIfNull(comparer, nameof(comparer));
 
-            foreach (var element in first)
-            {
-                foreach (var item in second)
-                {
-                    if (comparer.Equals(element, item))
-                    {
-                        yield return element;
-                    }
-                }
-            }
+            var intersect = new HashSet<TSource>(first, comparer);
+            return new HashSet<TSource>(intersect, comparer);
         }
 
         static void CheckIfNull<T>(T input, string nullReturn)
