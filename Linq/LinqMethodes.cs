@@ -221,6 +221,16 @@ namespace Linq
             return result;
         }
 
+        public static IEnumerable<TResult> GroupBy<TSource, TKey, TElement, TResult>(
+            this IEnumerable<TSource> source,
+            Func<TSource, TKey> keySelector,
+            Func<TSource, TElement> elementSelector,
+            Func<TKey, IEnumerable<TElement>, TResult> resultSelector,
+            IEqualityComparer<TKey> comparer)
+        {
+
+        }
+
         static void CheckIfNull<T>(T input, string nullReturn)
         {
             if (input != null)

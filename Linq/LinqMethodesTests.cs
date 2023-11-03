@@ -275,9 +275,9 @@ namespace Linq
                "ana", "maria", "claudia", "laura", "cristi", "mihai", "ionut", "daniel"
             };
 
-            var distinct = first.Union(second);
+            var union = first.Union(second);
 
-            Assert.Equal(result, distinct);
+            Assert.Equal(result, union);
         }
 
         [Fact]
@@ -299,9 +299,9 @@ namespace Linq
                "maria", "cristi"
             };
 
-            var distinct = first.Intersect(second);
+            var intersect = first.Intersect(second);
 
-            Assert.Equal(result, distinct);
+            Assert.Equal(result, intersect);
         }
 
         [Fact]
@@ -323,9 +323,29 @@ namespace Linq
                "ana", "claudia", "laura"
             };
 
-            var distinct = first.Except(second);
+            var except = first.Except(second);
 
-            Assert.Equal(result, distinct);
+            Assert.Equal(result, except);
+        }
+
+        [Fact]
+
+        public void CheckToGroupByMethode()
+        {
+            var workers = new List<Employes>
+            {
+               new Employes { Name = "Andre", Age = 20 },
+
+               new Employes { Name = "Cristi", Age = 50 },
+
+               new Employes { Name = "Ana", Age = 20 },
+
+               new Employes { Name = "Ilie", Age = 50 }
+            };
+
+            var groupBy = LinqMethodes.GroupBy<List, int, string, int>(workers, employes => employes.Age, employes => employes.Name);
+
+            Assert.Equal(groupBy);
         }
 
         private class Employes
