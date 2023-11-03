@@ -207,6 +207,20 @@ namespace Linq
             return result;
         }
 
+        public static IEnumerable<TSource> Expect<TSource>(
+            this IEnumerable<TSource> first,
+            IEnumerable<TSource> second,
+            IEqualityComparer<TSource> comparer)
+        {
+            CheckIfNull(first, nameof(first));
+            CheckIfNull(second, nameof(second));
+            CheckIfNull(comparer, nameof(comparer));
+
+            var result = new HashSet<TSource>(first, comparer);
+            result.ExceptWith(new HashSet<TSource>(second, comparer));
+            return result;
+        }
+
         static void CheckIfNull<T>(T input, string nullReturn)
         {
             if (input != null)

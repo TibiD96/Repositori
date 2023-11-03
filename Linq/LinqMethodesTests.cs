@@ -320,10 +320,10 @@ namespace Linq
 
             var result = new[]
             {
-               "an", "claudia", "laura"
+               "ana", "claudia", "laura"
             };
 
-            var distinct = first.Intersect(second);
+            var distinct = first.Except(second);
 
             Assert.Equal(result, distinct);
         }
