@@ -343,7 +343,7 @@ namespace Linq
                new Employes { Name = "Ilie", Age = 50 }
             };
 
-            var groupBy = LinqMethodes.GroupBy<List, int, string, int>(workers, employes => employes.Age, employes => employes.Name);
+            var groupBy = workers.GroupBy(employes => employes.Age, employes => employes.Name);
 
             Assert.Equal(groupBy);
         }
