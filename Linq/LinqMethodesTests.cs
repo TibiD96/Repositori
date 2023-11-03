@@ -304,6 +304,30 @@ namespace Linq
             Assert.Equal(result, distinct);
         }
 
+        [Fact]
+
+        public void CheckToExceptMethode()
+        {
+            var first = new[]
+            {
+               "ana", "maria", "claudia", "laura", "cristi"
+            };
+
+            var second = new[]
+            {
+               "mihai", "cristi", "ionut", "daniel", "maria"
+            };
+
+            var result = new[]
+            {
+               "an", "claudia", "laura"
+            };
+
+            var distinct = first.Intersect(second);
+
+            Assert.Equal(result, distinct);
+        }
+
         private class Employes
         {
             public string Name { get; set; }

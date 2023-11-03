@@ -189,7 +189,8 @@ namespace Linq
             CheckIfNull(comparer, nameof(comparer));
 
             var result = new HashSet<TSource>(first, comparer);
-            return new HashSet<TSource>(result, comparer);
+            result.UnionWith(new HashSet<TSource>(second, comparer));
+            return result;
         }
 
         public static IEnumerable<TSource> Intersect<TSource>(
@@ -201,8 +202,9 @@ namespace Linq
             CheckIfNull(second, nameof(second));
             CheckIfNull(comparer, nameof(comparer));
 
-            var intersect = new HashSet<TSource>(first, comparer);
-            return new HashSet<TSource>(intersect, comparer);
+            var result = new HashSet<TSource>(first, comparer);
+            result.IntersectWith(new HashSet<TSource>(second, comparer));
+            return result;
         }
 
         static void CheckIfNull<T>(T input, string nullReturn)
