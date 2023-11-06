@@ -1,10 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net.Cache;
-using System.Runtime.CompilerServices;
-using System.Runtime.ConstrainedExecution;
-using System.Runtime.Serialization;
-using Linq;
+﻿using Linq;
 using Xunit;
 
 namespace Linq
@@ -330,22 +324,40 @@ namespace Linq
 
         [Fact]
 
-        public void CheckToGroupByMethode()
+        public void CheckToGroupByMethodeWithInt()
         {
-            var workers = new List<Employes>
+            var numbers = new[]
             {
-               new Employes { Name = "Andre", Age = 20 },
-
-               new Employes { Name = "Cristi", Age = 50 },
-
-               new Employes { Name = "Ana", Age = 20 },
-
-               new Employes { Name = "Ilie", Age = 50 }
+               1, 2, 3, 4, 5, 6
             };
 
-            var groupBy = workers.GroupBy(employes => employes.Age, employes => employes.Name);
+            var groupBy = numbers.GroupBy(x => x % 2 == 0 ? "Even" : "Odd", x => x);
 
-            Assert.Equal(groupBy);
+            var evenNumbers = groupBy.FirstOrDefault(x => x.Key == "Even");
+            var oddNumbers = groupBy.FirstOrDefault(x => x.Key == "Odd");
+
+            Assert.Equal(new[] { 2, 4, 6 }, evenNumbers);
+            Assert.Equal(new[] { 1, 3, 5 }, oddNumbers);
+        }
+
+        [Fact]
+
+        public void CheckToGroupByMethodeWithString()
+        {
+            var names = new[]
+            {
+               "ana", "maria", "ion", "mirel", "anastasia", "dia", "mincu"
+            };
+
+            var groupBy = names.GroupBy(names => names.Length, names => names);
+
+            var three = groupBy.FirstOrDefault(names => names.Key == 3);
+            var five = groupBy.FirstOrDefault(names => names.Key == 5);
+            var nine = groupBy.FirstOrDefault(names => names.Key == 9);
+
+            Assert.Equal(new[] { "ana", "ion", "dia" }, three);
+            Assert.Equal(new[] { "maria", "mirel", "mincu" }, five);
+            Assert.Equal(new[] { "anastasia" }, nine);
         }
 
         private class Employes

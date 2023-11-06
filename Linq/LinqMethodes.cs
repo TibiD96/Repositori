@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO.Compression;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using Xunit;
 
 namespace Linq
 {
@@ -228,7 +224,16 @@ namespace Linq
             Func<TKey, IEnumerable<TElement>, TResult> resultSelector,
             IEqualityComparer<TKey> comparer)
         {
+            CheckIfNull(source, nameof(source));
+            CheckIfNull(keySelector, nameof(keySelector));
+            CheckIfNull(elementSelector, nameof(elementSelector));
+            CheckIfNull(resultSelector, nameof(resultSelector));
+            CheckIfNull(comparer, nameof(comparer));
 
+            foreach (var element in source)
+            {
+                yield return resultSelector(keySelector(element), (IEnumerable<TElement>)elementSelector(element));
+            }
         }
 
         static void CheckIfNull<T>(T input, string nullReturn)
