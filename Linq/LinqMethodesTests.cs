@@ -360,6 +360,25 @@ namespace Linq
             Assert.Equal(new[] { "anastasia" }, nine);
         }
 
+        [Fact]
+
+        public void CheckToOrderByMethodeWithString()
+        {
+            var names = new[]
+            {
+               "andu", "anastasia", "dia", "mincu"
+            };
+
+            var groupBy = names.OrderBy(names => names.Length);
+
+            var result = new[]
+            {
+               "dia", "andu", "mincu", "anastasia"
+            };
+
+            Assert.Equal(result, groupBy);
+        }
+
         private class Employes
         {
             public string Name { get; set; }
