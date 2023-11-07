@@ -379,11 +379,66 @@ namespace Linq
             Assert.Equal(result, groupBy);
         }
 
+        [Fact]
+
+        public void CheckToOrderByMethodeWithInt()
+        {
+            var names = new[]
+            {
+               5, 3, 20, 6
+            };
+
+            var groupBy = names.OrderBy(x => x);
+
+            var result = new[]
+            {
+               3, 5, 6, 20
+            };
+
+            Assert.Equal(result, groupBy);
+        }
+
+        [Fact]
+
+        public void CheckToOrderByMethodeWithList()
+        {
+            var workers = new List<Employes>
+            {
+               new Employes { Name = "Andre", Age = 20 },
+
+               new Employes { Name = "Cristi", Age = 40 },
+
+               new Employes { Name = "Ana", Age = 25 },
+
+               new Employes { Name = "Ilie", Age = 50 }
+            };
+
+            var groupBy = workers.OrderBy(employes => employes.Age);
+
+            var result = new List<Employes>
+            {
+               new Employes { Name = "Andre", Age = 20 },
+
+               new Employes { Name = "Ana", Age = 25 },
+
+               new Employes { Name = "Cristi", Age = 40 },
+
+               new Employes { Name = "Ilie", Age = 50 }
+            };
+
+            Assert.Equal(result, groupBy);
+        }
+
         private class Employes
         {
             public string Name { get; set; }
 
             public int Age { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                return obj is Employes other && Name == other.Name && Age == other.Age;
+            }
         }
 
         private class Rise

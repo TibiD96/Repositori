@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace Linq
 {
@@ -241,7 +240,11 @@ namespace Linq
             Func<TSource, TKey> keySelector,
             IComparer<TKey> comparer)
         {
+            CheckIfNull(source, nameof(source));
+            CheckIfNull(keySelector, nameof(keySelector));
+            CheckIfNull(comparer, nameof(comparer));
 
+            return source.OrderBy(keySelector, comparer);
         }
 
         static void CheckIfNull<T>(T input, string nullReturn)
