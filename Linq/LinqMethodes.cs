@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace Linq
 {
@@ -229,9 +228,22 @@ namespace Linq
             CheckIfNull(resultSelector, nameof(resultSelector));
             CheckIfNull(comparer, nameof(comparer));
 
+            var dataBase = new Dictionary<TKey, List<TElement>>();
             foreach (var element in source)
             {
-                yield return resultSelector(keySelector(element), (IEnumerable<TElement>)elementSelector(element));
+                var key = keySelector(element);
+
+                if (!dataBase.ContainsKey(key))
+                {
+                    dataBase.Add(key, new List<TElement>());
+                }
+
+                dataBase[key].Add(elementSelector(element));
+            }
+
+            foreach (var data in dataBase)
+            {
+                yield return resultSelector(data.Key, data.Value);
             }
         }
 
@@ -244,7 +256,23 @@ namespace Linq
             CheckIfNull(keySelector, nameof(keySelector));
             CheckIfNull(comparer, nameof(comparer));
 
-            return source.OrderBy(keySelector, comparer);
+            var list = source.ToArray();
+            for (int i = 0; i < list.Length; i++)
+            {
+                for (int j = i; j < list.Length; j++)
+                {
+                    var itemOne = list[i].GetHashCode();
+                    var itemTwo = list[j].GetHashCode();
+                    if (itemOne < itemTwo)
+                    {
+                        var temp = list[i];
+                        list[i] = list[j];
+                        list[j] = temp;
+                    }
+                }
+            }
+
+            return list;
         }
 
         static void CheckIfNull<T>(T input, string nullReturn)

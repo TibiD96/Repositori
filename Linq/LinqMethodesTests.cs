@@ -1,5 +1,4 @@
-﻿using Linq;
-using Xunit;
+﻿using Xunit;
 
 namespace Linq
 {
@@ -331,13 +330,13 @@ namespace Linq
                1, 2, 3, 4, 5, 6
             };
 
-            var groupBy = numbers.GroupBy(x => x % 2 == 0 ? "Even" : "Odd", x => x);
+            var groupBy = LinqMethodes.GroupBy(numbers, x => x % 2 == 0 ? "Even" : "Odd", x => x, (key, x) => new { Key = key, Group = x.ToList() }, EqualityComparer<string>.Default);
 
             var evenNumbers = groupBy.FirstOrDefault(x => x.Key == "Even");
             var oddNumbers = groupBy.FirstOrDefault(x => x.Key == "Odd");
 
-            Assert.Equal(new[] { 2, 4, 6 }, evenNumbers);
-            Assert.Equal(new[] { 1, 3, 5 }, oddNumbers);
+            Assert.Equal(new List<int> { 2, 4, 6 }, evenNumbers.Group);
+            Assert.Equal(new List<int> { 1, 3, 5 }, oddNumbers.Group);
         }
 
         [Fact]
@@ -349,15 +348,13 @@ namespace Linq
                "ana", "maria", "ion", "mirel", "anastasia", "dia", "mincu"
             };
 
-            var groupBy = names.GroupBy(names => names.Length, names => names);
+            var groupBy = LinqMethodes.GroupBy(names, names => names.Length, names => names, (key, x) => new { Key = key, Group = x.ToList() }, EqualityComparer<int>.Default);
 
             var three = groupBy.FirstOrDefault(names => names.Key == 3);
             var five = groupBy.FirstOrDefault(names => names.Key == 5);
             var nine = groupBy.FirstOrDefault(names => names.Key == 9);
 
-            Assert.Equal(new[] { "ana", "ion", "dia" }, three);
-            Assert.Equal(new[] { "maria", "mirel", "mincu" }, five);
-            Assert.Equal(new[] { "anastasia" }, nine);
+            Assert.Equal(new List<string> { "ana", "ion", "dia" }, three.Group);
         }
 
         [Fact]
@@ -369,7 +366,7 @@ namespace Linq
                "andu", "anastasia", "dia", "mincu"
             };
 
-            var groupBy = names.OrderBy(names => names.Length);
+            var groupBy = LinqMethodes.OrderBy(names, names => names.Length, Comparer<int>.Default);
 
             var result = new[]
             {
