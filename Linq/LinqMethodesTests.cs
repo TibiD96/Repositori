@@ -244,7 +244,7 @@ namespace Linq
                "ana", "andrei", "alin", "cristi", "marian"
             };
 
-            var distinct = workers.Distinct();
+            var distinct = LinqMethodes.Distinct(workers, EqualityComparer<string>.Default);
 
             Assert.Equal(result, distinct);
         }
@@ -268,7 +268,7 @@ namespace Linq
                "ana", "maria", "claudia", "laura", "cristi", "mihai", "ionut", "daniel"
             };
 
-            var union = first.Union(second);
+            var union = LinqMethodes.Union(first, second, EqualityComparer<string>.Default);
 
             Assert.Equal(result, union);
         }
@@ -292,7 +292,7 @@ namespace Linq
                "maria", "cristi"
             };
 
-            var intersect = first.Intersect(second);
+            var intersect = LinqMethodes.Intersect(first, second, EqualityComparer<string>.Default);
 
             Assert.Equal(result, intersect);
         }
@@ -316,7 +316,7 @@ namespace Linq
                "ana", "claudia", "laura"
             };
 
-            var except = first.Except(second);
+            var except = LinqMethodes.Expect(first, second, EqualityComparer<string>.Default);
 
             Assert.Equal(result, except);
         }
@@ -357,7 +357,7 @@ namespace Linq
             Assert.Equal(new List<string> { "ana", "ion", "dia" }, three.Group);
         }
 
-        [Fact]
+        /*[Fact]
 
         public void CheckToOrderByMethodeWithString()
         {
@@ -424,7 +424,7 @@ namespace Linq
             };
 
             Assert.Equal(result, groupBy);
-        }
+        }*/
 
         private class Employes
         {

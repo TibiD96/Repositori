@@ -247,7 +247,7 @@ namespace Linq
             }
         }
 
-        public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey>(
+        /*public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey>(
             this IEnumerable<TSource> source,
             Func<TSource, TKey> keySelector,
             IComparer<TKey> comparer)
@@ -273,7 +273,7 @@ namespace Linq
             }
 
             return list;
-        }
+        }*/
 
         static void CheckIfNull<T>(T input, string nullReturn)
         {
