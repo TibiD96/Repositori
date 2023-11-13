@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Linq
 {
@@ -247,7 +248,7 @@ namespace Linq
             }
         }
 
-        /*public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey>(
+        public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey>(
             this IEnumerable<TSource> source,
             Func<TSource, TKey> keySelector,
             IComparer<TKey> comparer)
@@ -256,24 +257,8 @@ namespace Linq
             CheckIfNull(keySelector, nameof(keySelector));
             CheckIfNull(comparer, nameof(comparer));
 
-            var list = source.ToArray();
-            for (int i = 0; i < list.Length; i++)
-            {
-                for (int j = i; j < list.Length; j++)
-                {
-                    var itemOne = list[i].GetHashCode();
-                    var itemTwo = list[j].GetHashCode();
-                    if (itemOne < itemTwo)
-                    {
-                        var temp = list[i];
-                        list[i] = list[j];
-                        list[j] = temp;
-                    }
-                }
-            }
-
-            return list;
-        }*/
+            return new OrderedEnumerable<TSource, TKey>(source, keySelector, comparer);
+        }
 
         static void CheckIfNull<T>(T input, string nullReturn)
         {

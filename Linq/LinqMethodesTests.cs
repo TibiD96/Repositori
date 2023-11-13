@@ -357,7 +357,7 @@ namespace Linq
             Assert.Equal(new List<string> { "ana", "ion", "dia" }, three.Group);
         }
 
-        /*[Fact]
+        [Fact]
 
         public void CheckToOrderByMethodeWithString()
         {
@@ -380,12 +380,12 @@ namespace Linq
 
         public void CheckToOrderByMethodeWithInt()
         {
-            var names = new[]
+            var numbers = new[]
             {
                5, 3, 20, 6
             };
 
-            var groupBy = names.OrderBy(x => x);
+            var groupBy = LinqMethodes.OrderBy(numbers, x => x, Comparer<int>.Default);
 
             var result = new[]
             {
@@ -410,7 +410,7 @@ namespace Linq
                new Employes { Name = "Ilie", Age = 50 }
             };
 
-            var groupBy = workers.OrderBy(employes => employes.Age);
+            var groupBy = LinqMethodes.OrderBy(workers, employes => employes.Age, Comparer<int>.Default);
 
             var result = new List<Employes>
             {
@@ -424,7 +424,7 @@ namespace Linq
             };
 
             Assert.Equal(result, groupBy);
-        }*/
+        }
 
         private class Employes
         {
