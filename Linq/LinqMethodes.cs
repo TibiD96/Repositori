@@ -260,6 +260,18 @@ namespace Linq
             return new OrderedEnumerable<TSource, TKey>(source, keySelector, comparer);
         }
 
+        public static IOrderedEnumerable<TSource> ThenBy<TSource, TKey>(
+             this IOrderedEnumerable<TSource> source,
+             Func<TSource, TKey> keySelector,
+             IComparer<TKey> comparer)
+        {
+            CheckIfNull(source, nameof(source));
+            CheckIfNull(keySelector, nameof(keySelector));
+            CheckIfNull(comparer, nameof(comparer));
+
+            return source.CreateOrderedEnumerable(keySelector, comparer, false);
+        }
+
         static void CheckIfNull<T>(T input, string nullReturn)
         {
             if (input != null)
