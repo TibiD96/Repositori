@@ -367,14 +367,14 @@ namespace Linq
                "andu", "anastasia", "dia", "mincu"
             };
 
-            var groupBy = LinqMethodes.OrderBy(names, names => names.Length, Comparer<int>.Default);
+            var orderBy = LinqMethodes.OrderBy(names, names => names.Length, Comparer<int>.Default);
 
             var result = new[]
             {
                "dia", "andu", "mincu", "anastasia"
             };
 
-            Assert.Equal(result, groupBy);
+            Assert.Equal(result, orderBy);
         }
 
         [Fact]
@@ -386,14 +386,14 @@ namespace Linq
                5, 3, 20, 6
             };
 
-            var groupBy = LinqMethodes.OrderBy(numbers, x => x, Comparer<int>.Default);
+            var orderBy = LinqMethodes.OrderBy(numbers, x => x, Comparer<int>.Default);
 
             var result = new[]
             {
                3, 5, 6, 20
             };
 
-            Assert.Equal(result, groupBy);
+            Assert.Equal(result, orderBy);
         }
 
         [Fact]
@@ -411,7 +411,7 @@ namespace Linq
                new Employes { Name = "Ilie", Age = 50 }
             };
 
-            var groupBy = LinqMethodes.OrderBy(workers, employes => employes.Age, Comparer<int>.Default);
+            var orderBy = LinqMethodes.OrderBy(workers, employes => employes.Age, Comparer<int>.Default);
 
             var result = new List<Employes>
             {
@@ -424,7 +424,7 @@ namespace Linq
                new Employes { Name = "Ilie", Age = 50 }
             };
 
-            Assert.Equal(result, groupBy);
+            Assert.Equal(result, orderBy);
         }
 
         [Fact]
@@ -442,7 +442,7 @@ namespace Linq
                new Employes { Name = "Ilie", Age = 50 }
             };
 
-            var groupBy = LinqMethodes.OrderBy(workers, employes => employes.Age, Comparer<int>.Default).ThenBy(employes => employes.Name.Length, Comparer<int>.Default);
+            var thenBy = LinqMethodes.OrderBy(workers, employes => employes.Age, Comparer<int>.Default).ThenBy(employes => employes.Name.Length, Comparer<int>.Default);
 
             var result = new List<Employes>
             {
@@ -455,7 +455,38 @@ namespace Linq
                new Employes { Name = "Cristi", Age = 40 }
             };
 
-            Assert.Equal(result, groupBy);
+            Assert.Equal(result, thenBy);
+        }
+
+        [Fact]
+
+        public void CheckToThenByMethodeWithListMultipleThenBy()
+        {
+            var workers = new List<Employes>
+            {
+               new Employes { Name = "Andre", Age = 20 },
+
+               new Employes { Name = "Cristi", Age = 40 },
+
+               new Employes { Name = "Ana", Age = 25 },
+
+               new Employes { Name = "Ilie", Age = 50 }
+            };
+
+            var thenBy = LinqMethodes.OrderBy(workers, employes => employes.Age, Comparer<int>.Default).ThenBy(employes => employes.Name.Length, Comparer<int>.Default).ThenBy(employes => employes.Age, Comparer<int>.Default);
+
+            var result = new List<Employes>
+            {
+               new Employes { Name = "Andre", Age = 20 },
+
+               new Employes { Name = "Ana", Age = 25 },
+
+               new Employes { Name = "Cristi", Age = 40 },
+
+               new Employes { Name = "Ilie", Age = 50 }
+            };
+
+            Assert.Equal(result, thenBy);
         }
 
         private class Employes

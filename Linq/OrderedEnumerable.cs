@@ -10,23 +10,17 @@ namespace Linq
         private readonly Func<TSource, TKey> keySelector;
         private readonly IComparer<TKey> comparer;
 
-        public OrderedEnumerable(
-            IEnumerable<TSource> source,
-            Func<TSource, TKey> keySelector,
-            IComparer<TKey> comparer)
+        public OrderedEnumerable(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
         {
             this.source = source;
             this.keySelector = keySelector;
             this.comparer = comparer;
         }
 
-        public IOrderedEnumerable<TSource> CreateOrderedEnumerable<TKey>(
-            Func<TSource, TKey> keySelector,
-            IComparer<TKey> comparer,
-            bool descending)
+        public IOrderedEnumerable<TSource> CreateOrderedEnumerable<TKey>(Func<TSource, TKey> keySelector, IComparer<TKey> comparer, bool descending)
         {
-            return new OrderedEnumerable<TSource, TKey>(
-                source, keySelector, comparer);
+            var newComparer = new ComparerChooser<TKey>((IComparer<TKey>)this.comparer, comparer);
+            return new OrderedEnumerable<TSource, TKey>(source, keySelector, newComparer);
         }
 
         public IEnumerator<TSource> GetEnumerator()
