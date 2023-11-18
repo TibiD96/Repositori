@@ -92,7 +92,7 @@ namespace Linq
             }
         }
 
-        public static Dictionary<TKey, TElement> ToDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,Func<TSource, TElement> elementSelector)
+        public static Dictionary<TKey, TElement> ToDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
         {
             CheckIfNull(source, nameof(source));
             CheckIfNull(keySelector, nameof(keySelector));
@@ -119,7 +119,7 @@ namespace Linq
 
             while (firstList.MoveNext() && secondList.MoveNext())
             {
-               yield return resultSelector(firstList.Current, secondList.Current);
+                yield return resultSelector(firstList.Current, secondList.Current);
             }
         }
 

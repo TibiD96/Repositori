@@ -442,7 +442,7 @@ namespace Linq
                new Employes { Name = "Ilie", Age = 50 }
             };
 
-            var thenBy = LinqMethodes.OrderBy(workers, employes => employes.Age, Comparer<int>.Default).ThenBy(employes => employes.Name.Length, Comparer<int>.Default);
+            var thenBy = workers.OrderBy(employes => employes.Age, Comparer<int>.Default).ThenBy(employes => employes.Name.Length, Comparer<int>.Default);
 
             var result = new List<Employes>
             {
@@ -453,6 +453,7 @@ namespace Linq
                new Employes { Name = "Andre", Age = 20 },
 
                new Employes { Name = "Cristi", Age = 40 }
+
             };
 
             Assert.Equal(result, thenBy);
@@ -473,7 +474,39 @@ namespace Linq
                new Employes { Name = "Ilie", Age = 50 }
             };
 
-            var thenBy = LinqMethodes.OrderBy(workers, employes => employes.Age, Comparer<int>.Default).ThenBy(employes => employes.Name.Length, Comparer<int>.Default).ThenBy(employes => employes.Age, Comparer<int>.Default);
+            var thenBy = LinqMethodes.OrderBy(workers, employes => employes.Age, Comparer<int>.Default).ThenBy(employes => employes.Age, Comparer<int>.Default).ThenBy(employes => employes.Name.Length, Comparer<int>.Default);
+
+            var result = new List<Employes>
+            {
+               new Employes { Name = "Ana", Age = 25 },
+
+               new Employes { Name = "Ilie", Age = 50 },
+
+               new Employes { Name = "Andre", Age = 20 },
+
+               new Employes { Name = "Cristi", Age = 40 }
+
+            };
+
+            Assert.Equal(result, thenBy);
+        }
+
+        [Fact]
+
+        public void CheckToThenByMethodeWithListMultipleThenByWithDifferentKey()
+        {
+            var workers = new List<Employes>
+            {
+               new Employes { Name = "Andre", Age = 20 },
+
+               new Employes { Name = "Cristi", Age = 40 },
+
+               new Employes { Name = "Ana", Age = 25 },
+
+               new Employes { Name = "Ilie", Age = 50 }
+            };
+
+            var thenBy = LinqMethodes.OrderBy(workers, employes => employes.Age, Comparer<int>.Default).ThenBy(employes => employes.Name, Comparer<string>.Default);
 
             var result = new List<Employes>
             {
