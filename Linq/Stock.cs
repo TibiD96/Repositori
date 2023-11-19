@@ -23,9 +23,9 @@ namespace Linq
             list.Add(new Product { Name = name, Quantity = quantity });
         }
 
-        public int Find(string name)
+        public bool Find(string name)
         {
-
+            return list.Any(x => x.Name == name);
         }
 
         private class Product
