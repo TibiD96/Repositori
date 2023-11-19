@@ -453,7 +453,6 @@ namespace Linq
                new Employes { Name = "Andre", Age = 20 },
 
                new Employes { Name = "Cristi", Age = 40 }
-
             };
 
             Assert.Equal(result, thenBy);
@@ -485,7 +484,6 @@ namespace Linq
                new Employes { Name = "Andre", Age = 20 },
 
                new Employes { Name = "Cristi", Age = 40 }
-
             };
 
             Assert.Equal(result, thenBy);
@@ -501,7 +499,7 @@ namespace Linq
 
                new Employes { Name = "Cristi", Age = 40 },
 
-               new Employes { Name = "Ana", Age = 25 },
+               new Employes { Name = "Bna", Age = 12 },
 
                new Employes { Name = "Ilie", Age = 50 }
             };
@@ -512,7 +510,7 @@ namespace Linq
             {
                new Employes { Name = "Andre", Age = 20 },
 
-               new Employes { Name = "Ana", Age = 25 },
+               new Employes { Name = "Bna", Age = 12 },
 
                new Employes { Name = "Cristi", Age = 40 },
 

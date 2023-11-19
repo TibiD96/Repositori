@@ -23,6 +23,11 @@ namespace Linq
             list.Add(new Product { Name = name, Quantity = quantity });
         }
 
+        public int Find(string name)
+        {
+
+        }
+
         private class Product
         {
             public string Name { get; set; }

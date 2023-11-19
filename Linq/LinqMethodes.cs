@@ -257,7 +257,7 @@ namespace Linq
             CheckIfNull(keySelector, nameof(keySelector));
             CheckIfNull(comparer, nameof(comparer));
 
-            return new OrderedEnumerable<TSource, TKey>(source, keySelector, comparer);
+            return new OrderedEnumerable<TSource>(source, new BaseComparer<TSource, TKey>(keySelector, comparer));
         }
 
         public static IOrderedEnumerable<TSource> ThenBy<TSource, TKey>(

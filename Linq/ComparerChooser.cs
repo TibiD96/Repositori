@@ -4,22 +4,22 @@ using System.Linq;
 
 namespace Linq
 {
-    internal class ComparerChooser<TKey> : IComparer<TKey>
+    internal class ComparerChooser<TSource> : IComparer<TSource>
     {
-        readonly IComparer<TKey> firstComparer;
-        readonly IComparer<TKey> secondComparer;
+        readonly IComparer<TSource> firstComparer;
+        readonly IComparer<TSource> secondComparer;
 
-        public ComparerChooser(IComparer<TKey> firstComparer, IComparer<TKey> secondComparer)
+        public ComparerChooser(IComparer<TSource> firstComparer, IComparer<TSource> secondComparer)
         {
             this.firstComparer = firstComparer;
             this.secondComparer = secondComparer;
         }
 
-        public int Compare(TKey first, TKey second)
+        public int Compare(TSource first, TSource second)
         {
             var firstComparerResult = firstComparer.Compare(first, second);
 
-            if (firstComparerResult != 0)
+            if (firstComparerResult == 0)
             {
                 return firstComparerResult;
             }

@@ -4,23 +4,21 @@ using System.Collections.Generic;
 
 namespace Linq
 {
-    public class OrderedEnumerable<TSource, TKey> : IOrderedEnumerable<TSource>
+    public class OrderedEnumerable<TSource> : IOrderedEnumerable<TSource>
     {
         private readonly IEnumerable<TSource> source;
-        private readonly Func<TSource, TKey> keySelector;
-        private readonly IComparer<TKey> comparer;
+        private readonly IComparer<TSource> comparer;
 
-        public OrderedEnumerable(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
+        public OrderedEnumerable(IEnumerable<TSource> source, IComparer<TSource> comparer)
         {
             this.source = source;
-            this.keySelector = keySelector;
             this.comparer = comparer;
         }
 
         public IOrderedEnumerable<TSource> CreateOrderedEnumerable<TKey>(Func<TSource, TKey> keySelector, IComparer<TKey> comparer, bool descending)
         {
-            var newComparer = new ComparerChooser<TKey>((IComparer<TKey>)this.comparer, comparer);
-            return new OrderedEnumerable<TSource, TKey>(source, keySelector, newComparer);
+            var newComparer = new ComparerChooser<TSource>(this.comparer, new BaseComparer<TSource, TKey>(keySelector, comparer));
+            return new OrderedEnumerable<TSource>(source, newComparer);
         }
 
         public IEnumerator<TSource> GetEnumerator()
@@ -31,10 +29,7 @@ namespace Linq
             {
                 for (int j = 0; j < list.Count - i - 1; j++)
                 {
-                    var itemOne = keySelector(list[j]);
-                    var itemTwo = keySelector(list[j + 1]);
-
-                    if (comparer.Compare(itemOne, itemTwo) > 0)
+                    if (comparer.Compare(list[j], list[j + 1]) > 0)
                     {
                         var temp = list[j];
                         list[j] = list[j + 1];
