@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace Linq
 {
@@ -17,7 +16,7 @@ namespace Linq
 
         public IOrderedEnumerable<TSource> CreateOrderedEnumerable<TKey>(Func<TSource, TKey> keySelector, IComparer<TKey> comparer, bool descending)
         {
-            var newComparer = new ComparerChooser<TSource>(this.comparer, new BaseComparer<TSource, TKey>(keySelector, comparer));
+            var newComparer = new ComparerChooser<TSource, TKey>(keySelector, comparer, Comparer<TKey>.Default);
             return new OrderedEnumerable<TSource>(source, newComparer);
         }
 
