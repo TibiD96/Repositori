@@ -54,7 +54,7 @@ namespace Linq
 
             stock.ProductOrder("BMW", 700);
 
-            Assert.Equal(300, );
+            Assert.Equal(300, 23);
         }
     }
 }
