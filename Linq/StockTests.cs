@@ -1,5 +1,6 @@
-﻿using Xunit;
-using System.Linq;
+﻿using System;
+using Linq;
+using Xunit;
 
 namespace Linq
 {
@@ -52,9 +53,7 @@ namespace Linq
             stock.Add("Mercedes", 300);
             stock.Add("Audi", 500);
 
-            stock.ProductOrder("BMW", 700);
-
-            Assert.Equal(300, 23);
+            Assert.Throws<ArgumentException>(() => stock.ProductOrder("BMW", 1500));
         }
     }
 }

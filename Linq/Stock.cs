@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xunit.Sdk;
 
 namespace Linq
 {
@@ -36,6 +35,8 @@ namespace Linq
                 throw new ArgumentException("Product don't exist");
             }
 
+            ProductQuantitieInDepo(name, quantity);
+
             list[ProductIndex(name)].Quantity = list[ProductIndex(name)].Quantity - quantity;
         }
 
@@ -47,6 +48,16 @@ namespace Linq
         public int ProductIndex(string name)
         {
             return list.FindIndex(0, list.Count, product => product.Name == name);
+        }
+
+        private void ProductQuantitieInDepo(string name, int quantity)
+        {
+            if (list[ProductIndex(name)].Quantity >= quantity)
+            {
+                return;
+            }
+
+            throw new ArgumentException("Not enough quantity");
         }
 
         internal class Product
