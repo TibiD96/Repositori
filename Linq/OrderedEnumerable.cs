@@ -16,7 +16,7 @@ namespace Linq
 
         public IOrderedEnumerable<TSource> CreateOrderedEnumerable<TKey>(Func<TSource, TKey> keySelector, IComparer<TKey> comparer, bool descending)
         {
-            var newComparer = new ComparerChooser<TSource, TKey>(keySelector, comparer);
+            var newComparer = new ComparerChooser<TSource, TKey>(keySelector);
             return new OrderedEnumerable<TSource>(source, newComparer);
         }
 

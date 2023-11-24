@@ -7,17 +7,18 @@ namespace Linq
     internal class ComparerChooser<TSource, TKey> : IComparer<TSource>
     {
         readonly Func<TSource, TKey> keySelector;
-        readonly IComparer<TKey> comparer;
 
-        public ComparerChooser(Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
+        public ComparerChooser(Func<TSource, TKey> keySelector)
         {
             this.keySelector = keySelector;
-            this.comparer = comparer;
         }
 
         public int Compare(TSource first, TSource second)
         {
-            return comparer.Compare(keySelector(first), keySelector(second));
+            TKey firstKey = keySelector(first);
+            TKey secondKey = keySelector(second);
+
+            return ((IComparable<TKey>)firstKey).CompareTo(secondKey);
         }
     }
 }

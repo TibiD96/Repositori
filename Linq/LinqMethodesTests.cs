@@ -520,6 +520,37 @@ namespace Linq
             Assert.Equal(result, thenBy);
         }
 
+        [Fact]
+
+        public void CheckComparerChooser()
+        {
+            var workers = new List<Employes>
+            {
+               new Employes { Name = "Andre", Age = 12 },
+
+               new Employes { Name = "Cristi", Age = 40 },
+
+               new Employes { Name = "Bna", Age = 2 },
+
+               new Employes { Name = "Ilie", Age = 50 }
+            };
+
+            var thenBy = LinqMethodes.OrderBy(workers, employes => employes.Name, Comparer<string>.Default);
+
+            var result = new List<Employes>
+            {
+               new Employes { Name = "Andre", Age = 12 },
+
+               new Employes { Name = "Bna", Age = 2 },
+
+               new Employes { Name = "Cristi", Age = 40 },
+
+               new Employes { Name = "Ilie", Age = 50 }
+            };
+
+            Assert.Equal(result, thenBy);
+        }
+
         private class Employes
         {
             public string Name { get; set; }
