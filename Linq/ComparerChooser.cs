@@ -4,21 +4,21 @@ using System.Linq;
 
 namespace Linq
 {
-    internal class ComparerChooser<TSource, TKey> : IComparer<TSource>
+    internal class ComparerChooser<TSource> : IComparer<TSource>
     {
-        readonly Func<TSource, TKey> keySelector;
+        readonly Func<TSource, TSource, int> comparer;
 
-        public ComparerChooser(Func<TSource, TKey> keySelector)
+        public ComparerChooser(Func<TSource, TSource, int> comparer)
         {
-            this.keySelector = keySelector;
+            this.comparer = comparer;
         }
 
         public int Compare(TSource first, TSource second)
         {
-            TKey firstKey = keySelector(first);
-            TKey secondKey = keySelector(second);
+            TSource firstKey = first;
+            TSource secondKey = second;
 
-            return ((IComparable<TKey>)firstKey).CompareTo(secondKey);
+            return comparer(firstKey, secondKey);
         }
     }
 }

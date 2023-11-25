@@ -7,6 +7,7 @@ namespace Linq
     public class Stock
     {
         private readonly List<Product> list;
+        Action<Product> notifications;
 
         public Stock()
         {
