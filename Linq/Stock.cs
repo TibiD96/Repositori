@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Xunit.Sdk;
+using static Linq.Stock;
 
 namespace Linq
 {
     public class Stock
     {
+        internal Action<Product> Notifications;
         private readonly List<Product> list;
-        Action<Product> notifications;
 
         public Stock()
         {
@@ -17,6 +19,11 @@ namespace Linq
         public int Count
         {
             get { return list.Count; }
+        }
+
+        internal List<Product> Products
+        {
+            get { return list; }
         }
 
         public void Add(string name, int quantity)
@@ -36,9 +43,11 @@ namespace Linq
                 throw new ArgumentException("Product don't exist");
             }
 
-            ProductQuantitieInDepo(name, quantity);
+            ProductQuantityInDepo(name, quantity);
 
             list[ProductIndex(name)].Quantity = list[ProductIndex(name)].Quantity - quantity;
+
+            CallBackNotifications(list[ProductIndex(name)]);
         }
 
         public bool Find(string name)
@@ -51,7 +60,7 @@ namespace Linq
             return list.FindIndex(0, list.Count, product => product.Name == name);
         }
 
-        private void ProductQuantitieInDepo(string name, int quantity)
+        private void ProductQuantityInDepo(string name, int quantity)
         {
             if (list[ProductIndex(name)].Quantity >= quantity)
             {
@@ -59,6 +68,18 @@ namespace Linq
             }
 
             throw new ArgumentException("Not enough quantity");
+        }
+
+        private void CallBackNotifications(Product product)
+        {
+            int[] notifQaunt = new[] { 2, 5, 10 };
+            for (int i = 0; i < notifQaunt.Length; i++)
+            {
+                if (product.Quantity < notifQaunt[i])
+                {
+                    Notifications(product);
+                }
+            }
         }
 
         internal class Product

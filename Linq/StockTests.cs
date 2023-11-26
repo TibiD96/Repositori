@@ -55,5 +55,39 @@ namespace Linq
 
             Assert.Throws<ArgumentException>(() => stock.ProductOrder("BMW", 1500));
         }
+
+        [Fact]
+
+        public void CheckNotificationsWhenIsUsed()
+        {
+            bool notificationReached = false;
+
+            var stock = new Stock();
+            stock.Notifications = product => notificationReached = true;
+            stock.Add("BMW", 1000);
+            stock.Add("Mercedes", 300);
+            stock.Add("Audi", 500);
+            stock.ProductOrder("BMW", 995);
+
+            Assert.True(notificationReached);
+            Assert.Equal(5, stock.Products[0].Quantity);
+        }
+
+        [Fact]
+
+        public void CheckNotificationsWhenIsNotUsed()
+        {
+            bool notificationReached = false;
+
+            var stock = new Stock();
+            stock.Notifications = product => notificationReached = true;
+            stock.Add("BMW", 1000);
+            stock.Add("Mercedes", 300);
+            stock.Add("Audi", 500);
+            stock.ProductOrder("BMW", 500);
+
+            Assert.False(notificationReached);
+            Assert.Equal(500, stock.Products[0].Quantity);
+        }
     }
 }
