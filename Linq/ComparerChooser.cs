@@ -15,10 +15,7 @@ namespace Linq
 
         public int Compare(TSource first, TSource second)
         {
-            TSource firstKey = first;
-            TSource secondKey = second;
-
-            return comparer(firstKey, secondKey);
+            return comparer(first, second);
         }
     }
 }
