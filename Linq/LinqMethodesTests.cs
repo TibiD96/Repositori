@@ -551,6 +551,27 @@ namespace Linq
             Assert.Equal(result, thenBy);
         }
 
+        [Fact]
+
+        public void CheckCreateOrderedEnumerable()
+        {
+            string[] fruits =
+            {
+                "grape", "passionfruit", "banana", "mango",
+                "orange", "raspberry", "apple", "blueberry"
+            };
+
+            var final = LinqMethodes.OrderBy(fruits, fruits => fruits.Length, Comparer<int>.Default).ThenBy(fruits => fruits, Comparer<string>.Default);
+
+            string[] result =
+            {
+                "apple", "grape", "mango", "banana",
+                "orange", "blueberry", "raspberry", "passionfruit"
+            };
+
+            Assert.Equal(result, final);
+        }
+
         private class Employes
         {
             public string Name { get; set; }
