@@ -446,13 +446,14 @@ namespace Linq
 
             var result = new List<Employes>
             {
-               new Employes { Name = "Ana", Age = 25 },
-
-               new Employes { Name = "Ilie", Age = 50 },
-
                new Employes { Name = "Andre", Age = 20 },
 
-               new Employes { Name = "Cristi", Age = 40 }
+               new Employes { Name = "Ana", Age = 25 },
+
+               new Employes { Name = "Cristi", Age = 40 },
+
+               new Employes { Name = "Ilie", Age = 50 }
+
             };
 
             Assert.Equal(result, thenBy);
@@ -477,13 +478,14 @@ namespace Linq
 
             var result = new List<Employes>
             {
-               new Employes { Name = "Ana", Age = 25 },
-
-               new Employes { Name = "Ilie", Age = 50 },
-
                new Employes { Name = "Andre", Age = 20 },
 
-               new Employes { Name = "Cristi", Age = 40 }
+               new Employes { Name = "Ana", Age = 25 },
+
+               new Employes { Name = "Cristi", Age = 40 },
+
+               new Employes { Name = "Ilie", Age = 50 }
+
             };
 
             Assert.Equal(result, thenBy);
@@ -508,9 +510,9 @@ namespace Linq
 
             var result = new List<Employes>
             {
-               new Employes { Name = "Andre", Age = 20 },
-
                new Employes { Name = "Bna", Age = 12 },
+
+               new Employes { Name = "Andre", Age = 20 },
 
                new Employes { Name = "Cristi", Age = 40 },
 
@@ -570,6 +572,53 @@ namespace Linq
             };
 
             Assert.Equal(result, final);
+        }
+
+        [Fact]
+
+        public void CreateOrderedEnumerable()
+        {
+            var workers = new List<Employes>
+            {
+               new Employes { Name = "A", Age = 12 },
+
+               new Employes { Name = "C", Age = 40 },
+
+               new Employes { Name = "A", Age = 20 },
+
+               new Employes { Name = "I", Age = 50 },
+
+               new Employes { Name = "C", Age = 91 },
+
+               new Employes { Name = "A", Age = 50 },
+
+               new Employes { Name = "I", Age = 15 },
+
+               new Employes { Name = "C", Age = 32 }
+            };
+
+            var thenBy = LinqMethodes.OrderBy(workers, employes => employes.Name, Comparer<string>.Default).ThenBy(employes => employes.Age, Comparer<int>.Default);
+
+            var result = new List<Employes>
+            {
+               new Employes { Name = "A", Age = 12 },
+
+               new Employes { Name = "A", Age = 20 },
+
+               new Employes { Name = "A", Age = 50 },
+
+               new Employes { Name = "C", Age = 32 },
+
+               new Employes { Name = "C", Age = 40 },
+
+               new Employes { Name = "C", Age = 91 },
+
+               new Employes { Name = "I", Age = 15 },
+
+               new Employes { Name = "I", Age = 50 }
+            };
+
+            Assert.Equal(result, thenBy);
         }
 
         private class Employes
