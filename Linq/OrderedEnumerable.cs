@@ -18,10 +18,16 @@ namespace Linq
         {
             Func<TSource, TSource, int> functionForComparer = (first, second) =>
             {
+                var finalcomp = this.comparer.Compare(first, second);
                 TKey firstKey = keySelector(first);
                 TKey secondKey = keySelector(second);
 
-                return comparer.Compare(firstKey, secondKey);
+                if (finalcomp == 0)
+                {
+                    return comparer.Compare(firstKey, secondKey);
+                }
+
+                return finalcomp;
             };
 
             var newComparer = new ComparerChooser<TSource>(functionForComparer);
