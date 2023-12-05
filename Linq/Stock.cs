@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xunit.Sdk;
-using static Linq.Stock;
 
 namespace Linq
 {
