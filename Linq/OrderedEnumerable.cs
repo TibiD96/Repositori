@@ -19,15 +19,8 @@ namespace Linq
             Func<TSource, TSource, int> functionForComparer = (first, second) =>
             {
                 var finalcomp = this.comparer.Compare(first, second);
-                TKey firstKey = keySelector(first);
-                TKey secondKey = keySelector(second);
 
-                if (finalcomp == 0)
-                {
-                    return comparer.Compare(firstKey, secondKey);
-                }
-
-                return finalcomp;
+                return finalcomp == 0 ? comparer.Compare(keySelector(first), keySelector(second)) : finalcomp;
             };
 
             var newComparer = new ComparerChooser<TSource>(functionForComparer);
