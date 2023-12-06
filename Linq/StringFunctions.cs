@@ -28,6 +28,11 @@ namespace Linq
             return (countVowels, countConsons);
         }
 
+        public static char FirstUniqElement(string input)
+        {
+
+        }
+
         private static bool Vowels(char character)
         {
             foreach (char c in new[] { 'a', 'e', 'i', 'o', 'u' })
