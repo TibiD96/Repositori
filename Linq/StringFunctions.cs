@@ -30,7 +30,17 @@ namespace Linq
 
         public static char FirstUniqElement(string input)
         {
+            var numLetter = input.GroupBy(c => c).ToDictionary(l => l.Key, l => l.Count());
 
+            foreach (char c in input)
+            {
+                if (numLetter[c] == 1)
+                {
+                    return c;
+                }
+            }
+
+            throw new InvalidOperationException("No unique element found.");
         }
 
         private static bool Vowels(char character)

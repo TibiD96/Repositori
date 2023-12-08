@@ -16,11 +16,18 @@ namespace Linq
             Assert.Equal((1, 5), result);
         }
 
-        public void CheckFirstUniqElement()
+        public void CheckFirstUniqElementUniqLetterArePresent()
         {
             const string input = "aanbcnmbmxny";
             var result = StringFunctions.FirstUniqElement(input);
             Assert.Equal('c', result);
+        }
+
+        public void CheckFirstUniqElementNoUniqElements()
+        {
+            const string input = "aanbccnmbmxynyx";
+            var result = StringFunctions.FirstUniqElement(input);
+            Assert.Throws<InvalidOperationException>(() => StringFunctions.FirstUniqElement(input));
         }
     }
 }
