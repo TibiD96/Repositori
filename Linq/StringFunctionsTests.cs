@@ -16,6 +16,8 @@ namespace Linq
             Assert.Equal((1, 5), result);
         }
 
+        [Fact]
+
         public void CheckFirstUniqElementUniqLetterArePresent()
         {
             const string input = "aanbcnmbmxny";
@@ -23,12 +25,15 @@ namespace Linq
             Assert.Equal('c', result);
         }
 
+        [Fact]
+
         public void CheckFirstUniqElementNoUniqElements()
         {
             const string input = "aanbccnmbmxynyx";
-            var result = StringFunctions.FirstUniqElement(input);
             Assert.Throws<InvalidOperationException>(() => StringFunctions.FirstUniqElement(input));
         }
+
+        [Fact]
 
         public void CheckStringToIntWhenInputIsValid()
         {
@@ -37,11 +42,12 @@ namespace Linq
             Assert.Equal(253, result);
         }
 
+        [Fact]
+
         public void CheckStringToIntWhenInputIsInvalid()
         {
             const string input = "2A3";
-            var result = StringFunctions.StringToInteger(input);
-            Assert.Equal(253, result);
+            Assert.Throws<InvalidOperationException>(() => StringFunctions.StringToInteger(input));
         }
     }
 }

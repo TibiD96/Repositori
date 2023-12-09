@@ -43,6 +43,16 @@ namespace Linq
             throw new InvalidOperationException("No unique element found.");
         }
 
+        public static int StringToInteger(string input)
+        {
+            if (input.All(c => char.IsDigit(c)))
+            {
+                return int.Parse(input);
+            }
+
+            throw new InvalidOperationException("Input is not correct format");
+        }
+
         private static bool Vowels(char character)
         {
             foreach (char c in new[] { 'a', 'e', 'i', 'o', 'u' })
