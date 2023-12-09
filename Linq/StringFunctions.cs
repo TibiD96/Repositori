@@ -30,13 +30,13 @@ namespace Linq
 
         public static char FirstUniqElement(string input)
         {
-            var numLetter = input.GroupBy(c => c).ToDictionary(l => l.Key, l => l.Count());
+            var numLetter = input.GroupBy(count => count).ToDictionary(character => character.Key, character => character.Count());
 
-            foreach (char c in input)
+            foreach (char character in input)
             {
-                if (numLetter[c] == 1)
+                if (numLetter[character] == 1)
                 {
-                    return c;
+                    return character;
                 }
             }
 
@@ -45,7 +45,7 @@ namespace Linq
 
         public static int StringToInteger(string input)
         {
-            if (input.All(c => char.IsDigit(c)))
+            if (input.All(character => char.IsDigit(character)))
             {
                 return int.Parse(input);
             }
@@ -55,7 +55,17 @@ namespace Linq
 
         public static char[] CharacterWithMostAppearances(string input)
         {
+            int maxCount = 0;
+            var numLetter = input.GroupBy(count => count).ToDictionary(character => character.Key, character => character.Count());
+            foreach (char character in input)
+            {
+                if (numLetter[character] > maxCount)
+                {
+                    maxCount = numLetter[character];
+                }
+            }
 
+            return numLetter.Where(count => count.Value == maxCount).Select(character => character.Key).ToArray();
         }
 
         private static bool Vowels(char character)
