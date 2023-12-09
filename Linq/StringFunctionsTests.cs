@@ -29,5 +29,19 @@ namespace Linq
             var result = StringFunctions.FirstUniqElement(input);
             Assert.Throws<InvalidOperationException>(() => StringFunctions.FirstUniqElement(input));
         }
+
+        public void CheckStringToIntWhenInputIsValid()
+        {
+            const string input = "253";
+            var result = StringFunctions.StringToInteger(input);
+            Assert.Equal(253, result);
+        }
+
+        public void CheckStringToIntWhenInputIsInvalid()
+        {
+            const string input = "2A3";
+            var result = StringFunctions.StringToInteger(input);
+            Assert.Equal(253, result);
+        }
     }
 }
