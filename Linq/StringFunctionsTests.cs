@@ -49,5 +49,25 @@ namespace Linq
             const string input = "2A3";
             Assert.Throws<InvalidOperationException>(() => StringFunctions.StringToInteger(input));
         }
+
+        [Fact]
+
+        public void CheckCharacterWithMostAppearanceOneCharater()
+        {
+            const string input = "adfgdopfnf";
+            var expected = new[] { 'f' };
+            var result = StringFunctions.CharacterWithMostAppearances(input);
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+
+        public void CheckCharacterWithMostAppearanceMultipleCharater()
+        {
+            const string input = "adfgdopfndf";
+            var expected = new[] { 'f', 'd' };
+            var result = StringFunctions.CharacterWithMostAppearances(input);
+            Assert.Equal(expected, result);
+        }
     }
 }

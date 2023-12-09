@@ -53,6 +53,11 @@ namespace Linq
             throw new InvalidOperationException("Input is not correct format");
         }
 
+        public static char[] CharacterWithMostAppearances(string input)
+        {
+
+        }
+
         private static bool Vowels(char character)
         {
             foreach (char c in new[] { 'a', 'e', 'i', 'o', 'u' })
