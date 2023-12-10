@@ -69,5 +69,15 @@ namespace Linq
             var result = StringFunctions.CharacterWithMostAppearances(input);
             Assert.Equal(expected, result);
         }
+
+        [Fact]
+
+        public void CheckDevideStringInPalindroms()
+        {
+            const string input = "aabaac";
+            var expected = new[] { "a", "a", "b", "a", "a", "c", "aa", "aa", "aba", "aabaa" };
+            var result = StringFunctions.DivideStringInPalindroms(input);
+            Assert.Equal(expected, result);
+        }
     }
 }

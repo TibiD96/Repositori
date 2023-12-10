@@ -68,6 +68,11 @@ namespace Linq
             return numLetter.Where(count => count.Value == maxCount).Select(character => character.Key).ToArray();
         }
 
+        public static string[] DivideStringInPalindroms(string input)
+        {
+
+        }
+
         private static bool Vowels(char character)
         {
             foreach (char c in new[] { 'a', 'e', 'i', 'o', 'u' })
