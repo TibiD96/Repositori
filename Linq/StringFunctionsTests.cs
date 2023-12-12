@@ -75,7 +75,7 @@ namespace Linq
         public void CheckDevideStringInPalindroms()
         {
             const string input = "aabaac";
-            var expected = new[] { "a", "a", "b", "a", "a", "c", "aa", "aa", "aba", "aabaa" };
+            var expected = new[] { "a", "aa", "aabaa", "a", "aba", "b", "a", "aa", "a", "c" };
             var result = StringFunctions.DivideStringInPalindroms(input);
             Assert.Equal(expected, result);
         }

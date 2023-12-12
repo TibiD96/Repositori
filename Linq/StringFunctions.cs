@@ -68,9 +68,24 @@ namespace Linq
             return numLetter.Where(count => count.Value == maxCount).Select(character => character.Key).ToArray();
         }
 
-        public static string[] DivideStringInPalindroms(string input)
+        public static List<string> DivideStringInPalindroms(string input)
         {
+            List<string> list = new List<string>();
+            for (int i = 0; i < input.Length; i++)
+            {
+                for (int j = i + 1; j <= input.Length; j++)
+                {
+                    string temp = input[i..j];
+                    var reversed = temp.ToCharArray();
+                    Array.Reverse(reversed);
+                    if (temp == new string(reversed))
+                    {
+                        list.Add(temp);
+                    }
+                }
+            }
 
+            return list;
         }
 
         private static bool Vowels(char character)
