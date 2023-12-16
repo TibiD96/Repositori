@@ -30,18 +30,7 @@ namespace Linq
         {
             var list = source.ToList();
 
-            for (int i = 0; i < list.Count - 1; i++)
-            {
-                for (int j = 0; j < list.Count - i - 1; j++)
-                {
-                    if (comparer.Compare(list[j], list[j + 1]) > 0)
-                    {
-                        var temp = list[j];
-                        list[j] = list[j + 1];
-                        list[j + 1] = temp;
-                    }
-                }
-            }
+            QuickSort(list, 0, list.Count - 1);
 
             foreach (var element in list)
             {
@@ -52,6 +41,42 @@ namespace Linq
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        private void QuickSort(List<TSource> list, int left, int right)
+        {
+            if (left >= right)
+            {
+                return;
+            }
+
+            int listSplitingIndex = Spliting(list, left, right);
+            QuickSort(list, left, listSplitingIndex - 1);
+            QuickSort(list, listSplitingIndex + 1, right);
+        }
+
+        private int Spliting(List<TSource> list, int left, int right)
+        {
+            int pivot = right;
+
+            int indexSmallestElem = left - 1;
+
+            for (int i = left; i <= right; i++)
+            {
+                if (comparer.Compare(list[i], list[pivot]) < 0)
+                {
+                    indexSmallestElem++;
+                    Swap(list, indexSmallestElem, i);
+                }
+            }
+
+            Swap(list, indexSmallestElem + 1, right);
+            return indexSmallestElem + 1;
+        }
+
+        private void Swap(List<TSource> list, int elemToBeSwap, int elemToSwapWith)
+        {
+            (list[elemToSwapWith], list[elemToBeSwap]) = (list[elemToBeSwap], list[elemToSwapWith]);
         }
     }
 }

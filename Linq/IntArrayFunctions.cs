@@ -6,9 +6,9 @@ namespace Linq
 {
     public class IntArrayFunctions
     {
-        public List<List<int>> SumLowerThenK(int k, int[] intArray)
-        {
+       // public List<List<int>> SumLowerThenK(int k, int[] intArray)
+        //{
 
-        }
+        //}
     }
 }
