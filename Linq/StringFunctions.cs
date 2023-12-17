@@ -76,9 +76,7 @@ namespace Linq
                 for (int j = i + 1; j <= input.Length; j++)
                 {
                     string temp = input[i..j];
-                    var reversed = temp.ToCharArray();
-                    Array.Reverse(reversed);
-                    if (temp == new string(reversed))
+                    if (temp.SequenceEqual(temp.Reverse()))
                     {
                         list.Add(temp);
                     }
