@@ -30,7 +30,7 @@ namespace Linq
         {
             var list = source.ToList();
 
-            QuickSort(list, 0, list.Count - 1);
+            NonRecursiveQuickSort(list, 0, list.Count - 1);
 
             foreach (var element in list)
             {
@@ -50,12 +50,41 @@ namespace Linq
                 return;
             }
 
-            int listSplitingIndex = Spliting(list, left, right);
+            int listSplitingIndex = Partitioning(list, left, right);
             QuickSort(list, left, listSplitingIndex - 1);
             QuickSort(list, listSplitingIndex + 1, right);
         }
 
-        private int Spliting(List<TSource> list, int left, int right)
+        private void NonRecursiveQuickSort(List<TSource> list, int left, int right)
+        {
+            int[] lifoList = new int[list.Count];
+            int elementFromTop = -1;
+
+            lifoList[++elementFromTop] = left;
+            lifoList[++elementFromTop] = right;
+
+            while (elementFromTop >= 0)
+            {
+                right = lifoList[elementFromTop--];
+                left = lifoList[elementFromTop--];
+
+                int listSplitingIndex = Partitioning(list, left, right);
+
+                if (listSplitingIndex - 1 > left)
+                {
+                    lifoList[++elementFromTop] = left;
+                    lifoList[++elementFromTop] = listSplitingIndex - 1;
+                }
+
+                if (listSplitingIndex + 1 < right)
+                {
+                    lifoList[++elementFromTop] = listSplitingIndex + 1;
+                    lifoList[++elementFromTop] = right;
+                }
+            }
+        }
+
+        private int Partitioning(List<TSource> list, int left, int right)
         {
             int pivot = right;
 
