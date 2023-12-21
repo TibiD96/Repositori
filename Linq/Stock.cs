@@ -70,13 +70,10 @@ namespace Linq
 
         private void CallBackNotifications(Product product)
         {
-            int[] notifQaunt = new[] { 2, 5, 10 };
-            for (int i = 0; i < notifQaunt.Length; i++)
+            int[] notifQuant = new[] { 2, 5, 10 };
+            foreach (var quantity in notifQuant.Where(quantity => product.Quantity < quantity))
             {
-                if (product.Quantity < notifQaunt[i])
-                {
-                    Notifications(product);
-                }
+                Notifications(product);
             }
         }
 
