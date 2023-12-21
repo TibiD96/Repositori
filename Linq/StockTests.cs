@@ -58,7 +58,7 @@ namespace Linq
 
         [Fact]
 
-        public void CheckNotificationsWhenIsUsed()
+        public void CheckNotificationsWhenIsUsed01()
         {
             bool notificationReached = false;
 
@@ -67,10 +67,44 @@ namespace Linq
             stock.Add("BMW", 1000);
             stock.Add("Mercedes", 300);
             stock.Add("Audi", 500);
-            stock.ProductOrder("BMW", 995);
+            stock.ProductOrder("BMW", 999);
 
             Assert.True(notificationReached);
-            Assert.Equal(5, stock.Products[0].Quantity);
+            Assert.Equal(1, stock.Products[0].Quantity);
+        }
+
+        [Fact]
+
+        public void CheckNotificationsWhenIsUsed02()
+        {
+            bool notificationReached = false;
+
+            var stock = new Stock();
+            stock.Notifications = product => notificationReached = true;
+            stock.Add("BMW", 1000);
+            stock.Add("Mercedes", 300);
+            stock.Add("Audi", 500);
+            stock.ProductOrder("BMW", 996);
+
+            Assert.True(notificationReached);
+            Assert.Equal(4, stock.Products[0].Quantity);
+        }
+
+        [Fact]
+
+        public void CheckNotificationsWhenIsUsed03()
+        {
+            bool notificationReached = false;
+
+            var stock = new Stock();
+            stock.Notifications = product => notificationReached = true;
+            stock.Add("BMW", 1000);
+            stock.Add("Mercedes", 300);
+            stock.Add("Audi", 500);
+            stock.ProductOrder("BMW", 991);
+
+            Assert.True(notificationReached);
+            Assert.Equal(9, stock.Products[0].Quantity);
         }
 
         [Fact]
