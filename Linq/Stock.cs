@@ -71,7 +71,7 @@ namespace Linq
         private void CallBackNotifications(Product product)
         {
             int[] notifQuant = new[] { 10, 5, 2 };
-            foreach (var quantity in notifQuant.Where(quantity => product.Quantity < quantity))
+            if (notifQuant.FirstOrDefault(notifQuant => product.Quantity < notifQuant) != 0)
             {
                 Notifications(product);
             }
