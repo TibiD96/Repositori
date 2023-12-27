@@ -70,20 +70,10 @@ namespace Linq
 
         public static List<string> DivideStringInPalindroms(string input)
         {
-            List<string> list = new List<string>();
-            for (int i = 0; i < input.Length; i++)
-            {
-                for (int j = i + 1; j <= input.Length; j++)
-                {
-                    string temp = input[i..j];
-                    if (temp.SequenceEqual(temp.Reverse()))
-                    {
-                        list.Add(temp);
-                    }
-                }
-            }
-
-            return list;
+            return Enumerable.Range(0, input.Length).SelectMany(startIndex => Enumerable.Range(1, input.Length - startIndex)
+                                                    .Select(length => input.Substring(startIndex, length)))
+                                                    .Where(substring => substring.SequenceEqual(substring.Reverse()))
+                                                    .ToList();
         }
 
         private static bool Vowels(char character)
