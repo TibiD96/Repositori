@@ -12,5 +12,10 @@ namespace Linq
                                                        .Select(length => intArray.Skip(startIndex).Take(length).ToList())
                                                        .TakeWhile(subList => subList.Sum() <= k)).ToList();
        }
+
+       public static List<List<int>> ValidCombination(int numberOfElements, int result)
+       {
+
+       }
     }
 }
