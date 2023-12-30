@@ -13,9 +13,9 @@ namespace Linq
                                                        .TakeWhile(subList => subList.Sum() <= k)).ToList();
        }
 
-       public static List<List<int>> ValidCombination(int numberOfElements, int result)
+       public static List<List<int>> ValidCombination(int lastNumber, int result)
        {
-
+            return Enumerable.Range(1, lastNumber).SelectMany()
        }
     }
 }

@@ -38,7 +38,7 @@ namespace Linq
 
         public void ValidCombination()
         {
-            const int numberOfElements = 4;
+            const int lastNumber = 4;
             const int result = 0;
             var expected = new List<List<int>>()
             {
@@ -46,7 +46,7 @@ namespace Linq
                 new List<int> { -1, 2, 3, -4 }
             };
 
-            var final = IntArrayFunctions.ValidCombination(numberOfElements, result);
+            var final = IntArrayFunctions.ValidCombination(lastNumber, result);
 
             Assert.Equal(expected, final);
         }
