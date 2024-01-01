@@ -15,7 +15,13 @@ namespace Linq
 
        public static List<List<int>> ValidCombination(int lastNumber, int result)
        {
-            return Enumerable.Range(1, lastNumber).SelectMany()
+            List<List<int>> listValidComb = new List<List<int>> { new List<int>() };
+            for (int i = 1; i <= lastNumber; i++)
+            {
+                listValidComb = listValidComb.SelectMany(comb => new[] { new List<int>(comb) { i }, new List<int>(comb) { -i } }).ToList();
+            }
+
+            return listValidComb.Where(comb => comb.Sum() == result).ToList();
        }
     }
 }
