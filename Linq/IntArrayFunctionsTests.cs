@@ -55,7 +55,7 @@ namespace Linq
 
         public void ValidTriplets()
         {
-            int[] inputArray = new[] { 13, 4, 12, 3, 5 };
+            int[] inputArray = new[] { 1, 2, 3, 4, 5, 12, 13 };
             var expected = new List<List<int>>()
             {
                 new List<int> { 3, 4, 5 },
