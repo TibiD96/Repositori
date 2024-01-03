@@ -62,7 +62,7 @@ namespace Linq
                 new ProductWithFeature("RcCar", 1, 2, 3, 4, 5)
             };
 
-            var final = FilteringFunctions.AtLeastOneFeature(inputListProd, inputFeatures);
+            var final = FilteringFunctions.AllFeature(inputListProd, inputFeatures);
 
             Assert.Equal(expected, final);
         }
