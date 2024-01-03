@@ -18,5 +18,18 @@ namespace Linq
                 Features.Add(new Feature(id));
             }
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            ProductWithFeature prod = (ProductWithFeature)obj;
+            return Name == prod.Name && Features.SequenceEqual(prod.Features);
+        }
+
+        public override int GetHashCode() => HashCode.Combine(Name, Features);
     }
 }

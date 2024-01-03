@@ -8,7 +8,7 @@ namespace Linq
     {
         public static List<ProductWithFeature> AtLeastOneFeature(List<ProductWithFeature> inputListProd, List<Feature> inputListFeature)
         {
-            return 
+            return inputListProd.Where(prod => prod.Features.Intersect(inputListFeature).Any()).ToList();
         }
     }
 }
