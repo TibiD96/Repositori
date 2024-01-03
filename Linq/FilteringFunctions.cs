@@ -15,5 +15,10 @@ namespace Linq
         {
             return inputListProd.Where(prod => inputListFeature.All(feature => prod.Features.Contains(feature))).ToList();
         }
+
+        public static List<ProductWithFeature> NoFeature(List<ProductWithFeature> inputListProd, List<Feature> inputListFeature)
+        {
+            return inputListProd.Where(prod => inputListFeature.All(feature => !prod.Features.Contains(feature))).ToList();
+        }
     }
 }
