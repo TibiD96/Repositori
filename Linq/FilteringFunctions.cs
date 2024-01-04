@@ -23,7 +23,8 @@ namespace Linq
 
         public static List<Product> ProductQuantity(List<Product> firstInputListProd, List<Product> secondInputListProd)
         {
-            return firstInputListProd.Union(secondInputListProd).GroupBy(product => product.Name)
+            firstInputListProd.AddRange(secondInputListProd);
+            return firstInputListProd.GroupBy(product => product.Name)
                                      .Select(prod =>
                                      {
                                          int sumQuant = prod.Aggregate(0, (result, product) => result + product.Quantity);
