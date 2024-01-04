@@ -169,5 +169,31 @@ namespace Linq
 
             Assert.Equal(expected, final);
         }
+
+        [Fact]
+
+        public void RankingResultsTest()
+        {
+            var inputRanking = new List<TestResults>()
+            {
+                new TestResults("1", "Ana", 5),
+                new TestResults("2", "Mihai", 4),
+                new TestResults("3", "Ilie", 20),
+                new TestResults("4", "Ana", 10),
+                new TestResults("3", "Mihai", 1),
+                new TestResults("5", "Ilie", 20)
+            };
+
+            var expected = new List<TestResults>()
+            {
+                new TestResults("1", "Ana", 10),
+                new TestResults("2", "Mihai", 4),
+                new TestResults("3", "Ilie", 20)
+            };
+
+            var final = FilteringFunctions.RankingResult(inputRanking);
+
+            Assert.Equal(expected, final);
+        }
     }
 }
