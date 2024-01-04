@@ -203,24 +203,24 @@ namespace Linq
 
         public void WordRankingTest()
         {
-            string input = "After a long long and hard day, Alex is ready for a long and intens gaming with Andrei and Alex.";
+            const string input = "After a long long and hard day, Alex is ready for a long and intens gaming with Andrei and Alex.";
 
             List<(int, string)> expected = new ()
             {
-                (1, "long 3"),
-                (2, "a 2"),
-                (2, "and 2"),
-                (2, "alex 2"),
-                (3, "after 1"),
-                (3, "hard 1"),
-                (3, "day 1"),
-                (3, "is 1"),
-                (3, "ready 1"),
-                (3, "for 1"),
-                (3, "intens 1"),
-                (3, "gaming 1"),
-                (3, "with 1"),
-                (3, "andrei 1")
+                (3, "long"),
+                (3, "and"),
+                (2, "a"),
+                (2, "alex"),
+                (1, "after"),
+                (1, "hard"),
+                (1, "day"),
+                (1, "is"),
+                (1, "ready"),
+                (1, "for"),
+                (1, "intens"),
+                (1, "gaming"),
+                (1, "with"),
+                (1, "andrei")
             };
 
             var final = FilteringFunctions.WordRanking(input);

@@ -41,5 +41,13 @@ namespace Linq
                                          return new TestResults(maxScoreEntry.Id, group.Key, maxScoreEntry.Score);
                                      }).ToList();
         }
+
+        public static List<(int, string)> WordRanking(string inputString)
+        {
+            var arraySubStr = inputString.ToLower().Split(" ,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            return arraySubStr.GroupBy(word => word)
+                              .Select(group => (Count: group.Count(), Word: group.Key))
+                              .OrderByDescending(pair => pair.Count).ToList();
+        }
     }
 }
