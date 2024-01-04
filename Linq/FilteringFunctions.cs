@@ -20,5 +20,15 @@ namespace Linq
         {
             return inputListProd.Where(prod => inputListFeature.All(feature => !prod.Features.Contains(feature))).ToList();
         }
+
+        public static List<Product> ProductQuantity(List<Product> firstInputListProd, List<Product> secondInputListProd)
+        {
+            return firstInputListProd.Union(secondInputListProd).GroupBy(product => product.Name)
+                                     .Select(prod =>
+                                     {
+                                         int sumQuant = prod.Aggregate(0, (result, product) => result + product.Quantity);
+                                         return new Product(prod.Key, sumQuant);
+                                     }).ToList();
+        }
     }
 }
