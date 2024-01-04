@@ -95,5 +95,42 @@ namespace Linq
 
             Assert.Equal(expected, final);
         }
+
+        [Fact]
+
+        public void ProdQuantity()
+        {
+            var firstInputListProd = new List<Product>()
+            {
+                new Product("RcCar", 50),
+                new Product("Phone", 4),
+                new Product("TV", 20),
+                new Product("Table", 6),
+                new Product("Ball", 2)
+            };
+
+            var secondInputListProd = new List<Product>()
+            {
+                new Product("Phone", 6),
+                new Product("PS5", 10),
+                new Product("PC", 6),
+                new Product("RcCar", 5)
+            };
+
+            var expected = new List<Product>()
+            {
+                new Product("RcCar", 55),
+                new Product("Phone", 10),
+                new Product("TV", 20),
+                new Product("Table", 6),
+                new Product("Ball", 2),
+                new Product("PS5", 10),
+                new Product("PC", 6)
+            };
+
+            var final = FilteringFunctions.ProductQuantity(firstInputListProd, secondInputListProd);
+
+            Assert.Equal(expected, final);
+        }
     }
 }
