@@ -31,5 +31,15 @@ namespace Linq
                                          return new Product(prod.Key, sumQuant);
                                      }).ToList();
         }
+
+        public static List<TestResults> RankingResult(List<TestResults> inputRanking)
+        {
+            return inputRanking.GroupBy(fam => fam.FamilyId)
+                                     .Select(group =>
+                                     {
+                                         var maxScoreEntry = group.OrderByDescending(score => score.Score).FirstOrDefault();
+                                         return new TestResults(maxScoreEntry.Id, group.Key, maxScoreEntry.Score);
+                                     }).ToList();
+        }
     }
 }

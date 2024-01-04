@@ -180,15 +180,18 @@ namespace Linq
                 new TestResults("2", "Mihai", 4),
                 new TestResults("3", "Ilie", 20),
                 new TestResults("4", "Ana", 10),
-                new TestResults("3", "Mihai", 1),
-                new TestResults("5", "Ilie", 20)
+                new TestResults("5", "Mihai", 1),
+                new TestResults("6", "George", 1),
+                new TestResults("7", "Ana", 5),
+                new TestResults("8", "Ilie", 20)
             };
 
             var expected = new List<TestResults>()
             {
-                new TestResults("1", "Ana", 10),
+                new TestResults("4", "Ana", 10),
                 new TestResults("2", "Mihai", 4),
-                new TestResults("3", "Ilie", 20)
+                new TestResults("3", "Ilie", 20),
+                new TestResults("6", "George", 1)
             };
 
             var final = FilteringFunctions.RankingResult(inputRanking);

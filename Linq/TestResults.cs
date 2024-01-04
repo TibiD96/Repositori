@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Linq
 {
@@ -18,5 +19,18 @@ namespace Linq
             FamilyId = familyId;
             Score = score;
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            TestResults testResult = (TestResults)obj;
+            return Id == testResult.Id && FamilyId == testResult.FamilyId && Score == testResult.Score;
+        }
+
+        public override int GetHashCode() => HashCode.Combine(Id, FamilyId, Score);
     }
 }
