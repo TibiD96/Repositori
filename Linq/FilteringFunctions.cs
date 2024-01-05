@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -49,6 +50,21 @@ namespace Linq
                                         .GroupBy(words => words)
                                         .Select(group => (Count: group.Count(), Word: group.Key))
                                         .OrderByDescending(pair => pair.Count).ToList();
+        }
+
+        public static bool SudokuValidator(int[,] sudokuTable)
+        {
+            var rows = Enumerable.Range(0, 9).Select(i => Enumerable.Range(0, 9)
+                                             .Select(j => sudokuTable[i, j]).ToArray()).ToArray();
+
+            var column = Enumerable.Range(0, 9).Select(j => Enumerable.Range(0, 9)
+                                               .Select(i => sudokuTable[i, j]).ToArray()).ToArray();
+
+            var blocks = Enumerable.Range(0, 3).SelectMany(i => Enumerable.Range(0, 3)
+                                               .Select(j => Enumerable.Range(0, 3)
+                                               .SelectMany(k => Enumerable.Range(0, 3)
+                                               .Select(l => sudokuTable[3 * i + k, 3 * j + l])).ToArray())).ToArray();
+            return true;
         }
     }
 }
