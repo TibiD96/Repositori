@@ -44,10 +44,11 @@ namespace Linq
 
         public static List<(int, string)> WordRanking(string inputString)
         {
-            var arraySubStr = inputString.ToLower().Split(" ,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            return arraySubStr.GroupBy(word => word)
-                              .Select(group => (Count: group.Count(), Word: group.Key))
-                              .OrderByDescending(pair => pair.Count).ToList();
+            const string delimitations = " ,.!?:\"";
+            return inputString.ToLower().Split(delimitations.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
+                                        .GroupBy(words => words)
+                                        .Select(group => (Count: group.Count(), Word: group.Key))
+                                        .OrderByDescending(pair => pair.Count).ToList();
         }
     }
 }
