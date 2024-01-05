@@ -64,7 +64,10 @@ namespace Linq
                                                .Select(j => Enumerable.Range(0, 3)
                                                .SelectMany(k => Enumerable.Range(0, 3)
                                                .Select(l => sudokuTable[3 * i + k, 3 * j + l])).ToArray())).ToArray();
-            return true;
+
+            return Enumerable.Range(0, 9).All(i => rows[i].GroupBy(num => num).All(group => group.Count() == 1 && group.Key >= 1 && group.Key <= 9)) &&
+                   Enumerable.Range(0, 9).All(i => column[i].GroupBy(num => num).All(group => group.Count() == 1 && group.Key >= 1 && group.Key <= 9)) &&
+                   Enumerable.Range(0, 9).All(i => blocks[i].GroupBy(num => num).All(group => group.Count() == 1 && group.Key >= 1 && group.Key <= 9));
         }
     }
 }
