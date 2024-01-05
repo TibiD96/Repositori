@@ -227,5 +227,25 @@ namespace Linq
 
             Assert.Equal(expected, final);
         }
+
+        [Fact]
+
+        public void CheckSudoku()
+        {
+            int[,] inputSudokuTable = new int[,]
+            {
+                { 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+                { 4, 5, 6, 7, 8, 9, 1, 2, 3 },
+                { 7, 8, 9, 1, 2, 3, 4, 5, 6 },
+                { 2, 3, 1, 5, 6, 4, 8, 9, 7 },
+                { 5, 6, 4, 8, 9, 7, 2, 3, 1 },
+                { 8, 9, 7, 2, 3, 1, 5, 6, 4 },
+                { 3, 2, 1, 6, 4, 5, 9, 7, 8 },
+                { 6, 4, 5, 9, 7, 8, 3, 1, 2 },
+                { 9, 7, 8, 3, 1, 2, 6, 4, 5 }
+            };
+
+            Assert.True(FilteringFunctions.SudokuValidator(inputSudokuTable));
+        }
     }
 }
