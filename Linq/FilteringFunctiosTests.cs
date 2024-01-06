@@ -274,7 +274,7 @@ namespace Linq
         {
             const string input = "3 4 * 2 5 * +";
 
-            const float expected = 22;
+            const double expected = 22;
 
             var final = FilteringFunctions.PostfixEquation(input);
 

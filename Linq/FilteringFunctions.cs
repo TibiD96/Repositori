@@ -71,13 +71,41 @@ namespace Linq
                    Enumerable.Range(0, 9).All(i => blocks[i].GroupBy(num => num).All(group => group.Count() == 1 && group.Key >= 1 && group.Key <= 9));
         }
 
-        public static float PostfixEquation(string inputEquation)
+        public static double PostfixEquation(string inputEquation)
         {
             string[] arrayOfElements = inputEquation.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            string[] operators = arrayOfElements.Where(element => !float.TryParse(element, out _)).ToArray();
-            float[] numbers = arrayOfElements.Where(element => float.TryParse(element, out _)).Select(element => float.Parse(element)).ToArray();
+            Stack<double> stack = new Stack<double>();
 
-            return 24;
+            return arrayOfElements.Aggregate(stack, (stack, element) =>
+            {
+                if (double.TryParse(element, out double number))
+                {
+                    stack.Push(number);
+                }
+                else
+                {
+                    double firstNumber = stack.Pop();
+                    double secondNumber = stack.Pop();
+
+                    switch (element)
+                    {
+                        case "+":
+                            stack.Push(firstNumber + secondNumber);
+                            break;
+                        case "-":
+                            stack.Push(firstNumber - secondNumber);
+                            break;
+                        case "*":
+                            stack.Push(firstNumber * secondNumber);
+                            break;
+                        case "/":
+                            stack.Push(firstNumber / secondNumber);
+                            break;
+                    }
+                }
+
+                return stack;
+            }).Single();
         }
     }
 }
