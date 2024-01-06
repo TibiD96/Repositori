@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Xunit.Sdk;
 
 namespace Linq
 {
@@ -68,6 +69,15 @@ namespace Linq
             return Enumerable.Range(0, 9).All(i => rows[i].GroupBy(num => num).All(group => group.Count() == 1 && group.Key >= 1 && group.Key <= 9)) &&
                    Enumerable.Range(0, 9).All(i => column[i].GroupBy(num => num).All(group => group.Count() == 1 && group.Key >= 1 && group.Key <= 9)) &&
                    Enumerable.Range(0, 9).All(i => blocks[i].GroupBy(num => num).All(group => group.Count() == 1 && group.Key >= 1 && group.Key <= 9));
+        }
+
+        public static float PostfixEquation(string inputEquation)
+        {
+            string[] arrayOfElements = inputEquation.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] operators = arrayOfElements.Where(element => !float.TryParse(element, out _)).ToArray();
+            float[] numbers = arrayOfElements.Where(element => float.TryParse(element, out _)).Select(element => float.Parse(element)).ToArray();
+
+            return 24;
         }
     }
 }
