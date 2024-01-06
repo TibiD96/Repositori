@@ -267,5 +267,18 @@ namespace Linq
 
             Assert.False(FilteringFunctions.SudokuValidator(inputSudokuTable));
         }
+
+        [Fact]
+
+        public void CheckPostfixEquation()
+        {
+            const string input = "3 4 * 2 5 * +";
+
+            const float expected = 22;
+
+            var final = FilteringFunctions.PostfixEquation(input);
+
+            Assert.Equal(expected, final);
+        }
     }
 }
