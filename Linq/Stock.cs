@@ -43,9 +43,9 @@ namespace Linq
 
             ProductQuantityInDepo(name, quantity);
 
-            list[ProductIndex(name)].Quantity = list[ProductIndex(name)].Quantity - quantity;
+            CallBackNotifications(list[ProductIndex(name)], quantity);
 
-            CallBackNotifications(list[ProductIndex(name)]);
+            list[ProductIndex(name)].Quantity = list[ProductIndex(name)].Quantity - quantity;
         }
 
         public bool Find(string name)
@@ -68,13 +68,15 @@ namespace Linq
             throw new ArgumentException("Not enough quantity");
         }
 
-        private void CallBackNotifications(Product product)
+        private void CallBackNotifications(Product product, int quanityToSell)
         {
             int[] notifQuant = new[] { 10, 5, 2 };
-            if (notifQuant.FirstOrDefault(notifQuant => product.Quantity < notifQuant) != 0)
+            if (notifQuant.Where(notifValues => notifValues <= product.Quantity).FirstOrDefault(newNotifQuant => product.Quantity - quanityToSell < newNotifQuant) == 0)
             {
-                Notifications(product);
+                return;
             }
+
+            Notifications(product);
         }
 
         internal class Product
