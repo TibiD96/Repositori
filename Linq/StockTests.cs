@@ -160,6 +160,23 @@ namespace Linq
 
         [Fact]
 
+        public void CheckNotificationsWhenIsUsed07()
+        {
+            bool notificationReached = false;
+
+            var stock = new Stock();
+            stock.Notifications = product => notificationReached = true;
+            stock.Add("BMW", 1);
+            stock.Add("Mercedes", 300);
+            stock.Add("Audi", 500);
+            stock.ProductOrder("BMW", 1);
+
+            Assert.True(notificationReached);
+            Assert.Equal(0, stock.Products[0].Quantity);
+        }
+
+        [Fact]
+
         public void CheckNotificationsWhenIsNotUsed()
         {
             bool notificationReached = false;
