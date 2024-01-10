@@ -71,8 +71,7 @@ namespace Linq
         private void CallBackNotifications(Product product, int quanityToSell)
         {
             int[] notifQuant = new[] { 10, 5, 2, 0 };
-            int notiVal = notifQuant.Where(notifValues => notifValues <= product.Quantity)
-                                   .FirstOrDefault(newNotifQuant => product.Quantity - quanityToSell < newNotifQuant);
+            int notiVal = notifQuant.FirstOrDefault(notifQuant => notifQuant <= product.Quantity && product.Quantity - quanityToSell < notifQuant);
             if (product.Quantity - quanityToSell > notiVal)
             {
                 return;
