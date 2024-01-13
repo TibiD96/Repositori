@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Linq
@@ -22,12 +23,12 @@ namespace Linq
 
         public static int StringToInteger(string input)
         {
-            if (input.All(character => char.IsDigit(character)))
+            if (input.Any(element => !char.IsDigit(element)))
             {
-                return int.Parse(input);
+                throw new InvalidOperationException("Input is not correct format");
             }
 
-            throw new InvalidOperationException("Input is not correct format");
+            return input.Aggregate(0, (current, element) => current * 10 + (element - '0'));
         }
 
         public static char[] CharacterWithMostAppearances(string input)
