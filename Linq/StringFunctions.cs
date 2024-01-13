@@ -10,22 +10,9 @@ namespace Linq
         {
             int countVowels = 0;
             int countConsons = 0;
-            foreach (char c in input)
-            {
-                if (char.IsLetter(c))
-                {
-                    if (Vowels(c))
-                    {
-                        countVowels++;
-                    }
-                    else
-                    {
-                        countConsons++;
-                    }
-                }
-            }
 
-            return (countVowels, countConsons);
+            return input.Where(element => char.IsLetter(element))
+                        .Aggregate((countVowels, countConsons), (_, element) => Vowels(element) ? (++countVowels, countConsons) : (countVowels, ++countConsons));
         }
 
         public static char FirstUniqElement(string input)
