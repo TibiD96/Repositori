@@ -17,17 +17,7 @@ namespace Linq
 
         public static char FirstUniqElement(string input)
         {
-            var numLetter = input.GroupBy(count => count).ToDictionary(character => character.Key, character => character.Count());
-
-            foreach (char character in input)
-            {
-                if (numLetter[character] == 1)
-                {
-                    return character;
-                }
-            }
-
-            throw new InvalidOperationException("No unique element found.");
+            return input.GroupBy(count => count).First(character => character.Count() == 1).Key;
         }
 
         public static int StringToInteger(string input)
