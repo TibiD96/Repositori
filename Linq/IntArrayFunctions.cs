@@ -17,12 +17,10 @@ namespace Linq
        public static List<List<int>> ValidCombination(int lastNumber, int result)
        {
             List<List<int>> listValidComb = new List<List<int>> { new List<int>() };
-            for (int i = 1; i <= lastNumber; i++)
-            {
-                listValidComb = listValidComb.SelectMany(comb => new[] { new List<int>(comb) { i }, new List<int>(comb) { -i } }).ToList();
-            }
 
-            return listValidComb.Where(comb => comb.Sum() == result).ToList();
+            return Enumerable.Range(1, lastNumber).Aggregate(listValidComb, (element, i) => element
+                             .SelectMany(comb => new[] { new List<int>(comb) { i }, new List<int>(comb) { -i } }).ToList())
+                             .Where(comb => comb.Sum() == result).ToList();
        }
 
        public static List<List<int>> ValidTriplets(int[] inputArray)
