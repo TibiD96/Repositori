@@ -48,15 +48,8 @@ namespace Linq
 
         private static bool Vowels(char character)
         {
-            foreach (char c in new[] { 'a', 'e', 'i', 'o', 'u' })
-            {
-                if (char.ToLower(character) == c)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            char[] vowels = new[] { 'a', 'e', 'i', 'o', 'u' };
+            return vowels.Any(element => element == char.ToLower(character));
         }
     }
 }
