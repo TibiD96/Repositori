@@ -33,9 +33,9 @@ namespace Linq
 
         public static char[] CharacterWithMostAppearances(string input)
         {
-            var groupOfChars = input.GroupBy(element => element);
-            var maxAppearances = groupOfChars.Max(element => element.Count());
-            return groupOfChars.Where(element => element.Count() == maxAppearances).Select(element => element.Key).ToArray();
+            var groupOfSameChars = input.GroupBy(element => element);
+            var groupOfSameCount = groupOfSameChars.GroupBy(element => element.Count());
+            return groupOfSameCount.OrderByDescending(element => element.Key).First().Select(element => element.Key).ToArray();
         }
 
         public static IEnumerable<string> DivideStringInPalindroms(string input)
