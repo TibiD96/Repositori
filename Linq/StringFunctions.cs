@@ -38,12 +38,11 @@ namespace Linq
             return groupOfChars.Where(element => element.Count() == maxAppearances).Select(element => element.Key).ToArray();
         }
 
-        public static List<string> DivideStringInPalindroms(string input)
+        public static IEnumerable<string> DivideStringInPalindroms(string input)
         {
             return Enumerable.Range(0, input.Length).SelectMany(startIndex => Enumerable.Range(1, input.Length - startIndex)
                                                     .Select(length => input.Substring(startIndex, length)))
-                                                    .Where(substring => substring.SequenceEqual(substring.Reverse()))
-                                                    .ToList();
+                                                    .Where(substring => substring.SequenceEqual(substring.Reverse()));
         }
 
         private static bool Vowels(char character)
