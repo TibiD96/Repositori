@@ -31,11 +31,10 @@ namespace Linq
             return input.Aggregate(0, (current, element) => current * 10 + (element - '0'));
         }
 
-        public static char[] CharacterWithMostAppearances(string input)
+        public static char CharacterWithMostAppearances(string input)
         {
-            var groupOfSameChars = input.GroupBy(element => element);
-            var groupOfSameCount = groupOfSameChars.GroupBy(element => element.Count());
-            return groupOfSameCount.OrderByDescending(element => element.Key).First().Select(element => element.Key).ToArray();
+            return input.GroupBy(element => element)
+                        .Aggregate((groupWithMaxCount, nextGroup) => nextGroup.Count() > groupWithMaxCount.Count() ? nextGroup : groupWithMaxCount).Key;
         }
 
         public static IEnumerable<string> DivideStringInPalindroms(string input)

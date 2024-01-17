@@ -55,7 +55,7 @@ namespace Linq
         public void CheckCharacterWithMostAppearanceOneCharater()
         {
             const string input = "adfgdopfnf";
-            var expected = new[] { 'f' };
+            const char expected = 'f';
             var result = StringFunctions.CharacterWithMostAppearances(input);
             Assert.Equal(expected, result);
         }
@@ -65,7 +65,7 @@ namespace Linq
         public void CheckCharacterWithMostAppearanceMultipleCharater()
         {
             const string input = "adfgdopfndf";
-            var expected = new[] { 'd', 'f' };
+            const char expected = 'd';
             var result = StringFunctions.CharacterWithMostAppearances(input);
             Assert.Equal(expected, result);
         }
