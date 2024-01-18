@@ -7,20 +7,20 @@ namespace Linq
 {
     public class IntArrayFunctions
     {
-       public static List<List<int>> SumLowerEqualThenK(int[] intArray, int k)
+       public static IEnumerable<IEnumerable<int>> SumLowerEqualThenK(int[] intArray, int k)
        {
             return Enumerable.Range(0, intArray.Length).SelectMany(startIndex => Enumerable.Range(1, intArray.Length - startIndex)
-                                                       .Select(length => intArray.Skip(startIndex).Take(length).ToList())
-                                                       .TakeWhile(subList => subList.Sum() <= k)).ToList();
+                                                       .Select(length => intArray.Skip(startIndex).Take(length))
+                                                       .TakeWhile(subList => subList.Sum() <= k));
        }
 
-       public static List<List<int>> ValidCombination(int lastNumber, int result)
+       public static IEnumerable<IEnumerable<int>> ValidCombination(int lastNumber, int result)
        {
-            List<List<int>> listValidComb = new List<List<int>> { new List<int>() };
+            IEnumerable<IEnumerable<int>> listValidComb = new[] { new int[] { } };
 
             return Enumerable.Range(1, lastNumber).Aggregate(listValidComb, (element, i) => element
-                             .SelectMany(comb => new[] { new List<int>(comb) { i }, new List<int>(comb) { -i } }).ToList())
-                             .Where(comb => comb.Sum() == result).ToList();
+                             .SelectMany(comb => new[] { new List<int>(comb) { i }, new List<int>(comb) { -i } }))
+                             .Where(comb => comb.Sum() == result);
        }
 
        public static List<List<int>> ValidTriplets(int[] inputArray)
