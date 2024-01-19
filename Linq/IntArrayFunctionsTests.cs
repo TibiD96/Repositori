@@ -74,8 +74,8 @@ namespace Linq
             int[] inputArray = new[] { 1, 2, 13, 4, 5, 12, 3 };
             var expected = new List<List<int>>()
             {
-                new List<int> { 3, 4, 5 },
-                new List<int> { 5, 12, 13 }
+                new List<int> { 5, 12, 13 },
+                new List<int> { 3, 4, 5 }
             };
 
             var final = IntArrayFunctions.ValidTriplets(inputArray);
