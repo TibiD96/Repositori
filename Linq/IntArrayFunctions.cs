@@ -25,13 +25,18 @@ namespace Linq
 
        public static IEnumerable<IEnumerable<int>> ValidTriplets(int[] inputArray)
        {
+            bool IsValidTriplet(ValueTuple<int, int, int> triplet)
+            {
+                return Math.Pow(triplet.Item1, 2) + Math.Pow(triplet.Item2, 2) == Math.Pow(triplet.Item3, 2) ||
+                                               Math.Pow(triplet.Item3, 2) + Math.Pow(triplet.Item1, 2) == Math.Pow(triplet.Item2, 2) ||
+                                               Math.Pow(triplet.Item2, 2) + Math.Pow(triplet.Item3, 2) == Math.Pow(triplet.Item1, 2);
+            }
+
             return inputArray.SelectMany((firstNumber, firstIndex) => inputArray.Skip(firstIndex + 1)
                              .SelectMany((secondNumber, secondIndex) => inputArray.Skip(firstIndex + secondIndex + 1)
-                             .Select(thirdNumber => new List<int> { firstNumber, secondNumber, thirdNumber })))
-                             .Where(subList => Math.Pow(subList[0], 2) + Math.Pow(subList[1], 2) == Math.Pow(subList[2], 2) ||
-                                               Math.Pow(subList[2], 2) + Math.Pow(subList[0], 2) == Math.Pow(subList[1], 2) ||
-                                               Math.Pow(subList[1], 2) + Math.Pow(subList[2], 2) == Math.Pow(subList[0], 2))
-                              .Select(triplet => triplet.OrderBy(x => x));
+                             .Select(thirdNumber => new ValueTuple<int, int, int>(firstNumber, secondNumber, thirdNumber))))
+                             .Where(preliminatyTriplet => IsValidTriplet(preliminatyTriplet))
+                             .Select(triplet => new[] { triplet.Item1, triplet.Item2, triplet.Item3 }.OrderBy(x => x));
        }
     }
 }

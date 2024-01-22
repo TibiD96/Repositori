@@ -82,5 +82,17 @@ namespace Linq
 
             Assert.Equal(expected, final);
         }
+
+        [Fact]
+
+        public void NoValidTriplets()
+        {
+            int[] inputArray = new[] { 1, 2, 15, 4, 5, 12, 6 };
+            var expected = new List<List<int>>();
+
+            var final = IntArrayFunctions.ValidTriplets(inputArray);
+
+            Assert.Equal(expected, final);
+        }
     }
 }
