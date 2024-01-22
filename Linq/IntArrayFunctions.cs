@@ -25,7 +25,7 @@ namespace Linq
 
        public static IEnumerable<IEnumerable<int>> ValidTriplets(int[] inputArray)
        {
-            bool IsValidTriplet(ValueTuple<int, int, int> triplet)
+            bool IsValidTriplet((int firstNumber, int secondNumber, int thirdNumber) triplet)
             {
                 return Math.Pow(triplet.Item1, 2) + Math.Pow(triplet.Item2, 2) == Math.Pow(triplet.Item3, 2) ||
                                                Math.Pow(triplet.Item3, 2) + Math.Pow(triplet.Item1, 2) == Math.Pow(triplet.Item2, 2) ||
@@ -34,9 +34,9 @@ namespace Linq
 
             return inputArray.SelectMany((firstNumber, firstIndex) => inputArray.Skip(firstIndex + 1)
                              .SelectMany((secondNumber, secondIndex) => inputArray.Skip(firstIndex + secondIndex + 1)
-                             .Select(thirdNumber => new ValueTuple<int, int, int>(firstNumber, secondNumber, thirdNumber))))
+                             .Select(thirdNumber => (firstNumber, secondNumber, thirdNumber))))
                              .Where(preliminatyTriplet => IsValidTriplet(preliminatyTriplet))
-                             .Select(triplet => new[] { triplet.Item1, triplet.Item2, triplet.Item3 }.OrderBy(x => x));
+                             .Select(triplet => new[] { triplet.firstNumber, triplet.secondNumber, triplet.thirdNumber }.OrderBy(x => x));
        }
     }
 }
