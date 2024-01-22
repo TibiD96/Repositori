@@ -27,15 +27,15 @@ namespace Linq
        {
             bool IsValidTriplet((int firstNumber, int secondNumber, int thirdNumber) triplet)
             {
-                return Math.Pow(triplet.Item1, 2) + Math.Pow(triplet.Item2, 2) == Math.Pow(triplet.Item3, 2) ||
-                                               Math.Pow(triplet.Item3, 2) + Math.Pow(triplet.Item1, 2) == Math.Pow(triplet.Item2, 2) ||
-                                               Math.Pow(triplet.Item2, 2) + Math.Pow(triplet.Item3, 2) == Math.Pow(triplet.Item1, 2);
+                return Math.Pow(triplet.firstNumber, 2) + Math.Pow(triplet.secondNumber, 2) == Math.Pow(triplet.thirdNumber, 2) ||
+                                               Math.Pow(triplet.thirdNumber, 2) + Math.Pow(triplet.firstNumber, 2) == Math.Pow(triplet.secondNumber, 2) ||
+                                               Math.Pow(triplet.secondNumber, 2) + Math.Pow(triplet.thirdNumber, 2) == Math.Pow(triplet.firstNumber, 2);
             }
 
             return inputArray.SelectMany((firstNumber, firstIndex) => inputArray.Skip(firstIndex + 1)
                              .SelectMany((secondNumber, secondIndex) => inputArray.Skip(firstIndex + secondIndex + 1)
                              .Select(thirdNumber => (firstNumber, secondNumber, thirdNumber))))
-                             .Where(preliminatyTriplet => IsValidTriplet(preliminatyTriplet))
+                             .Where(IsValidTriplet)
                              .Select(triplet => new[] { triplet.firstNumber, triplet.secondNumber, triplet.thirdNumber }.OrderBy(x => x));
        }
     }
