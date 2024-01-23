@@ -1,54 +1,46 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Linq
 {
     public class FilteringFunctions
     {
-        public static List<ProductWithFeature> AtLeastOneFeature(List<ProductWithFeature> inputListProd, List<Feature> inputListFeature)
+        public static IEnumerable<ProductWithFeature> AtLeastOneFeature(List<ProductWithFeature> inputListProd, List<Feature> inputListFeature)
         {
-            return inputListProd.Where(prod => prod.Features.Intersect(inputListFeature).Any()).ToList();
+            return inputListProd.Where(prod => prod.Features.Intersect(inputListFeature).Any());
         }
 
-        public static List<ProductWithFeature> AllFeature(List<ProductWithFeature> inputListProd, List<Feature> inputListFeature)
+        public static IEnumerable<ProductWithFeature> AllFeatures(List<ProductWithFeature> inputListProd, List<Feature> inputListFeature)
         {
-            return inputListProd.Where(prod => inputListFeature.All(feature => prod.Features.Contains(feature))).ToList();
+            return inputListProd.Where(prod => !inputListFeature.Except(prod.Features).Any());
         }
 
-        public static List<ProductWithFeature> NoFeature(List<ProductWithFeature> inputListProd, List<Feature> inputListFeature)
+        public static IEnumerable<ProductWithFeature> NoFeature(List<ProductWithFeature> inputListProd, List<Feature> inputListFeature)
         {
-            return inputListProd.Where(prod => inputListFeature.All(feature => !prod.Features.Contains(feature))).ToList();
+            return inputListProd.Except(AtLeastOneFeature(inputListProd, inputListFeature));
         }
 
-        public static List<Product> ProductQuantity(List<Product> firstInputListProd, List<Product> secondInputListProd)
+        public static IEnumerable<Product> ProductQuantity(List<Product> firstInputListProd, List<Product> secondInputListProd)
         {
-            firstInputListProd.AddRange(secondInputListProd);
-            return firstInputListProd.GroupBy(product => product.Name)
-                                     .Select(prod =>
-                                     {
-                                         int sumQuant = prod.Aggregate(0, (result, product) => result + product.Quantity);
-                                         return new Product(prod.Key, sumQuant);
-                                     }).ToList();
+            return firstInputListProd.Concat(secondInputListProd).GroupBy(product => product.Name)
+                                     .Select(prod => new Product(prod.Key, prod.Sum(prodQuant => prodQuant.Quantity)));
         }
 
-        public static List<TestResults> RankingResult(List<TestResults> inputRanking)
+        public static IEnumerable<TestResults> RankingResult(List<TestResults> inputRanking)
         {
-            return inputRanking.GroupBy(fam => fam.FamilyId)
-                                     .Select(group =>
-                                     {
-                                         var maxScoreEntry = group.OrderByDescending(score => score.Score).FirstOrDefault();
-                                         return new TestResults(maxScoreEntry.Id, group.Key, maxScoreEntry.Score);
-                                     }).ToList();
+            return inputRanking.GroupBy(fam => fam.FamilyId).Select(group => group.OrderByDescending(score => score.Score).First());
         }
 
-        public static List<(int, string)> WordRanking(string inputString)
+        public static IEnumerable<(int, string)> WordRanking(string inputString)
         {
             const string delimitations = " ,.!?:\"";
             return inputString.ToLower().Split(delimitations.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
                                         .GroupBy(words => words)
                                         .Select(group => (Count: group.Count(), Word: group.Key))
-                                        .OrderByDescending(pair => pair.Count).ToList();
+                                        .OrderByDescending(pair => pair.Count);
         }
 
         public static bool SudokuValidator(int[,] sudokuTable)
@@ -64,42 +56,46 @@ namespace Linq
                                                .SelectMany(k => Enumerable.Range(0, 3)
                                                .Select(l => sudokuTable[3 * i + k, 3 * j + l])).ToArray())).ToArray();
 
-            return Enumerable.Range(0, 9).All(i => rows[i].GroupBy(num => num).All(group => group.Count() == 1 && group.Key >= 1 && group.Key <= 9)) &&
-                   Enumerable.Range(0, 9).All(i => column[i].GroupBy(num => num).All(group => group.Count() == 1 && group.Key >= 1 && group.Key <= 9)) &&
-                   Enumerable.Range(0, 9).All(i => blocks[i].GroupBy(num => num).All(group => group.Count() == 1 && group.Key >= 1 && group.Key <= 9));
+            bool GroupIsValid(int[] group)
+            {
+                return group.GroupBy(element => element).All(g => g.Count() == 1 && g.Key >= 1 && g.Key <= 9);
+            }
+
+            return Enumerable.Range(0, 9).All(i => GroupIsValid(rows[i])) &&
+                   Enumerable.Range(0, 9).All(i => GroupIsValid(column[i])) &&
+                   Enumerable.Range(0, 9).All(i => GroupIsValid(blocks[i]));
         }
 
         public static double PostfixEquation(string inputEquation)
         {
             string[] arrayOfElements = inputEquation.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            Stack<double> stack = new Stack<double>();
+            List<double> stack = new List<double>();
 
-            return arrayOfElements.Aggregate(stack, (stack, element) =>
+            double Calculus(double firstNumber, double secondNumber, string operand)
             {
-                if (double.TryParse(element, out double number))
+                return operand switch
                 {
-                    stack.Push(number);
+                    "+" => firstNumber + secondNumber,
+                    "-" => firstNumber - secondNumber,
+                    "*" => firstNumber * secondNumber,
+                    "/" => firstNumber / secondNumber,
+                };
+            }
+
+            return arrayOfElements.Aggregate(stack, (stack, operand) =>
+            {
+                if (double.TryParse(operand, out double number))
+                {
+                    stack.Add(number);
                 }
                 else
                 {
-                    double firstNumber = stack.Pop();
-                    double secondNumber = stack.Pop();
+                    double firstNumber = stack[^1];
+                    double secondNumber = stack[^2];
 
-                    switch (element)
-                    {
-                        case "+":
-                            stack.Push(firstNumber + secondNumber);
-                            break;
-                        case "-":
-                            stack.Push(firstNumber - secondNumber);
-                            break;
-                        case "*":
-                            stack.Push(firstNumber * secondNumber);
-                            break;
-                        case "/":
-                            stack.Push(firstNumber / secondNumber);
-                            break;
-                    }
+                    stack.RemoveRange(stack.Count - 2, 2);
+
+                    stack.Add(Calculus(firstNumber, secondNumber, operand));
                 }
 
                 return stack;
