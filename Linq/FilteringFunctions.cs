@@ -31,7 +31,7 @@ namespace Linq
 
         public static IEnumerable<TestResults> RankingResult(List<TestResults> inputRanking)
         {
-            return inputRanking.GroupBy(fam => fam.FamilyId).Select(group => group.OrderByDescending(score => score.Score).First());
+            return inputRanking.GroupBy(fam => fam.FamilyId).Select(group => group.MaxBy(score => score.Score));
         }
 
         public static IEnumerable<(int, string)> WordRanking(string inputString)
