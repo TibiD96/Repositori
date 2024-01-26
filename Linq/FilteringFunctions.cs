@@ -46,24 +46,22 @@ namespace Linq
         public static bool SudokuValidator(int[,] sudokuTable)
         {
             var rows = Enumerable.Range(0, 9).Select(i => Enumerable.Range(0, 9)
-                                             .Select(j => sudokuTable[i, j]).ToArray()).ToArray();
+                                             .Select(j => sudokuTable[i, j]));
 
             var column = Enumerable.Range(0, 9).Select(j => Enumerable.Range(0, 9)
-                                               .Select(i => sudokuTable[i, j]).ToArray()).ToArray();
+                                               .Select(i => sudokuTable[i, j]));
 
             var blocks = Enumerable.Range(0, 3).SelectMany(i => Enumerable.Range(0, 3)
                                                .Select(j => Enumerable.Range(0, 3)
                                                .SelectMany(k => Enumerable.Range(0, 3)
-                                               .Select(l => sudokuTable[3 * i + k, 3 * j + l])).ToArray())).ToArray();
+                                               .Select(l => sudokuTable[3 * i + k, 3 * j + l]))));
 
-            bool GroupIsValid(int[] group)
+            bool GroupIsValid(IEnumerable<int> group)
             {
                 return group.GroupBy(element => element).All(g => g.Count() == 1 && g.Key >= 1 && g.Key <= 9);
             }
 
-            return Enumerable.Range(0, 9).All(i => GroupIsValid(rows[i])) &&
-                   Enumerable.Range(0, 9).All(i => GroupIsValid(column[i])) &&
-                   Enumerable.Range(0, 9).All(i => GroupIsValid(blocks[i]));
+            return rows.All(GroupIsValid) && column.All(GroupIsValid) && blocks.All(GroupIsValid);
         }
 
         public static double PostfixEquation(string inputEquation)
