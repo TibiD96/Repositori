@@ -80,23 +80,23 @@ namespace Linq
                 };
             }
 
-            return arrayOfElements.Aggregate(stack, (stack, operand) =>
+            return arrayOfElements.Aggregate(stack, (currentStack, operand) =>
             {
                 if (double.TryParse(operand, out double number))
                 {
-                    stack.Add(number);
+                    currentStack.Add(number);
                 }
                 else
                 {
-                    double firstNumber = stack[^1];
-                    double secondNumber = stack[^2];
+                    double firstNumber = currentStack.Last();
+                    double secondNumber = currentStack.SkipLast(1).Last();
 
-                    stack.RemoveRange(stack.Count - 2, 2);
+                    currentStack = currentStack.Take(currentStack.Count - 2).ToList();
 
-                    stack.Add(Calculus(firstNumber, secondNumber, operand));
+                    currentStack.Add(Calculus(firstNumber, secondNumber, operand));
                 }
 
-                return stack;
+                return currentStack;
             }).Single();
         }
     }
