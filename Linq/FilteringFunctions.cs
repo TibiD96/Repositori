@@ -20,7 +20,7 @@ namespace Linq
 
         public static IEnumerable<ProductWithFeature> NoFeature(List<ProductWithFeature> inputListProd, List<Feature> inputListFeature)
         {
-            return inputListProd.Except(AtLeastOneFeature(inputListProd, inputListFeature));
+            return inputListProd.Where(prod => !prod.Features.Intersect(inputListFeature).Any());
         }
 
         public static IEnumerable<Product> ProductQuantity(List<Product> firstInputListProd, List<Product> secondInputListProd)
@@ -61,7 +61,7 @@ namespace Linq
                 return group.GroupBy(element => element).All(g => g.Count() == 1 && g.Key >= 1 && g.Key <= 9);
             }
 
-            return rows.All(GroupIsValid) && column.All(GroupIsValid) && blocks.All(GroupIsValid);
+            return rows.Concat(column).Concat(blocks).All(GroupIsValid);
         }
 
         public static double PostfixEquation(string inputEquation)
