@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Linq
 {
@@ -67,7 +66,7 @@ namespace Linq
         public static double PostfixEquation(string inputEquation)
         {
             string[] arrayOfElements = inputEquation.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            List<double> stack = new List<double>();
+            IEnumerable<double> stack = new double[] { };
 
             double Calculus(double firstNumber, double secondNumber, string operand)
             {
@@ -84,19 +83,13 @@ namespace Linq
             {
                 if (double.TryParse(operand, out double number))
                 {
-                    currentStack.Add(number);
-                }
-                else
-                {
-                    double firstNumber = currentStack.Last();
-                    double secondNumber = currentStack.SkipLast(1).Last();
-
-                    currentStack = currentStack.Take(currentStack.Count - 2).ToList();
-
-                    currentStack.Add(Calculus(firstNumber, secondNumber, operand));
+                    return currentStack.Concat(new[] { number });
                 }
 
-                return currentStack;
+                double firstNumber = currentStack.Last();
+                double secondNumber = currentStack.SkipLast(1).Last();
+
+                return currentStack.SkipLast(2).Concat(new[] { Calculus(firstNumber, secondNumber, operand) });
             }).Single();
         }
     }
