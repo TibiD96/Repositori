@@ -68,29 +68,26 @@ namespace Linq
             string[] arrayOfElements = inputEquation.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             IEnumerable<double> stack = new double[] { };
 
-            double Calculus(double firstNumber, double secondNumber, string operand)
+            Func<double, double, double> Calculus(string @operator)
             {
-                return operand switch
+                return @operator switch
                 {
-                    "+" => firstNumber + secondNumber,
-                    "-" => firstNumber - secondNumber,
-                    "*" => firstNumber * secondNumber,
-                    "/" => firstNumber / secondNumber,
+                    "+" => (firstNumber, secondNumber) => firstNumber + secondNumber,
+                    "-" => (firstNumber, secondNumber) => firstNumber - secondNumber,
+                    "*" => (firstNumber, secondNumber) => firstNumber * secondNumber,
+                    "/" => (firstNumber, secondNumber) => firstNumber / secondNumber,
                 };
             }
 
-            return arrayOfElements.Aggregate(stack, (currentStack, operand) =>
+            return arrayOfElements.Aggregate(stack, (currentStack, @operator) =>
             {
-                if (double.TryParse(operand, out double number))
+                if (double.TryParse(@operator, out double operand))
                 {
-                    return currentStack.Concat(new[] { number });
+                    return currentStack.Append(operand);
                 }
 
-                double firstNumber = currentStack.Last();
-                double secondNumber = currentStack.SkipLast(1).Last();
-
-                return currentStack.SkipLast(2).Concat(new[] { Calculus(firstNumber, secondNumber, operand) });
-            }).Single();
+                return currentStack.SkipLast(2).Append(currentStack.TakeLast(2).Aggregate(Calculus(@operator)));
+            }).Last();
         }
     }
 }
