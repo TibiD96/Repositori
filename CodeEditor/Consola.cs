@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeEditor
 {
@@ -10,7 +7,15 @@ namespace CodeEditor
     {
         public static void Menu()
         {
-            Console.WriteLine("Show from file");
+            Console.WriteLine("1. Show from file");
+        }
+
+        public static void ShowContentOfFile()
+        {
+            foreach (string line in File.ReadAllLines("E:\\JUniorMind\\Modulul_2\\Repositori\\CodeEditor\\File.txt"))
+            {
+                Console.WriteLine(line);
+            }
         }
     }
 }
