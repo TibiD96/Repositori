@@ -5,22 +5,37 @@ namespace CodeEditor
 {
     public class Controller
     {
+        private static readonly int[] ValidOptions = new[] { 0, 1, 2 };
+
         public static void RunMenu()
         {
+            Consola.Menu();
             bool exitApp = false;
             while (!exitApp)
             {
-                Consola.Menu();
+                int option = ReadOption();
 
-                switch (ReadOption())
+                if (ValidOptions.Contains(option))
                 {
-                    case 0:
-                        exitApp = true;
-                        break;
-                    case 1:
-                        Consola.ShowContentOfFile();
-                        exitApp = true;
-                        break;
+                    switch (option)
+                    {
+                        case 0:
+                            exitApp = true;
+                            break;
+                        case 1:
+                            Consola.ShowContentOfFile();
+                            exitApp = true;
+                            break;
+                        case 2:
+                            Consola.Menu();
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Choose a valid option");
+                    Console.ResetColor();
                 }
             }
         }
