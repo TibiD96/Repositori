@@ -13,45 +13,44 @@ namespace CodeEditor
             bool exitApp = false;
             while (!exitApp)
             {
-                int option = ReadOption();
-
-                if (ValidOptions.Contains(option))
+                switch (ReadOption(ValidOptions))
                 {
-                    switch (option)
-                    {
-                        case 0:
+                    case 0:
                             exitApp = true;
                             break;
-                        case 1:
+                    case 1:
                             Consola.ShowContentOfFile();
                             exitApp = true;
                             break;
-                        case 2:
+                    case 2:
                             Consola.Menu();
                             break;
-                    }
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Choose a valid option");
-                    Console.ResetColor();
                 }
             }
         }
 
-        private static int ReadOption()
+        public static int ReadOption(int[] validOption)
         {
             try
             {
-                return Convert.ToInt32(Console.ReadLine());
+                int answer = Convert.ToInt32(Console.ReadLine());
+                if (validOption.Contains(answer))
+                {
+                    return answer;
+                }
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Choose a valid option");
+                Console.ResetColor();
+
+                return ReadOption(validOption);
             }
             catch (FormatException)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Please insert an integer");
+                Console.WriteLine("Choose a valid option");
                 Console.ResetColor();
-                return ReadOption();
+                return ReadOption(validOption);
             }
         }
     }
