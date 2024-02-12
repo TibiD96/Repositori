@@ -8,7 +8,7 @@ namespace CodeEditor
     {
         public static void Menu()
         {
-            Console.WriteLine("0. Exit aplciation");
+            Console.WriteLine("0. Exit application");
             Console.WriteLine("1. Show from file");
             Console.WriteLine("2. Show Menu");
         }
