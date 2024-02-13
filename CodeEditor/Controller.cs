@@ -5,15 +5,16 @@ namespace CodeEditor
 {
     public class Controller
     {
+        private static int upperPosition = 1;
+
         public static void RunMenu()
         {
             int[] validOptions = new[] { 0, 1, 2 };
             Consola.Menu();
-            int option = ReadOption(validOptions);
             bool exitApp = false;
             while (!exitApp)
             {
-                switch (option)
+                switch (ReadOption(validOptions))
                 {
                     case 0:
                             exitApp = true;
@@ -21,7 +22,6 @@ namespace CodeEditor
                     case 1:
                             Consola.ShowContentOfFile();
                             NavigateInConsole();
-                            exitApp = true;
                             break;
                     case 2:
                             Consola.Menu();
@@ -57,7 +57,6 @@ namespace CodeEditor
 
         public static void NavigateInConsole()
         {
-            int upperPosition = 0;
             ConsoleKeyInfo arrowDirection = Console.ReadKey(true);
             while (arrowDirection.Key != ConsoleKey.Escape)
             {
