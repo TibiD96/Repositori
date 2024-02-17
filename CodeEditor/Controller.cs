@@ -58,19 +58,19 @@ namespace CodeEditor
         public static void NavigateInConsole()
         {
             ConsoleKeyInfo arrowDirection = Console.ReadKey(true);
+            upperPosition = Console.CursorTop;
             while (arrowDirection.Key != ConsoleKey.Escape)
             {
                 if (arrowDirection.Key == ConsoleKey.UpArrow && upperPosition > 0)
                 {
                     upperPosition--;
-                    Console.SetWindowPosition(0, upperPosition);
                 }
-                else if (arrowDirection.Key == ConsoleKey.DownArrow && upperPosition < Console.WindowHeight - 1)
+                else if (arrowDirection.Key == ConsoleKey.DownArrow)
                 {
                     upperPosition++;
-                    Console.SetWindowPosition(0, upperPosition);
                 }
 
+                Console.SetCursorPosition(0, upperPosition);
                 arrowDirection = Console.ReadKey(true);
             }
         }
