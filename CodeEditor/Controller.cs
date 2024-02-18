@@ -5,8 +5,6 @@ namespace CodeEditor
 {
     public class Controller
     {
-        private static int upperPosition = 1;
-
         public static void RunMenu()
         {
             int[] validOptions = new[] { 0, 1, 2 };
@@ -22,6 +20,7 @@ namespace CodeEditor
                     case 1:
                             Consola.ShowContentOfFile();
                             NavigateInConsole();
+                            Consola.Menu();
                             break;
                     case 2:
                             Consola.Menu();
@@ -57,22 +56,44 @@ namespace CodeEditor
 
         public static void NavigateInConsole()
         {
+            Console.CursorVisible = false;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Press \"escape\" when you finish navigating");
+            Console.ResetColor();
+            int originalPosition = Console.CursorTop;
+            int position = Console.CursorTop;
             ConsoleKeyInfo arrowDirection = Console.ReadKey(true);
-            upperPosition = Console.CursorTop;
             while (arrowDirection.Key != ConsoleKey.Escape)
             {
-                if (arrowDirection.Key == ConsoleKey.UpArrow && upperPosition > 0)
+                if (arrowDirection.Key == ConsoleKey.UpArrow && position > 0)
                 {
-                    upperPosition--;
-                }
-                else if (arrowDirection.Key == ConsoleKey.DownArrow)
-                {
-                    upperPosition++;
+                    position = Console.WindowTop;
+
+                    if (position >= 1)
+                    {
+                        position--;
+                    }
                 }
 
-                Console.SetCursorPosition(0, upperPosition);
+                if (arrowDirection.Key == ConsoleKey.DownArrow)
+                {
+                    if (position == Console.WindowTop)
+                    {
+                        position = Console.CursorTop + Console.WindowHeight - 1;
+                    }
+
+                    if (position < originalPosition)
+                    {
+                        position++;
+                    }
+                }
+
+                Console.SetCursorPosition(0, position);
                 arrowDirection = Console.ReadKey(true);
             }
+
+            Console.CursorVisible = true;
+            Console.SetCursorPosition(0, originalPosition);
         }
     }
 }
