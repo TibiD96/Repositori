@@ -59,8 +59,6 @@ namespace CodeEditor
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Press \"escape\" when you finish navigating");
             Console.ResetColor();
-            int originalVerticalPosition = Console.CursorTop;
-            int originalHorizontalPosition = Console.CursorLeft;
             int verticalPosition = Console.CursorTop;
             int horizontalPosition = Console.CursorLeft;
             ConsoleKeyInfo arrowDirection = Console.ReadKey(true);
@@ -89,9 +87,13 @@ namespace CodeEditor
                         break;
 
                     case ConsoleKey.RightArrow:
-                        if (horizontalPosition < 120)
+                        if (horizontalPosition < Console.WindowWidth - 1)
                         {
                             horizontalPosition++;
+                        }
+                        else
+                        {
+                            horizontalPosition = Console.WindowWidth - 1;
                         }
 
                         break;
@@ -100,8 +102,6 @@ namespace CodeEditor
                 Console.SetCursorPosition(horizontalPosition, verticalPosition);
                 arrowDirection = Console.ReadKey(true);
             }
-
-            Console.SetCursorPosition(originalHorizontalPosition, originalVerticalPosition);
         }
     }
 }
