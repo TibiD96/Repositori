@@ -13,41 +13,24 @@ namespace CodeEditor
             Console.WriteLine("2. Show Menu");
         }
 
-        public static void ShowContentOfFile()
+        public static void ShowContentOfFile(string fullPath, int startingLine = 0, int startingColumn = 0)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Give the path to the file like in the next example!\nExample:\nC:\\Users\\danit\\OneDrive\\Desktop\\Fisier.TXT");
-            Console.ResetColor();
-            string fullPath = Console.ReadLine();
-            if (File.Exists(fullPath))
-            {
-                Console.WriteLine();
-                foreach (string line in File.ReadAllLines(fullPath))
-                {
-                    Console.WriteLine(line);
-                }
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("File don't exist");
-                Console.ResetColor();
-                WrongPath();
-            }
-        }
+            const int visibleAreaWidth = 120;
+            const int visibleAreaHight = 30;
+            string line;
+            int currentEndColumn;
+            int currentStartColumn;
+            Console.Clear();
+            string[] lines = File.ReadAllLines(fullPath);
 
-        private static void WrongPath()
-        {
-            Console.WriteLine("Have you added a wrong path?\nPress 1 for \"yes\" or 2 for \"no\"");
-            int[] validOptions = new[] { 1, 2 };
-            int answer = Controller.ReadOption(validOptions);
-
-            if (answer != 1)
+            for (int i = startingLine; i < Math.Min(lines.Length, startingLine + visibleAreaHight); i++)
             {
-                return;
-            }
+                line = lines[i];
+                currentStartColumn = Math.Max(0, Math.Min(startingColumn, line.Length));
+                currentEndColumn = line.Length - currentStartColumn <= visibleAreaWidth ? line.Length - currentStartColumn : visibleAreaWidth;
 
-            ShowContentOfFile();
+                Console.WriteLine(line.Substring(currentStartColumn, currentEndColumn));
+            }
         }
     }
 }
