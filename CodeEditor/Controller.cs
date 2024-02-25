@@ -17,21 +17,21 @@ namespace CodeEditor
                 switch (ReadOption(validOptions))
                 {
                     case 0:
-                            exitApp = true;
-                            break;
+                        exitApp = true;
+                        break;
                     case 1:
-                            PathToFile();
-                            if (File.Exists(pathOfFile))
-                            {
-                                Consola.ShowContentOfFile(pathOfFile);
-                                NavigateInConsole();
-                            }
+                        PathToFile();
+                        if (File.Exists(pathOfFile))
+                        {
+                            Consola.ShowContentOfFile(pathOfFile);
+                            NavigateInConsole();
+                        }
 
-                            exitApp = true;
-                            break;
+                        exitApp = true;
+                        break;
                     case 2:
-                            Consola.Menu();
-                            break;
+                        Consola.Menu();
+                        break;
                 }
             }
         }
@@ -40,9 +40,8 @@ namespace CodeEditor
         {
             int startingLine = 0;
             int startingColumn = 0;
-            int verticalPosition = 0;
-            int horizontalPosition = 0;
-            Console.SetCursorPosition(horizontalPosition, verticalPosition);
+            int verticalPosition = Console.CursorTop;
+            int horizontalPosition = Console.CursorLeft;
             ConsoleKeyInfo arrowDirection = Console.ReadKey(true);
             while (arrowDirection.Key != ConsoleKey.Escape)
             {
@@ -74,7 +73,7 @@ namespace CodeEditor
                         break;
                 }
 
-                if (horizontalPosition == 120)
+                if (horizontalPosition == 119)
                 {
                     startingColumn++;
                     Consola.ShowContentOfFile(pathOfFile, startingLine, startingColumn);

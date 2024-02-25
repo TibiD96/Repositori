@@ -15,7 +15,7 @@ namespace CodeEditor
 
         public static void ShowContentOfFile(string fullPath, int startingLine = 0, int startingColumn = 0)
         {
-            const int visibleAreaWidth = 120;
+            const int visibleAreaWidth = 119;
             const int visibleAreaHight = 30;
             string line;
             int currentEndColumn;
@@ -29,7 +29,14 @@ namespace CodeEditor
                 currentStartColumn = Math.Max(0, Math.Min(startingColumn, line.Length));
                 currentEndColumn = line.Length - currentStartColumn <= visibleAreaWidth ? line.Length - currentStartColumn : visibleAreaWidth;
 
-                Console.WriteLine(line.Substring(currentStartColumn, currentEndColumn));
+                if (i < Math.Min(lines.Length, startingLine + visibleAreaHight) - 1)
+                {
+                    Console.WriteLine(line.Substring(currentStartColumn, currentEndColumn));
+                }
+                else
+                {
+                    Console.Write(line.Substring(currentStartColumn, currentEndColumn));
+                }
             }
         }
     }
