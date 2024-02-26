@@ -39,5 +39,17 @@ namespace CodeEditor
                 }
             }
         }
+
+        public static void ConsoleSizeing()
+        {
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+            {
+                Console.SetWindowSize(120, 30);
+            }
+            else
+            {
+                Console.WriteLine($"\x1b[8;{30};{120}t");
+            }
+        }
     }
 }

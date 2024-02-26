@@ -7,6 +7,7 @@ namespace CodeEditor
     {
         static void Main()
         {
+            Consola.ConsoleSizeing();
             Console.Clear();
             Controller.RunMenu();
         }

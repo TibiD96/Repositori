@@ -45,50 +45,94 @@ namespace CodeEditor
             ConsoleKeyInfo arrowDirection = Console.ReadKey(true);
             while (arrowDirection.Key != ConsoleKey.Escape)
             {
+                Consola.ConsoleSizeing();
                 switch (arrowDirection.Key)
                 {
                     case ConsoleKey.UpArrow:
                         if (verticalPosition > 0)
                         {
                             verticalPosition--;
+                            break;
                         }
+
+                        MoveWindow(ref startingLine, ref startingColumn, ref horizontalPosition, ref verticalPosition, arrowDirection);
 
                         break;
 
                     case ConsoleKey.DownArrow:
+                        if (verticalPosition + 1 == 30)
+                        {
+                            MoveWindow(ref startingLine, ref startingColumn, ref horizontalPosition, ref verticalPosition, arrowDirection);
+                            break;
+                        }
+
                         verticalPosition++;
+
                         break;
 
                     case ConsoleKey.LeftArrow:
                         if (horizontalPosition > 0)
                         {
                             horizontalPosition--;
+                            break;
                         }
+
+                        MoveWindow(ref startingLine, ref startingColumn, ref horizontalPosition, ref verticalPosition, arrowDirection);
 
                         break;
 
                     case ConsoleKey.RightArrow:
+                        if (horizontalPosition + 1 == 119)
+                        {
+                            MoveWindow(ref startingLine, ref startingColumn, ref horizontalPosition, ref verticalPosition, arrowDirection);
+                            break;
+                        }
+
                         horizontalPosition++;
 
                         break;
                 }
 
-                if (horizontalPosition == 119)
-                {
-                    startingColumn++;
-                    Consola.ShowContentOfFile(pathOfFile, startingLine, startingColumn);
-                    horizontalPosition--;
-                }
-
-                if (verticalPosition == 30)
-                {
-                    startingLine++;
-                    Consola.ShowContentOfFile(pathOfFile, startingLine, startingColumn);
-                    verticalPosition--;
-                }
-
                 Console.SetCursorPosition(horizontalPosition, verticalPosition);
                 arrowDirection = Console.ReadKey(true);
+            }
+
+            Console.SetCursorPosition(0, 30);
+        }
+
+        private static void MoveWindow(ref int startingLine, ref int startingColumn, ref int horizontalPosition, ref int verticalPosition, ConsoleKeyInfo arrowDirection)
+        {
+            switch (arrowDirection.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    if (verticalPosition == 0 && startingLine != 0)
+                    {
+                        startingLine--;
+                        Consola.ShowContentOfFile(pathOfFile, startingLine, startingColumn);
+                    }
+
+                    break;
+
+                case ConsoleKey.DownArrow:
+                    startingLine++;
+                    Consola.ShowContentOfFile(pathOfFile, startingLine, startingColumn);
+
+                    break;
+
+                case ConsoleKey.LeftArrow:
+                    if (horizontalPosition == 0 && startingColumn != 0)
+                    {
+                        startingColumn--;
+                        Consola.ShowContentOfFile(pathOfFile, startingLine, startingColumn);
+                    }
+
+                    break;
+
+                case ConsoleKey.RightArrow:
+                    startingColumn++;
+                    Consola.ShowContentOfFile(pathOfFile, startingLine, startingColumn);
+
+                    break;
             }
         }
 
