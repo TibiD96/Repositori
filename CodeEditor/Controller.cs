@@ -45,7 +45,6 @@ namespace CodeEditor
             ConsoleKeyInfo arrowDirection = Console.ReadKey(true);
             while (arrowDirection.Key != ConsoleKey.Escape)
             {
-                Consola.ConsoleSizeing();
                 switch (arrowDirection.Key)
                 {
                     case ConsoleKey.UpArrow:
@@ -102,6 +101,14 @@ namespace CodeEditor
 
         private static void MoveWindow(ref int startingLine, ref int startingColumn, ref int horizontalPosition, ref int verticalPosition, ConsoleKeyInfo arrowDirection)
         {
+            if (pathOfFile == null)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Error: pathOfFile is null");
+                Console.ResetColor();
+                return;
+            }
+
             switch (arrowDirection.Key)
             {
                 case ConsoleKey.UpArrow:

@@ -20,7 +20,7 @@ namespace CodeEditor
             string line;
             int currentEndColumn;
             int currentStartColumn;
-            Console.Clear();
+            ClearConsole();
             string[] lines = File.ReadAllLines(fullPath);
 
             for (int i = startingLine; i < Math.Min(lines.Length, startingLine + visibleAreaHight); i++)
@@ -50,6 +50,18 @@ namespace CodeEditor
             {
                 Console.WriteLine($"\x1b[8;{30};{120}t");
             }
+        }
+
+        public static void ClearConsole()
+        {
+            Console.SetCursorPosition(0, 29);
+            for (int i = Console.CursorTop; i >= 0; i--)
+            {
+                Console.SetCursorPosition(0, i);
+                Console.Write(new string(' ', 120));
+            }
+
+            Console.SetCursorPosition(0, 0);
         }
     }
 }
