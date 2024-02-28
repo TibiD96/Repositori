@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-
-namespace CodeEditor
+﻿namespace CodeEditor
 {
     public class Consola
     {
@@ -21,6 +17,7 @@ namespace CodeEditor
             int currentEndColumn;
             int currentStartColumn;
             ClearConsole();
+            ConsoleSizeing();
             string[] lines = File.ReadAllLines(fullPath);
 
             for (int i = startingLine; i < Math.Min(lines.Length, startingLine + visibleAreaHight); i++)
@@ -48,17 +45,27 @@ namespace CodeEditor
             }
             else
             {
-                Console.WriteLine($"\x1b[8;{30};{120}t");
+                Console.Write($"\x1b[8;{30};{120}t");
             }
         }
 
         public static void ClearConsole()
         {
-            Console.SetCursorPosition(0, 29);
-            for (int i = Console.CursorTop; i >= 0; i--)
+            if (Console.CursorTop >= 29)
             {
-                Console.SetCursorPosition(0, i);
-                Console.Write(new string(' ', 120));
+                for (int i = Console.CursorTop; i >= 0; i--)
+                {
+                    Console.SetCursorPosition(0, i);
+                    Console.Write(new string(' ', Console.WindowWidth));
+                }
+            }
+            else
+            {
+                for (int i = 29; i >= 0; i--)
+                {
+                    Console.SetCursorPosition(0, i);
+                    Console.Write(new string(' ', Console.WindowWidth));
+                }
             }
 
             Console.SetCursorPosition(0, 0);

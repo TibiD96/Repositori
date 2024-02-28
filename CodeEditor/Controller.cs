@@ -101,6 +101,7 @@ namespace CodeEditor
 
         private static void MoveWindow(ref int startingLine, ref int startingColumn, ref int horizontalPosition, ref int verticalPosition, ConsoleKeyInfo arrowDirection)
         {
+            Consola.ConsoleSizeing();
             if (pathOfFile == null)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
