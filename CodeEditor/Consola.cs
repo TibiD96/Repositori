@@ -11,13 +11,12 @@
 
         public static void ShowContentOfFile(string fullPath, int startingLine = 0, int startingColumn = 0)
         {
-            const int visibleAreaWidth = 119;
-            const int visibleAreaHight = 30;
+            int visibleAreaWidth = Console.WindowWidth;
+            int visibleAreaHight = Console.WindowHeight;
             string line;
             int currentEndColumn;
             int currentStartColumn;
             ClearConsole();
-            ConsoleSizeing();
             string[] lines = File.ReadAllLines(fullPath);
 
             for (int i = startingLine; i < Math.Min(lines.Length, startingLine + visibleAreaHight); i++)
@@ -34,18 +33,6 @@
                 {
                     Console.Write(line.Substring(currentStartColumn, currentEndColumn));
                 }
-            }
-        }
-
-        public static void ConsoleSizeing()
-        {
-            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
-            {
-                Console.SetWindowSize(120, 30);
-            }
-            else
-            {
-                Console.Write($"\x1b[8;{30};{120}t");
             }
         }
 

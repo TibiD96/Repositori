@@ -59,7 +59,7 @@ namespace CodeEditor
                         break;
 
                     case ConsoleKey.DownArrow:
-                        if (verticalPosition + 1 == 30)
+                        if (verticalPosition + 1 == Console.WindowHeight)
                         {
                             MoveWindow(ref startingLine, ref startingColumn, ref horizontalPosition, ref verticalPosition, arrowDirection);
                             break;
@@ -81,7 +81,7 @@ namespace CodeEditor
                         break;
 
                     case ConsoleKey.RightArrow:
-                        if (horizontalPosition + 1 == 119)
+                        if (horizontalPosition + 1 == Console.WindowWidth)
                         {
                             MoveWindow(ref startingLine, ref startingColumn, ref horizontalPosition, ref verticalPosition, arrowDirection);
                             break;
@@ -101,7 +101,6 @@ namespace CodeEditor
 
         private static void MoveWindow(ref int startingLine, ref int startingColumn, ref int horizontalPosition, ref int verticalPosition, ConsoleKeyInfo arrowDirection)
         {
-            Consola.ConsoleSizeing();
             if (pathOfFile == null)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
