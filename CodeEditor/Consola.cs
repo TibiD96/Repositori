@@ -38,21 +38,10 @@
 
         public static void ClearConsole()
         {
-            if (Console.CursorTop >= 29)
+            for (int i = Console.WindowHeight - 1; i >= 0; i--)
             {
-                for (int i = Console.CursorTop; i >= 0; i--)
-                {
-                    Console.SetCursorPosition(0, i);
-                    Console.Write(new string(' ', Console.WindowWidth));
-                }
-            }
-            else
-            {
-                for (int i = 29; i >= 0; i--)
-                {
-                    Console.SetCursorPosition(0, i);
-                    Console.Write(new string(' ', Console.WindowWidth));
-                }
+                Console.SetCursorPosition(0, i);
+                Console.Write(new string(' ', Console.WindowWidth));
             }
 
             Console.SetCursorPosition(0, 0);

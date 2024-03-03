@@ -92,11 +92,12 @@ namespace CodeEditor
                         break;
                 }
 
-                Console.SetCursorPosition(horizontalPosition, verticalPosition);
+                Console.SetCursorPosition(Math.Min(horizontalPosition, Console.WindowWidth), Math.Min(verticalPosition, Console.WindowHeight));
+
                 arrowDirection = Console.ReadKey(true);
             }
 
-            Console.SetCursorPosition(0, 30);
+            Console.SetCursorPosition(0, Console.WindowWidth);
         }
 
         private static void MoveWindow(ref int startingLine, ref int startingColumn, ref int horizontalPosition, ref int verticalPosition, ConsoleKeyInfo arrowDirection)
