@@ -21,10 +21,10 @@ namespace CodeEditor
                         break;
                     case 1:
                         PathToFile();
-                        if (File.Exists(pathOfFile))
+                        if (pathOfFile != null)
                         {
                             Consola.ShowContentOfFile(pathOfFile);
-                            NavigateInConsole();
+                            NavigateInConsole(pathOfFile);
                         }
 
                         exitApp = true;
@@ -36,10 +36,8 @@ namespace CodeEditor
             }
         }
 
-        private static void NavigateInConsole()
+        private static void NavigateInConsole(string pathOfFile)
         {
-            int startingLine = 0;
-            int startingColumn = 0;
             int verticalPosition = Console.CursorTop;
             int horizontalPosition = Console.CursorLeft;
             ConsoleKeyInfo arrowDirection = Console.ReadKey(true);
@@ -54,14 +52,14 @@ namespace CodeEditor
                             break;
                         }
 
-                        MoveWindow(ref startingLine, ref startingColumn, ref horizontalPosition, ref verticalPosition, arrowDirection);
+                        Consola.MoveWindow(horizontalPosition, verticalPosition, arrowDirection, pathOfFile);
 
                         break;
 
                     case ConsoleKey.DownArrow:
                         if (verticalPosition + 1 == Console.WindowHeight)
                         {
-                            MoveWindow(ref startingLine, ref startingColumn, ref horizontalPosition, ref verticalPosition, arrowDirection);
+                            Consola.MoveWindow(horizontalPosition, verticalPosition, arrowDirection, pathOfFile);
                             break;
                         }
 
@@ -76,14 +74,14 @@ namespace CodeEditor
                             break;
                         }
 
-                        MoveWindow(ref startingLine, ref startingColumn, ref horizontalPosition, ref verticalPosition, arrowDirection);
+                        Consola.MoveWindow(horizontalPosition, verticalPosition, arrowDirection, pathOfFile);
 
                         break;
 
                     case ConsoleKey.RightArrow:
                         if (horizontalPosition + 1 == Console.WindowWidth)
                         {
-                            MoveWindow(ref startingLine, ref startingColumn, ref horizontalPosition, ref verticalPosition, arrowDirection);
+                            Consola.MoveWindow(horizontalPosition, verticalPosition, arrowDirection, pathOfFile);
                             break;
                         }
 
@@ -98,50 +96,6 @@ namespace CodeEditor
             }
 
             Console.SetCursorPosition(0, Console.WindowWidth);
-        }
-
-        private static void MoveWindow(ref int startingLine, ref int startingColumn, ref int horizontalPosition, ref int verticalPosition, ConsoleKeyInfo arrowDirection)
-        {
-            if (pathOfFile == null)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Error: pathOfFile is null");
-                Console.ResetColor();
-                return;
-            }
-
-            switch (arrowDirection.Key)
-            {
-                case ConsoleKey.UpArrow:
-                    if (verticalPosition == 0 && startingLine != 0)
-                    {
-                        startingLine--;
-                        Consola.ShowContentOfFile(pathOfFile, startingLine, startingColumn);
-                    }
-
-                    break;
-
-                case ConsoleKey.DownArrow:
-                    startingLine++;
-                    Consola.ShowContentOfFile(pathOfFile, startingLine, startingColumn);
-
-                    break;
-
-                case ConsoleKey.LeftArrow:
-                    if (horizontalPosition == 0 && startingColumn != 0)
-                    {
-                        startingColumn--;
-                        Consola.ShowContentOfFile(pathOfFile, startingLine, startingColumn);
-                    }
-
-                    break;
-
-                case ConsoleKey.RightArrow:
-                    startingColumn++;
-                    Consola.ShowContentOfFile(pathOfFile, startingLine, startingColumn);
-
-                    break;
-            }
         }
 
         private static int ReadOption(int[] validOption)
