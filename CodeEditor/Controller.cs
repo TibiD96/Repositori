@@ -39,6 +39,7 @@ namespace CodeEditor
         {
             int startingLine = 0;
             int startingColumn = 0;
+            int lineCounting = Console.CursorTop;
             int verticalPosition = Console.CursorTop;
             int horizontalPosition = Console.CursorLeft;
             ConsoleKeyInfo arrowDirection = Console.ReadKey(true);
@@ -48,30 +49,28 @@ namespace CodeEditor
                 {
                     case ConsoleKey.UpArrow:
 
-                        NavigateUp(ref verticalPosition, ref startingLine, startingColumn, lines);
+                        NavigateUp(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, startingColumn, lines);
 
                         break;
 
                     case ConsoleKey.DownArrow:
 
-                        NavigateDown(ref verticalPosition, ref startingLine, startingColumn, lines);
+                        NavigateDown(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, startingColumn, lines);
 
                         break;
 
                     case ConsoleKey.LeftArrow:
 
-                        NavigateLeft(ref horizontalPosition, startingLine, ref startingColumn, lines);
+                        NavigateLeft(ref lineCounting, ref horizontalPosition, startingLine, ref startingColumn, lines);
 
                         break;
 
                     case ConsoleKey.RightArrow:
 
-                        NavigateRight(ref horizontalPosition, startingLine, ref startingColumn, lines);
+                        NavigateRight(ref lineCounting, verticalPosition, ref horizontalPosition, startingLine, ref startingColumn, lines);
 
                         break;
                 }
-
-                Console.SetCursorPosition(Math.Min(horizontalPosition, Console.WindowWidth), Math.Min(verticalPosition, Console.WindowHeight));
 
                 arrowDirection = Console.ReadKey(true);
             }
@@ -126,8 +125,19 @@ namespace CodeEditor
             return answer == 1 ? PathToFile() : "";
         }
 
-        private static void NavigateUp(ref int verticalPosition, ref int startingLine, int startingColumn, string[] lines)
+        private static void NavigateUp(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, int startingColumn, string[] lines)
         {
+            int currentStartColumn;
+            int currentEndColumn;
+
+            if (lineCounting != 0)
+            {
+                lineCounting--;
+            }
+
+            currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
+            currentEndColumn = lines[lineCounting].Length - currentStartColumn <= Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth;
+
             if (verticalPosition == 0 && startingLine != 0)
             {
                 startingLine--;
@@ -137,10 +147,23 @@ namespace CodeEditor
             {
                 verticalPosition--;
             }
+
+            Console.SetCursorPosition(horizontalPosition > currentEndColumn ? currentEndColumn : horizontalPosition, verticalPosition);
         }
 
-        private static void NavigateDown(ref int verticalPosition, ref int startingLine, int startingColumn, string[] lines)
+        private static void NavigateDown(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, int startingColumn, string[] lines)
         {
+            int currentStartColumn;
+            int currentEndColumn;
+
+            if (lineCounting < lines.Length - 1)
+            {
+                lineCounting++;
+            }
+
+            currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
+            currentEndColumn = lines[lineCounting].Length - currentStartColumn <= Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth;
+
             if (verticalPosition + 1 == Console.WindowHeight)
             {
                 startingLine++;
@@ -157,9 +180,11 @@ namespace CodeEditor
             {
                 verticalPosition++;
             }
+
+            Console.SetCursorPosition(horizontalPosition > currentEndColumn ? currentEndColumn : horizontalPosition, verticalPosition);
         }
 
-        private static void NavigateLeft(ref int horizontalPosition, int startingLine, ref int startingColumn, string[] lines)
+        private static void NavigateLeft(ref int lineCounting, ref int horizontalPosition, int startingLine, ref int startingColumn, string[] lines)
         {
             if (horizontalPosition == 0 && startingColumn != 0)
             {
@@ -172,12 +197,19 @@ namespace CodeEditor
             }
         }
 
-        private static void NavigateRight(ref int horizontalPosition, int startingLine, ref int startingColumn, string[] lines)
+        private static void NavigateRight(ref int lineCounting, int verticalPosition, ref int horizontalPosition, int startingLine, ref int startingColumn, string[] lines)
         {
             if (horizontalPosition + 1 == Console.WindowWidth)
             {
                 startingColumn++;
-                Consola.ShowContentOfFile(lines, startingLine, startingColumn);
+                if (startingColumn > lines[verticalPosition].Length - Console.WindowWidth)
+                {
+                    startingColumn--;
+                }
+                else
+                {
+                    Consola.ShowContentOfFile(lines, startingLine, startingColumn);
+                }
             }
             else
             {
