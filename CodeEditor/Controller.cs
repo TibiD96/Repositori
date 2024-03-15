@@ -49,13 +49,13 @@ namespace CodeEditor
                 {
                     case ConsoleKey.UpArrow:
 
-                        NavigateUp(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, startingColumn, lines);
+                        NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
 
                         break;
 
                     case ConsoleKey.DownArrow:
 
-                        NavigateDown(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, startingColumn, lines);
+                        NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
 
                         break;
 
@@ -67,7 +67,7 @@ namespace CodeEditor
 
                     case ConsoleKey.RightArrow:
 
-                        NavigateRight(ref lineCounting, ref verticalPosition, ref horizontalPosition, ref startingLine, ref startingColumn, lines);
+                        NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
 
                         break;
                 }
@@ -125,105 +125,122 @@ namespace CodeEditor
             return answer == 1 ? PathToFile() : "";
         }
 
-        private static void NavigateUp(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, int startingColumn, string[] lines)
+        private static void NavigateUp(ref int lineCounting, int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
         {
             int currentStartColumn;
             int currentEndColumn;
 
-            if (lineCounting != 0)
+            if (lineCounting == 0)
             {
-                lineCounting--;
+                return;
             }
 
+            lineCounting--;
+
             currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
-            currentEndColumn = lines[lineCounting].Length - currentStartColumn <= Console.WindowWidth - 1 ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+
+            if (currentStartColumn < startingColumn)
+            {
+                startingColumn = currentStartColumn;
+            }
 
             if (verticalPosition == 0 && startingLine != 0)
             {
                 startingLine--;
-                Consola.ShowContentOfFile(lines, startingLine, startingColumn);
             }
             else if (verticalPosition > 0)
             {
                 verticalPosition--;
             }
 
+            Consola.ShowContentOfFile(lines, startingLine, startingColumn);
             Console.SetCursorPosition(horizontalPosition > currentEndColumn ? currentEndColumn : horizontalPosition, verticalPosition);
         }
 
-        private static void NavigateDown(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, int startingColumn, string[] lines)
+        private static void NavigateDown(ref int lineCounting, int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
         {
             int currentStartColumn;
             int currentEndColumn;
 
-            if (lineCounting < lines.Length - 1)
+            if (lineCounting >= lines.Length - 1)
             {
-                lineCounting++;
+                return;
             }
 
+            lineCounting++;
+
             currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
-            currentEndColumn = lines[lineCounting].Length - currentStartColumn <= Console.WindowWidth - 1 ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+
+            if (currentStartColumn < startingColumn)
+            {
+                startingColumn = currentStartColumn;
+            }
 
             if (verticalPosition + 1 == Console.WindowHeight)
             {
                 if (startingLine + 1 <= lines.Length - Console.WindowHeight)
                 {
                     startingLine++;
-                    Consola.ShowContentOfFile(lines, startingLine, startingColumn);
                 }
             }
             else
             {
                 verticalPosition++;
+                Console.SetCursorPosition(horizontalPosition > currentEndColumn ? currentEndColumn : horizontalPosition, verticalPosition);
             }
 
+            Consola.ShowContentOfFile(lines, startingLine, startingColumn);
             Console.SetCursorPosition(horizontalPosition > currentEndColumn ? currentEndColumn : horizontalPosition, verticalPosition);
         }
 
         private static void NavigateLeft(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
         {
-            int currentStartColumn;
-            int currentEndColumn;
+            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
+            int currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
 
-            if (Console.CursorLeft == 0)
+            if (Console.CursorLeft == 0 && lineCounting != 0)
             {
+                horizontalPosition = 0;
                 if (startingColumn == 0)
                 {
-                    currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
-                    currentEndColumn = lines[lineCounting - 1].Length - currentStartColumn <= Console.WindowWidth - 1 ? lines[lineCounting - 1].Length - currentStartColumn : Console.WindowWidth - 1;
+                    currentEndColumn = lines[lineCounting - 1].Length - currentStartColumn;
+                    while (currentEndColumn > Console.WindowWidth)
+                    {
+                        startingColumn++;
+                        currentEndColumn--;
+                    }
+
                     horizontalPosition = currentEndColumn;
-                    NavigateUp(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, startingColumn, lines);
+                    NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                    return;
                 }
-                else
-                {
-                    startingColumn--;
-                    Consola.ShowContentOfFile(lines, startingLine, startingColumn);
-                    Console.SetCursorPosition(horizontalPosition, verticalPosition);
-                }
+
+                startingColumn--;
+                Consola.ShowContentOfFile(lines, startingLine, startingColumn);
             }
             else
             {
-                currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
-                currentEndColumn = lines[lineCounting].Length - currentStartColumn <= Console.WindowWidth - 1 ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
                 if (horizontalPosition > currentEndColumn)
                 {
                     horizontalPosition = currentEndColumn - 1;
                 }
-                else
+                else if (horizontalPosition > 0)
                 {
                     horizontalPosition--;
                 }
-
-                Console.SetCursorPosition(horizontalPosition, verticalPosition);
             }
+
+            Console.SetCursorPosition(horizontalPosition > currentEndColumn ? currentEndColumn : horizontalPosition, verticalPosition);
         }
 
-        private static void NavigateRight(ref int lineCounting, ref int verticalPosition, ref int horizontalPosition, ref int startingLine, ref int startingColumn, string[] lines)
+        private static void NavigateRight(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
         {
             int currentStartColumn;
             int currentEndColumn;
             currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
-            currentEndColumn = lines[lineCounting].Length - currentStartColumn <= Console.WindowWidth - 1 ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
 
             if (horizontalPosition + 1 == Console.WindowWidth && lines[lineCounting].Length - currentStartColumn > Console.WindowWidth - 1)
             {
@@ -237,7 +254,7 @@ namespace CodeEditor
                 {
                     horizontalPosition = 0;
                     startingColumn = 0;
-                    NavigateDown(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, startingColumn, lines);
+                    NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
                 }
                 else
                 {
