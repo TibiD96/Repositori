@@ -26,14 +26,21 @@
             for (int i = startingLine; i < Math.Min(lines.Length, startingLine + visibleAreaHight); i++)
             {
                 line = lines[i];
+                string lineIndex = Convert.ToString(i) + " ";
                 currentStartColumn = Math.Max(0, Math.Min(startingColumn, line.Length));
-                currentEndColumn = line.Length - currentStartColumn <= visibleAreaWidth ? line.Length - currentStartColumn : visibleAreaWidth;
+                currentEndColumn = line.Length - currentStartColumn <= visibleAreaWidth - lineIndex.Length ? line.Length - currentStartColumn : visibleAreaWidth - lineIndex.Length;
                 if (i < Math.Min(lines.Length, startingLine + visibleAreaHight) - 1)
                 {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write(lineIndex);
+                    Console.ResetColor();
                     Console.WriteLine(line.Substring(currentStartColumn, currentEndColumn));
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write(lineIndex);
+                    Console.ResetColor();
                     Console.Write(line.Substring(currentStartColumn, currentEndColumn));
                 }
             }
