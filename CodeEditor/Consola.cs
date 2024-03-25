@@ -11,6 +11,7 @@
 
         public static void ShowContentOfFile(string[] lines, int startingLine = 0, int startingColumn = 0)
         {
+            Console.CursorVisible = false;
             int visibleAreaWidth = Console.WindowWidth;
             int visibleAreaHight = Console.WindowHeight;
             string line;
@@ -44,6 +45,8 @@
                     Console.Write(line.Substring(currentStartColumn, currentEndColumn));
                 }
             }
+
+            Console.CursorVisible = true;
         }
 
         public static void ClearConsole()
