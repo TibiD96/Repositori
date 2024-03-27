@@ -136,7 +136,7 @@ namespace CodeEditor
             }
 
             lineCounting--;
-            string lineIndex = Convert.ToString(lineCounting) + " ";
+            string lineIndex = Convert.ToString(lines.Length - 1) + " ";
             currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
             currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
 
@@ -169,7 +169,7 @@ namespace CodeEditor
             }
 
             lineCounting++;
-            string lineIndex = Convert.ToString(lineCounting) + " ";
+            string lineIndex = Convert.ToString(lines.Length - 1) + " ";
             currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
             currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
 
@@ -198,7 +198,7 @@ namespace CodeEditor
         {
             int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
             int currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
-            string lineIndex = Convert.ToString(lineCounting) + " ";
+            string lineIndex = Convert.ToString(lines.Length - 1) + " ";
 
             if (Console.CursorLeft == lineIndex.Length && lineCounting != 0)
             {
@@ -241,7 +241,7 @@ namespace CodeEditor
             int currentEndColumn;
             currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
             currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
-            string lineIndex = Convert.ToString(lineCounting) + " ";
+            string lineIndex = Convert.ToString(lines.Length - 1) + " ";
 
             if (horizontalPosition + 1 == Console.WindowWidth && lines[lineCounting].Length - currentStartColumn + lineIndex.Length - 1 > Console.WindowWidth - 1)
             {

@@ -14,20 +14,25 @@
             Console.CursorVisible = false;
             int visibleAreaWidth = Console.WindowWidth;
             int visibleAreaHight = Console.WindowHeight;
+            string lineNumber;
             string line;
-            int currentEndColumn;
-            int currentStartColumn;
+
             if (lines == null)
             {
                 return;
             }
+
+            string maximumNumberOfLines = Convert.ToString(lines.Length - 1);
+            int currentEndColumn;
+            int currentStartColumn;
 
             ClearConsole();
 
             for (int i = startingLine; i < Math.Min(lines.Length, startingLine + visibleAreaHight); i++)
             {
                 line = lines[i];
-                string lineIndex = Convert.ToString(i) + " ";
+                lineNumber = Convert.ToString(i);
+                string lineIndex = GenerateLineIndex(lineNumber, maximumNumberOfLines) + " ";
                 currentStartColumn = Math.Max(0, Math.Min(startingColumn, line.Length));
                 currentEndColumn = line.Length - currentStartColumn <= visibleAreaWidth - lineIndex.Length ? line.Length - currentStartColumn : visibleAreaWidth - lineIndex.Length;
                 if (i < Math.Min(lines.Length, startingLine + visibleAreaHight) - 1)
@@ -58,6 +63,17 @@
             }
 
             Console.SetCursorPosition(0, 0);
+        }
+
+        private static string GenerateLineIndex(string lineNumber, string maximumNumberOfLines)
+        {
+            string lineIndex = lineNumber;
+            for (int i = maximumNumberOfLines.Length; i > lineIndex.Length;)
+            {
+                lineIndex = " " + lineIndex;
+            }
+
+            return lineIndex;
         }
     }
 }
