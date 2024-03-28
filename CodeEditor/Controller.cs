@@ -73,7 +73,7 @@ namespace CodeEditor
 
                     case ConsoleKey.End:
 
-                        EndButtonBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                        EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, lines);
 
                         break;
                 }
@@ -263,7 +263,7 @@ namespace CodeEditor
             }
         }
 
-        private static void EndButtonBehaviour(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
+        private static void EndButtonBehaviour(int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn, string[] lines)
         {
             int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
             int currentEndColumn = lines[lineCounting].Length - currentStartColumn;
