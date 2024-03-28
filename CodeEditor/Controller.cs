@@ -76,6 +76,12 @@ namespace CodeEditor
                         EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, lines);
 
                         break;
+
+                    case ConsoleKey.Home:
+
+                        HomeButtonBehaviour(ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, lines);
+
+                        break;
                 }
 
                 arrowDirection = Console.ReadKey(true);
@@ -277,6 +283,15 @@ namespace CodeEditor
             horizontalPosition = currentEndColumn + lineIndex.Length;
             Consola.ShowContentOfFile(lines, startingLine, startingColumn);
             Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
+        }
+
+        private static void HomeButtonBehaviour(ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn, string[] lines)
+        {
+            string lineIndex = Convert.ToString(lines.Length - 1) + " ";
+            horizontalPosition = lineIndex.Length;
+            startingColumn = 0;
+            Consola.ShowContentOfFile(lines, startingLine, startingColumn);
+            Console.SetCursorPosition(horizontalPosition, verticalPosition);
         }
     }
 }
