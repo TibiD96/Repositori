@@ -82,6 +82,18 @@ namespace CodeEditor
                         HomeButtonBehaviour(ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, lines);
 
                         break;
+
+                    case ConsoleKey.PageDown:
+
+                        PageDownBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn, lines);
+
+                        break;
+
+                    case ConsoleKey.PageUp:
+
+                        PageUpBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn, lines);
+
+                        break;
                 }
 
                 arrowDirection = Console.ReadKey(true);
@@ -292,6 +304,58 @@ namespace CodeEditor
             startingColumn = 0;
             Consola.ShowContentOfFile(lines, startingLine, startingColumn);
             Console.SetCursorPosition(horizontalPosition, verticalPosition);
+        }
+
+        private static void PageDownBehaviour(ref int lineCounting, int horizontalPosition, int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
+        {
+            int newStartingLine = startingLine + Console.WindowHeight - 1;
+            int originalVerticalPosition = verticalPosition;
+            int downSteps = lines.Length - 1 - newStartingLine;
+            if (newStartingLine + Console.WindowHeight - 1 <= lines.Length - 1)
+            {
+                while (startingLine < newStartingLine)
+                {
+                    NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                }
+            }
+            else
+            {
+                newStartingLine = startingLine + downSteps;
+                while (startingLine < newStartingLine)
+                {
+                    NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                }
+            }
+
+            while (verticalPosition != originalVerticalPosition)
+            {
+                NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+            }
+        }
+
+        private static void PageUpBehaviour(ref int lineCounting, int horizontalPosition, int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
+        {
+            int newStartingLine = startingLine - Console.WindowHeight + 1;
+            int originalVerticalPosition = verticalPosition;
+            if (newStartingLine - Console.WindowHeight - 1 >= 0)
+            {
+                while (startingLine > newStartingLine)
+                {
+                    NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                }
+            }
+            else
+            {
+                while (startingLine > 0)
+                {
+                    NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                }
+            }
+
+            while (verticalPosition != originalVerticalPosition)
+            {
+                NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+            }
         }
     }
 }
