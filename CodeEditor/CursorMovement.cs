@@ -4,6 +4,8 @@
     {
         public static void NavigateUp(ref int lineCounting, int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
         {
+            CheckForNull(lines);
+
             if (lineCounting == 0)
             {
                 return;
@@ -34,6 +36,8 @@
 
         public static void NavigateDown(ref int lineCounting, int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
         {
+            CheckForNull(lines);
+
             if (lineCounting >= lines.Length - 1)
             {
                 return;
@@ -67,6 +71,8 @@
 
         public static void NavigateLeft(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
         {
+            CheckForNull(lines);
+
             int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
             int currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
             string lineIndex = Convert.ToString(lines.Length - 1) + " ";
@@ -108,6 +114,8 @@
 
         public static void NavigateRight(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
         {
+            CheckForNull(lines);
+
             int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
             int currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
             string lineIndex = Convert.ToString(lines.Length - 1) + " ";
@@ -136,6 +144,8 @@
 
         public static void EndButtonBehaviour(int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn, string[] lines)
         {
+            CheckForNull(lines);
+
             int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
             int currentEndColumn = lines[lineCounting].Length - currentStartColumn;
             string lineIndex = Convert.ToString(lines.Length - 1) + " ";
@@ -152,6 +162,8 @@
 
         public static void HomeButtonBehaviour(ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn, string[] lines)
         {
+            CheckForNull(lines);
+
             string lineIndex = Convert.ToString(lines.Length - 1) + " ";
             horizontalPosition = lineIndex.Length;
             startingColumn = 0;
@@ -161,6 +173,8 @@
 
         public static void PageDownBehaviour(ref int lineCounting, int horizontalPosition, int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
         {
+            CheckForNull(lines);
+
             int newStartingLine = startingLine + Console.WindowHeight - 1;
             int originalVerticalPosition = verticalPosition;
             int downSteps = lines.Length - 1 - newStartingLine;
@@ -188,6 +202,8 @@
 
         public static void PageUpBehaviour(ref int lineCounting, int horizontalPosition, int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
         {
+            CheckForNull(lines);
+
             int newStartingLine = startingLine - Console.WindowHeight + 1;
             int originalVerticalPosition = verticalPosition;
             if (newStartingLine - Console.WindowHeight - 1 >= 0)
@@ -209,6 +225,28 @@
             {
                 NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
             }
+        }
+
+        public static void CaretBehaviour(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
+        {
+            CheckForNull(lines);
+
+            string currentLine = lines[lineCounting];
+            HomeButtonBehaviour(ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, lines);
+            for (int i = 0; currentLine[i] == ' ' && i < currentLine.Length; i++)
+            {
+                NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+            }
+        }
+
+        private static void CheckForNull(string[] lines)
+        {
+            if (lines != null)
+            {
+                return;
+            }
+
+            throw new ArgumentNullException(nameof(lines));
         }
     }
 }

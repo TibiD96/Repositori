@@ -39,64 +39,73 @@ namespace CodeEditor
         {
             int startingLine = 0;
             int startingColumn = 0;
+            string numberOfMoves = "";
             int lineCounting = Console.CursorTop;
             int verticalPosition = Console.CursorTop;
             int horizontalPosition = Console.CursorLeft;
-            ConsoleKeyInfo navigationDirection = ReadKey();
+            ConsoleKeyInfo navigationDirection = ReadKey(ref numberOfMoves);
             while (navigationDirection.Key != ConsoleKey.Escape)
             {
-                switch (navigationDirection.Key)
+                for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
                 {
-                    case ConsoleKey.UpArrow:
+                    switch (navigationDirection.Key)
+                    {
+                        case ConsoleKey.UpArrow:
 
-                        CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
 
-                        break;
+                            break;
 
-                    case ConsoleKey.DownArrow:
+                        case ConsoleKey.DownArrow:
 
-                        CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
 
-                        break;
+                            break;
 
-                    case ConsoleKey.LeftArrow:
+                        case ConsoleKey.LeftArrow:
 
-                        CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
 
-                        break;
+                            break;
 
-                    case ConsoleKey.RightArrow:
+                        case ConsoleKey.RightArrow:
 
-                        CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
 
-                        break;
+                            break;
 
-                    case ConsoleKey.End:
+                        case ConsoleKey.End:
 
-                        CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, lines);
+                            CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, lines);
 
-                        break;
+                            break;
 
-                    case ConsoleKey.Home:
+                        case ConsoleKey.Home:
 
-                        CursorMovement.HomeButtonBehaviour(ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, lines);
+                            CursorMovement.HomeButtonBehaviour(ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, lines);
 
-                        break;
+                            break;
 
-                    case ConsoleKey.PageDown:
+                        case ConsoleKey.PageDown:
 
-                        CursorMovement.PageDownBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.PageDownBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn, lines);
 
-                        break;
+                            break;
 
-                    case ConsoleKey.PageUp:
+                        case ConsoleKey.PageUp:
 
-                        CursorMovement.PageUpBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.PageUpBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn, lines);
 
-                        break;
+                            break;
+                    }
                 }
 
-                navigationDirection = ReadKey();
+                if (navigationDirection.KeyChar == '^')
+                {
+                    CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                }
+
+                navigationDirection = ReadKey(ref numberOfMoves);
             }
 
             Console.SetCursorPosition(0, Console.WindowWidth);
@@ -149,9 +158,26 @@ namespace CodeEditor
             return answer == 1 ? PathToFile() : "";
         }
 
-        private static ConsoleKeyInfo ReadKey()
+        private static ConsoleKeyInfo ReadKey(ref string numberOfMoves)
         {
+            numberOfMoves = "";
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            while (char.IsDigit(keyInfo.KeyChar))
+            {
+                if (keyInfo.KeyChar == '0' && numberOfMoves.Length == 0)
+                {
+                    break;
+                }
+
+                numberOfMoves = numberOfMoves + keyInfo.KeyChar;
+                keyInfo = Console.ReadKey(true);
+            }
+
+            if (numberOfMoves.Length == 0)
+            {
+                numberOfMoves = "1";
+            }
+
             Dictionary<ConsoleKey, ConsoleKey> keyValue = new Dictionary<ConsoleKey, ConsoleKey>()
             {
                 { ConsoleKey.K, ConsoleKey.UpArrow },
