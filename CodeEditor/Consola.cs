@@ -65,17 +65,22 @@
             Console.SetCursorPosition(0, 0);
         }
 
-        private static string GenerateLineIndex(bool fastTravelMode, int currentLine, int lineNumber, string maximumNumberOfLines)
+        public static string GenerateLineIndex(bool fastTravelMode, int currentLine, int lineNumber, string maximumNumberOfLines)
         {
             string lineIndex = Convert.ToString(lineNumber);
-            string curentLineGap = Convert.ToString(currentLine);
+            int curentLineGap = Convert.ToString(currentLine).Length;
             if (fastTravelMode)
             {
                 if (lineNumber != currentLine)
                 {
+                    if (curentLineGap == maximumNumberOfLines.Length)
+                    {
+                        curentLineGap--;
+                    }
+
                     lineIndex = Convert.ToString(Math.Abs(currentLine - lineNumber));
 
-                    while (maximumNumberOfLines.Length + curentLineGap.Length - 1 > lineIndex.Length)
+                    while (maximumNumberOfLines.Length - 1 + curentLineGap != lineIndex.Length)
                     {
                         lineIndex = " " + lineIndex;
                     }
@@ -83,16 +88,22 @@
                     return lineIndex;
                 }
 
-                while (maximumNumberOfLines.Length + curentLineGap.Length - 1 > lineIndex.Length)
+                while (maximumNumberOfLines.Length - 1 + curentLineGap != lineIndex.Length)
                 {
-                    lineIndex = curentLineGap.Length == maximumNumberOfLines.Length ? lineIndex + " " : " " + lineIndex + " ";
+                    if (curentLineGap == maximumNumberOfLines.Length)
+                    {
+                        lineIndex = lineIndex + " ";
+                        break;
+                    }
+
+                    lineIndex = " " + lineIndex + " ";
                 }
 
                 return lineIndex;
             }
 
             lineIndex = Convert.ToString(lineNumber + 1);
-            for (int i = maximumNumberOfLines.Length; i > lineIndex.Length;)
+            while (maximumNumberOfLines.Length > lineIndex.Length)
             {
                 lineIndex = " " + lineIndex;
             }
