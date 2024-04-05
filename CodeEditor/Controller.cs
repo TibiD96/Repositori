@@ -18,13 +18,12 @@ namespace CodeEditor
                         exitApp = true;
                         break;
                     case 1:
+                        int currentLine = Console.WindowHeight - 1;
                         string fullPath = PathToFile();
-                        if (fullPath != "")
-                        {
-                            string[] lines = File.ReadAllLines(fullPath);
-                            Consola.ShowContentOfFile(lines);
-                            NavigateInConsole(lines);
-                        }
+                        bool fastTravelMode = FastTravel();
+                        string[] lines = File.ReadAllLines(fullPath);
+                        Consola.ShowContentOfFile(lines, currentLine, fastTravelMode);
+                        NavigateInConsole(lines, fastTravelMode);
 
                         exitApp = true;
                         break;
@@ -35,7 +34,7 @@ namespace CodeEditor
             }
         }
 
-        private static void NavigateInConsole(string[] lines)
+        private static void NavigateInConsole(string[] lines, bool fastTravelMode)
         {
             int startingLine = 0;
             int startingColumn = 0;
@@ -52,49 +51,49 @@ namespace CodeEditor
                     {
                         case ConsoleKey.UpArrow:
 
-                            CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.NavigateUp(fastTravelMode, ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
 
                             break;
 
                         case ConsoleKey.DownArrow:
 
-                            CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.NavigateDown(fastTravelMode, ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
 
                             break;
 
                         case ConsoleKey.LeftArrow:
 
-                            CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.NavigateLeft(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
 
                             break;
 
                         case ConsoleKey.RightArrow:
 
-                            CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.NavigateRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
 
                             break;
 
                         case ConsoleKey.End:
 
-                            CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, lines);
+                            CursorMovement.EndButtonBehaviour(fastTravelMode, lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, lines);
 
                             break;
 
                         case ConsoleKey.Home:
 
-                            CursorMovement.HomeButtonBehaviour(ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, lines);
+                            CursorMovement.HomeButtonBehaviour(fastTravelMode, lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, lines);
 
                             break;
 
                         case ConsoleKey.PageDown:
 
-                            CursorMovement.PageDownBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.PageDownBehaviour(fastTravelMode, ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn, lines);
 
                             break;
 
                         case ConsoleKey.PageUp:
 
-                            CursorMovement.PageUpBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.PageUpBehaviour(fastTravelMode, ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn, lines);
 
                             break;
                     }
@@ -102,7 +101,7 @@ namespace CodeEditor
 
                 if (navigationDirection.KeyChar == '^')
                 {
-                    CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                    CursorMovement.CaretBehaviour(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
                 }
 
                 navigationDirection = ReadKey(ref numberOfMoves);
@@ -201,6 +200,17 @@ namespace CodeEditor
             }
 
             return keyInfo;
+        }
+
+        private static bool FastTravel()
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Do you want to activate Fast Travel Mode?\nPress 1 for \"yes\" or 2 for \"no\"");
+            Console.ResetColor();
+            int[] validOptions = new[] { 1, 2 };
+            int answer = ReadOption(validOptions);
+
+            return answer == 1;
         }
     }
 }
