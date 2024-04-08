@@ -69,6 +69,7 @@
         {
             string lineIndex = Convert.ToString(lineNumber);
             int curentLineGap = Convert.ToString(currentLine).Length;
+            ArgumentNullException(maximumNumberOfLines);
             if (fastTravelMode)
             {
                 if (lineNumber != currentLine)
@@ -109,6 +110,16 @@
             }
 
             return lineIndex;
+        }
+
+        private static void ArgumentNullException(string maximumNumberOfLines)
+        {
+            if (maximumNumberOfLines != null)
+            {
+                return;
+            }
+
+            throw new ArgumentNullException(maximumNumberOfLines);
         }
     }
 }
