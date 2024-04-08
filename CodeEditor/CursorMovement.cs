@@ -12,7 +12,7 @@
             }
 
             lineCounting--;
-            string lineIndex = Convert.ToString(lines.Length - 1) + " ";
+            string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length)) + " ";
             int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
             int currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
 
@@ -44,7 +44,7 @@
             }
 
             lineCounting++;
-            string lineIndex = Convert.ToString(lines.Length - 1) + " ";
+            string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length)) + " ";
             int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
             int currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
 
@@ -75,7 +75,7 @@
 
             int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
             int currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
-            string lineIndex = Convert.ToString(lines.Length - 1) + " ";
+            string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length)) + " ";
 
             if (Console.CursorLeft == lineIndex.Length && lineCounting != 0)
             {
@@ -118,7 +118,7 @@
 
             int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
             int currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
-            string lineIndex = Convert.ToString(lines.Length - 1) + " ";
+            string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length)) + " ";
 
             if (horizontalPosition + 1 == Console.WindowWidth && lines[lineCounting].Length - currentStartColumn + lineIndex.Length - 1 > Console.WindowWidth - 1)
             {
@@ -148,7 +148,7 @@
 
             int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
             int currentEndColumn = lines[lineCounting].Length - currentStartColumn;
-            string lineIndex = Convert.ToString(lines.Length - 1) + " ";
+            string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length)) + " ";
             while (currentEndColumn > Console.WindowWidth - lineIndex.Length - 1)
             {
                 startingColumn++;
@@ -164,7 +164,7 @@
         {
             CheckForNull(lines);
 
-            string lineIndex = Convert.ToString(lines.Length - 1) + " ";
+            string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length)) + " ";
             horizontalPosition = lineIndex.Length;
             startingColumn = 0;
             Consola.ShowContentOfFile(lines, lineCounting, fastTravelMode, startingLine, startingColumn);
