@@ -37,16 +37,12 @@
                 currentEndColumn = line.Length - currentStartColumn <= visibleAreaWidth - lineIndex.Length ? line.Length - currentStartColumn : visibleAreaWidth - lineIndex.Length;
                 if (i < Math.Min(lines.Length, startingLine + visibleAreaHight) - 1)
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write(lineIndex);
-                    Console.ResetColor();
+                    WriteIndex(lineNumber, lineIndex, currentLine, fastTravelMode);
                     Console.WriteLine(line.Substring(currentStartColumn, currentEndColumn));
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write(lineIndex);
-                    Console.ResetColor();
+                    WriteIndex(lineNumber, lineIndex, currentLine, fastTravelMode);
                     Console.Write(line.Substring(currentStartColumn, currentEndColumn));
                 }
             }
@@ -67,21 +63,16 @@
 
         public static string GenerateLineIndex(bool fastTravelMode, int currentLine, int lineNumber, string maximumNumberOfLines)
         {
-            string lineIndex = Convert.ToString(lineNumber);
-            int curentLineGap = Convert.ToString(currentLine).Length;
             ArgumentNullException(maximumNumberOfLines);
+            string lineIndex = Convert.ToString(lineNumber);
+            int offset = maximumNumberOfLines.Length;
             if (fastTravelMode)
             {
                 if (lineNumber != currentLine)
                 {
-                    if (curentLineGap == maximumNumberOfLines.Length)
-                    {
-                        curentLineGap--;
-                    }
-
                     lineIndex = Convert.ToString(Math.Abs(currentLine - lineNumber));
 
-                    while (maximumNumberOfLines.Length - 1 + curentLineGap != lineIndex.Length)
+                    while (maximumNumberOfLines.Length - 1 + offset - 1 != lineIndex.Length)
                     {
                         lineIndex = " " + lineIndex;
                     }
@@ -89,15 +80,15 @@
                     return lineIndex;
                 }
 
-                while (maximumNumberOfLines.Length - 1 + curentLineGap != lineIndex.Length)
+                while (maximumNumberOfLines.Length - 1 + offset - 1 != lineIndex.Length)
                 {
-                    if (curentLineGap == maximumNumberOfLines.Length)
+                    if (lineIndex.Length == maximumNumberOfLines.Length)
                     {
                         lineIndex = lineIndex + " ";
                         break;
                     }
 
-                    lineIndex = " " + lineIndex + " ";
+                    lineIndex = " " + lineIndex;
                 }
 
                 return lineIndex;
@@ -120,6 +111,22 @@
             }
 
             throw new ArgumentNullException(maximumNumberOfLines);
+        }
+
+        private static void WriteIndex(int lineNumber, string lineIndex, int currentLine, bool fastTravelMode)
+        {
+            if (lineNumber == currentLine && fastTravelMode)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write(lineIndex);
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write(lineIndex);
+            }
+
+            Console.ResetColor();
         }
     }
 }
