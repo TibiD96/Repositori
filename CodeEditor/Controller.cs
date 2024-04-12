@@ -96,6 +96,12 @@ namespace CodeEditor
                             CursorMovement.PageUpBehaviour(fastTravelMode, ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn, lines);
 
                             break;
+
+                        case ConsoleKey.W:
+
+                            CursorMovement.MoveWordRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+
+                            break;
                     }
                 }
 
