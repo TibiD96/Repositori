@@ -89,7 +89,7 @@
                         currentEndColumn--;
                     }
 
-                    horizontalPosition = GetHorizontalPositionForLeftAndEndMoves(currentEndColumn, lineIndex.Length);
+                    horizontalPosition = currentEndColumn + lineIndex.Length;
                     NavigateUp(fastTravelMode, ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
                     return;
                 }
@@ -155,7 +155,7 @@
                 currentEndColumn--;
             }
 
-            horizontalPosition = GetHorizontalPositionForLeftAndEndMoves(currentEndColumn, lineIndex.Length);
+            horizontalPosition = currentEndColumn + lineIndex.Length;
             Consola.ShowContentOfFile(lines, lineCounting, fastTravelMode, startingLine, startingColumn);
             Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
         }
@@ -293,11 +293,6 @@
 
                 character = GetChar(fastTravelMode, lines, lineNumber, startingColumn, lineCounting);
             }
-        }
-
-        private static int GetHorizontalPositionForLeftAndEndMoves(int currentEndColumn, int lineIndexLength)
-        {
-            return currentEndColumn == 0 ? lineIndexLength : currentEndColumn + lineIndexLength - 1;
         }
 
         private static char GetChar(bool fastTravelMode, string[] lines, string lineNumber, int startingColumn, int lineCounting)
