@@ -251,13 +251,14 @@
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
             char character = GetChar(fastTravelMode, lines, lineNumber, startingColumn, lineCounting);
             int baseLineCounting = lineCounting;
+            char[] puctuation = new[] { ' ', '.', '?', '!', ',', ';', ':', '"', '\'', '(', ')', '[', ']', '-', '/' };
 
             if (lineCounting >= lines.Length - 1)
             {
                 return;
             }
 
-            while (character != ' ')
+            while (!puctuation.Contains(character))
             {
                 NavigateRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
                 if (lines[lineCounting] == "")
@@ -283,7 +284,7 @@
             NavigateRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
             character = GetChar(fastTravelMode, lines, lineNumber, startingColumn, lineCounting);
 
-            while (character == ' ')
+            while (puctuation.Contains(character))
             {
                 NavigateRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
                 if (lines[lineCounting] == "")
@@ -291,6 +292,7 @@
                     NavigateRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
                 }
 
+                lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
                 character = GetChar(fastTravelMode, lines, lineNumber, startingColumn, lineCounting);
             }
         }
@@ -303,7 +305,7 @@
             {
                 if (lines[Convert.ToInt32(lineNumber)] == "" || horizontalPosition > currentEndColumn)
                 {
-                    return 'a';
+                    return ' ';
                 }
 
                 return lines[Convert.ToInt32(lineNumber)][(Console.CursorLeft + startingColumn - 1) - lineNumber.Length];
@@ -311,7 +313,7 @@
 
             if (lines[Convert.ToInt32(lineNumber) - 1] == "" || horizontalPosition > currentEndColumn)
             {
-                return 'a';
+                return ' ';
             }
 
             return lines[Convert.ToInt32(lineNumber) - 1][(Console.CursorLeft + startingColumn - 1) - lineNumber.Length];
