@@ -248,22 +248,15 @@
         public static void MoveWordRight(bool fastTravelMode, ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
         {
             CheckForNull(lines);
-
-            if (fastTravelMode)
-            {
-                WordRightFST(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
-            }
-            else
-            {
-                WordRightDFLT(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
-            }
-        }
-
-        private static void WordRightFST(bool fastTravelMode, ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
-        {
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
-            char character = GetChar(fastTravelMode, lines, lineNumber, startingColumn);
+            char character = GetChar(fastTravelMode, lines, lineNumber, startingColumn, lineCounting);
             int baseLineCounting = lineCounting;
+
+            if (lineCounting >= lines.Length - 1)
+            {
+                return;
+            }
+
             while (character != ' ')
             {
                 NavigateRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
@@ -273,25 +266,22 @@
                 }
 
                 lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
-                character = GetChar(fastTravelMode, lines, lineNumber, startingColumn);
+                character = GetChar(fastTravelMode, lines, lineNumber, startingColumn, lineCounting);
 
                 if (baseLineCounting != lineCounting)
                 {
                     if (character == ' ')
                     {
-                        WordRightFST(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                        MoveWordRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
                         return;
                     }
 
                     return;
                 }
-
-                lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
-                character = GetChar(fastTravelMode, lines, lineNumber, startingColumn);
             }
 
             NavigateRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
-            character = GetChar(fastTravelMode, lines, lineNumber, startingColumn);
+            character = GetChar(fastTravelMode, lines, lineNumber, startingColumn, lineCounting);
 
             while (character == ' ')
             {
@@ -301,53 +291,7 @@
                     NavigateRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
                 }
 
-                character = GetChar(fastTravelMode, lines, lineNumber, startingColumn);
-            }
-        }
-
-        private static void WordRightDFLT(bool fastTravelMode, ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
-        {
-            string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
-            char character = GetChar(fastTravelMode, lines, lineNumber, startingColumn);
-            int baseLineCounting = lineCounting;
-            while (character != ' ')
-            {
-                NavigateRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
-                if (lines[lineCounting] == "")
-                {
-                    NavigateRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
-                }
-
-                lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
-                character = GetChar(fastTravelMode, lines, lineNumber, startingColumn);
-
-                if (baseLineCounting != lineCounting)
-                {
-                    if (character == ' ')
-                    {
-                        WordRightDFLT(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
-                        return;
-                    }
-
-                    return;
-                }
-
-                lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
-                character = GetChar(fastTravelMode, lines, lineNumber, startingColumn);
-            }
-
-            NavigateRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
-            character = GetChar(fastTravelMode, lines, lineNumber, startingColumn);
-
-            while (character == ' ')
-            {
-                NavigateRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
-                if (lines[lineCounting] == "")
-                {
-                    NavigateRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
-                }
-
-                character = GetChar(fastTravelMode, lines, lineNumber, startingColumn);
+                character = GetChar(fastTravelMode, lines, lineNumber, startingColumn, lineCounting);
             }
         }
 
@@ -356,11 +300,13 @@
             return currentEndColumn == 0 ? lineIndexLength : currentEndColumn + lineIndexLength - 1;
         }
 
-        private static char GetChar(bool fastTravelMode, string[] lines, string lineNumber, int startingColumn)
+        private static char GetChar(bool fastTravelMode, string[] lines, string lineNumber, int startingColumn, int lineCounting)
         {
+            int currentEndColumn = lines[lineCounting].Length - 1;
+            int horizontalPosition = (Console.CursorLeft + startingColumn - 1) - lineNumber.Length;
             if (fastTravelMode)
             {
-                if (lines[Convert.ToInt32(lineNumber)] == "")
+                if (lines[Convert.ToInt32(lineNumber)] == "" || horizontalPosition > currentEndColumn)
                 {
                     return 'a';
                 }
@@ -368,7 +314,7 @@
                 return lines[Convert.ToInt32(lineNumber)][(Console.CursorLeft + startingColumn - 1) - lineNumber.Length];
             }
 
-            if (lines[Convert.ToInt32(lineNumber) - 1] == "")
+            if (lines[Convert.ToInt32(lineNumber) - 1] == "" || horizontalPosition > currentEndColumn)
             {
                 return 'a';
             }
