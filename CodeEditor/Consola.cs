@@ -9,6 +9,30 @@
             Console.WriteLine("2. Show Menu");
         }
 
+        public static void KeysForMovement()
+        {
+            ClearConsole();
+            Console.WriteLine("To navigate throgh file you can use:");
+            Console.WriteLine("Arrow keys");
+            Console.WriteLine("\"H\" equivalente to left arrow key");
+            Console.WriteLine("\"J\" equivalente to down arrow key");
+            Console.WriteLine("\"K\" equivalente to up arrow key");
+            Console.WriteLine("\"l\" equivalente to right arrow key");
+            Console.WriteLine("\"End\" to go to the end of the current line");
+            Console.WriteLine("\"Home\" to go to the beginning of the current line");
+            Console.WriteLine("\"0\" equivalente to \"Home\" button");
+            Console.WriteLine("\"$\" equivalente to \"End\" button");
+            Console.WriteLine("\"^\" to go to the first character from the current line");
+            Console.WriteLine("\"W\" to go to the beginning of the next word");
+            Console.WriteLine("\"B\" to go to the beginning of the previous word");
+            Console.WriteLine("\"ESC\" to exit app");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\"M\" to see this menu at any time.");
+            Console.WriteLine("To Continue press \"Enter\"");
+            Console.ResetColor();
+            Console.ReadLine();
+        }
+
         public static void ShowContentOfFile(string[] lines, int currentLine, bool fastTravelMode, int startingLine = 0, int startingColumn = 0)
         {
             Console.CursorVisible = false;

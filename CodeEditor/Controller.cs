@@ -24,6 +24,7 @@ namespace CodeEditor
                         {
                             bool fastTravelMode = FastTravel();
                             string[] lines = File.ReadAllLines(fullPath);
+                            Consola.KeysForMovement();
                             Consola.ShowContentOfFile(lines, currentLine, fastTravelMode);
                             NavigateInConsole(lines, fastTravelMode);
                         }
@@ -109,6 +110,12 @@ namespace CodeEditor
                         case ConsoleKey.B:
 
                             CursorMovement.MoveWordLeft(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+
+                            break;
+
+                        case ConsoleKey.M:
+
+                            CursorMovement.SeeKeys(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
 
                             break;
                     }

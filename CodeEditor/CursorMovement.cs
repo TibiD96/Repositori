@@ -347,6 +347,17 @@
             NavigateRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
         }
 
+        public static void SeeKeys(bool fastTravelMode, ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
+        {
+            CheckForNull(lines);
+            string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length)) + " ";
+            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
+            int currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            Consola.KeysForMovement();
+            Consola.ShowContentOfFile(lines, lineCounting, fastTravelMode, startingLine, startingColumn);
+            Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
+        }
+
         private static void CursorOnPnct(bool fastTravelMode, ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, string[] lines)
         {
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
