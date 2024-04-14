@@ -26,6 +26,8 @@
             Console.WriteLine("\"W\" to go to the beginning of the next word");
             Console.WriteLine("\"B\" to go to the beginning of the previous word");
             Console.WriteLine("\"ESC\" to exit app");
+            Console.WriteLine("\"PageUp\" move the visible window up with the amount equal with the window hight");
+            Console.WriteLine("\"PageDown\" move the visible window down with the amount equal with the window hight");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("\"M\" to see this menu at any time.");
             Console.WriteLine("To Continue press \"Enter\"");
