@@ -20,10 +20,13 @@ namespace CodeEditor
                     case 1:
                         int currentLine = Console.WindowHeight - 1;
                         string fullPath = PathToFile();
-                        bool fastTravelMode = FastTravel();
-                        string[] lines = File.ReadAllLines(fullPath);
-                        Consola.ShowContentOfFile(lines, currentLine, fastTravelMode);
-                        NavigateInConsole(lines, fastTravelMode);
+                        if (fullPath != "")
+                        {
+                            bool fastTravelMode = FastTravel();
+                            string[] lines = File.ReadAllLines(fullPath);
+                            Consola.ShowContentOfFile(lines, currentLine, fastTravelMode);
+                            NavigateInConsole(lines, fastTravelMode);
+                        }
 
                         exitApp = true;
                         break;
@@ -162,10 +165,11 @@ namespace CodeEditor
             }
 
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("File don't exist");
+            Console.WriteLine("File don't exist or wrong path");
+            Console.WriteLine("Do you want to add the path again?\nPress 1 for \"yes\" \nPress 2 for \"no\"");
             Console.ResetColor();
-            Console.WriteLine("Have you added a wrong path?\nPress 1 for \"yes\" or 2 for \"no\"");
             answer = ReadOption(validOptions);
+
             return answer == 1 ? PathToFile() : "";
         }
 
