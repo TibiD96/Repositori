@@ -102,6 +102,12 @@ namespace CodeEditor
                             CursorMovement.MoveWordRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
 
                             break;
+
+                        case ConsoleKey.B:
+
+                            CursorMovement.MoveWordLeft(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+
+                            break;
                     }
                 }
 
