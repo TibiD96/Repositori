@@ -47,6 +47,7 @@ namespace CodeEditor
             int verticalPosition = Console.CursorTop;
             int horizontalPosition = Console.CursorLeft;
             ConsoleKeyInfo navigationDirection = ReadKey(ref numberOfMoves);
+            CursorMovement.FileParameter(fastTravelMode, lines);
             while (navigationDirection.Key != ConsoleKey.Escape)
             {
                 for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
@@ -55,67 +56,67 @@ namespace CodeEditor
                     {
                         case ConsoleKey.UpArrow:
 
-                            CursorMovement.NavigateUp(fastTravelMode, ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
 
                             break;
 
                         case ConsoleKey.DownArrow:
 
-                            CursorMovement.NavigateDown(fastTravelMode, ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
 
                             break;
 
                         case ConsoleKey.LeftArrow:
 
-                            CursorMovement.NavigateLeft(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
 
                             break;
 
                         case ConsoleKey.RightArrow:
 
-                            CursorMovement.NavigateRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
 
                             break;
 
                         case ConsoleKey.End:
 
-                            CursorMovement.EndButtonBehaviour(fastTravelMode, lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, lines);
+                            CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
 
                             break;
 
                         case ConsoleKey.Home:
 
-                            CursorMovement.HomeButtonBehaviour(fastTravelMode, lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, lines);
+                            CursorMovement.HomeButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
 
                             break;
 
                         case ConsoleKey.PageDown:
 
-                            CursorMovement.PageDownBehaviour(fastTravelMode, ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.PageDownBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn);
 
                             break;
 
                         case ConsoleKey.PageUp:
 
-                            CursorMovement.PageUpBehaviour(fastTravelMode, ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.PageUpBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn);
 
                             break;
 
                         case ConsoleKey.W:
 
-                            CursorMovement.MoveWordRight(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.MoveWordRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
 
                             break;
 
                         case ConsoleKey.B:
 
-                            CursorMovement.MoveWordLeft(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.MoveWordLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
 
                             break;
 
                         case ConsoleKey.M:
 
-                            CursorMovement.SeeKeys(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                            CursorMovement.SeeKeys(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
 
                             break;
                     }
@@ -123,7 +124,7 @@ namespace CodeEditor
 
                 if (navigationDirection.KeyChar == '^')
                 {
-                    CursorMovement.CaretBehaviour(fastTravelMode, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, lines);
+                    CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                 }
 
                 navigationDirection = ReadKey(ref numberOfMoves);
@@ -228,7 +229,7 @@ namespace CodeEditor
         private static bool FastTravel()
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Do you want to activate Fast Travel Mode?\nPress 1 for \"yes\" or 2 for \"no\"");
+            Console.WriteLine("Do you want to activate Fast Travel Mode?\nPress 1 for \"yes\" \nPress 2 for \"no\"");
             Console.ResetColor();
             int[] validOptions = new[] { 1, 2 };
             int answer = ReadOption(validOptions);
