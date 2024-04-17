@@ -104,13 +104,13 @@ namespace CodeEditor
 
                         case ConsoleKey.W:
 
-                            CursorMovement.MoveWordRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                            CursorMovement.MoveWordRight(navigationDirection.KeyChar, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
 
                             break;
 
                         case ConsoleKey.B:
 
-                            CursorMovement.MoveWordLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                            CursorMovement.MoveWordLeft(navigationDirection.KeyChar, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
 
                             break;
 
