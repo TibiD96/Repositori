@@ -260,7 +260,7 @@
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
             char character = GetChar(lineNumber, startingColumn, lineCounting);
             int baseLineCounting = lineCounting;
-            char[] punctuation = charType == 'W' ? new[] { ' ', '.', '?', '!', ',', ';', ':', '"', '\'', '-', '/' } : new[] { ' ' };
+            char[] punctuation = charType == 'w' ? new[] { ' ', '.', '?', '!', ',', ';', ':', '"', '\'', '-', '/', '\\' } : new[] { ' ' };
             if (lineCounting >= lines.Length - 1)
             {
                 return;
@@ -311,7 +311,7 @@
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
             char character = GetChar(lineNumber, startingColumn, lineCounting);
             int beginningOfLine = lineNumber.Length + 1;
-            char[] punctuation = charType == 'B' ? new[] { ' ', '.', '?', '!', ',', ';', ':', '"', '\'', '-', '/' } : new[] { ' ' };
+            char[] punctuation = charType == 'b' ? new[] { ' ', '.', '?', '!', ',', ';', ':', '"', '\'', '-', '/', '\\' } : new[] { ' ' };
 
             if (lineCounting == 0 && Console.CursorLeft == beginningOfLine)
             {
@@ -370,7 +370,7 @@
         {
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
             char character = GetChar(lineNumber, startingColumn, lineCounting);
-            char[] punctuation = charType == 'B' ? new[] { ' ', '.', '?', '!', ',', ';', ':', '"', '\'', '-', '/' } : new[] { ' ' };
+            char[] punctuation = charType == 'b' ? new[] { ' ', '.', '?', '!', ',', ';', ':', '"', '\'', '-', '/', '\\' } : new[] { ' ' };
 
             while (punctuation.Contains(character))
             {
