@@ -114,6 +114,12 @@ namespace CodeEditor
 
                             break;
 
+                        case ConsoleKey.F:
+
+                            CursorMovement.FindCharacter(navigationDirection.KeyChar, lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
+
+                            break;
+
                         case ConsoleKey.M:
 
                             CursorMovement.SeeKeys(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);

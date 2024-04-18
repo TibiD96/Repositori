@@ -23,8 +23,10 @@
             Console.WriteLine("\"0\" equivalente to \"Home\" button");
             Console.WriteLine("\"$\" equivalente to \"End\" button");
             Console.WriteLine("\"^\" to go to the first character from the current line");
-            Console.WriteLine("\"W\" to go to the beginning of the next word");
-            Console.WriteLine("\"B\" to go to the beginning of the previous word");
+            Console.WriteLine("\"W\" to go to the beginning of the next word punctuations are not take in to consideration");
+            Console.WriteLine("\"w\" to go to the beginning of the next word punctuations are take in to consideration");
+            Console.WriteLine("\"B\" to go to the beginning of the previous word punctuations are not take in to consideration");
+            Console.WriteLine("\"b\" to go to the beginning of the previous word punctuations are take in to consideration");
             Console.WriteLine("\"ESC\" to exit app");
             Console.WriteLine("\"PageUp\" move the visible window up with the amount equal with the window hight");
             Console.WriteLine("\"PageDown\" move the visible window down with the amount equal with the window hight");
