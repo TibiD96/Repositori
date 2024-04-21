@@ -303,50 +303,55 @@
         {
             CheckForNull(lines);
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
-            char character = GetChar(lineNumber, startingColumn, lineCounting);
+            char baseCharacter = GetChar(lineNumber, startingColumn, lineCounting);
+            char currentCharacter;
             int beginningOfLine = lineNumber.Length + 1;
-            char[] punctuation = charType == 'b' ? new[] { ' ', '.', '?', '!', ',', ';', ':', '"', '\'', '-', '/', '\\' } : new[] { ' ' };
+            char[] wordDelimitation = charType == 'b' ? new[] { ' ', '.', '?', '!', ',', ';', ':', '"', '\'', '-', '/', '\\', '(', ')', '[', ']', '{', '}', '=', '+', '-', '<', '>' } : new[] { ' ' };
+            char[] open = new[] { '(', '[', '{' };
+            char[] close = new[] { ')', ']', '}' };
+            char[] punctuation = new[] { '.', '?', '!', ',', ';', ':', '"', '\'', '-', '/', '\\', '(', ')', '[', ']', '{', '}', '=', '+', '-', '<', '>' };
 
             if (lineCounting == 0 && Console.CursorLeft == beginningOfLine)
             {
                 return;
             }
 
-            while (!punctuation.Contains(character))
+            if (charType == 'B')
             {
-                NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                if (lines[lineCounting] == "")
-                {
-                    NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                }
-
-                lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
-                character = GetChar(lineNumber, startingColumn, lineCounting);
+                MoveWLeft(wordDelimitation, charType, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                return;
             }
 
-            CursorOnPnctLeft(charType, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+            if (!punctuation.Contains(baseCharacter))
+            {
+                MoveWLeft(wordDelimitation, charType, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                return;
+            }
+
+            NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
             lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
-            character = GetChar(lineNumber, startingColumn, lineCounting);
+            currentCharacter = GetChar(lineNumber, startingColumn, lineCounting);
 
-            while (!punctuation.Contains(character))
+            if (open.Contains(currentCharacter) && close.Contains(baseCharacter))
             {
-                beginningOfLine = lineNumber.Length + 1;
-                if (Console.CursorLeft == beginningOfLine && startingColumn == 0)
-                {
-                    return;
-                }
-
                 NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                if (lines[lineCounting] == "")
-                {
-                    NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                }
-
                 lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
-                character = GetChar(lineNumber, startingColumn, lineCounting);
+                currentCharacter = GetChar(lineNumber, startingColumn, lineCounting);
             }
 
-            NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+            if (punctuation.Contains(currentCharacter))
+            {
+                return;
+            }
+
+            if (currentCharacter == ' ')
+            {
+                MoveWLeft(wordDelimitation, charType, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+            }
+            else
+            {
+                CursorOnLetter(wordDelimitation, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+            }
         }
 
         public static void FindCharacter(char charType, int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn)
@@ -365,23 +370,54 @@
             Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
         }
 
-        private static void CursorOnPnctLeft(char charType, ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
+        private static void CursorOnDelimitation(char charType, char[] wordSplit, ref int lineCount, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
         {
-            string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
-            char character = GetChar(lineNumber, startingColumn, lineCounting);
-            char[] punctuation = charType == 'b' ? new[] { ' ', '.', '?', '!', ',', ';', ':', '"', '\'', '-', '/', '\\' } : new[] { ' ' };
+            string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCount, lineCount, Convert.ToString(lines.Length));
+            char character = GetChar(lineNumber, startingColumn, lineCount);
+            char[] punctuation = new[] { '.', '?', '!', ',', ';', ':', '"', '\'', '-', '/', '\\', '(', ')', '[', ']', '{', '}', '=', '+', '-', '<', '>' };
 
-            while (punctuation.Contains(character))
+            while (wordSplit.Contains(character))
             {
-                NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                if (lines[lineCounting] == "")
+                if (charType == 'b' && punctuation.Contains(character))
                 {
-                    NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                    break;
                 }
 
-                lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
-                character = GetChar(lineNumber, startingColumn, lineCounting);
+                NavigateLeft(ref lineCount, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                if (lines[lineCount] == "")
+                {
+                    NavigateLeft(ref lineCount, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                }
+
+                lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCount, lineCount, Convert.ToString(lines.Length));
+                character = GetChar(lineNumber, startingColumn, lineCount);
             }
+        }
+
+        private static void CursorOnLetter(char[] wordSplit, ref int lineCount, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
+        {
+            string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCount, lineCount, Convert.ToString(lines.Length));
+            char character = GetChar(lineNumber, startingColumn, lineCount);
+
+            while (!wordSplit.Contains(character))
+            {
+                int beginningOfLine = lineNumber.Length + 1;
+                if (Console.CursorLeft == beginningOfLine && startingColumn == 0)
+                {
+                    return;
+                }
+
+                NavigateLeft(ref lineCount, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                if (lines[lineCount] == "")
+                {
+                    NavigateLeft(ref lineCount, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                }
+
+                lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCount, lineCount, Convert.ToString(lines.Length));
+                character = GetChar(lineNumber, startingColumn, lineCount);
+            }
+
+            NavigateRight(ref lineCount, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
         }
 
         private static void MoveWRight(char[] wordDelimitation, char charType, ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
@@ -437,6 +473,37 @@
                 lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
                 character = GetChar(lineNumber, startingColumn, lineCounting);
             }
+        }
+
+        private static void MoveWLeft(char[] wordDelimitation, char charType, ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
+        {
+            CheckForNull(lines);
+            string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
+            char character = GetChar(lineNumber, startingColumn, lineCounting);
+            char[] punctuation = new[] { '.', '?', '!', ',', ';', ':', '"', '\'', '-', '/', '\\', '(', ')', '[', ']', '{', '}', '=', '+', '-', '<', '>' };
+
+            while (!wordDelimitation.Contains(character))
+            {
+                NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                if (lines[lineCounting] == "")
+                {
+                    NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                }
+
+                lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
+                character = GetChar(lineNumber, startingColumn, lineCounting);
+            }
+
+            CursorOnDelimitation(charType, wordDelimitation, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+            lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
+            character = GetChar(lineNumber, startingColumn, lineCounting);
+
+            if (charType == 'b' && punctuation.Contains(character))
+            {
+                return;
+            }
+
+            CursorOnLetter(wordDelimitation, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
         }
 
         private static char GetChar(string lineNumber, int startingColumn, int lineCounting)
