@@ -356,7 +356,8 @@
 
         public static void FindCharacter(char charType, int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn)
         {
-            Console.WriteLine("Work in Progress");
+            Console.WriteLine("Please add the char:");
+            char character = ReadChar();
         }
 
         public static void SeeKeys(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
@@ -526,6 +527,21 @@
             }
 
             return lines[Convert.ToInt32(lineNumber) - 1][(Console.CursorLeft + startingColumn - 1) - lineNumber.Length];
+        }
+
+        private static char ReadChar()
+        {
+            string? baseInput = Console.ReadLine();
+
+            while (baseInput?.Length is > 1 or < 1)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Invalid character please add a single character");
+                Console.ResetColor();
+                baseInput = Console.ReadLine();
+            }
+
+            return Convert.ToChar(baseInput);
         }
 
         private static void CheckForNull(string[] lines)
