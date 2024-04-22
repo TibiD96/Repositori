@@ -354,10 +354,23 @@
             }
         }
 
-        public static void FindCharacter(char charType, int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn)
+        public static void FindCharacter(char charType, int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn, char? character)
         {
-            Console.WriteLine("Please add the char:");
-            char character = ReadChar();
+            string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
+            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
+            int currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            Consola.ShowContentOfFile(lines, lineCounting, fastTravelMode, startingLine, startingColumn);
+            Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineNumber.Length ? currentEndColumn + lineNumber.Length : horizontalPosition, verticalPosition);
+            char currentCharacter = GetChar(lineNumber, startingColumn, lineCounting);
+
+            if (charType == 'f')
+            {
+                FindCharacterLow(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, character);
+            }
+            else
+            {
+                FindCharacterUpper(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, character);
+            }
         }
 
         public static void SeeKeys(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
@@ -369,6 +382,74 @@
             Consola.KeysForMovement();
             Consola.ShowContentOfFile(lines, lineCounting, fastTravelMode, startingLine, startingColumn);
             Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
+        }
+
+        private static void FindCharacterLow(int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn, char? character)
+        {
+            string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
+            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
+            int currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            char currentCharacter = GetChar(lineNumber, startingColumn, lineCounting);
+            int steptUntilLastCorrectPosition = 0;
+
+            if (character == currentCharacter && !(horizontalPosition >= currentEndColumn + lineNumber.Length - 1 || currentEndColumn == 0))
+            {
+                NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                currentCharacter = GetChar(lineNumber, startingColumn, lineCounting);
+                steptUntilLastCorrectPosition++;
+            }
+
+            while (!(horizontalPosition >= currentEndColumn + lineNumber.Length || currentEndColumn == 0) && character != currentCharacter)
+            {
+                NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
+                currentEndColumn = lines[lineCounting].Length - currentStartColumn;
+                currentCharacter = GetChar(lineNumber, startingColumn, lineCounting);
+                steptUntilLastCorrectPosition++;
+            }
+
+            for (int i = 0; i < steptUntilLastCorrectPosition && currentCharacter != character; i++)
+            {
+                NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+            }
+        }
+
+        private static void FindCharacterUpper(int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn, char? character)
+        {
+            string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
+            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
+            int currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            char currentCharacter = GetChar(lineNumber, startingColumn, lineCounting);
+            int steptUntilLastCorrectPosition = 0;
+
+            if (character == currentCharacter && horizontalPosition >= lineNumber.Length + 1)
+            {
+                if (horizontalPosition == lineNumber.Length + 1 && startingColumn == 0)
+                {
+                    return;
+                }
+
+                NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                currentCharacter = GetChar(lineNumber, startingColumn, lineCounting);
+                steptUntilLastCorrectPosition++;
+            }
+
+            while (horizontalPosition >= lineNumber.Length + 1 && character != currentCharacter)
+            {
+                if (horizontalPosition == lineNumber.Length + 1 && startingColumn == 0)
+                {
+                    break;
+                }
+
+                NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                currentCharacter = GetChar(lineNumber, startingColumn, lineCounting);
+                steptUntilLastCorrectPosition++;
+            }
+
+            for (int i = 0; i < steptUntilLastCorrectPosition && currentCharacter != character; i++)
+            {
+                NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+            }
         }
 
         private static void CursorOnDelimitation(char charType, char[] wordSplit, ref int lineCount, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
@@ -527,21 +608,6 @@
             }
 
             return lines[Convert.ToInt32(lineNumber) - 1][(Console.CursorLeft + startingColumn - 1) - lineNumber.Length];
-        }
-
-        private static char ReadChar()
-        {
-            string? baseInput = Console.ReadLine();
-
-            while (baseInput?.Length is > 1 or < 1)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Invalid character please add a single character");
-                Console.ResetColor();
-                baseInput = Console.ReadLine();
-            }
-
-            return Convert.ToChar(baseInput);
         }
 
         private static void CheckForNull(string[] lines)

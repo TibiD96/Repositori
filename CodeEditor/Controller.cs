@@ -43,6 +43,7 @@ namespace CodeEditor
             int startingLine = 0;
             int startingColumn = 0;
             string numberOfMoves = "";
+            char? character = ' ';
             int lineCounting = Console.CursorTop;
             int verticalPosition = Console.CursorTop;
             int horizontalPosition = Console.CursorLeft;
@@ -116,7 +117,9 @@ namespace CodeEditor
 
                         case ConsoleKey.F:
 
-                            CursorMovement.FindCharacter(navigationDirection.KeyChar, lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
+                            character = ReadChar(ref character, i);
+
+                            CursorMovement.FindCharacter(navigationDirection.KeyChar, lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, character);
 
                             break;
 
@@ -133,6 +136,7 @@ namespace CodeEditor
                     CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                 }
 
+                character = ' ';
                 navigationDirection = ReadKey(ref numberOfMoves);
             }
 
@@ -241,6 +245,30 @@ namespace CodeEditor
             int answer = ReadOption(validOptions);
 
             return answer == 1;
+        }
+
+        private static char? ReadChar(ref char? character, int numberOfMoves)
+        {
+            Consola.ClearConsole();
+            if (character == ' ')
+            {
+                Console.WriteLine("Add character, after press ENTER:");
+                string? baseInput = Console.ReadLine();
+
+                while (baseInput == null || baseInput.Length is > 1 or < 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid character please add a single character");
+                    Console.ResetColor();
+                    baseInput = Console.ReadLine();
+                }
+
+                character = Convert.ToChar(baseInput);
+
+                return character;
+            }
+
+            return character;
         }
     }
 }
