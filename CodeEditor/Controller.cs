@@ -117,7 +117,7 @@ namespace CodeEditor
 
                         case ConsoleKey.F:
 
-                            character = ReadChar(ref character, i);
+                            character = ReadChar(ref character);
 
                             CursorMovement.FindCharacter(navigationDirection.KeyChar, lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, character);
 
@@ -247,7 +247,7 @@ namespace CodeEditor
             return answer == 1;
         }
 
-        private static char? ReadChar(ref char? character, int numberOfMoves)
+        private static char? ReadChar(ref char? character)
         {
             if (character == ' ')
             {
