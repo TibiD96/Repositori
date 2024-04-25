@@ -249,21 +249,11 @@ namespace CodeEditor
 
         private static char? ReadChar(ref char? character, int numberOfMoves)
         {
-            Consola.ClearConsole();
             if (character == ' ')
             {
-                Console.WriteLine("Add character, after press ENTER:");
-                string? baseInput = Console.ReadLine();
+                ConsoleKeyInfo baseInput = Console.ReadKey(true);
 
-                while (baseInput == null || baseInput.Length is > 1 or < 1)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Invalid character please add a single character");
-                    Console.ResetColor();
-                    baseInput = Console.ReadLine();
-                }
-
-                character = Convert.ToChar(baseInput);
+                character = baseInput.KeyChar;
 
                 return character;
             }
