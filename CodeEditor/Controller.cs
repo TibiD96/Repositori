@@ -125,7 +125,7 @@ namespace CodeEditor
 
                         case ConsoleKey.M:
 
-                            CursorMovement.SeeKeys(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                            CursorMovement.MarkLine(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
 
                             break;
                     }

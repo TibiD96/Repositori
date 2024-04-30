@@ -373,15 +373,9 @@
             }
         }
 
-        public static void SeeKeys(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
+        public static void MarkLine(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
         {
-            CheckForNull(lines);
-            string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length)) + " ";
-            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
-            int currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
-            Consola.KeysForMovement();
-            Consola.ShowContentOfFile(lines, lineCounting, fastTravelMode, startingLine, startingColumn);
-            Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
+
         }
 
         private static void FindCharacterLow(int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn, char? character)
