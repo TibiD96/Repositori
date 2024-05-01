@@ -24,7 +24,6 @@ namespace CodeEditor
                         {
                             bool fastTravelMode = FastTravel();
                             string[] lines = File.ReadAllLines(fullPath);
-                            Consola.KeysForMovement();
                             Consola.ShowContentOfFile(lines, currentLine, fastTravelMode);
                             NavigateInConsole(lines, fastTravelMode);
                         }
@@ -125,7 +124,11 @@ namespace CodeEditor
 
                         case ConsoleKey.M:
 
-                            CursorMovement.MarkLine(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                            character = ReadChar(ref character);
+
+                            char key = Convert.ToChar(character);
+
+                            CursorMovement.MarkLine(lineCounting, key);
 
                             break;
                     }
@@ -134,6 +137,15 @@ namespace CodeEditor
                 if (navigationDirection.KeyChar == '^')
                 {
                     CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                }
+
+                if (navigationDirection.KeyChar == '\'')
+                {
+                    character = ReadChar(ref character);
+
+                    char key = Convert.ToChar(character);
+
+                    CursorMovement.GoToMarkedLine(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, key);
                 }
 
                 character = ' ';

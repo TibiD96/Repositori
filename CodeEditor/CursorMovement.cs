@@ -4,6 +4,7 @@
     {
         private static bool fastTravelMode;
         private static string[] lines = new string[0];
+        private static Dictionary<char, int> markedLines = new Dictionary<char, int>();
 
         public static void FileParameter(bool fastTravel, string[] fileLines)
         {
@@ -361,7 +362,6 @@
             int currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
             Consola.ShowContentOfFile(lines, lineCounting, fastTravelMode, startingLine, startingColumn);
             Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineNumber.Length ? currentEndColumn + lineNumber.Length : horizontalPosition, verticalPosition);
-            char currentCharacter = GetChar(lineNumber, startingColumn, lineCounting);
 
             if (charType == 'f')
             {
@@ -373,9 +373,42 @@
             }
         }
 
-        public static void MarkLine(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
+        public static void MarkLine(int lineCounting, char key)
         {
+            if (markedLines.Keys.Contains(key))
+            {
+                markedLines.Remove(key);
+            }
 
+            markedLines.Add(key, lineCounting);
+        }
+
+        public static void GoToMarkedLine(ref int lineCounting, int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, char key)
+        {
+            int moves;
+            if (markedLines.TryGetValue(key, out int markedLineNumber))
+            {
+                moves = markedLineNumber - lineCounting;
+            }
+            else
+            {
+                return;
+            }
+
+            if (moves < 0)
+            {
+                for (int i = 0; i > moves; i--)
+                {
+                    NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < moves; i++)
+                {
+                    NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                }
+            }
         }
 
         private static void FindCharacterLow(int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn, char? character)
