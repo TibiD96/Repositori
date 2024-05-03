@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace CodeEditor
 {
@@ -7,35 +8,23 @@ namespace CodeEditor
     {
         public static void RunMenu()
         {
-            int[] validOptions = new[] { 0, 1, 2 };
-            Consola.Menu();
-            bool exitApp = false;
-            while (!exitApp)
+            int currentLine = Console.WindowHeight - 1;
+            string fullPath = PathToFile();
+            if (fullPath == "")
             {
-                switch (ReadOption(validOptions))
-                {
-                    case 0:
-                        exitApp = true;
-                        break;
-                    case 1:
-                        int currentLine = Console.WindowHeight - 1;
-                        string fullPath = PathToFile();
-                        if (fullPath != "")
-                        {
-                            bool fastTravelMode = FastTravel();
-                            string[] lines = File.ReadAllLines(fullPath);
-                            Consola.ShowContentOfFile(lines, currentLine, fastTravelMode);
-                            NavigateInConsole(lines, fastTravelMode);
-                        }
-
-                        exitApp = true;
-                        break;
-                    case 2:
-                        Consola.Menu();
-                        break;
-                }
+                return;
             }
+
+            bool fastTravelMode = Config.FastTravel;
+            string[] lines = File.ReadAllLines(fullPath);
+            Consola.ShowContentOfFile(lines, currentLine, fastTravelMode);
+            NavigateInConsole(lines, fastTravelMode);
         }
+
+        /*public static string Finder()
+        {
+            
+        }*/
 
         private static void NavigateInConsole(string[] lines, bool fastTravelMode)
         {
@@ -183,7 +172,6 @@ namespace CodeEditor
         private static string PathToFile()
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Give the path to the file like in the next example!\nExample:\nC:\\Users\\danit\\OneDrive\\Desktop\\Fisier.TXT");
             Console.ResetColor();
             int[] validOptions = new[] { 1, 2 };
             string? pathOfFile = Console.ReadLine();
@@ -246,17 +234,6 @@ namespace CodeEditor
             }
 
             return keyInfo;
-        }
-
-        private static bool FastTravel()
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Do you want to activate Fast Travel Mode?\nPress 1 for \"yes\" \nPress 2 for \"no\"");
-            Console.ResetColor();
-            int[] validOptions = new[] { 1, 2 };
-            int answer = ReadOption(validOptions);
-
-            return answer == 1;
         }
 
         private static char? ReadChar(ref char? character)
