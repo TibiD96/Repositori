@@ -8,7 +8,8 @@ namespace CodeEditor
         static void Main()
         {
             Consola.ClearConsole();
-            Controller.RunMenu();
+            Controller.Finder();
+            Controller.ShowContent();
         }
     }
 }

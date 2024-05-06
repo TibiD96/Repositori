@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-
-namespace CodeEditor
+﻿namespace CodeEditor
 {
     public class Controller
     {
-        public static void RunMenu()
+        public static void ShowContent()
         {
             int currentLine = Console.WindowHeight - 1;
             string fullPath = PathToFile();
@@ -21,10 +17,15 @@ namespace CodeEditor
             NavigateInConsole(lines, fastTravelMode);
         }
 
-        /*public static string Finder()
+        public static void Finder()
         {
-            
-        }*/
+            string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string[] filesFromDirectory = Directory.GetFiles(currentDirectory);
+            int totalNUmberOfFiles = filesFromDirectory.Length;
+            Consola.ClearConsole();
+            Consola.ShowDirectoryContent(filesFromDirectory);
+            Console.SetCursorPosition(0, Console.WindowHeight - 1);
+        }
 
         private static void NavigateInConsole(string[] lines, bool fastTravelMode)
         {

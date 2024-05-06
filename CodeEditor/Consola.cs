@@ -1,4 +1,6 @@
-﻿namespace CodeEditor
+﻿using System.Runtime.ExceptionServices;
+
+namespace CodeEditor
 {
     public class Consola
     {
@@ -101,6 +103,38 @@
             }
 
             return lineIndex;
+        }
+
+        public static void ShowDirectoryContent(string[] fileFromDirectory)
+        {
+            const int searchBarDim = 2;
+            int startingLine = Console.WindowHeight - (searchBarDim + 1);
+            if (fileFromDirectory == null)
+            {
+                return;
+            }
+
+            ClearResulsWindow();
+            for (int i = 0; i < fileFromDirectory.Length && startingLine != 0; i++)
+            {
+                Console.Write(Path.GetFileName(fileFromDirectory[i]));
+                startingLine--;
+                Console.SetCursorPosition(0, startingLine);
+            }
+        }
+
+        public static void ClearResulsWindow()
+        {
+            const int searchBarDim = 2;
+            int startingLine = Console.WindowHeight - (searchBarDim + 1);
+            Console.SetCursorPosition(0, startingLine);
+            for (int i = startingLine; i >= 0; i--)
+            {
+                Console.SetCursorPosition(0, i);
+                Console.Write(new string(' ', Console.WindowWidth));
+            }
+
+            Console.SetCursorPosition(0, startingLine);
         }
 
         private static void ArgumentNullException(string maximumNumberOfLines)
