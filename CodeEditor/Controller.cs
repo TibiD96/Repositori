@@ -33,6 +33,7 @@
             List<string> valid = new List<string>();
             string search = "";
             string file = "";
+            int corsorLeftPosition;
 
             do
             {
@@ -55,6 +56,10 @@
                         Consola.ShowValidResults(valid, search.Length);
                     }
                 }
+
+                corsorLeftPosition = Console.WindowWidth - (Convert.ToString(filesFromDirectory.Length).Length + Convert.ToString(valid.Count).Length + 2);
+                Console.SetCursorPosition(corsorLeftPosition, Console.WindowHeight - 1);
+                Console.Write(valid.Count + "/" + filesFromDirectory.Length);
 
                 Console.SetCursorPosition(search.Length, Console.WindowHeight - 1);
             }

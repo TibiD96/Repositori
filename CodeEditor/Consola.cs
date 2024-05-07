@@ -125,13 +125,13 @@ namespace CodeEditor
 
         public static void ShowValidResults(List<string> valid, int identicalCharacters)
         {
-            const int searchBarDim = 2;
-            int startingLine = Console.WindowHeight - (searchBarDim + 1);
-
             if (valid == null)
             {
                 return;
             }
+
+            const int searchBarDim = 2;
+            int startingLine = Console.WindowHeight - (searchBarDim + 1);
 
             ClearResultsWindow();
 
