@@ -114,7 +114,7 @@ namespace CodeEditor
                 return;
             }
 
-            ClearResulsWindow();
+            ClearResultsWindow();
             for (int i = 0; i < fileFromDirectory.Length && startingLine != 0; i++)
             {
                 Console.Write(Path.GetFileName(fileFromDirectory[i]));
@@ -123,7 +123,32 @@ namespace CodeEditor
             }
         }
 
-        public static void ClearResulsWindow()
+        public static void ShowValidResults(List<string> valid, int identicalCharacters)
+        {
+            const int searchBarDim = 2;
+            int startingLine = Console.WindowHeight - (searchBarDim + 1);
+
+            if (valid == null)
+            {
+                return;
+            }
+
+            ClearResultsWindow();
+
+            for (int i = 0; i < valid.Count && startingLine != 0; i++)
+            {
+                string colored = Path.GetFileName(valid[i]).Substring(0, identicalCharacters);
+                string basic = Path.GetFileName(valid[i]).Remove(0, identicalCharacters);
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write(colored);
+                Console.ResetColor();
+                Console.Write(basic);
+                startingLine--;
+                Console.SetCursorPosition(0, startingLine);
+            }
+        }
+
+        public static void ClearResultsWindow()
         {
             const int searchBarDim = 2;
             int startingLine = Console.WindowHeight - (searchBarDim + 1);

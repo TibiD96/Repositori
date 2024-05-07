@@ -14,20 +14,54 @@
             bool fastTravelMode = Config.FastTravel;
             string[] lines = File.ReadAllLines(fullPath);
             Consola.ShowContentOfFile(lines, currentLine, fastTravelMode);
-            NavigateInConsole(lines, fastTravelMode);
+            NavigateInFile(lines, fastTravelMode);
         }
 
         public static void Finder()
         {
             string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
             string[] filesFromDirectory = Directory.GetFiles(currentDirectory);
-            int totalNUmberOfFiles = filesFromDirectory.Length;
             Consola.ClearConsole();
             Consola.ShowDirectoryContent(filesFromDirectory);
             Console.SetCursorPosition(0, Console.WindowHeight - 1);
+            FuzzySearch(filesFromDirectory);
         }
 
-        private static void NavigateInConsole(string[] lines, bool fastTravelMode)
+        private static void FuzzySearch(string[] filesFromDirectory)
+        {
+            ConsoleKeyInfo key;
+            List<string> valid = new List<string>();
+            string search = "";
+            string file = "";
+
+            do
+            {
+                key = Console.ReadKey();
+                search = search + key.KeyChar;
+                for (int i = 0; i < filesFromDirectory.Length; i++)
+                {
+                    if (Path.GetFileName(filesFromDirectory[i]).Length >= search.Length)
+                    {
+                        file = Path.GetFileName(filesFromDirectory[i]).Substring(0, search.Length);
+                    }
+
+                    if (file == search && !valid.Contains(Path.GetFileName(filesFromDirectory[i])))
+                    {
+                        valid.Add(Path.GetFileName(filesFromDirectory[i]));
+                    }
+
+                    if (file == search)
+                    {
+                        Consola.ShowValidResults(valid, search.Length);
+                    }
+                }
+
+                Console.SetCursorPosition(search.Length, Console.WindowHeight - 1);
+            }
+            while (key.Key != ConsoleKey.Escape);
+        }
+
+        private static void NavigateInFile(string[] lines, bool fastTravelMode)
         {
             int startingLine = 0;
             int startingColumn = 0;
