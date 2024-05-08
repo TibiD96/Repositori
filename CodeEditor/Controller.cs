@@ -30,15 +30,50 @@
         private static void FuzzySearch(string[] filesFromDirectory)
         {
             ConsoleKeyInfo key;
-            List<string> valid = new List<string>();
+            List<string> listOfValidFiles;
             string search = "";
-            string file = "";
             int corsorLeftPosition;
 
             do
             {
                 key = Console.ReadKey();
-                search = search + key.KeyChar;
+                UpdateSearch(ref search, key);
+
+                listOfValidFiles = SearchingLogic(filesFromDirectory, search);
+
+                if (listOfValidFiles.Count == 0 && search.Length != 0)
+                {
+                    Consola.ClearResultsWindow();
+                }
+
+                if (search.Length == 0)
+                {
+                    Consola.ClearResultsWindow();
+                    Consola.ShowDirectoryContent(filesFromDirectory);
+                }
+
+                if (listOfValidFiles.Count != 0)
+                {
+                    Consola.ShowValidResults(listOfValidFiles, search.Length);
+                }
+
+                corsorLeftPosition = Console.WindowWidth - (Convert.ToString(filesFromDirectory.Length).Length + Convert.ToString(listOfValidFiles.Count).Length + 2);
+                Console.SetCursorPosition(corsorLeftPosition, Console.WindowHeight - 1);
+                Console.Write(listOfValidFiles.Count + "/" + filesFromDirectory.Length);
+                listOfValidFiles.Clear();
+
+                Console.SetCursorPosition(search.Length, Console.WindowHeight - 1);
+            }
+            while (key.Key != ConsoleKey.Escape);
+        }
+
+        private static List<string> SearchingLogic(string[] filesFromDirectory, string search)
+        {
+            List<string> listOfValidFiles = new List<string>();
+            string file = "";
+
+            if (search.Length > 0)
+            {
                 for (int i = 0; i < filesFromDirectory.Length; i++)
                 {
                     if (Path.GetFileName(filesFromDirectory[i]).Length >= search.Length)
@@ -46,24 +81,30 @@
                         file = Path.GetFileName(filesFromDirectory[i]).Substring(0, search.Length);
                     }
 
-                    if (file == search && !valid.Contains(Path.GetFileName(filesFromDirectory[i])))
+                    if (file == search && !listOfValidFiles.Contains(Path.GetFileName(filesFromDirectory[i])))
                     {
-                        valid.Add(Path.GetFileName(filesFromDirectory[i]));
-                    }
-
-                    if (file == search)
-                    {
-                        Consola.ShowValidResults(valid, search.Length);
+                        listOfValidFiles.Add(Path.GetFileName(filesFromDirectory[i]));
                     }
                 }
-
-                corsorLeftPosition = Console.WindowWidth - (Convert.ToString(filesFromDirectory.Length).Length + Convert.ToString(valid.Count).Length + 2);
-                Console.SetCursorPosition(corsorLeftPosition, Console.WindowHeight - 1);
-                Console.Write(valid.Count + "/" + filesFromDirectory.Length);
-
-                Console.SetCursorPosition(search.Length, Console.WindowHeight - 1);
             }
-            while (key.Key != ConsoleKey.Escape);
+
+            return listOfValidFiles;
+        }
+
+        private static void UpdateSearch(ref string search, ConsoleKeyInfo key)
+        {
+            if (key.Key == ConsoleKey.Backspace && search.Length > 0)
+            {
+                search = search.Substring(0, search.Length - 1);
+                Console.SetCursorPosition(0, Console.WindowHeight - 1);
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.SetCursorPosition(0, Console.WindowHeight - 1);
+                Console.Write(search);
+            }
+            else if (key.Key != ConsoleKey.Backspace)
+            {
+                search = search + key.KeyChar;
+            }
         }
 
         private static void NavigateInFile(string[] lines, bool fastTravelMode)
