@@ -123,13 +123,14 @@ namespace CodeEditor
             }
         }
 
-        public static void ShowValidResults(List<string> valid, int identicalCharacters)
+        public static void ShowValidResults(List<string> valid, int identicalCharacters, string[] totatlNumberOfFiles)
         {
-            if (valid == null)
+            if (valid == null || totatlNumberOfFiles == null)
             {
                 return;
             }
 
+            int corsorLeftPosition;
             const int searchBarDim = 2;
             int startingLine = Console.WindowHeight - (searchBarDim + 1);
 
@@ -146,6 +147,10 @@ namespace CodeEditor
                 startingLine--;
                 Console.SetCursorPosition(0, startingLine);
             }
+
+            corsorLeftPosition = Console.WindowWidth - (Convert.ToString(totatlNumberOfFiles.Length).Length + Convert.ToString(valid.Count).Length + 2);
+            Console.SetCursorPosition(corsorLeftPosition, Console.WindowHeight - 1);
+            Console.Write(valid.Count + "/" + totatlNumberOfFiles.Length);
         }
 
         public static void ClearResultsWindow()

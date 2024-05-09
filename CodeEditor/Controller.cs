@@ -43,23 +43,23 @@
 
                 if (listOfValidFiles.Count == 0 && search.Length != 0)
                 {
-                    Consola.ClearResultsWindow();
+                    Consola.ShowValidResults(listOfValidFiles, search.Length, filesFromDirectory);
                 }
 
                 if (search.Length == 0)
                 {
                     Consola.ClearResultsWindow();
                     Consola.ShowDirectoryContent(filesFromDirectory);
+                    Console.SetCursorPosition(0, Console.WindowHeight - 1);
+                    Console.Write(new string(' ', Console.WindowWidth));
+                    Console.SetCursorPosition(0, Console.WindowHeight - 1);
                 }
 
                 if (listOfValidFiles.Count != 0)
                 {
-                    Consola.ShowValidResults(listOfValidFiles, search.Length);
+                    Consola.ShowValidResults(listOfValidFiles, search.Length, filesFromDirectory);
                 }
 
-                corsorLeftPosition = Console.WindowWidth - (Convert.ToString(filesFromDirectory.Length).Length + Convert.ToString(listOfValidFiles.Count).Length + 2);
-                Console.SetCursorPosition(corsorLeftPosition, Console.WindowHeight - 1);
-                Console.Write(listOfValidFiles.Count + "/" + filesFromDirectory.Length);
                 listOfValidFiles.Clear();
 
                 Console.SetCursorPosition(search.Length, Console.WindowHeight - 1);
