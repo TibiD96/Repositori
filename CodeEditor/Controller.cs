@@ -30,15 +30,16 @@
         private static void FuzzySearch(string[] filesFromDirectory)
         {
             ConsoleKeyInfo key;
-            List<string> listOfValidFiles;
+            List<string> listOfValidFiles = new List<string>();
             string search = "";
-            int corsorLeftPosition;
+            string pathToFile = "";
 
-            do
+            key = Console.ReadKey();
+
+            while (key.Key != ConsoleKey.UpArrow && key.Key != ConsoleKey.Escape)
             {
-                key = Console.ReadKey();
                 UpdateSearch(ref search, key);
-
+                listOfValidFiles.Clear();
                 listOfValidFiles = SearchingLogic(filesFromDirectory, search);
 
                 if (listOfValidFiles.Count == 0 && search.Length != 0)
@@ -60,11 +61,66 @@
                     Consola.ShowValidResults(listOfValidFiles, search.Length, filesFromDirectory);
                 }
 
-                listOfValidFiles.Clear();
-
                 Console.SetCursorPosition(search.Length, Console.WindowHeight - 1);
+
+                key = Console.ReadKey();
             }
-            while (key.Key != ConsoleKey.Escape);
+
+            NavigateThroughValid(ref pathToFile, listOfValidFiles);
+        }
+
+        private static void NavigateThroughValid(ref string pathToFile, List<string> validFiles)
+        {
+            int verticalPosition = Console.WindowHeight - 3;
+            int fileCurrentLine = 0;
+            string current = validFiles[fileCurrentLine];
+
+            Console.SetCursorPosition(0, verticalPosition);
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, verticalPosition);
+            Console.Write("->" + current);
+
+            if (validFiles.Count == 0)
+            {
+                return;
+            }
+
+            ConsoleKeyInfo navigationDirection = Console.ReadKey(true);
+            while (navigationDirection.Key != ConsoleKey.Enter)
+            {
+                switch (navigationDirection.Key)
+                {
+                    case ConsoleKey.UpArrow:
+
+                        verticalPosition--;
+                        fileCurrentLine++;
+                        current = validFiles[fileCurrentLine];
+                        Console.SetCursorPosition(0, verticalPosition);
+                        Console.Write(new string(' ', verticalPosition));
+                        Console.SetCursorPosition(0, verticalPosition);
+                        Console.Write("->" + current);
+
+                        pathToFile = current;
+
+                        break;
+
+                    case ConsoleKey.DownArrow:
+
+                        verticalPosition--;
+                        fileCurrentLine++;
+                        current = validFiles[fileCurrentLine];
+                        Console.SetCursorPosition(0, verticalPosition);
+                        Console.Write(new string(' ', verticalPosition));
+                        Console.SetCursorPosition(0, verticalPosition);
+                        Console.Write("->" + current);
+
+                        pathToFile = current;
+
+                        break;
+                }
+
+                navigationDirection = Console.ReadKey(true);
+            }
         }
 
         private static List<string> SearchingLogic(string[] filesFromDirectory, string search)
