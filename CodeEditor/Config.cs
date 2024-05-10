@@ -2,6 +2,6 @@
 {
     public class Config
     {
-        public static bool FastTravel { get; } = false;
+        public static bool FastTravel { get; } = true;
     }
 }

@@ -1,16 +1,7 @@
-﻿using System.Runtime.ExceptionServices;
-
-namespace CodeEditor
+﻿namespace CodeEditor
 {
     public class Consola
     {
-        public static void Menu()
-        {
-            Console.WriteLine("0. Exit application");
-            Console.WriteLine("1. Show from file");
-            Console.WriteLine("2. Show Menu");
-        }
-
         public static void ShowContentOfFile(string[] lines, int currentLine, bool fastTravelMode, int startingLine = 0, int startingColumn = 0)
         {
             Console.CursorVisible = false;

@@ -2,14 +2,10 @@
 {
     public class Controller
     {
-        public static void ShowContent()
+        public static void ShowContent(string pathToFile)
         {
             int currentLine = Console.WindowHeight - 1;
-            string fullPath = PathToFile();
-            if (fullPath == "")
-            {
-                return;
-            }
+            string fullPath = pathToFile;
 
             bool fastTravelMode = Config.FastTravel;
             string[] lines = File.ReadAllLines(fullPath);
@@ -19,20 +15,19 @@
 
         public static void Finder()
         {
-            string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string currentDirectory = Environment.CurrentDirectory;
             string[] filesFromDirectory = Directory.GetFiles(currentDirectory);
             Consola.ClearConsole();
             Consola.ShowDirectoryContent(filesFromDirectory);
             Console.SetCursorPosition(0, Console.WindowHeight - 1);
-            FuzzySearch(filesFromDirectory);
+            ShowContent(FuzzySearch(filesFromDirectory));
         }
 
-        private static void FuzzySearch(string[] filesFromDirectory)
+        private static string FuzzySearch(string[] filesFromDirectory)
         {
             ConsoleKeyInfo key;
             List<string> listOfValidFiles = new List<string>();
             string search = "";
-            string pathToFile = "";
 
             key = Console.ReadKey();
 
@@ -66,61 +61,57 @@
                 key = Console.ReadKey();
             }
 
-            NavigateThroughValid(ref pathToFile, listOfValidFiles);
+            return NavigateThroughValid(listOfValidFiles, search.Length, filesFromDirectory);
         }
 
-        private static void NavigateThroughValid(ref string pathToFile, List<string> validFiles)
+        private static string NavigateThroughValid(List<string> validFiles, int identicalCharacter, string[] totalNumberOFiles)
         {
             int verticalPosition = Console.WindowHeight - 3;
             int fileCurrentLine = 0;
             string current = validFiles[fileCurrentLine];
 
+            Console.CursorVisible = false;
             Console.SetCursorPosition(0, verticalPosition);
             Console.Write(new string(' ', Console.WindowWidth));
             Console.SetCursorPosition(0, verticalPosition);
-            Console.Write("->" + current);
-
-            if (validFiles.Count == 0)
-            {
-                return;
-            }
+            Console.Write("->" + Path.GetFileName(current));
 
             ConsoleKeyInfo navigationDirection = Console.ReadKey(true);
             while (navigationDirection.Key != ConsoleKey.Enter)
             {
-                switch (navigationDirection.Key)
+                if (navigationDirection.Key == ConsoleKey.UpArrow && fileCurrentLine < validFiles.Count - 1)
                 {
-                    case ConsoleKey.UpArrow:
+                    Consola.ShowValidResults(validFiles, identicalCharacter, totalNumberOFiles);
+                    verticalPosition--;
+                    fileCurrentLine++;
+                    current = validFiles[fileCurrentLine];
+                    Console.SetCursorPosition(0, verticalPosition);
+                    Console.Write(new string(' ', Console.WindowWidth));
+                    Console.SetCursorPosition(0, verticalPosition);
+                    Console.Write("->" + Path.GetFileName(current));
+                }
 
-                        verticalPosition--;
-                        fileCurrentLine++;
-                        current = validFiles[fileCurrentLine];
-                        Console.SetCursorPosition(0, verticalPosition);
-                        Console.Write(new string(' ', verticalPosition));
-                        Console.SetCursorPosition(0, verticalPosition);
-                        Console.Write("->" + current);
-
-                        pathToFile = current;
-
+                if (navigationDirection.Key == ConsoleKey.DownArrow && fileCurrentLine > 0)
+                {
+                    if (fileCurrentLine == 0)
+                    {
                         break;
+                    }
 
-                    case ConsoleKey.DownArrow:
-
-                        verticalPosition--;
-                        fileCurrentLine++;
-                        current = validFiles[fileCurrentLine];
-                        Console.SetCursorPosition(0, verticalPosition);
-                        Console.Write(new string(' ', verticalPosition));
-                        Console.SetCursorPosition(0, verticalPosition);
-                        Console.Write("->" + current);
-
-                        pathToFile = current;
-
-                        break;
+                    Consola.ShowValidResults(validFiles, identicalCharacter, totalNumberOFiles);
+                    verticalPosition++;
+                    fileCurrentLine--;
+                    current = validFiles[fileCurrentLine];
+                    Console.SetCursorPosition(0, verticalPosition);
+                    Console.Write(new string(' ', Console.WindowWidth));
+                    Console.SetCursorPosition(0, verticalPosition);
+                    Console.Write("->" + Path.GetFileName(current));
                 }
 
                 navigationDirection = Console.ReadKey(true);
             }
+
+            return current;
         }
 
         private static List<string> SearchingLogic(string[] filesFromDirectory, string search)
@@ -139,7 +130,7 @@
 
                     if (file == search && !listOfValidFiles.Contains(Path.GetFileName(filesFromDirectory[i])))
                     {
-                        listOfValidFiles.Add(Path.GetFileName(filesFromDirectory[i]));
+                        listOfValidFiles.Add(filesFromDirectory[i]);
                     }
                 }
             }
@@ -304,28 +295,6 @@
                 Console.ResetColor();
                 return ReadOption(validOption);
             }
-        }
-
-        private static string PathToFile()
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.ResetColor();
-            int[] validOptions = new[] { 1, 2 };
-            string? pathOfFile = Console.ReadLine();
-            int answer;
-
-            if (File.Exists(pathOfFile))
-            {
-                return pathOfFile;
-            }
-
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("File don't exist or wrong path");
-            Console.WriteLine("Do you want to add the path again?\nPress 1 for \"yes\" \nPress 2 for \"no\"");
-            Console.ResetColor();
-            answer = ReadOption(validOptions);
-
-            return answer == 1 ? PathToFile() : "";
         }
 
         private static ConsoleKeyInfo ReadKey(ref string numberOfMoves)

@@ -9,7 +9,6 @@ namespace CodeEditor
         {
             Consola.ClearConsole();
             Controller.Finder();
-            Controller.ShowContent();
         }
     }
 }
