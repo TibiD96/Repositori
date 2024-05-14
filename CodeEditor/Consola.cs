@@ -114,7 +114,7 @@
             }
         }
 
-        public static void ShowValidResults(List<string> valid, int identicalCharacters, string[] totatlNumberOfFiles)
+        public static void ShowValidResults(List<string> valid, int searchLength, string[] totatlNumberOfFiles)
         {
             if (valid == null || totatlNumberOfFiles == null)
             {
@@ -129,8 +129,8 @@
 
             for (int i = 0; i < valid.Count && startingLine != 0; i++)
             {
-                string colored = Path.GetFileName(valid[i]).Substring(0, identicalCharacters);
-                string basic = Path.GetFileName(valid[i]).Remove(0, identicalCharacters);
+                string colored = Path.GetFileName(valid[i]).Substring(0, searchLength);
+                string basic = Path.GetFileName(valid[i]).Remove(0, searchLength);
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.Write(colored);
                 Console.ResetColor();
@@ -140,6 +140,8 @@
             }
 
             corsorLeftPosition = Console.WindowWidth - (Convert.ToString(totatlNumberOfFiles.Length).Length + Convert.ToString(valid.Count).Length + 2);
+            Console.SetCursorPosition(searchLength, Console.WindowHeight - 1);
+            Console.Write(new string(' ', Console.WindowWidth - 1 - searchLength));
             Console.SetCursorPosition(corsorLeftPosition, Console.WindowHeight - 1);
             Console.Write(valid.Count + "/" + totatlNumberOfFiles.Length);
         }

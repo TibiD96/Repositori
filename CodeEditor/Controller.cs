@@ -47,7 +47,7 @@
             {
                 UpdateSearch(ref search, key);
                 listOfValidFiles.Clear();
-                listOfValidFiles = SearchingLogic(allFiles, search);
+                listOfValidFiles = GetValidFiles(search, allFiles);
 
                 if (listOfValidFiles.Count == 0 && search.Length != 0)
                 {
@@ -73,7 +73,117 @@
                 key = Console.ReadKey();
             }
 
+            if (search.Length == 0)
+            {
+                listOfValidFiles.AddRange(filesFromDirectory);
+                Consola.ShowValidResults(listOfValidFiles, search.Length, allFiles);
+            }
+
             return NavigateThroughValid(listOfValidFiles, search.Length, allFiles);
+        }
+
+        private static void UpdateSearch(ref string search, ConsoleKeyInfo key)
+        {
+            if (key.Key == ConsoleKey.Backspace && search.Length > 0)
+            {
+                search = search.Substring(0, search.Length - 1);
+                Console.SetCursorPosition(0, Console.WindowHeight - 1);
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.SetCursorPosition(0, Console.WindowHeight - 1);
+                Console.Write(search);
+            }
+            else if (key.Key != ConsoleKey.Backspace)
+            {
+                search = search + key.KeyChar;
+            }
+        }
+
+        private static List<string> GetValidFiles(string search, string[] allFiles)
+        {
+            List<string> preliminaryList = FilesWhichContainAllChar(search, allFiles);
+            SortedList<int, List<string>> validOrderedFiles = new SortedList<int, List<string>>();
+            List<string> finalList = new List<string>();
+
+            foreach (string file in preliminaryList)
+            {
+                int distance = LevenshteinDistance(search, Path.GetFileName(file));
+                if (distance < Path.GetFileName(file).Length)
+                {
+                    List<string> toAdd = new List<string> { file };
+                    if (validOrderedFiles.ContainsKey(distance))
+                    {
+                        validOrderedFiles[distance].Add(file);
+                    }
+                    else
+                    {
+                        validOrderedFiles.Add(distance, toAdd);
+                    }
+                }
+            }
+
+            foreach (List<string> list in validOrderedFiles.Values)
+            {
+                finalList.AddRange(list);
+            }
+
+            return finalList;
+        }
+
+        private static List<string> FilesWhichContainAllChar(string search, string[] allFiles)
+        {
+            int charIndex = 0;
+            List<string> preliminaryList = new List<string>();
+
+            foreach (string file in allFiles)
+            {
+                foreach (char c in Path.GetFileName(file))
+                {
+                    if (charIndex < search.Length && c == search[charIndex])
+                    {
+                        charIndex++;
+                    }
+                }
+
+                if (charIndex == search.Length)
+                {
+                    preliminaryList.Add(file);
+                }
+
+                charIndex = 0;
+            }
+
+            return preliminaryList;
+        }
+
+        private static int LevenshteinDistance(string search, string file)
+        {
+            int line = search.Length;
+            int column = file.Length;
+            int[,] table = new int[line + 1, column + 1];
+
+            for (int i = 0; i <= line; i++)
+            {
+                table[i, 0] = i;
+            }
+
+            for (int j = 0; j <= column; j++)
+            {
+                table[0, j] = j;
+            }
+
+            for (int i = 1; i <= line; i++)
+            {
+                for (int j = 1; j <= column; j++)
+                {
+                    int cost = file[j - 1] == search[i - 1] ? 0 : 1;
+                    int deletion = table[i - 1, j] + 1;
+                    int insertion = table[i, j - 1] + 1;
+                    int substitution = table[i - 1, j - 1] + cost;
+                    table[i, j] = Math.Min(Math.Min(deletion, insertion), substitution);
+                }
+            }
+
+            return table[line, column];
         }
 
         private static string NavigateThroughValid(List<string> validFiles, int identicalCharacter, string[] totalNumberOFiles)
@@ -124,48 +234,6 @@
             }
 
             return current;
-        }
-
-        private static List<string> SearchingLogic(string[] filesFromDirectory, string search)
-        {
-            List<string> listOfValidFiles = new List<string>();
-            string file = "";
-
-            if (search.Length > 0)
-            {
-                for (int i = 0; i < filesFromDirectory.Length; i++)
-                {
-                    file = "";
-
-                    if (Path.GetFileName(filesFromDirectory[i]).Length >= search.Length)
-                    {
-                        file = Path.GetFileName(filesFromDirectory[i]).Substring(0, search.Length);
-                    }
-
-                    if (file == search && !listOfValidFiles.Contains(Path.GetFileName(filesFromDirectory[i])))
-                    {
-                        listOfValidFiles.Add(filesFromDirectory[i]);
-                    }
-                }
-            }
-
-            return listOfValidFiles;
-        }
-
-        private static void UpdateSearch(ref string search, ConsoleKeyInfo key)
-        {
-            if (key.Key == ConsoleKey.Backspace && search.Length > 0)
-            {
-                search = search.Substring(0, search.Length - 1);
-                Console.SetCursorPosition(0, Console.WindowHeight - 1);
-                Console.Write(new string(' ', Console.WindowWidth));
-                Console.SetCursorPosition(0, Console.WindowHeight - 1);
-                Console.Write(search);
-            }
-            else if (key.Key != ConsoleKey.Backspace)
-            {
-                search = search + key.KeyChar;
-            }
         }
 
         private static void NavigateInFile(string[] lines, bool fastTravelMode)
