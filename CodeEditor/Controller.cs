@@ -51,7 +51,7 @@
 
                 if (listOfValidFiles.Count == 0 && search.Length != 0)
                 {
-                    Consola.ShowValidResults(listOfValidFiles, search.Length, allFiles);
+                    Consola.ShowValidResults(listOfValidFiles, search, allFiles);
                 }
 
                 if (search.Length == 0)
@@ -65,7 +65,7 @@
 
                 if (listOfValidFiles.Count != 0)
                 {
-                    Consola.ShowValidResults(listOfValidFiles, search.Length, allFiles);
+                    Consola.ShowValidResults(listOfValidFiles, search, allFiles);
                 }
 
                 Console.SetCursorPosition(search.Length, Console.WindowHeight - 1);
@@ -76,10 +76,10 @@
             if (search.Length == 0)
             {
                 listOfValidFiles.AddRange(filesFromDirectory);
-                Consola.ShowValidResults(listOfValidFiles, search.Length, allFiles);
+                Consola.ShowValidResults(listOfValidFiles, search, allFiles);
             }
 
-            return NavigateThroughValid(listOfValidFiles, search.Length, allFiles);
+            return NavigateThroughValid(listOfValidFiles, search, allFiles);
         }
 
         private static void UpdateSearch(ref string search, ConsoleKeyInfo key)
@@ -103,10 +103,12 @@
             List<string> preliminaryList = FilesWhichContainAllChar(search, allFiles);
             SortedList<int, List<string>> validOrderedFiles = new SortedList<int, List<string>>();
             List<string> finalList = new List<string>();
+            int distance;
 
             foreach (string file in preliminaryList)
             {
-                int distance = LevenshteinDistance(search, Path.GetFileName(file));
+                distance = Path.GetFileName(file).IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0 ? 1 : LevenshteinDistance(search, Path.GetFileName(file));
+
                 if (distance < Path.GetFileName(file).Length)
                 {
                     List<string> toAdd = new List<string> { file };
@@ -152,7 +154,7 @@
                 charIndex = 0;
             }
 
-            return preliminaryList;
+            return preliminaryList.OrderBy(file => Path.GetFileName(file).Length).ToList();
         }
 
         private static int LevenshteinDistance(string search, string file)
@@ -186,7 +188,7 @@
             return table[line, column];
         }
 
-        private static string NavigateThroughValid(List<string> validFiles, int identicalCharacter, string[] totalNumberOFiles)
+        private static string NavigateThroughValid(List<string> validFiles, string search, string[] totalNumberOFiles)
         {
             int verticalPosition = Console.WindowHeight - 3;
             int fileCurrentLine = 0;
@@ -203,7 +205,7 @@
             {
                 if (navigationDirection.Key == ConsoleKey.UpArrow && fileCurrentLine < validFiles.Count - 1)
                 {
-                    Consola.ShowValidResults(validFiles, identicalCharacter, totalNumberOFiles);
+                    Consola.ShowValidResults(validFiles, search, totalNumberOFiles);
                     verticalPosition--;
                     fileCurrentLine++;
                     current = validFiles[fileCurrentLine];
@@ -220,7 +222,7 @@
                         break;
                     }
 
-                    Consola.ShowValidResults(validFiles, identicalCharacter, totalNumberOFiles);
+                    Consola.ShowValidResults(validFiles, search, totalNumberOFiles);
                     verticalPosition++;
                     fileCurrentLine--;
                     current = validFiles[fileCurrentLine];

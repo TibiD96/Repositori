@@ -114,9 +114,9 @@
             }
         }
 
-        public static void ShowValidResults(List<string> valid, int searchLength, string[] totatlNumberOfFiles)
+        public static void ShowValidResults(List<string> valid, string search, string[] totatlNumberOfFiles)
         {
-            if (valid == null || totatlNumberOfFiles == null)
+            if (valid == null || totatlNumberOfFiles == null || search == null)
             {
                 return;
             }
@@ -124,24 +124,39 @@
             int corsorLeftPosition;
             const int searchBarDim = 2;
             int startingLine = Console.WindowHeight - (searchBarDim + 1);
+            string firstSection = "";
+            string colored = "";
+            string lastSection = "";
 
             ClearResultsWindow();
 
             for (int i = 0; i < valid.Count && startingLine != 0; i++)
             {
-                string colored = Path.GetFileName(valid[i]).Substring(0, searchLength);
-                string basic = Path.GetFileName(valid[i]).Remove(0, searchLength);
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.Write(colored);
-                Console.ResetColor();
-                Console.Write(basic);
-                startingLine--;
-                Console.SetCursorPosition(0, startingLine);
+                int startingIndex = Path.GetFileName(valid[i]).IndexOf(search, StringComparison.OrdinalIgnoreCase);
+                if (startingIndex >= 0)
+                {
+                    firstSection = Path.GetFileName(valid[i]).Substring(0, startingIndex);
+                    colored = Path.GetFileName(valid[i]).Substring(firstSection.Length, search.Length);
+                    lastSection = Path.GetFileName(valid[i]).Substring(startingIndex + search.Length);
+                    Console.Write(firstSection);
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write(colored);
+                    Console.ResetColor();
+                    Console.Write(lastSection);
+                    startingLine--;
+                    Console.SetCursorPosition(0, startingLine);
+                }
+                else
+                {
+                    Console.Write(Path.GetFileName(valid[i]));
+                    startingLine--;
+                    Console.SetCursorPosition(0, startingLine);
+                }
             }
 
             corsorLeftPosition = Console.WindowWidth - (Convert.ToString(totatlNumberOfFiles.Length).Length + Convert.ToString(valid.Count).Length + 2);
-            Console.SetCursorPosition(searchLength, Console.WindowHeight - 1);
-            Console.Write(new string(' ', Console.WindowWidth - 1 - searchLength));
+            Console.SetCursorPosition(search.Length, Console.WindowHeight - 1);
+            Console.Write(new string(' ', Console.WindowWidth - 1 - search.Length));
             Console.SetCursorPosition(corsorLeftPosition, Console.WindowHeight - 1);
             Console.Write(valid.Count + "/" + totatlNumberOfFiles.Length);
         }
