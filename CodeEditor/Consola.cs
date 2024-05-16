@@ -1,4 +1,6 @@
-﻿namespace CodeEditor
+﻿using System;
+
+namespace CodeEditor
 {
     public class Consola
     {
@@ -114,9 +116,9 @@
             }
         }
 
-        public static void ShowValidResults(List<string> valid, string search, string[] totatlNumberOfFiles)
+        public static void ShowValidResults(List<string> validFiles, string search, string[] totatlNumberOfFiles)
         {
-            if (valid == null || totatlNumberOfFiles == null || search == null)
+            if (validFiles == null || totatlNumberOfFiles == null || search == null)
             {
                 return;
             }
@@ -124,20 +126,17 @@
             int corsorLeftPosition;
             const int searchBarDim = 2;
             int startingLine = Console.WindowHeight - (searchBarDim + 1);
-            string firstSection = "";
-            string colored = "";
-            string lastSection = "";
 
             ClearResultsWindow();
 
-            for (int i = 0; i < valid.Count && startingLine != 0; i++)
+            for (int i = 0; i < validFiles.Count && startingLine != 0; i++)
             {
-                int startingIndex = Path.GetFileName(valid[i]).IndexOf(search, StringComparison.OrdinalIgnoreCase);
+                int startingIndex = Path.GetFileName(validFiles[i]).IndexOf(search, StringComparison.OrdinalIgnoreCase);
                 if (startingIndex >= 0)
                 {
-                    firstSection = Path.GetFileName(valid[i]).Substring(0, startingIndex);
-                    colored = Path.GetFileName(valid[i]).Substring(firstSection.Length, search.Length);
-                    lastSection = Path.GetFileName(valid[i]).Substring(startingIndex + search.Length);
+                    string firstSection = Path.GetFileName(validFiles[i]).Substring(0, startingIndex);
+                    string colored = Path.GetFileName(validFiles[i]).Substring(firstSection.Length, search.Length);
+                    string lastSection = Path.GetFileName(validFiles[i]).Substring(startingIndex + search.Length);
                     Console.Write(firstSection);
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.Write(colored);
@@ -148,17 +147,17 @@
                 }
                 else
                 {
-                    Console.Write(Path.GetFileName(valid[i]));
+                    HilightChar(validFiles[i], search);
                     startingLine--;
                     Console.SetCursorPosition(0, startingLine);
                 }
             }
 
-            corsorLeftPosition = Console.WindowWidth - (Convert.ToString(totatlNumberOfFiles.Length).Length + Convert.ToString(valid.Count).Length + 2);
+            corsorLeftPosition = Console.WindowWidth - (Convert.ToString(totatlNumberOfFiles.Length).Length + Convert.ToString(validFiles.Count).Length + 2);
             Console.SetCursorPosition(search.Length, Console.WindowHeight - 1);
             Console.Write(new string(' ', Console.WindowWidth - 1 - search.Length));
             Console.SetCursorPosition(corsorLeftPosition, Console.WindowHeight - 1);
-            Console.Write(valid.Count + "/" + totatlNumberOfFiles.Length);
+            Console.Write(validFiles.Count + "/" + totatlNumberOfFiles.Length);
         }
 
         public static void ClearResultsWindow()
@@ -173,6 +172,76 @@
             }
 
             Console.SetCursorPosition(0, startingLine);
+        }
+
+        private static void HilightChar(string file, string search)
+        {
+            int subSearchLength;
+            string restOfSearch = "";
+            string subSearch = "";
+            string restOfValid = "";
+            bool presentOfChar = false;
+
+            if (search.Length == 1)
+            {
+                subSearchLength = search.Length;
+                subSearch = search.Substring(0, subSearchLength);
+            }
+            else
+            {
+                subSearchLength = search.Length - 1;
+                subSearch = search.Substring(0, subSearchLength);
+                restOfSearch = search.Substring(search.Length - 1);
+            }
+
+            int startingIndex = Path.GetFileName(file).IndexOf(subSearch, StringComparison.OrdinalIgnoreCase);
+            restOfValid = Path.GetFileName(file).Substring(startingIndex + subSearch.Length);
+            presentOfChar = ContainAllChar(restOfSearch, restOfValid);
+
+            while (startingIndex < 0 || !presentOfChar)
+            {
+                restOfSearch = subSearch.Substring(subSearch.Length - 1);
+                subSearch = subSearch.Substring(0, subSearch.Length - 1);
+                startingIndex = Path.GetFileName(file).IndexOf(subSearch, StringComparison.OrdinalIgnoreCase);
+                restOfValid = Path.GetFileName(file).Substring(startingIndex + subSearch.Length);
+                presentOfChar = ContainAllChar(restOfSearch, restOfValid);
+            }
+
+            string firstSection = Path.GetFileName(file).Substring(0, startingIndex);
+            string colored = Path.GetFileName(file).Substring(firstSection.Length, subSearch.Length);
+            Console.Write(firstSection);
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write(colored);
+            Console.ResetColor();
+
+            if (search.Length == 1)
+            {
+                Console.Write(Path.GetFileName(file).Substring(startingIndex + subSearch.Length));
+                return;
+            }
+
+            if (search.Length > 1)
+            {
+                file = Path.GetFileName(file).Substring(startingIndex + subSearch.Length);
+                search = search.Substring(subSearch.Length);
+            }
+
+            HilightChar(file, search);
+        }
+
+        private static bool ContainAllChar(string search, string fileName)
+        {
+            int charIndex = 0;
+
+            foreach (char c in fileName)
+            {
+                if (charIndex < search.Length && c == search[charIndex])
+                {
+                    charIndex++;
+                }
+            }
+
+            return charIndex == search.Length;
         }
 
         private static void ArgumentNullException(string maximumNumberOfLines)
