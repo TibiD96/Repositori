@@ -100,7 +100,8 @@ namespace CodeEditor
 
         public static void ShowDirectoryContent(string[] fileFromDirectory)
         {
-            const int searchBarDim = 2;
+            const int searchBarDim = 4;
+            DrawContour();
             int startingLine = Console.WindowHeight - (searchBarDim + 1);
             if (fileFromDirectory == null)
             {
@@ -112,7 +113,7 @@ namespace CodeEditor
             {
                 Console.Write(Path.GetFileName(fileFromDirectory[i]));
                 startingLine--;
-                Console.SetCursorPosition(0, startingLine);
+                Console.SetCursorPosition(1, startingLine);
             }
         }
 
@@ -124,7 +125,7 @@ namespace CodeEditor
             }
 
             int corsorLeftPosition;
-            const int searchBarDim = 2;
+            const int searchBarDim = 4;
             int startingLine = Console.WindowHeight - (searchBarDim + 1);
 
             ClearResultsWindow();
@@ -143,35 +144,56 @@ namespace CodeEditor
                     Console.ResetColor();
                     Console.Write(lastSection);
                     startingLine--;
-                    Console.SetCursorPosition(0, startingLine);
+                    Console.SetCursorPosition(1, startingLine);
                 }
                 else
                 {
                     HilightChar(validFiles[i], search);
                     startingLine--;
-                    Console.SetCursorPosition(0, startingLine);
+                    Console.SetCursorPosition(1, startingLine);
                 }
             }
 
             corsorLeftPosition = Console.WindowWidth - (Convert.ToString(totatlNumberOfFiles.Length).Length + Convert.ToString(validFiles.Count).Length + 2);
-            Console.SetCursorPosition(search.Length, Console.WindowHeight - 1);
-            Console.Write(new string(' ', Console.WindowWidth - 1 - search.Length));
-            Console.SetCursorPosition(corsorLeftPosition, Console.WindowHeight - 1);
+            Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
+            Console.Write(new string(' ', Console.WindowWidth - (2 + search.Length)));
+            Console.SetCursorPosition(corsorLeftPosition, Console.WindowHeight - 2);
             Console.Write(validFiles.Count + "/" + totatlNumberOfFiles.Length);
         }
 
         public static void ClearResultsWindow()
         {
-            const int searchBarDim = 2;
+            const int searchBarDim = 4;
             int startingLine = Console.WindowHeight - (searchBarDim + 1);
             Console.SetCursorPosition(0, startingLine);
-            for (int i = startingLine; i >= 0; i--)
+            for (int i = startingLine; i > 0; i--)
             {
-                Console.SetCursorPosition(0, i);
-                Console.Write(new string(' ', Console.WindowWidth));
+                Console.SetCursorPosition(1, i);
+                Console.Write(new string(' ', Console.WindowWidth - 2));
             }
 
-            Console.SetCursorPosition(0, startingLine);
+            Console.SetCursorPosition(1, startingLine);
+        }
+
+        public static void DrawContour()
+        {
+            const int lowerLineResults = 3;
+            for (int i = 0; i <= Console.WindowHeight - 1; i++)
+            {
+                Console.SetCursorPosition(0, i);
+                Console.Write("│");
+                Console.SetCursorPosition(Console.WindowWidth - 1, i);
+                Console.Write("│");
+            }
+
+            Console.SetCursorPosition(0, 0);
+            Console.Write(new string('─', Console.WindowWidth));
+            Console.SetCursorPosition(0, Console.WindowHeight - (1 + lowerLineResults));
+            Console.Write(new string('─', Console.WindowWidth));
+            Console.SetCursorPosition(0, Console.WindowHeight - lowerLineResults);
+            Console.Write(new string('─', Console.WindowWidth));
+            Console.SetCursorPosition(0, Console.WindowHeight - 1);
+            Console.Write(new string('─', Console.WindowWidth));
         }
 
         private static void HilightChar(string file, string search)
@@ -200,7 +222,7 @@ namespace CodeEditor
 
             while (startingIndex < 0 || !presentOfChar)
             {
-                restOfSearch = subSearch.Substring(subSearch.Length - 1);
+                restOfSearch = subSearch.Substring(subSearch.Length - 1) + restOfSearch;
                 subSearch = subSearch.Substring(0, subSearch.Length - 1);
                 startingIndex = Path.GetFileName(file).IndexOf(subSearch, StringComparison.OrdinalIgnoreCase);
                 restOfValid = Path.GetFileName(file).Substring(startingIndex + subSearch.Length);
