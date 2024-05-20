@@ -17,11 +17,20 @@
         {
             string currentDirectory = Environment.CurrentDirectory;
             string[] filesFromDirectory = Directory.GetFiles(currentDirectory);
+            List<string> filesFromDir = new List<string>();
             List<string> allFiles = new List<string>();
+
             GetAllFiles(ref allFiles, currentDirectory);
+            filesFromDir.AddRange(filesFromDirectory);
+
             Consola.ClearConsole();
-            Consola.ShowDirectoryContent(filesFromDirectory);
+            Consola.DrawContour();
+            Console.SetCursorPosition(1, Console.WindowHeight - 2);
+            Console.Write(new string(' ', Console.WindowWidth - 2));
+            Console.SetCursorPosition(1, Console.WindowHeight - 2);
+            Consola.ShowValidResults(filesFromDir, "", allFiles.ToArray());
             Console.SetCursorPosition(0, Console.WindowHeight - 1);
+
             ShowContent(FuzzySearch(filesFromDirectory, allFiles.ToArray()));
         }
 
@@ -58,13 +67,12 @@
                 if (search.Length == 0)
                 {
                     Consola.ClearResultsWindow();
-                    Consola.ShowDirectoryContent(filesFromDirectory);
                     Console.SetCursorPosition(1, Console.WindowHeight - 2);
                     Console.Write(new string(' ', Console.WindowWidth - 2));
                     Console.SetCursorPosition(1, Console.WindowHeight - 2);
                     listOfValidFiles.Clear();
-                    listOfValidFiles.AddRange(filesFromDirectory);
-                    Consola.ShowValidResults(listOfValidFiles, search, filesFromDirectory);
+                    listOfValidFiles.AddRange(allFiles);
+                    Consola.ShowValidResults(listOfValidFiles, search, allFiles);
                 }
 
                 if (listOfValidFiles.Count != 0 && search.Length != 0)
