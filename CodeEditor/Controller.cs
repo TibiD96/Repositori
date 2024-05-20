@@ -47,7 +47,7 @@
         private static string FuzzySearch(string[] filesFromDirectory, string[] allFiles)
         {
             ConsoleKeyInfo key;
-            List<string> listOfValidFiles = new List<string>();
+            List<string> listOfValidFiles = new List<string>(filesFromDirectory);
             string search = "";
             Consola.DrawContour();
             Console.SetCursorPosition(1, Console.WindowHeight - 2);
@@ -87,9 +87,6 @@
 
             if (search.Length == 0)
             {
-                listOfValidFiles.Clear();
-                listOfValidFiles.AddRange(filesFromDirectory);
-                allFiles = filesFromDirectory;
                 Consola.ShowValidResults(listOfValidFiles, search, allFiles);
             }
 
