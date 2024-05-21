@@ -187,13 +187,29 @@ namespace CodeEditor
             }
 
             Console.SetCursorPosition(0, 0);
-            Console.Write(new string('─', Console.WindowWidth));
+            Console.Write("┌");
+            Console.SetCursorPosition(Console.WindowWidth - 1, 0);
+            Console.Write("┐");
+            Console.SetCursorPosition(1, 0);
+            Console.Write(new string('─', Console.WindowWidth - 2));
             Console.SetCursorPosition(0, Console.WindowHeight - (1 + lowerLineResults));
-            Console.Write(new string('─', Console.WindowWidth));
+            Console.Write("└");
+            Console.SetCursorPosition(Console.WindowWidth - 1, Console.WindowHeight - (1 + lowerLineResults));
+            Console.Write("┘");
+            Console.SetCursorPosition(1, Console.WindowHeight - (1 + lowerLineResults));
+            Console.Write(new string('─', Console.WindowWidth - 2));
             Console.SetCursorPosition(0, Console.WindowHeight - lowerLineResults);
-            Console.Write(new string('─', Console.WindowWidth));
+            Console.Write("┌");
+            Console.SetCursorPosition(Console.WindowWidth - 1, Console.WindowHeight - lowerLineResults);
+            Console.Write("┐");
+            Console.SetCursorPosition(1, Console.WindowHeight - lowerLineResults);
+            Console.Write(new string('─', Console.WindowWidth - 2));
             Console.SetCursorPosition(0, Console.WindowHeight - 1);
-            Console.Write(new string('─', Console.WindowWidth));
+            Console.Write("└");
+            Console.SetCursorPosition(Console.WindowWidth - 1, Console.WindowHeight - 1);
+            Console.Write("┘");
+            Console.SetCursorPosition(1, Console.WindowHeight - 1);
+            Console.Write(new string('─', Console.WindowWidth - 2));
         }
 
         private static void HilightChar(string file, string search)
