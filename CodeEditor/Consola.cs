@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CodeEditor
+﻿namespace CodeEditor
 {
     public class Consola
     {
@@ -58,7 +56,7 @@ namespace CodeEditor
 
         public static string GenerateLineIndex(bool fastTravelMode, int currentLine, int lineNumber, string maximumNumberOfLines)
         {
-            ArgumentNullException(maximumNumberOfLines);
+            NullExcept.ArgumentNullException(maximumNumberOfLines);
             string lineIndex = Convert.ToString(lineNumber);
             int offset = maximumNumberOfLines.Length;
             if (fastTravelMode)
@@ -117,12 +115,11 @@ namespace CodeEditor
             }
         }
 
-        public static void ShowValidResults(List<string> validFiles, string search, string[] totatlNumberOfFiles)
+        public static void ShowValidResults(List<string> validFiles, string search, string[] totalNumberOfFiles)
         {
-            if (validFiles == null || totatlNumberOfFiles == null || search == null)
-            {
-                return;
-            }
+            NullExcept.ArgumentNullException(validFiles);
+            NullExcept.ArgumentNullException(totalNumberOfFiles);
+            NullExcept.ArgumentNullException(search);
 
             int corsorLeftPosition;
             const int searchBarDim = 4;
@@ -154,11 +151,11 @@ namespace CodeEditor
                 }
             }
 
-            corsorLeftPosition = Console.WindowWidth - (Convert.ToString(totatlNumberOfFiles.Length).Length + Convert.ToString(validFiles.Count).Length + 2);
+            corsorLeftPosition = Console.WindowWidth - (Convert.ToString(totalNumberOfFiles.Length).Length + Convert.ToString(validFiles.Count).Length + 2);
             Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
             Console.Write(new string(' ', Console.WindowWidth - (2 + search.Length)));
             Console.SetCursorPosition(corsorLeftPosition, Console.WindowHeight - 2);
-            Console.Write(validFiles.Count + "/" + totatlNumberOfFiles.Length);
+            Console.Write(validFiles.Count + "/" + totalNumberOfFiles.Length);
         }
 
         public static void ClearResultsWindow()
@@ -216,10 +213,7 @@ namespace CodeEditor
         {
             int subSearchLength;
             string restOfSearch = "";
-            string subSearch = "";
-            string restOfValid = "";
-            bool presentOfChar = false;
-
+            string subSearch;
             if (search.Length == 1)
             {
                 subSearchLength = search.Length;
@@ -233,9 +227,8 @@ namespace CodeEditor
             }
 
             int startingIndex = Path.GetFileName(file).IndexOf(subSearch, StringComparison.OrdinalIgnoreCase);
-            restOfValid = Path.GetFileName(file).Substring(startingIndex + subSearch.Length);
-            presentOfChar = ContainAllChar(restOfSearch, restOfValid);
-
+            string restOfValid = Path.GetFileName(file).Substring(startingIndex + subSearch.Length);
+            bool presentOfChar = ContainAllChar(restOfSearch, restOfValid);
             while (startingIndex < 0 || !presentOfChar)
             {
                 restOfSearch = subSearch.Substring(subSearch.Length - 1) + restOfSearch;
@@ -280,16 +273,6 @@ namespace CodeEditor
             }
 
             return charIndex == search.Length;
-        }
-
-        private static void ArgumentNullException(string maximumNumberOfLines)
-        {
-            if (maximumNumberOfLines != null)
-            {
-                return;
-            }
-
-            throw new ArgumentNullException(maximumNumberOfLines);
         }
 
         private static void WriteIndex(int lineNumber, string lineIndex, int currentLine, bool fastTravelMode)

@@ -14,7 +14,7 @@
 
         public static void NavigateUp(ref int lineCounting, int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
         {
-            CheckForNull(lines);
+            NullExcept.ArgumentNullException(lines);
 
             if (lineCounting == 0)
             {
@@ -46,7 +46,7 @@
 
         public static void NavigateDown(ref int lineCounting, int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
         {
-            CheckForNull(lines);
+            NullExcept.ArgumentNullException(lines);
 
             if (lineCounting >= lines.Length - 1)
             {
@@ -81,7 +81,7 @@
 
         public static void NavigateLeft(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
         {
-            CheckForNull(lines);
+            NullExcept.ArgumentNullException(lines);
 
             int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
             int currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
@@ -124,7 +124,7 @@
 
         public static void NavigateRight(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
         {
-            CheckForNull(lines);
+            NullExcept.ArgumentNullException(lines);
 
             int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
             int currentEndColumn = lines[lineCounting].Length - currentStartColumn < Console.WindowWidth ? lines[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
@@ -154,7 +154,7 @@
 
         public static void EndButtonBehaviour(int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn)
         {
-            CheckForNull(lines);
+            NullExcept.ArgumentNullException(lines);
 
             int currentStartColumn = Math.Max(0, Math.Min(startingColumn, lines[lineCounting].Length));
             int currentEndColumn = lines[lineCounting].Length - currentStartColumn;
@@ -172,7 +172,7 @@
 
         public static void HomeButtonBehaviour(int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn)
         {
-            CheckForNull(lines);
+            NullExcept.ArgumentNullException(lines);
 
             string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length)) + " ";
             horizontalPosition = lineIndex.Length;
@@ -183,7 +183,7 @@
 
         public static void PageDownBehaviour(ref int lineCounting, int horizontalPosition, int verticalPosition, ref int startingLine, ref int startingColumn)
         {
-            CheckForNull(lines);
+            NullExcept.ArgumentNullException(lines);
 
             int newStartingLine = startingLine + Console.WindowHeight - 1;
             int originalVerticalPosition = verticalPosition;
@@ -212,7 +212,7 @@
 
         public static void PageUpBehaviour(ref int lineCounting, int horizontalPosition, int verticalPosition, ref int startingLine, ref int startingColumn)
         {
-            CheckForNull(lines);
+            NullExcept.ArgumentNullException(lines);
 
             int newStartingLine = startingLine - Console.WindowHeight + 1;
             int originalVerticalPosition = verticalPosition;
@@ -239,7 +239,7 @@
 
         public static void CaretBehaviour(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
         {
-            CheckForNull(lines);
+            NullExcept.ArgumentNullException(lines);
 
             string currentLine = lines[lineCounting];
 
@@ -257,7 +257,7 @@
 
         public static void MoveWordRight(char charType, ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
         {
-            CheckForNull(lines);
+            NullExcept.ArgumentNullException(lines);
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
             char baseCharacter = GetChar(lineNumber, startingColumn, lineCounting);
             char currentCharacter;
@@ -302,7 +302,7 @@
 
         public static void MoveWordLeft(char charType, ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
         {
-            CheckForNull(lines);
+            NullExcept.ArgumentNullException(lines);
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
             char baseCharacter = GetChar(lineNumber, startingColumn, lineCounting);
             char currentCharacter;
@@ -586,7 +586,7 @@
 
         private static void MoveWLeft(char[] wordDelimitation, char charType, ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
         {
-            CheckForNull(lines);
+            NullExcept.ArgumentNullException(lines);
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(lines.Length));
             char character = GetChar(lineNumber, startingColumn, lineCounting);
             char[] punctuation = new[] { '.', '?', '!', ',', ';', ':', '"', '\'', '-', '/', '\\', '(', ')', '[', ']', '{', '}', '=', '+', '-', '<', '>' };
@@ -635,16 +635,6 @@
             }
 
             return lines[Convert.ToInt32(lineNumber) - 1][(Console.CursorLeft + startingColumn - 1) - lineNumber.Length];
-        }
-
-        private static void CheckForNull(string[] lines)
-        {
-            if (lines != null)
-            {
-                return;
-            }
-
-            throw new ArgumentNullException(nameof(lines));
         }
     }
 }
