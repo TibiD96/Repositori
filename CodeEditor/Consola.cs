@@ -12,10 +12,7 @@
             int currentEndColumn;
             int currentStartColumn;
 
-            if (lines == null)
-            {
-                return;
-            }
+            NullExcept.ArgumentNullException(lines);
 
             string maximumNumberOfLines = Convert.ToString(lines.Length - 1);
 
