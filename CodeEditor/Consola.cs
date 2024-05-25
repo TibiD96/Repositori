@@ -112,7 +112,7 @@
             }
         }
 
-        public static void ShowValidResults(List<string> validFiles, string search, string[] totalNumberOfFiles)
+        public static void ShowValidResults(List<string> validFiles, int numberOfValidFiles, string search, string[] totalNumberOfFiles)
         {
             NullExcept.ArgumentNullException(validFiles);
             NullExcept.ArgumentNullException(totalNumberOfFiles);
@@ -124,7 +124,7 @@
 
             ClearResultsWindow();
 
-            for (int i = 0; i < validFiles.Count && startingLine != 0; i++)
+            for (int i = 0; i < numberOfValidFiles && startingLine != 0; i++)
             {
                 int startingIndex = Path.GetFileName(validFiles[i]).IndexOf(search, StringComparison.OrdinalIgnoreCase);
                 if (startingIndex >= 0)
@@ -148,11 +148,11 @@
                 }
             }
 
-            corsorLeftPosition = Console.WindowWidth - (Convert.ToString(totalNumberOfFiles.Length).Length + Convert.ToString(validFiles.Count).Length + 2);
+            corsorLeftPosition = Console.WindowWidth - (Convert.ToString(totalNumberOfFiles.Length).Length + Convert.ToString(numberOfValidFiles).Length + 2);
             Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
             Console.Write(new string(' ', Console.WindowWidth - (2 + search.Length)));
             Console.SetCursorPosition(corsorLeftPosition, Console.WindowHeight - 2);
-            Console.Write(validFiles.Count + "/" + totalNumberOfFiles.Length);
+            Console.Write(numberOfValidFiles + "/" + totalNumberOfFiles.Length);
         }
 
         public static void ClearResultsWindow()

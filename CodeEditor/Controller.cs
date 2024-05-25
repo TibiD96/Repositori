@@ -28,7 +28,7 @@
             Console.SetCursorPosition(1, Console.WindowHeight - 2);
             Console.Write(new string(' ', Console.WindowWidth - 2));
             Console.SetCursorPosition(1, Console.WindowHeight - 2);
-            Consola.ShowValidResults(filesFromDir, "", allFiles.ToArray());
+            Consola.ShowValidResults(filesFromDir, filesFromDir.Count, "", allFiles.ToArray());
             Console.SetCursorPosition(0, Console.WindowHeight - 1);
 
             ShowContent(FuzzySearch(filesFromDirectory, allFiles.ToArray()));
@@ -61,7 +61,7 @@
 
                 if (listOfValidFiles.Count == 0 && search.Length != 0)
                 {
-                    Consola.ShowValidResults(listOfValidFiles, search, allFiles);
+                    Consola.ShowValidResults(listOfValidFiles, listOfValidFiles.Count, search, allFiles);
                 }
 
                 if (search.Length == 0)
@@ -72,12 +72,12 @@
                     Console.SetCursorPosition(1, Console.WindowHeight - 2);
                     listOfValidFiles.Clear();
                     listOfValidFiles.AddRange(allFiles);
-                    Consola.ShowValidResults(listOfValidFiles, search, allFiles);
+                    Consola.ShowValidResults(listOfValidFiles, listOfValidFiles.Count, search, allFiles);
                 }
 
                 if (listOfValidFiles.Count != 0 && search.Length != 0)
                 {
-                    Consola.ShowValidResults(listOfValidFiles, search, allFiles);
+                    Consola.ShowValidResults(listOfValidFiles, listOfValidFiles.Count, search, allFiles);
                 }
 
                 Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
@@ -87,7 +87,7 @@
 
             if (search.Length == 0)
             {
-                Consola.ShowValidResults(listOfValidFiles, search, allFiles);
+                Consola.ShowValidResults(listOfValidFiles, listOfValidFiles.Count, search, allFiles);
             }
 
             return NavigateThroughValid(listOfValidFiles, search, allFiles);
@@ -204,6 +204,7 @@
             int verticalPosition = Console.WindowHeight - 5;
             int fileCurrentLine = 0;
             string current = validFiles[fileCurrentLine];
+            int startingLineIndex = 0;
 
             Console.CursorVisible = false;
             Console.SetCursorPosition(1, verticalPosition);
@@ -214,29 +215,34 @@
             ConsoleKeyInfo navigationDirection = Console.ReadKey(true);
             while (navigationDirection.Key != ConsoleKey.Enter)
             {
-                if (navigationDirection.Key == ConsoleKey.UpArrow && fileCurrentLine < validFiles.Count - 1)
+                List<string> visibleValidFiles = ValidFilesToShow(validFiles, navigationDirection, ref startingLineIndex);
+
+                if (navigationDirection.Key == ConsoleKey.UpArrow)
                 {
-                    Consola.ShowValidResults(validFiles, search, totalNumberOFiles);
-                    verticalPosition--;
-                    fileCurrentLine++;
-                    current = validFiles[fileCurrentLine];
+                    if (fileCurrentLine < visibleValidFiles.Count - 1)
+                    {
+                        fileCurrentLine++;
+                        verticalPosition--;
+                    }
+
+                    Consola.ShowValidResults(visibleValidFiles, validFiles.Count, search, totalNumberOFiles);
+                    current = visibleValidFiles[fileCurrentLine];
                     Console.SetCursorPosition(1, verticalPosition);
                     Console.Write(new string(' ', Console.WindowWidth - 2));
                     Console.SetCursorPosition(1, verticalPosition);
                     Console.Write("->" + Path.GetFileName(current));
                 }
 
-                if (navigationDirection.Key == ConsoleKey.DownArrow && fileCurrentLine > 0)
+                if (navigationDirection.Key == ConsoleKey.DownArrow)
                 {
-                    if (fileCurrentLine == 0)
+                    if (fileCurrentLine != 0)
                     {
-                        break;
+                        verticalPosition++;
+                        fileCurrentLine--;
                     }
 
-                    Consola.ShowValidResults(validFiles, search, totalNumberOFiles);
-                    verticalPosition++;
-                    fileCurrentLine--;
-                    current = validFiles[fileCurrentLine];
+                    Consola.ShowValidResults(visibleValidFiles, validFiles.Count, search, totalNumberOFiles);
+                    current = visibleValidFiles[fileCurrentLine];
                     Console.SetCursorPosition(1, verticalPosition);
                     Console.Write(new string(' ', Console.WindowWidth - 2));
                     Console.SetCursorPosition(1, verticalPosition);
@@ -247,6 +253,52 @@
             }
 
             return current;
+        }
+
+        private static List<string> ValidFilesToShow(List<string> validFiles, ConsoleKeyInfo key, ref int startingLineIndex)
+        {
+            const int searchBarDim = 4;
+            int lastPositionInConsole = Console.WindowHeight - (searchBarDim + 1);
+            const int firstPositionInConsole = 1;
+            int maxNumberOfLines = lastPositionInConsole;
+            int count;
+            int lastValidIndex = validFiles.Count - maxNumberOfLines;
+            if (Console.CursorTop != firstPositionInConsole && Console.CursorTop != lastPositionInConsole)
+            {
+                count = Math.Min(maxNumberOfLines, validFiles.Count - startingLineIndex);
+                return validFiles.GetRange(startingLineIndex, count);
+            }
+
+            if (key.Key == ConsoleKey.DownArrow)
+            {
+                if (startingLineIndex == 0 || Console.CursorTop == firstPositionInConsole)
+                {
+                    count = Math.Min(maxNumberOfLines, validFiles.Count - startingLineIndex);
+                    return validFiles.GetRange(startingLineIndex, count);
+                }
+
+                startingLineIndex--;
+                count = Math.Min(maxNumberOfLines, validFiles.Count - startingLineIndex);
+
+                return validFiles.GetRange(startingLineIndex, count);
+            }
+
+            if (startingLineIndex + maxNumberOfLines == validFiles.Count)
+            {
+                count = Math.Min(maxNumberOfLines, validFiles.Count - startingLineIndex);
+                return validFiles.GetRange(startingLineIndex, count);
+            }
+
+            if (startingLineIndex == lastValidIndex || Console.CursorTop == lastPositionInConsole)
+            {
+                count = Math.Min(maxNumberOfLines, validFiles.Count - startingLineIndex);
+                return validFiles.GetRange(startingLineIndex, count);
+            }
+
+            startingLineIndex++;
+            count = Math.Min(maxNumberOfLines, validFiles.Count - startingLineIndex);
+
+            return validFiles.GetRange(startingLineIndex, count);
         }
 
         private static void NavigateInFile(string[] lines, bool fastTravelMode)
