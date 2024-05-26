@@ -151,7 +151,7 @@
             {
                 foreach (char c in Path.GetFileName(file))
                 {
-                    if (charIndex < search.Length && c == search[charIndex])
+                    if (charIndex < search.Length && char.ToLower(c) == char.ToLower(search[charIndex]))
                     {
                         charIndex++;
                     }
