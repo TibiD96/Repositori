@@ -106,7 +106,7 @@
             ClearResultsWindow();
             for (int i = 0; i < fileFromDirectory.Length && startingLine != 0; i++)
             {
-                Console.Write(Path.GetFileName(fileFromDirectory[i]));
+                Console.Write("  " + Path.GetFileName(fileFromDirectory[i]));
                 startingLine--;
                 Console.SetCursorPosition(1, startingLine);
             }
@@ -132,7 +132,7 @@
                     string firstSection = Path.GetFileName(validFiles[i]).Substring(0, startingIndex);
                     string colored = Path.GetFileName(validFiles[i]).Substring(firstSection.Length, search.Length);
                     string lastSection = Path.GetFileName(validFiles[i]).Substring(startingIndex + search.Length);
-                    Console.Write(firstSection);
+                    Console.Write("  " + firstSection);
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.Write(colored);
                     Console.ResetColor();
@@ -142,6 +142,7 @@
                 }
                 else
                 {
+                    Console.SetCursorPosition(3, Console.CursorTop);
                     HilightChar(validFiles[i], search);
                     startingLine--;
                     Console.SetCursorPosition(1, startingLine);
