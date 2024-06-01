@@ -2,17 +2,6 @@
 {
     public class Controller
     {
-        public static void ShowContent(string pathToFile)
-        {
-            int currentLine = Console.WindowHeight - 1;
-            string fullPath = pathToFile;
-
-            bool fastTravelMode = Config.FastTravel;
-            string[] lines = File.ReadAllLines(fullPath);
-            Consola.ShowContentOfFile(lines, currentLine, fastTravelMode);
-            NavigateInFile(lines, fastTravelMode);
-        }
-
         public static void Finder()
         {
             string currentDirectory = Environment.CurrentDirectory;
@@ -34,6 +23,17 @@
             ShowContent(FuzzySearch(filesFromDirectory, allFiles.ToArray()));
         }
 
+        public static void ShowContent(string pathToFile)
+        {
+            int currentLine = Console.WindowHeight - 1;
+            string fullPath = pathToFile;
+
+            bool fastTravelMode = Config.FastTravel;
+            string[] lines = File.ReadAllLines(fullPath);
+            Consola.ShowContentOfFile(lines, currentLine, fastTravelMode);
+            NavigateInFile(lines, fastTravelMode);
+        }
+
         private static void GetAllFiles(ref List<string> allFiles, string directory)
         {
             allFiles.AddRange(Directory.GetFiles(directory));
@@ -51,46 +51,53 @@
             string search = "";
             Consola.DrawContour();
             Console.SetCursorPosition(1, Console.WindowHeight - 2);
+            (string, ConsoleKeyInfo) navigationResult;
+            string file = "";
+
             key = Console.ReadKey();
 
-            while (key.Key != ConsoleKey.UpArrow && key.Key != ConsoleKey.Escape)
+            while (key.Key != ConsoleKey.Enter)
             {
-                UpdateSearch(ref search, key);
-                listOfValidFiles.Clear();
-                listOfValidFiles = GetValidFiles(search, allFiles);
-
-                if (listOfValidFiles.Count == 0 && search.Length != 0)
+                if (key.Key != ConsoleKey.UpArrow && key.Key != ConsoleKey.DownArrow)
                 {
-                    Consola.ShowValidResults(listOfValidFiles, listOfValidFiles.Count, search, allFiles);
-                }
-
-                if (search.Length == 0)
-                {
-                    Consola.ClearResultsWindow();
-                    Console.SetCursorPosition(1, Console.WindowHeight - 2);
-                    Console.Write(new string(' ', Console.WindowWidth - 2));
-                    Console.SetCursorPosition(1, Console.WindowHeight - 2);
+                    UpdateSearch(ref search, key);
                     listOfValidFiles.Clear();
-                    listOfValidFiles.AddRange(allFiles);
-                    Consola.ShowValidResults(listOfValidFiles, listOfValidFiles.Count, search, allFiles);
+                    listOfValidFiles = GetValidFiles(search, allFiles);
+
+                    if (search.Length == 0)
+                    {
+                        Consola.ClearResultsWindow();
+                        Console.SetCursorPosition(1, Console.WindowHeight - 2);
+                        Console.Write(new string(' ', Console.WindowWidth - 2));
+                        Console.SetCursorPosition(1, Console.WindowHeight - 2);
+                        listOfValidFiles.Clear();
+                        listOfValidFiles.AddRange(allFiles);
+                        Consola.ShowValidResults(listOfValidFiles, listOfValidFiles.Count, search, allFiles);
+                    }
+
+                    if (search.Length != 0)
+                    {
+                        Consola.ShowValidResults(listOfValidFiles, listOfValidFiles.Count, search, allFiles);
+                    }
                 }
 
-                if (listOfValidFiles.Count != 0 && search.Length != 0)
+                if (key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.DownArrow)
                 {
-                    Consola.ShowValidResults(listOfValidFiles, listOfValidFiles.Count, search, allFiles);
+                    navigationResult = NavigateThroughValid(listOfValidFiles, search, allFiles);
+                    Console.CursorVisible = true;
+                    file = navigationResult.Item1;
+                    Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
+                    key = navigationResult.Item2;
+                    Console.Write(key.KeyChar);
                 }
-
-                Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
-
-                key = Console.ReadKey();
+                else
+                {
+                    Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
+                    key = Console.ReadKey();
+                }
             }
 
-            if (search.Length == 0)
-            {
-                Consola.ShowValidResults(listOfValidFiles, listOfValidFiles.Count, search, allFiles);
-            }
-
-            return NavigateThroughValid(listOfValidFiles, search, allFiles);
+            return file;
         }
 
         private static void UpdateSearch(ref string search, ConsoleKeyInfo key)
@@ -199,7 +206,7 @@
             return table[line, column];
         }
 
-        private static string NavigateThroughValid(List<string> validFiles, string search, string[] totalNumberOFiles)
+        private static (string, ConsoleKeyInfo) NavigateThroughValid(List<string> validFiles, string search, string[] totalNumberOFiles)
         {
             int verticalPosition = Console.WindowHeight - 5;
             int fileCurrentLine = 0;
@@ -213,7 +220,7 @@
             Console.Write("->" + Path.GetFileName(current));
 
             ConsoleKeyInfo navigationDirection = Console.ReadKey(true);
-            while (navigationDirection.Key != ConsoleKey.Enter)
+            while (navigationDirection.Key == ConsoleKey.UpArrow || navigationDirection.Key == ConsoleKey.DownArrow)
             {
                 List<string> visibleValidFiles = ValidFilesToShow(validFiles, navigationDirection, ref startingLineIndex);
 
@@ -252,7 +259,7 @@
                 navigationDirection = Console.ReadKey(true);
             }
 
-            return current;
+            return (current, navigationDirection);
         }
 
         private static List<string> ValidFilesToShow(List<string> validFiles, ConsoleKeyInfo key, ref int startingLineIndex)
