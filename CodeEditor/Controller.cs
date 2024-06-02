@@ -12,14 +12,6 @@
             GetAllFiles(ref allFiles, currentDirectory);
             filesFromDir.AddRange(filesFromDirectory);
 
-            Consola.ClearConsole();
-            Consola.DrawContour();
-            Console.SetCursorPosition(1, Console.WindowHeight - 2);
-            Console.Write(new string(' ', Console.WindowWidth - 2));
-            Console.SetCursorPosition(1, Console.WindowHeight - 2);
-            Consola.ShowValidResults(filesFromDir, filesFromDir.Count, "", allFiles.ToArray());
-            Console.SetCursorPosition(0, Console.WindowHeight - 1);
-
             ShowContent(FuzzySearch(filesFromDirectory, allFiles.ToArray()));
         }
 
@@ -49,10 +41,16 @@
             ConsoleKeyInfo key;
             List<string> listOfValidFiles = new List<string>(filesFromDirectory);
             string search = "";
-            Consola.DrawContour();
-            Console.SetCursorPosition(1, Console.WindowHeight - 2);
             (string, ConsoleKeyInfo) navigationResult;
-            string file = "";
+
+            Consola.ClearConsole();
+            Consola.DrawContour();
+            Consola.ShowValidResults(listOfValidFiles, listOfValidFiles.Count, "", allFiles.ToArray());
+
+            string file = ValidFileByDefault(listOfValidFiles);
+
+            Console.CursorVisible = true;
+            Console.SetCursorPosition(1, Console.WindowHeight - 2);
 
             key = Console.ReadKey();
 
@@ -69,15 +67,20 @@
                         Consola.ClearResultsWindow();
                         Console.SetCursorPosition(1, Console.WindowHeight - 2);
                         Console.Write(new string(' ', Console.WindowWidth - 2));
-                        Console.SetCursorPosition(1, Console.WindowHeight - 2);
                         listOfValidFiles.Clear();
                         listOfValidFiles.AddRange(allFiles);
                         Consola.ShowValidResults(listOfValidFiles, listOfValidFiles.Count, search, allFiles);
+                        file = ValidFileByDefault(listOfValidFiles);
+                        Console.CursorVisible = true;
+                        Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
                     }
 
                     if (search.Length != 0)
                     {
                         Consola.ShowValidResults(listOfValidFiles, listOfValidFiles.Count, search, allFiles);
+                        file = ValidFileByDefault(listOfValidFiles);
+                        Console.CursorVisible = true;
+                        Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
                     }
                 }
 
@@ -206,6 +209,25 @@
             return table[line, column];
         }
 
+        private static string ValidFileByDefault(List<string> validFiles)
+        {
+            int verticalPosition = Console.WindowHeight - 5;
+            string file = "";
+
+            if (validFiles.Count > 0)
+            {
+                file = validFiles[0];
+                Console.CursorVisible = false;
+                Console.SetCursorPosition(1, verticalPosition);
+                Console.Write(new string(' ', Console.WindowWidth - 2));
+                Console.SetCursorPosition(1, verticalPosition);
+                Console.Write("->" + Path.GetFileName(file));
+                return file;
+            }
+
+            return file;
+        }
+
         private static (string, ConsoleKeyInfo) NavigateThroughValid(List<string> validFiles, string search, string[] totalNumberOFiles)
         {
             int verticalPosition = Console.WindowHeight - 5;
@@ -213,11 +235,19 @@
             string current = validFiles[fileCurrentLine];
             int startingLineIndex = 0;
 
-            Console.CursorVisible = false;
-            Console.SetCursorPosition(1, verticalPosition);
-            Console.Write(new string(' ', Console.WindowWidth - 2));
-            Console.SetCursorPosition(1, verticalPosition);
-            Console.Write("->" + Path.GetFileName(current));
+            if (validFiles.Count > 1)
+            {
+                verticalPosition--;
+                fileCurrentLine++;
+                current = validFiles[fileCurrentLine];
+                Consola.ClearResultsWindow();
+                Consola.ShowValidResults(validFiles, validFiles.Count, search, totalNumberOFiles);
+                Console.CursorVisible = false;
+                Console.SetCursorPosition(1, verticalPosition);
+                Console.Write(new string(' ', Console.WindowWidth - 2));
+                Console.SetCursorPosition(1, verticalPosition);
+                Console.Write("->" + Path.GetFileName(current));
+            }
 
             ConsoleKeyInfo navigationDirection = Console.ReadKey(true);
             while (navigationDirection.Key == ConsoleKey.UpArrow || navigationDirection.Key == ConsoleKey.DownArrow)
