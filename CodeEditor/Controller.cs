@@ -81,7 +81,7 @@
                     }
                 }
 
-                if (key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.DownArrow)
+                if (listOfValidFiles.Count > 0 && (key.Key == ConsoleKey.UpArrow || key.Key == ConsoleKey.DownArrow))
                 {
                     navigationResult = NavigateThroughValid(listOfValidFiles, search, allFiles);
                     Console.CursorVisible = true;
