@@ -120,6 +120,7 @@
 
             int corsorLeftPosition;
             const int searchBarDim = 4;
+            const int spaceBeforeName = 3;
             int startingLine = Console.WindowHeight - (searchBarDim + 1);
 
             ClearResultsWindow();
@@ -142,10 +143,10 @@
                 }
                 else
                 {
-                    Console.SetCursorPosition(3, Console.CursorTop);
+                    Console.SetCursorPosition(spaceBeforeName, Console.CursorTop);
                     HilightChar(validFiles[i], search);
                     startingLine--;
-                    Console.SetCursorPosition(1, startingLine);
+                    Console.SetCursorPosition(spaceBeforeName, startingLine);
                 }
             }
 
@@ -264,7 +265,7 @@
 
             foreach (char c in fileName)
             {
-                if (charIndex < search.Length && c == search[charIndex])
+                if (charIndex < search.Length && char.ToLower(c) == char.ToLower(search[charIndex]))
                 {
                     charIndex++;
                 }
