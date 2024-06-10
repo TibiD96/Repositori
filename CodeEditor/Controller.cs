@@ -27,7 +27,7 @@
             }
         }
 
-        private static void NavigateInFile(string[] lines, bool fastTravelMode)
+        private static void NavigateInFile(string[] fileContent, bool fastTravelMode)
         {
             int startingLine = 0;
             int startingColumn = 0;
@@ -36,9 +36,11 @@
             int lineCounting = Console.CursorTop;
             int verticalPosition = Console.CursorTop;
             int horizontalPosition = Console.CursorLeft;
+
             ConsoleKeyInfo navigationDirection = ReadKey(ref numberOfMoves);
-            CursorMovement.FileParameter(fastTravelMode, lines);
-            while (navigationDirection.Key != ConsoleKey.Escape)
+            CursorMovement.FileParameter(fastTravelMode, fileContent);
+
+            while (navigationDirection.KeyChar != ':')
             {
                 for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
                 {
