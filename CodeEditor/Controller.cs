@@ -1,4 +1,6 @@
-﻿namespace CodeEditor
+﻿using System;
+
+namespace CodeEditor
 {
     public class Controller
     {
@@ -14,7 +16,7 @@
             string[] fileContent = File.ReadAllLines(filePathToOpen);
 
             Consola.ShowContentOfFile(fileContent, Console.WindowHeight - 1, fastTravelMode);
-            NavigateInFile(fileContent, fastTravelMode);
+            InFileActions(fileContent, fastTravelMode);
         }
 
         private static void GetAllFiles(ref List<string> allFiles, string directory)
@@ -27,124 +29,180 @@
             }
         }
 
-        private static void NavigateInFile(string[] fileContent, bool fastTravelMode)
+        private static void InFileActions(string[] fileContent, bool fastTravelMode)
         {
             int startingLine = 0;
             int startingColumn = 0;
             string numberOfMoves = "";
-            char? character = ' ';
             int lineCounting = Console.CursorTop;
             int verticalPosition = Console.CursorTop;
             int horizontalPosition = Console.CursorLeft;
+            string[] originalFile = fileContent;
 
-            ConsoleKeyInfo navigationDirection = ReadKey(ref numberOfMoves);
+            ConsoleKeyInfo action = ReadKey(ref numberOfMoves);
             CursorMovement.FileParameter(fastTravelMode, fileContent);
 
-            while (navigationDirection.KeyChar != ':')
+            while (action.KeyChar != ':')
             {
-                for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
+                if (action.Key != ConsoleKey.I)
                 {
-                    switch (navigationDirection.Key)
-                    {
-                        case ConsoleKey.UpArrow:
-
-                            CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-
-                            break;
-
-                        case ConsoleKey.DownArrow:
-
-                            CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-
-                            break;
-
-                        case ConsoleKey.LeftArrow:
-
-                            CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-
-                            break;
-
-                        case ConsoleKey.RightArrow:
-
-                            CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-
-                            break;
-
-                        case ConsoleKey.End:
-
-                            CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
-
-                            break;
-
-                        case ConsoleKey.Home:
-
-                            CursorMovement.HomeButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
-
-                            break;
-
-                        case ConsoleKey.PageDown:
-
-                            CursorMovement.PageDownBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn);
-
-                            break;
-
-                        case ConsoleKey.PageUp:
-
-                            CursorMovement.PageUpBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn);
-
-                            break;
-
-                        case ConsoleKey.W:
-
-                            CursorMovement.MoveWordRight(navigationDirection.KeyChar, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-
-                            break;
-
-                        case ConsoleKey.B:
-
-                            CursorMovement.MoveWordLeft(navigationDirection.KeyChar, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-
-                            break;
-
-                        case ConsoleKey.F:
-
-                            character = ReadChar(ref character);
-
-                            CursorMovement.FindCharacter(navigationDirection.KeyChar, lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, character);
-
-                            break;
-
-                        case ConsoleKey.M:
-
-                            character = ReadChar(ref character);
-
-                            char key = Convert.ToChar(character);
-
-                            CursorMovement.MarkLine(lineCounting, key);
-
-                            break;
-                    }
+                    Movements(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, numberOfMoves, action);
+                }
+                else
+                {
+                    EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                 }
 
-                if (navigationDirection.KeyChar == '^')
-                {
-                    CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                }
-
-                if (navigationDirection.KeyChar == '\'')
-                {
-                    character = ReadChar(ref character);
-
-                    char key = Convert.ToChar(character);
-
-                    CursorMovement.GoToMarkedLine(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, key);
-                }
-
-                character = ' ';
-                navigationDirection = ReadKey(ref numberOfMoves);
+                action = ReadKey(ref numberOfMoves);
             }
 
             Console.SetCursorPosition(0, Console.WindowWidth);
+        }
+
+        private static void Movements(
+                                      ref int lineCounting,
+                                      ref int horizontalPosition,
+                                      ref int verticalPosition,
+                                      ref int startingLine,
+                                      ref int startingColumn,
+                                      string numberOfMoves,
+                                      ConsoleKeyInfo action)
+        {
+            char? character = ' ';
+
+            for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
+            {
+                switch (action.Key)
+                {
+                    case ConsoleKey.UpArrow:
+
+                        CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                        break;
+
+                    case ConsoleKey.DownArrow:
+
+                        CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                        break;
+
+                    case ConsoleKey.LeftArrow:
+
+                        CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                        break;
+
+                    case ConsoleKey.RightArrow:
+
+                        CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                        break;
+
+                    case ConsoleKey.End:
+
+                        CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
+
+                        break;
+
+                    case ConsoleKey.Home:
+
+                        CursorMovement.HomeButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
+
+                        break;
+
+                    case ConsoleKey.PageDown:
+
+                        CursorMovement.PageDownBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn);
+
+                        break;
+
+                    case ConsoleKey.PageUp:
+
+                        CursorMovement.PageUpBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn);
+
+                        break;
+
+                    case ConsoleKey.W:
+
+                        CursorMovement.MoveWordRight(action.KeyChar, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                        break;
+
+                    case ConsoleKey.B:
+
+                        CursorMovement.MoveWordLeft(action.KeyChar, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                        break;
+
+                    case ConsoleKey.F:
+
+                        character = ReadChar(ref character);
+
+                        CursorMovement.FindCharacter(action.KeyChar, lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, character);
+
+                        break;
+
+                    case ConsoleKey.M:
+
+                        character = ReadChar(ref character);
+
+                        char key = Convert.ToChar(character);
+
+                        CursorMovement.MarkLine(lineCounting, key);
+
+                        break;
+                }
+            }
+
+            if (action.KeyChar == '^')
+            {
+                CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+            }
+
+            if (action.KeyChar == '\'')
+            {
+                character = ReadChar(ref character);
+
+                char key = Convert.ToChar(character);
+
+                CursorMovement.GoToMarkedLine(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, key);
+            }
+        }
+
+        private static void EditMode(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
+        {
+            ConsoleKeyInfo action = Console.ReadKey(true);
+            while (action.Key != ConsoleKey.Escape)
+            {
+                switch (action.Key)
+                {
+                    case ConsoleKey.UpArrow:
+
+                        CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                        break;
+
+                    case ConsoleKey.DownArrow:
+
+                        CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                        break;
+
+                    case ConsoleKey.LeftArrow:
+
+                        CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                        break;
+
+                    case ConsoleKey.RightArrow:
+
+                        CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                        break;
+                }
+
+                action = Console.ReadKey(true);
+            }
         }
 
         private static int ReadOption(int[] validOption)
