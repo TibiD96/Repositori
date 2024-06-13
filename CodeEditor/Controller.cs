@@ -50,7 +50,7 @@ namespace CodeEditor
                 }
                 else
                 {
-                    EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                    EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent);
                 }
 
                 action = ReadKey(ref numberOfMoves);
@@ -169,9 +169,10 @@ namespace CodeEditor
             }
         }
 
-        private static void EditMode(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
+        private static void EditMode(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, ref string[] fileContent)
         {
             ConsoleKeyInfo action = Console.ReadKey(true);
+            bool fastTravelMode = Config.FastTravel;
             while (action.Key != ConsoleKey.Escape)
             {
                 switch (action.Key)
@@ -199,6 +200,17 @@ namespace CodeEditor
                         CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
 
                         break;
+                }
+
+                string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
+                int charIndex = horizontalPosition - startingColumn - lineIndex.Length - 1;
+
+                if (action.Key == ConsoleKey.Backspace && charIndex >= 0)
+                {
+                    fileContent[lineCounting] = fileContent[lineCounting].Remove(charIndex, 1);
+                    CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                    Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                    Console.SetCursorPosition(horizontalPosition, verticalPosition);
                 }
 
                 action = Console.ReadKey(true);

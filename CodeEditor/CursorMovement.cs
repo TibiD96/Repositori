@@ -138,7 +138,7 @@
             }
             else
             {
-                if (horizontalPosition >= currentEndColumn + lineIndex.Length - 1 || currentEndColumn == 0)
+                if (horizontalPosition >= currentEndColumn + lineIndex.Length || currentEndColumn == 0)
                 {
                     horizontalPosition = lineIndex.Length;
                     startingColumn = 0;
