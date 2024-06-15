@@ -171,6 +171,7 @@ namespace CodeEditor
 
         private static void EditMode(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, ref string[] fileContent)
         {
+            bool arrowButton = false;
             ConsoleKeyInfo action = Console.ReadKey(true);
             bool fastTravelMode = Config.FastTravel;
             while (action.Key != ConsoleKey.Escape)
@@ -180,40 +181,54 @@ namespace CodeEditor
                     case ConsoleKey.UpArrow:
 
                         CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-
+                        arrowButton = true;
                         break;
 
                     case ConsoleKey.DownArrow:
 
                         CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-
+                        arrowButton = true;
                         break;
 
                     case ConsoleKey.LeftArrow:
 
                         CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-
+                        arrowButton = true;
                         break;
 
                     case ConsoleKey.RightArrow:
 
                         CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-
+                        arrowButton = true;
                         break;
                 }
 
                 string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
                 int charIndex = horizontalPosition - startingColumn - lineIndex.Length - 1;
 
-                if (action.Key == ConsoleKey.Backspace && charIndex >= 0)
+                if (!arrowButton)
                 {
-                    fileContent[lineCounting] = fileContent[lineCounting].Remove(charIndex, 1);
-                    CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                    Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
-                    Console.SetCursorPosition(horizontalPosition, verticalPosition);
+                    if (action.Key == ConsoleKey.Backspace && charIndex >= 0)
+                    {
+                        fileContent[lineCounting] = fileContent[lineCounting].Remove(charIndex, 1);
+                        CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                        Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                        Console.SetCursorPosition(horizontalPosition, verticalPosition);
+                    }
+                    else if (action.Key != ConsoleKey.Backspace)
+                    {
+                        fileContent[lineCounting] = charIndex == fileContent[lineCounting].Length
+                            ? fileContent[lineCounting].Substring(charIndex) + action.KeyChar
+                            : fileContent[lineCounting].Substring(0, charIndex + 1) + action.KeyChar + fileContent[lineCounting].Substring(charIndex + 1);
+
+                        CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                        Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                        Console.SetCursorPosition(horizontalPosition, verticalPosition);
+                    }
                 }
 
                 action = Console.ReadKey(true);
+                arrowButton = false;
             }
         }
 
