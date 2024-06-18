@@ -231,9 +231,22 @@ namespace CodeEditor
                                      ConsoleKeyInfo action)
         {
             bool fastTravelMode = Config.FastTravel;
+            int charIndex;
+
+            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
+            int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
             string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
 
-            int charIndex = horizontalPosition + startingColumn - lineIndex.Length - 1;
+            if (horizontalPosition >= currentEndColumn + lineIndex.Length - 1)
+            {
+                horizontalPosition = fileContent[lineCounting].Length + lineIndex.Length;
+                charIndex = horizontalPosition + startingColumn - lineIndex.Length - 1;
+            }
+            else
+            {
+                charIndex = horizontalPosition + startingColumn - lineIndex.Length;
+            }
+
             if (action.Key == ConsoleKey.Backspace && charIndex >= 0)
             {
                 fileContent[lineCounting] = fileContent[lineCounting].Remove(charIndex, 1);
