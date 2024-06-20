@@ -237,14 +237,14 @@ namespace CodeEditor
             int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
             string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
 
-            if (horizontalPosition >= currentEndColumn + lineIndex.Length - 1)
+            if (horizontalPosition >= currentEndColumn + lineIndex.Length)
             {
-                horizontalPosition = fileContent[lineCounting].Length + lineIndex.Length;
+                horizontalPosition = currentEndColumn + lineIndex.Length;
                 charIndex = horizontalPosition + startingColumn - lineIndex.Length - 1;
             }
             else
             {
-                charIndex = horizontalPosition + startingColumn - lineIndex.Length;
+                charIndex = horizontalPosition + startingColumn - lineIndex.Length - 1;
             }
 
             if (action.Key == ConsoleKey.Backspace && charIndex >= 0)

@@ -111,7 +111,7 @@
             {
                 if (horizontalPosition > currentEndColumn + lineIndex.Length)
                 {
-                    horizontalPosition = currentEndColumn - 1 + lineIndex.Length;
+                    horizontalPosition = currentEndColumn + lineIndex.Length;
                 }
                 else if (horizontalPosition > lineIndex.Length)
                 {
@@ -130,7 +130,7 @@
             int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
             string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
 
-            if (horizontalPosition + 1 == Console.WindowWidth && fileContent[lineCounting].Length - currentStartColumn + lineIndex.Length - 1 > Console.WindowWidth - 1)
+            if (horizontalPosition + 1 == Console.WindowWidth && fileContent[lineCounting].Length - currentStartColumn + lineIndex.Length > Console.WindowWidth - 1)
             {
                 startingColumn++;
                 Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
@@ -138,7 +138,7 @@
             }
             else
             {
-                if (horizontalPosition >= currentEndColumn + lineIndex.Length - 1 || currentEndColumn == 0)
+                if (horizontalPosition >= currentEndColumn + lineIndex.Length || currentEndColumn == 0)
                 {
                     horizontalPosition = lineIndex.Length;
                     startingColumn = 0;
