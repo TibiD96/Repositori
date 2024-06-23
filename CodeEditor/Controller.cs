@@ -39,11 +39,12 @@ namespace CodeEditor
             int verticalPosition = Console.CursorTop;
             int horizontalPosition = Console.CursorLeft;
             string[] originalFile = fileContent;
+            bool quit = false;
 
             ConsoleKeyInfo action = ReadKey(ref numberOfMoves);
             CursorMovement.FileParameter(fastTravelMode, fileContent);
 
-            while (action.KeyChar != ':')
+            while (!quit)
             {
                 if (action.Key != ConsoleKey.I)
                 {
@@ -52,6 +53,16 @@ namespace CodeEditor
                 else
                 {
                     EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent);
+                }
+
+                if (action.KeyChar == ':')
+                {
+                    CommandMode(ref quit, fileContent, originalFile);
+                }
+
+                if (quit)
+                {
+                    break;
                 }
 
                 action = ReadKey(ref numberOfMoves);
@@ -263,6 +274,42 @@ namespace CodeEditor
                 CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                 Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
                 Console.SetCursorPosition(horizontalPosition, verticalPosition);
+            }
+        }
+
+        private static void CommandMode(ref bool quite, string[] fileLastVersion, string[] fileOriginalVersion)
+        {
+            Console.Clear();
+            ConsoleKeyInfo action = Console.ReadKey(true);
+            string command = "";
+
+            while (action.Key != ConsoleKey.Enter)
+            {
+                Console.Clear();
+                if (action.Key == ConsoleKey.Backspace)
+                {
+                    if (command.Length == 1)
+                    {
+                        command = "";
+                    }
+                    else if (command.Length > 1)
+                    {
+                        command = command.Substring(0, command.Length - 1);
+                    }
+                }
+                else
+                {
+                    command = command + action.KeyChar;
+                }
+
+                Console.Write(command);
+                Console.SetCursorPosition(command.Length, Console.CursorTop);
+                action = Console.ReadKey(true);
+            }
+
+            if (command == "quit!" || command == "q!")
+            {
+                quite = true;
             }
         }
 
