@@ -1,7 +1,4 @@
-﻿using System;
-using static System.Collections.Specialized.BitVector32;
-
-namespace CodeEditor
+﻿namespace CodeEditor
 {
     public class Controller
     {
@@ -17,7 +14,7 @@ namespace CodeEditor
             string[] fileContent = File.ReadAllLines(filePathToOpen);
 
             Consola.ShowContentOfFile(fileContent, Console.WindowHeight - 1, fastTravelMode);
-            InFileActions(fileContent, fastTravelMode);
+            InFileActions(fileContent, fastTravelMode, filePathToOpen);
         }
 
         private static void GetAllFiles(ref List<string> allFiles, string directory)
@@ -30,7 +27,7 @@ namespace CodeEditor
             }
         }
 
-        private static void InFileActions(string[] fileContent, bool fastTravelMode)
+        private static void InFileActions(string[] fileContent, bool fastTravelMode, string originalPath)
         {
             int startingLine = 0;
             int startingColumn = 0;
@@ -38,7 +35,7 @@ namespace CodeEditor
             int lineCounting = Console.CursorTop;
             int verticalPosition = Console.CursorTop;
             int horizontalPosition = Console.CursorLeft;
-            string[] originalFile = fileContent;
+            string[] originalFile = (string[])fileContent.Clone();
             bool quit = false;
 
             ConsoleKeyInfo action = ReadKey(ref numberOfMoves);
@@ -57,7 +54,16 @@ namespace CodeEditor
 
                 if (action.KeyChar == ':')
                 {
-                    CommandMode(ref quit, fileContent, originalFile);
+                    CommandMode(ref quit, fileContent, originalFile, originalPath);
+                    Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+
+                    int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
+                    int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ?
+                                           fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+                    string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
+                    Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
+
+                    originalFile = (string[])fileContent.Clone();
                 }
 
                 if (quit)
@@ -185,7 +191,6 @@ namespace CodeEditor
         {
             bool arrowButton = false;
             ConsoleKeyInfo action = Console.ReadKey(true);
-            bool fastTravelMode = Config.FastTravel;
             while (action.Key != ConsoleKey.Escape)
             {
                 switch (action.Key)
@@ -277,39 +282,102 @@ namespace CodeEditor
             }
         }
 
-        private static void CommandMode(ref bool quite, string[] fileLastVersion, string[] fileOriginalVersion)
+        private static void CommandMode(ref bool quit, string[] fileLastVersion, string[] fileOriginalVersion, string originalPath)
         {
-            Console.Clear();
+            Consola.CommandModeContour();
             ConsoleKeyInfo action = Console.ReadKey(true);
             string command = "";
-
-            while (action.Key != ConsoleKey.Enter)
+            int bottomLane = Console.WindowHeight - 10;
+            const int leftLane = 20;
+            int rightLane = Console.WindowWidth - 20;
+            while (!quit)
             {
-                Console.Clear();
+                Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
+                Console.Write(new string(' ', rightLane - leftLane - 1));
+
                 if (action.Key == ConsoleKey.Backspace)
                 {
-                    if (command.Length == 1)
-                    {
-                        command = "";
-                    }
-                    else if (command.Length > 1)
+                    if (command.Length > 0)
                     {
                         command = command.Substring(0, command.Length - 1);
                     }
                 }
-                else
+                else if (action.Key != ConsoleKey.Enter)
                 {
                     command = command + action.KeyChar;
                 }
 
-                Console.Write(command);
-                Console.SetCursorPosition(command.Length, Console.CursorTop);
+                string commandToShow = command;
+                if (command.Length > rightLane - leftLane - 1)
+                {
+                    commandToShow = command.Substring(command.Length - (rightLane - leftLane - 1));
+                }
+
+                Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
+                Console.Write(commandToShow);
+                Console.SetCursorPosition(commandToShow.Length + leftLane + 1, Console.CursorTop);
                 action = Console.ReadKey(true);
+
+                if (action.Key == ConsoleKey.Enter)
+                {
+                    Commands(ref command, ref quit, fileLastVersion, fileOriginalVersion, originalPath);
+                    if (command.Contains('w'))
+                    {
+                        return;
+                    }
+                }
+            }
+        }
+
+        private static void Commands(ref string command, ref bool quit, string[] fileLastVersion, string[] fileOriginalVersion, string originalPath)
+        {
+            const int topLane = 10;
+            const int leftLane = 20;
+            string path = originalPath;
+
+            if (command.Contains("write") && command.Length > 5)
+            {
+                path = command.Replace("write", "").Trim() + '\\' + Path.GetFileName(originalPath);
+                command = command.Substring(0, 5);
+            }
+            else
+            {
+                if (command.Contains("w") && command.Length > 5)
+                {
+                    path = command.Replace("w", "").Trim() + '\\' + Path.GetFileName(originalPath);
+                    command = command.Substring(0, 1);
+                }
             }
 
-            if (command == "quit!" || command == "q!")
+            switch (command)
             {
-                quite = true;
+                case "quit!":
+
+                case "q!":
+
+                    quit = true;
+                    break;
+
+                case "quit":
+
+                case "q":
+
+                    if (fileLastVersion.SequenceEqual(fileOriginalVersion))
+                    {
+                        quit = true;
+                        break;
+                    }
+
+                    Console.SetCursorPosition(leftLane + 1, topLane + 1);
+                    Console.Write("File has modifications please save first ore use quit!/q!");
+                    break;
+
+                case "write":
+
+                case "w":
+
+                    File.WriteAllLines(path, fileLastVersion);
+                    break;
             }
         }
 

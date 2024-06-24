@@ -2,7 +2,7 @@
 {
     public class Consola
     {
-        public static void ShowContentOfFile(string[] lines, int currentLine, bool fastTravelMode, int startingLine = 0, int startingColumn = 0)
+        public static void ShowContentOfFile(string[] file, int currentLine, bool fastTravelMode, int startingLine = 0, int startingColumn = 0)
         {
             Console.CursorVisible = false;
             int visibleAreaWidth = Console.WindowWidth;
@@ -12,20 +12,20 @@
             int currentEndColumn;
             int currentStartColumn;
 
-            NullExcept.ArgumentNullException(lines);
+            NullExcept.ArgumentNullException(file);
 
-            string maximumNumberOfLines = Convert.ToString(lines.Length - 1);
+            string maximumNumberOfLines = Convert.ToString(file.Length - 1);
 
             ClearConsole();
 
-            for (int i = startingLine; i < Math.Min(lines.Length, startingLine + visibleAreaHight); i++)
+            for (int i = startingLine; i < Math.Min(file.Length, startingLine + visibleAreaHight); i++)
             {
-                line = lines[i];
+                line = file[i];
                 lineNumber = i;
                 string lineIndex = GenerateLineIndex(fastTravelMode, currentLine, lineNumber, maximumNumberOfLines) + " ";
                 currentStartColumn = Math.Max(0, Math.Min(startingColumn, line.Length));
                 currentEndColumn = line.Length - currentStartColumn <= visibleAreaWidth - lineIndex.Length ? line.Length - currentStartColumn : visibleAreaWidth - lineIndex.Length;
-                if (i < Math.Min(lines.Length, startingLine + visibleAreaHight) - 1)
+                if (i < Math.Min(file.Length, startingLine + visibleAreaHight) - 1)
                 {
                     WriteIndex(lineNumber, lineIndex, currentLine, fastTravelMode);
                     Console.WriteLine(line.Substring(currentStartColumn, currentEndColumn));
@@ -206,6 +206,55 @@
             Console.Write("┘");
             Console.SetCursorPosition(1, Console.WindowHeight - 1);
             Console.Write(new string('─', Console.WindowWidth - 2));
+        }
+
+        public static void CommandModeContour()
+        {
+            const int topLane = 10;
+            int bottomLane = Console.WindowHeight - 10;
+            const int leftLane = 20;
+            int rightLane = Console.WindowWidth - 20;
+            const string header = "Command Line";
+
+            for (int i = topLane; i <= bottomLane; i++)
+            {
+                Console.SetCursorPosition(leftLane, i);
+                Console.Write("│");
+                Console.SetCursorPosition(leftLane + 1, i);
+                Console.Write(new string(' ', rightLane - leftLane));
+                Console.SetCursorPosition(rightLane, i);
+                Console.Write("│");
+            }
+
+            Console.SetCursorPosition(leftLane, topLane);
+            Console.Write("┌");
+            Console.SetCursorPosition(rightLane, topLane);
+            Console.Write("┐");
+            Console.SetCursorPosition(leftLane + 1, topLane);
+            Console.Write(header);
+            Console.SetCursorPosition(leftLane + header.Length + 1, topLane);
+            Console.Write(new string('─', rightLane - leftLane - 1 - header.Length));
+            Console.SetCursorPosition(leftLane, bottomLane - 3);
+            Console.Write("└");
+            Console.SetCursorPosition(rightLane, bottomLane - 3);
+            Console.Write("┘");
+            Console.SetCursorPosition(leftLane + 1, bottomLane - 3);
+            Console.Write(new string('─', rightLane - leftLane - 1));
+
+            Console.SetCursorPosition(leftLane, bottomLane - 2);
+            Console.Write("┌");
+            Console.SetCursorPosition(rightLane, bottomLane - 2);
+            Console.Write("┐");
+            Console.SetCursorPosition(leftLane + 1, bottomLane - 2);
+            Console.Write(new string('─', rightLane - leftLane - 1));
+            Console.SetCursorPosition(leftLane, bottomLane);
+            Console.Write("└");
+            Console.SetCursorPosition(rightLane, bottomLane);
+            Console.Write("┘");
+            Console.SetCursorPosition(leftLane + 1, bottomLane);
+            Console.Write(new string('─', rightLane - leftLane - 1));
+
+            Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
         }
 
         private static void HilightChar(string file, string search)
