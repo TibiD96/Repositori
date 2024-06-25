@@ -288,30 +288,13 @@
             string horizontal = Convert.ToString(currentColumn);
             string vertical = Convert.ToString(lineCounting);
 
-            Console.SetCursorPosition(1, topLane);
-            Console.Write(new string('─', Console.WindowWidth - 1));
-            Console.SetCursorPosition(0, topLane);
-            Console.Write("┌");
-            Console.SetCursorPosition(Console.WindowWidth - 1, topLane);
-            Console.Write("┐");
-            Console.SetCursorPosition(0, topLane + 1);
-            Console.Write("│");
-            Console.SetCursorPosition(Console.WindowWidth - 1, topLane + 1);
-            Console.Write("│");
-            Console.SetCursorPosition(0, Console.WindowHeight - 1);
-            Console.Write(new string('─', Console.WindowWidth - 1));
-            Console.SetCursorPosition(0, Console.WindowHeight - 1);
-            Console.Write("└");
-            Console.SetCursorPosition(Console.WindowWidth - 1, Console.WindowHeight - 1);
-            Console.Write("┘");
-
             Console.SetCursorPosition(1, topLane + 1);
 
             if (editMode)
             {
                 Console.BackgroundColor = ConsoleColor.Green;
                 Console.Write(new string(' ', Console.WindowWidth - 2));
-                Console.ForegroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.DarkBlue;
                 Console.SetCursorPosition(1, topLane + 1);
                 Console.Write("INS " + Path.GetFileName(originalPath));
             }
@@ -319,7 +302,7 @@
             {
                 Console.BackgroundColor = ConsoleColor.Red;
                 Console.Write(new string(' ', Console.WindowWidth - 2));
-                Console.ForegroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.DarkBlue;
                 Console.SetCursorPosition(1, topLane + 1);
                 Console.Write("NOR " + Path.GetFileName(originalPath));
             }

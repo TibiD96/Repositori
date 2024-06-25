@@ -205,6 +205,7 @@ namespace CodeEditor
         {
             bool arrowButton = false;
             const bool editMode = true;
+            bool fastTravelMode = Config.FastTravel;
 
             Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent, originalPath);
 
@@ -248,6 +249,7 @@ namespace CodeEditor
                               ref startingColumn,
                               ref fileContent,
                               action);
+                    CursorMovement.FileParameter(fastTravelMode, fileContent);
                 }
 
                 Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent, originalPath);
@@ -283,12 +285,25 @@ namespace CodeEditor
                 charIndex = horizontalPosition + startingColumn - lineIndex.Length - 1;
             }
 
-            if (action.Key == ConsoleKey.Backspace && charIndex >= 0)
+            if (action.Key == ConsoleKey.Backspace)
             {
-                fileContent[lineCounting] = fileContent[lineCounting].Remove(charIndex, 1);
-                CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
-                Console.SetCursorPosition(horizontalPosition, verticalPosition);
+                if (charIndex >= 0)
+                {
+                    fileContent[lineCounting] = fileContent[lineCounting].Remove(charIndex, 1);
+                    CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                    Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                    Console.SetCursorPosition(horizontalPosition, verticalPosition);
+                }
+                else
+                {
+                    if (lineCounting > 0)
+                    {
+                        DeleteLine(ref lineCounting, ref fileContent);
+                        CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                        Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                        Console.SetCursorPosition(horizontalPosition, verticalPosition);
+                    }
+                }
             }
             else if (action.Key != ConsoleKey.Backspace)
             {
@@ -300,6 +315,31 @@ namespace CodeEditor
                 Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
                 Console.SetCursorPosition(horizontalPosition, verticalPosition);
             }
+        }
+
+        private static void DeleteLine(ref int lineCounting, ref string[] fileContent)
+        {
+            bool fastTravelMode = Config.FastTravel;
+            if (fileContent[lineCounting].Length > 0)
+            {
+                fileContent[lineCounting - 1] = fileContent[lineCounting - 1] + fileContent[lineCounting];
+            }
+
+            for (int i = lineCounting; i < fileContent.Length - 1; i++)
+            {
+                fileContent[i] = fileContent[i + 1];
+            }
+
+            string[] newfileContent = fileContent.Take(fileContent.Length - 1).ToArray();
+
+            if (lineCounting == newfileContent.Length - 1)
+            {
+                lineCounting--;
+            }
+
+            fileContent = (string[])newfileContent.Clone();
+
+            CursorMovement.FileParameter(fastTravelMode, fileContent);
         }
 
         private static void CommandMode(ref bool quit, string[] fileLastVersion, string[] fileOriginalVersion, string originalPath)
