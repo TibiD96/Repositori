@@ -96,7 +96,7 @@
         public static void ShowDirectoryContent(string[] fileFromDirectory)
         {
             const int searchBarDim = 4;
-            DrawContour();
+            SearchContour();
             int startingLine = Console.WindowHeight - (searchBarDim + 1);
             if (fileFromDirectory == null)
             {
@@ -171,7 +171,7 @@
             Console.SetCursorPosition(1, startingLine);
         }
 
-        public static void DrawContour()
+        public static void SearchContour()
         {
             const int lowerLineResults = 3;
             for (int i = 0; i <= Console.WindowHeight - 1; i++)

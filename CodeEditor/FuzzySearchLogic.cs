@@ -10,7 +10,7 @@
             (string, ConsoleKeyInfo) navigationResult;
 
             Consola.ClearConsole();
-            Consola.DrawContour();
+            Consola.SearchContour();
             Consola.ShowValidResults(listOfValidFiles, listOfValidFiles.Count, "", allFiles.ToArray());
 
             string file = ValidFileByDefault(listOfValidFiles);
