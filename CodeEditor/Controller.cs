@@ -56,6 +56,7 @@ namespace CodeEditor
                 else
                 {
                     EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent);
+                    Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent);
                 }
 
                 if (action.KeyChar == ':')
