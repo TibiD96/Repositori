@@ -268,7 +268,7 @@
             Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
         }
 
-        public static void Status(bool editMode, int horizontalPosition, int verticalPosition, int lineCounting, int startingColumn, string[] fileContent)
+        public static void Status(bool editMode, int horizontalPosition, int verticalPosition, int lineCounting, int startingColumn, string[] fileContent, string originalPath)
         {
             NullExcept.ArgumentNullException(fileContent);
 
@@ -284,15 +284,12 @@
             }
 
             int topLane = Console.WindowHeight - 3;
-            const string header = "Status";
             int currentColumn = horizontalPosition + startingColumn;
             string horizontal = Convert.ToString(currentColumn);
             string vertical = Convert.ToString(lineCounting);
 
             Console.SetCursorPosition(1, topLane);
-            Console.Write(header);
-            Console.SetCursorPosition(header.Length + 1, topLane);
-            Console.Write(new string('─', (Console.WindowWidth - 1) - header.Length));
+            Console.Write(new string('─', Console.WindowWidth - 1));
             Console.SetCursorPosition(0, topLane);
             Console.Write("┌");
             Console.SetCursorPosition(Console.WindowWidth - 1, topLane);
@@ -312,23 +309,25 @@
 
             if (editMode)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("INS");
+                Console.BackgroundColor = ConsoleColor.Green;
+                Console.Write(new string(' ', Console.WindowWidth - 2));
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.SetCursorPosition(1, topLane + 1);
+                Console.Write("INS " + Path.GetFileName(originalPath));
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write("NOR");
+                Console.BackgroundColor = ConsoleColor.Red;
+                Console.Write(new string(' ', Console.WindowWidth - 2));
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.SetCursorPosition(1, topLane + 1);
+                Console.Write("NOR " + Path.GetFileName(originalPath));
             }
-
-            Console.ResetColor();
-
-            Console.SetCursorPosition(Console.WindowWidth / 2, topLane + 1);
-            Console.Write(new string(' ', Console.WindowWidth / 2 - 2));
 
             Console.SetCursorPosition((Console.WindowWidth - 1) - (horizontal.Length + vertical.Length + 1), topLane + 1);
             Console.Write(horizontal + '/' + vertical);
 
+            Console.ResetColor();
             Console.SetCursorPosition(horizontalPosition, verticalPosition);
         }
 

@@ -42,7 +42,7 @@ namespace CodeEditor
             bool quit = false;
             const bool editMode = false;
 
-            Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent);
+            Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent, originalPath);
             ConsoleKeyInfo action = ReadKey(ref numberOfMoves);
             CursorMovement.FileParameter(fastTravelMode, fileContent);
 
@@ -51,12 +51,12 @@ namespace CodeEditor
                 if (action.Key != ConsoleKey.I)
                 {
                     Movements(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, numberOfMoves, action);
-                    Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent);
+                    Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent, originalPath);
                 }
                 else
                 {
-                    EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent);
-                    Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent);
+                    EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
+                    Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent, originalPath);
                 }
 
                 if (action.KeyChar == ':')
@@ -194,12 +194,19 @@ namespace CodeEditor
             }
         }
 
-        private static void EditMode(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, ref string[] fileContent)
+        private static void EditMode(
+                                     ref int lineCounting,
+                                     ref int horizontalPosition,
+                                     ref int verticalPosition,
+                                     ref int startingLine,
+                                     ref int startingColumn,
+                                     ref string[] fileContent,
+                                     string originalPath)
         {
             bool arrowButton = false;
             const bool editMode = true;
 
-            Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent);
+            Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent, originalPath);
 
             ConsoleKeyInfo action = Console.ReadKey(true);
             while (action.Key != ConsoleKey.Escape)
@@ -243,7 +250,7 @@ namespace CodeEditor
                               action);
                 }
 
-                Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent);
+                Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent, originalPath);
 
                 action = Console.ReadKey(true);
                 arrowButton = false;
