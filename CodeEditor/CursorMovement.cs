@@ -63,9 +63,9 @@
                 startingColumn = currentStartColumn;
             }
 
-            if (verticalPosition + 1 == Console.WindowHeight)
+            if (verticalPosition + 1 == Console.WindowHeight - 3)
             {
-                if (startingLine + 1 <= fileContent.Length - Console.WindowHeight)
+                if (startingLine + 1 <= fileContent.Length - (Console.WindowHeight - 3))
                 {
                     startingLine++;
                 }
@@ -185,10 +185,10 @@
         {
             NullExcept.ArgumentNullException(fileContent);
 
-            int newStartingLine = startingLine + Console.WindowHeight - 1;
+            int newStartingLine = startingLine + Console.WindowHeight - 3;
             int originalVerticalPosition = verticalPosition;
             int downSteps = fileContent.Length - 1 - newStartingLine;
-            if (newStartingLine + Console.WindowHeight - 1 <= fileContent.Length - 1)
+            if (newStartingLine + Console.WindowHeight - 3 <= fileContent.Length - 1)
             {
                 while (startingLine < newStartingLine)
                 {
@@ -214,9 +214,9 @@
         {
             NullExcept.ArgumentNullException(fileContent);
 
-            int newStartingLine = startingLine - Console.WindowHeight + 1;
+            int newStartingLine = startingLine - (Console.WindowHeight - 2) + 1;
             int originalVerticalPosition = verticalPosition;
-            if (newStartingLine - Console.WindowHeight - 1 >= 0)
+            if (newStartingLine - Console.WindowHeight - 4 >= 0)
             {
                 while (startingLine > newStartingLine)
                 {

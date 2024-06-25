@@ -1,4 +1,6 @@
-﻿namespace CodeEditor
+﻿using System;
+
+namespace CodeEditor
 {
     public class Controller
     {
@@ -13,7 +15,8 @@
             string filePathToOpen = FuzzySearchLogic.FuzzySearch(filesFromDirectory, allFiles.ToArray());
             string[] fileContent = File.ReadAllLines(filePathToOpen);
 
-            Consola.ShowContentOfFile(fileContent, Console.WindowHeight - 1, fastTravelMode);
+            Consola.ClearConsole();
+            Consola.ShowContentOfFile(fileContent, Console.WindowHeight - 4, fastTravelMode);
             InFileActions(fileContent, fastTravelMode, filePathToOpen);
         }
 
@@ -37,7 +40,9 @@
             int horizontalPosition = Console.CursorLeft;
             string[] originalFile = (string[])fileContent.Clone();
             bool quit = false;
+            const bool editMode = false;
 
+            Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent);
             ConsoleKeyInfo action = ReadKey(ref numberOfMoves);
             CursorMovement.FileParameter(fastTravelMode, fileContent);
 
@@ -46,6 +51,7 @@
                 if (action.Key != ConsoleKey.I)
                 {
                     Movements(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, numberOfMoves, action);
+                    Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent);
                 }
                 else
                 {
@@ -190,6 +196,10 @@
         private static void EditMode(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, ref string[] fileContent)
         {
             bool arrowButton = false;
+            const bool editMode = true;
+
+            Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent);
+
             ConsoleKeyInfo action = Console.ReadKey(true);
             while (action.Key != ConsoleKey.Escape)
             {
@@ -231,6 +241,8 @@
                               ref fileContent,
                               action);
                 }
+
+                Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent);
 
                 action = Console.ReadKey(true);
                 arrowButton = false;

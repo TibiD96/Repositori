@@ -6,7 +6,7 @@
         {
             Console.CursorVisible = false;
             int visibleAreaWidth = Console.WindowWidth;
-            int visibleAreaHight = Console.WindowHeight;
+            int visibleAreaHight = Console.WindowHeight - 3;
             int lineNumber;
             string line;
             int currentEndColumn;
@@ -16,7 +16,7 @@
 
             string maximumNumberOfLines = Convert.ToString(file.Length - 1);
 
-            ClearConsole();
+            ClearVisibleArea();
 
             for (int i = startingLine; i < Math.Min(file.Length, startingLine + visibleAreaHight); i++)
             {
@@ -43,6 +43,17 @@
         public static void ClearConsole()
         {
             for (int i = Console.WindowHeight - 1; i >= 0; i--)
+            {
+                Console.SetCursorPosition(0, i);
+                Console.Write(new string(' ', Console.WindowWidth));
+            }
+
+            Console.SetCursorPosition(0, 0);
+        }
+
+        public static void ClearVisibleArea()
+        {
+            for (int i = Console.WindowHeight - 4; i >= 0; i--)
             {
                 Console.SetCursorPosition(0, i);
                 Console.Write(new string(' ', Console.WindowWidth));
@@ -255,6 +266,70 @@
             Console.Write(new string('─', rightLane - leftLane - 1));
 
             Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
+        }
+
+        public static void Status(bool editMode, int horizontalPosition, int verticalPosition, int lineCounting, int startingColumn, string[] fileContent)
+        {
+            NullExcept.ArgumentNullException(fileContent);
+
+            bool fastTravelMode = Config.FastTravel;
+
+            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
+            int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
+
+            if (horizontalPosition >= currentEndColumn + lineIndex.Length)
+            {
+                horizontalPosition = currentEndColumn + lineIndex.Length;
+            }
+
+            int topLane = Console.WindowHeight - 3;
+            const string header = "Status";
+            int currentColumn = horizontalPosition + startingColumn;
+            string horizontal = Convert.ToString(currentColumn);
+            string vertical = Convert.ToString(lineCounting);
+
+            Console.SetCursorPosition(1, topLane);
+            Console.Write(header);
+            Console.SetCursorPosition(header.Length + 1, topLane);
+            Console.Write(new string('─', (Console.WindowWidth - 1) - header.Length));
+            Console.SetCursorPosition(0, topLane);
+            Console.Write("┌");
+            Console.SetCursorPosition(Console.WindowWidth - 1, topLane);
+            Console.Write("┐");
+            Console.SetCursorPosition(0, topLane + 1);
+            Console.Write("│");
+            Console.SetCursorPosition(Console.WindowWidth - 1, topLane + 1);
+            Console.Write("│");
+            Console.SetCursorPosition(0, Console.WindowHeight - 1);
+            Console.Write(new string('─', Console.WindowWidth - 1));
+            Console.SetCursorPosition(0, Console.WindowHeight - 1);
+            Console.Write("└");
+            Console.SetCursorPosition(Console.WindowWidth - 1, Console.WindowHeight - 1);
+            Console.Write("┘");
+
+            Console.SetCursorPosition(1, topLane + 1);
+
+            if (editMode)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("INS");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("NOR");
+            }
+
+            Console.ResetColor();
+
+            Console.SetCursorPosition(Console.WindowWidth / 2, topLane + 1);
+            Console.Write(new string(' ', Console.WindowWidth / 2 - 2));
+
+            Console.SetCursorPosition((Console.WindowWidth - 1) - (horizontal.Length + vertical.Length + 1), topLane + 1);
+            Console.Write(horizontal + '/' + vertical);
+
+            Console.SetCursorPosition(horizontalPosition, verticalPosition);
         }
 
         private static void HilightChar(string file, string search)
