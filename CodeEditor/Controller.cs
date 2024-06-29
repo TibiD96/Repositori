@@ -94,6 +94,13 @@ namespace CodeEditor
                                       ConsoleKeyInfo action)
         {
             char? character = ' ';
+            int oldVerticalPosition = verticalPosition;
+
+            if (verticalPosition > Console.WindowHeight - 3)
+            {
+                verticalPosition = Console.WindowHeight - 3;
+                lineCounting = lineCounting - (oldVerticalPosition - verticalPosition);
+            }
 
             for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
             {
@@ -212,6 +219,14 @@ namespace CodeEditor
             ConsoleKeyInfo action = Console.ReadKey(true);
             while (action.Key != ConsoleKey.Escape)
             {
+                int oldVerticalPosition = verticalPosition;
+
+                if (verticalPosition > Console.WindowHeight - 3)
+                {
+                    verticalPosition = Console.WindowHeight - 3;
+                    lineCounting = lineCounting - (oldVerticalPosition - verticalPosition);
+                }
+
                 switch (action.Key)
                 {
                     case ConsoleKey.UpArrow:

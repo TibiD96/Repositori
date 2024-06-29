@@ -16,7 +16,7 @@
 
             string maximumNumberOfLines = Convert.ToString(file.Length - 1);
 
-            ClearVisibleArea();
+            ClearConsole();
 
             for (int i = startingLine; i < Math.Min(file.Length, startingLine + visibleAreaHight); i++)
             {
@@ -43,17 +43,6 @@
         public static void ClearConsole()
         {
             for (int i = Console.WindowHeight - 1; i >= 0; i--)
-            {
-                Console.SetCursorPosition(0, i);
-                Console.Write(new string(' ', Console.WindowWidth));
-            }
-
-            Console.SetCursorPosition(0, 0);
-        }
-
-        public static void ClearVisibleArea()
-        {
-            for (int i = Console.WindowHeight - 4; i >= 0; i--)
             {
                 Console.SetCursorPosition(0, i);
                 Console.Write(new string(' ', Console.WindowWidth));
@@ -293,16 +282,16 @@
             if (editMode)
             {
                 Console.BackgroundColor = ConsoleColor.Green;
-                Console.Write(new string(' ', Console.WindowWidth - 2));
-                Console.ForegroundColor = ConsoleColor.DarkBlue;
+                Console.Write(new string(' ', Console.WindowWidth - 1));
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.SetCursorPosition(1, topLane + 1);
                 Console.Write("INS " + Path.GetFileName(originalPath));
             }
             else
             {
                 Console.BackgroundColor = ConsoleColor.Red;
-                Console.Write(new string(' ', Console.WindowWidth - 2));
-                Console.ForegroundColor = ConsoleColor.DarkBlue;
+                Console.Write(new string(' ', Console.WindowWidth - 1));
+                Console.ForegroundColor = ConsoleColor.Black;
                 Console.SetCursorPosition(1, topLane + 1);
                 Console.Write("NOR " + Path.GetFileName(originalPath));
             }
