@@ -51,12 +51,10 @@ namespace CodeEditor
                 if (action.Key != ConsoleKey.I)
                 {
                     Movements(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, numberOfMoves, action);
-                    Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent, originalPath);
                 }
                 else
                 {
                     EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
-                    Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent, originalPath);
                 }
 
                 if (action.KeyChar == ':')
@@ -77,6 +75,8 @@ namespace CodeEditor
                 {
                     break;
                 }
+
+                Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent, originalPath);
 
                 action = ReadKey(ref numberOfMoves);
             }
@@ -302,23 +302,14 @@ namespace CodeEditor
 
             if (action.Key == ConsoleKey.Backspace)
             {
-                if (charIndex >= 0)
-                {
-                    fileContent[lineCounting] = fileContent[lineCounting].Remove(charIndex, 1);
-                    CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                    Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
-                    Console.SetCursorPosition(horizontalPosition, verticalPosition);
-                }
-                else
-                {
-                    if (lineCounting > 0)
-                    {
-                        DeleteLine(ref lineCounting, ref fileContent);
-                        CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                        Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
-                        Console.SetCursorPosition(horizontalPosition, verticalPosition);
-                    }
-                }
+                DeleteLine(
+                                   ref lineCounting,
+                                   ref horizontalPosition,
+                                   ref verticalPosition,
+                                   ref startingLine,
+                                   ref startingColumn,
+                                   ref fileContent,
+                                   charIndex);
             }
             else if (action.Key != ConsoleKey.Backspace)
             {
@@ -332,29 +323,53 @@ namespace CodeEditor
             }
         }
 
-        private static void DeleteLine(ref int lineCounting, ref string[] fileContent)
+        private static void DeleteLine(
+                                       ref int lineCounting,
+                                       ref int horizontalPosition,
+                                       ref int verticalPosition,
+                                       ref int startingLine,
+                                       ref int startingColumn,
+                                       ref string[] fileContent,
+                                       int charIndex)
         {
             bool fastTravelMode = Config.FastTravel;
-            if (fileContent[lineCounting].Length > 0)
+
+            if (charIndex >= 0)
             {
-                fileContent[lineCounting - 1] = fileContent[lineCounting - 1] + fileContent[lineCounting];
+                fileContent[lineCounting] = fileContent[lineCounting].Remove(charIndex, 1);
+                CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                Console.SetCursorPosition(horizontalPosition, verticalPosition);
             }
-
-            for (int i = lineCounting; i < fileContent.Length - 1; i++)
+            else
             {
-                fileContent[i] = fileContent[i + 1];
+                if (lineCounting > 0)
+                {
+                    if (fileContent[lineCounting].Length > 0)
+                    {
+                        fileContent[lineCounting - 1] = fileContent[lineCounting - 1] + fileContent[lineCounting];
+                    }
+
+                    for (int i = lineCounting; i < fileContent.Length - 1; i++)
+                    {
+                        fileContent[i] = fileContent[i + 1];
+                    }
+
+                    string[] newfileContent = fileContent.Take(fileContent.Length - 1).ToArray();
+
+                    if (lineCounting == newfileContent.Length - 1)
+                    {
+                        lineCounting--;
+                    }
+
+                    fileContent = (string[])newfileContent.Clone();
+
+                    CursorMovement.FileParameter(fastTravelMode, fileContent);
+                    CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                    Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                    Console.SetCursorPosition(horizontalPosition, verticalPosition);
+                }
             }
-
-            string[] newfileContent = fileContent.Take(fileContent.Length - 1).ToArray();
-
-            if (lineCounting == newfileContent.Length - 1)
-            {
-                lineCounting--;
-            }
-
-            fileContent = (string[])newfileContent.Clone();
-
-            CursorMovement.FileParameter(fastTravelMode, fileContent);
         }
 
         private static void CommandMode(ref bool quit, string[] fileLastVersion, string[] fileOriginalVersion, string originalPath)
