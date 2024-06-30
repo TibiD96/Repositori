@@ -300,26 +300,39 @@ namespace CodeEditor
                 charIndex = horizontalPosition + startingColumn - lineIndex.Length - 1;
             }
 
-            if (action.Key == ConsoleKey.Backspace)
+            switch (action.Key)
             {
-                DeleteLine(
-                                   ref lineCounting,
-                                   ref horizontalPosition,
-                                   ref verticalPosition,
-                                   ref startingLine,
-                                   ref startingColumn,
-                                   ref fileContent,
-                                   charIndex);
-            }
-            else if (action.Key != ConsoleKey.Backspace)
-            {
-                fileContent[lineCounting] = charIndex == fileContent[lineCounting].Length
+                case ConsoleKey.Backspace:
+                    DeleteLine(
+                                ref lineCounting,
+                                ref horizontalPosition,
+                                ref verticalPosition,
+                                ref startingLine,
+                                ref startingColumn,
+                                ref fileContent,
+                                charIndex);
+                    break;
+
+                case ConsoleKey.Enter:
+                    AddLine(
+                             ref lineCounting,
+                             ref horizontalPosition,
+                             ref verticalPosition,
+                             ref startingLine,
+                             ref startingColumn,
+                             ref fileContent,
+                             charIndex);
+                    break;
+
+                default:
+                    fileContent[lineCounting] = charIndex == fileContent[lineCounting].Length
                     ? fileContent[lineCounting].Substring(charIndex) + action.KeyChar
                     : fileContent[lineCounting].Substring(0, charIndex + 1) + action.KeyChar + fileContent[lineCounting].Substring(charIndex + 1);
 
-                CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
-                Console.SetCursorPosition(horizontalPosition, verticalPosition);
+                    CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                    Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                    Console.SetCursorPosition(horizontalPosition, verticalPosition);
+                    break;
             }
         }
 
@@ -370,6 +383,49 @@ namespace CodeEditor
                     Console.SetCursorPosition(horizontalPosition, verticalPosition);
                 }
             }
+        }
+
+        private static void AddLine(
+                                      ref int lineCounting,
+                                      ref int horizontalPosition,
+                                      ref int verticalPosition,
+                                      ref int startingLine,
+                                      ref int startingColumn,
+                                      ref string[] fileContent,
+                                      int charIndex)
+        {
+            string newLine = "";
+            bool fastTravelMode = Config.FastTravel;
+            string[] newFileContent = new string[fileContent.Length + 1];
+            if (charIndex > 0)
+            {
+                newLine = fileContent[lineCounting].Substring(charIndex + 1);
+                fileContent[lineCounting] = fileContent[lineCounting].Substring(0, charIndex + 1);
+            }
+            else
+            {
+                newLine = fileContent[lineCounting];
+                fileContent[lineCounting] = fileContent[lineCounting].Remove(0);
+            }
+
+            if (lineCounting < fileContent.Length - 1)
+            {
+                Array.Copy(fileContent, 0, newFileContent, 0, lineCounting + 1);
+                newFileContent[lineCounting + 1] = newLine;
+                Array.Copy(fileContent, lineCounting + 1, newFileContent, lineCounting + 2, (fileContent.Length - 1) - (lineCounting + 1));
+            }
+            else
+            {
+                Array.Copy(fileContent, 0, newFileContent, 0, lineCounting + 1);
+                newFileContent[lineCounting + 1] = newLine;
+            }
+
+            fileContent = (string[])newFileContent.Clone();
+
+            CursorMovement.FileParameter(fastTravelMode, fileContent);
+            CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+            Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+            Console.SetCursorPosition(horizontalPosition, verticalPosition);
         }
 
         private static void CommandMode(ref bool quit, string[] fileLastVersion, string[] fileOriginalVersion, string originalPath)
