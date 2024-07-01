@@ -358,6 +358,8 @@ namespace CodeEditor
             {
                 if (lineCounting > 0)
                 {
+                    string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting - 1, lineCounting - 1, Convert.ToString(fileContent.Length)) + " ";
+                    int indexOfLastChar = fileContent[lineCounting - 1].Length - 1 + lineIndex.Length;
                     if (fileContent[lineCounting].Length > 0)
                     {
                         fileContent[lineCounting - 1] = fileContent[lineCounting - 1] + fileContent[lineCounting];
@@ -370,15 +372,21 @@ namespace CodeEditor
 
                     string[] newfileContent = fileContent.Take(fileContent.Length - 1).ToArray();
 
-                    if (lineCounting == newfileContent.Length - 1)
-                    {
-                        lineCounting--;
-                    }
-
                     fileContent = (string[])newfileContent.Clone();
 
                     CursorMovement.FileParameter(fastTravelMode, fileContent);
                     CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                    lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
+
+                    startingColumn = 0;
+                    horizontalPosition = lineIndex.Length;
+
+                    while (horizontalPosition + startingColumn < indexOfLastChar)
+                    {
+                        CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                    }
+
                     Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
                     Console.SetCursorPosition(horizontalPosition, verticalPosition);
                 }
@@ -394,9 +402,9 @@ namespace CodeEditor
                                       ref string[] fileContent,
                                       int charIndex)
         {
-            string newLine = "";
             bool fastTravelMode = Config.FastTravel;
             string[] newFileContent = new string[fileContent.Length + 1];
+            string newLine;
             if (charIndex > 0)
             {
                 newLine = fileContent[lineCounting].Substring(charIndex + 1);
