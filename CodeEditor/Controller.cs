@@ -420,7 +420,7 @@ namespace CodeEditor
             {
                 Array.Copy(fileContent, 0, newFileContent, 0, lineCounting + 1);
                 newFileContent[lineCounting + 1] = newLine;
-                Array.Copy(fileContent, lineCounting + 1, newFileContent, lineCounting + 2, (fileContent.Length - 1) - (lineCounting + 1));
+                Array.Copy(fileContent, lineCounting + 1, newFileContent, lineCounting + 2, fileContent.Length - (lineCounting + 1));
             }
             else
             {
@@ -432,6 +432,9 @@ namespace CodeEditor
 
             CursorMovement.FileParameter(fastTravelMode, fileContent);
             CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+            string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
+            startingColumn = 0;
+            horizontalPosition = lineIndex.Length;
             Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
             Console.SetCursorPosition(horizontalPosition, verticalPosition);
         }
