@@ -284,21 +284,7 @@ namespace CodeEditor
                                      ConsoleKeyInfo action)
         {
             bool fastTravelMode = Config.FastTravel;
-            int charIndex;
-
-            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-            int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
-            string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
-
-            if (horizontalPosition >= currentEndColumn + lineIndex.Length)
-            {
-                horizontalPosition = currentEndColumn + lineIndex.Length;
-                charIndex = horizontalPosition + startingColumn - lineIndex.Length - 1;
-            }
-            else
-            {
-                charIndex = horizontalPosition + startingColumn - lineIndex.Length - 1;
-            }
+            int charIndex = GetCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
 
             switch (action.Key)
             {
@@ -538,6 +524,23 @@ namespace CodeEditor
                     File.WriteAllLines(path, fileLastVersion);
                     break;
             }
+        }
+
+        private static int GetCursorCharIndex(int lineCounting, ref int horizontalPosition, int startingColumn, string[] fileContent)
+        {
+            bool fastTravelMode = Config.FastTravel;
+
+            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
+            int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
+
+            if (horizontalPosition >= currentEndColumn + lineIndex.Length)
+            {
+                horizontalPosition = currentEndColumn + lineIndex.Length;
+                return horizontalPosition + startingColumn - lineIndex.Length - 1;
+            }
+
+            return horizontalPosition + startingColumn - lineIndex.Length - 1;
         }
 
         private static int ReadOption(int[] validOption)
