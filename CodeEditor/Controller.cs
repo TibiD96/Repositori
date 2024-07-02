@@ -404,15 +404,17 @@ namespace CodeEditor
         {
             bool fastTravelMode = Config.FastTravel;
             string[] newFileContent = new string[fileContent.Length + 1];
-            string newLine;
+            string newLine = fileContent[lineCounting].TakeWhile(c => c == ' ').Aggregate("", (current, c) => current + c);
+            int emptySpacesLength = newLine.Length;
+
             if (charIndex > 0)
             {
-                newLine = fileContent[lineCounting].Substring(charIndex + 1);
+                newLine = newLine + fileContent[lineCounting].Substring(charIndex + 1);
                 fileContent[lineCounting] = fileContent[lineCounting].Substring(0, charIndex + 1);
             }
             else
             {
-                newLine = fileContent[lineCounting];
+                newLine = newLine + fileContent[lineCounting];
                 fileContent[lineCounting] = fileContent[lineCounting].Remove(0);
             }
 
@@ -434,7 +436,7 @@ namespace CodeEditor
             CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
             string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
             startingColumn = 0;
-            horizontalPosition = lineIndex.Length;
+            horizontalPosition = emptySpacesLength + lineIndex.Length;
             Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
             Console.SetCursorPosition(horizontalPosition, verticalPosition);
         }
