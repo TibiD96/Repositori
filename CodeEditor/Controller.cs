@@ -284,7 +284,7 @@ namespace CodeEditor
                                      ConsoleKeyInfo action)
         {
             bool fastTravelMode = Config.FastTravel;
-            int charIndex = GetCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+            int charIndex = GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
 
             switch (action.Key)
             {
