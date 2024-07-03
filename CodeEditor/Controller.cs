@@ -368,7 +368,7 @@ namespace CodeEditor
                     startingColumn = 0;
                     horizontalPosition = lineIndex.Length;
 
-                    while (horizontalPosition + startingColumn < indexOfLastChar)
+                    while (horizontalPosition + startingColumn < indexOfLastChar + 1)
                     {
                         CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                     }
