@@ -40,6 +40,7 @@ namespace CodeEditor
             int horizontalPosition = Console.CursorLeft;
             string[] originalFile = (string[])fileContent.Clone();
             bool quit = false;
+            int charIndex;
             const bool editMode = false;
 
             Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent, originalPath);
@@ -48,27 +49,69 @@ namespace CodeEditor
 
             while (!quit)
             {
+                switch (action.KeyChar)
+                {
+                    case 'A':
+                        CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
+                        EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
+                        break;
+
+                    case 'I':
+                        CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                        EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
+                        break;
+
+                    case 'i':
+
+                    case 'a':
+                        EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
+                        break;
+
+                    case 'o':
+                        CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
+                        charIndex = GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                        AddLine(
+                             ref lineCounting,
+                             ref horizontalPosition,
+                             ref verticalPosition,
+                             ref startingLine,
+                             ref startingColumn,
+                             ref fileContent,
+                             charIndex);
+                        EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
+                        break;
+
+                    case 'O':
+                        CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                        charIndex = GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                        AddLine(
+                             ref lineCounting,
+                             ref horizontalPosition,
+                             ref verticalPosition,
+                             ref startingLine,
+                             ref startingColumn,
+                             ref fileContent,
+                             charIndex);
+                        EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
+                        break;
+
+                    case ':':
+                        CommandMode(ref quit, fileContent, originalFile, originalPath);
+                        Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+
+                        int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
+                        int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ?
+                                               fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+                        string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
+                        Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
+
+                        originalFile = (string[])fileContent.Clone();
+                        break;
+                }
+
                 if (action.Key != ConsoleKey.I)
                 {
                     Movements(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, numberOfMoves, action);
-                }
-                else
-                {
-                    EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
-                }
-
-                if (action.KeyChar == ':')
-                {
-                    CommandMode(ref quit, fileContent, originalFile, originalPath);
-                    Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
-
-                    int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-                    int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ?
-                                           fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
-                    string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
-                    Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
-
-                    originalFile = (string[])fileContent.Clone();
                 }
 
                 if (quit)
