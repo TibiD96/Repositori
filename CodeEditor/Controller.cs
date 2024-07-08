@@ -62,8 +62,12 @@ namespace CodeEditor
                         break;
 
                     case 'i':
+                        Config.EditAfterCursor = true;
+                        EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
+                        break;
 
                     case 'a':
+                        Config.EditAfterCursor = false;
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
                         break;
 
@@ -355,11 +359,19 @@ namespace CodeEditor
                     break;
 
                 default:
-                    fileContent[lineCounting] = charIndex == fileContent[lineCounting].Length
-                    ? fileContent[lineCounting].Substring(charIndex) + action.KeyChar
-                    : fileContent[lineCounting].Substring(0, charIndex + 1) + action.KeyChar + fileContent[lineCounting].Substring(charIndex + 1);
+                    if (Config.EditAfterCursor)
+                    {
+                        fileContent[lineCounting] = fileContent[lineCounting].Substring(0, charIndex + 1) + action.KeyChar + fileContent[lineCounting].Substring(charIndex + 1);
 
-                    CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                        CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                    }
+                    else
+                    {
+                        fileContent[lineCounting] = charIndex == fileContent[lineCounting].Length - 1
+                            ? fileContent[lineCounting].Substring(0, charIndex + 1) + action.KeyChar + fileContent[lineCounting].Substring(charIndex + 1)
+                            : fileContent[lineCounting].Substring(0, charIndex + 2) + action.KeyChar + fileContent[lineCounting].Substring(charIndex + 2);
+                    }
+
                     Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
                     Console.SetCursorPosition(horizontalPosition, verticalPosition);
                     break;
