@@ -92,6 +92,7 @@ namespace CodeEditor
                              ref startingColumn,
                              ref fileContent,
                              charIndex);
+                        CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
                         break;
 
