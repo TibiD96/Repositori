@@ -361,7 +361,9 @@ namespace CodeEditor
                 default:
                     if (Config.EditAfterCursor)
                     {
-                        fileContent[lineCounting] = fileContent[lineCounting].Substring(0, charIndex + 1) + action.KeyChar + fileContent[lineCounting].Substring(charIndex + 1);
+                        fileContent[lineCounting] = charIndex == fileContent[lineCounting].Length
+                        ? fileContent[lineCounting].Substring(charIndex) + action.KeyChar
+                        : fileContent[lineCounting].Substring(0, charIndex + 1) + action.KeyChar + fileContent[lineCounting].Substring(charIndex + 1);
 
                         CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                     }
