@@ -69,6 +69,7 @@ namespace CodeEditor
                     case 'a':
                         Config.EditAfterCursor = false;
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
+                        Config.EditAfterCursor = true;
                         break;
 
                     case 'o':
