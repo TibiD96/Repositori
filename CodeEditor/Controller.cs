@@ -67,10 +67,8 @@ namespace CodeEditor
                         break;
 
                     case 'a':
-                        CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                         Config.EditAfterCursor = false;
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
-                        Config.EditAfterCursor = true;
                         break;
 
                     case 'o':
@@ -362,9 +360,11 @@ namespace CodeEditor
 
                 default:
 
-                    if (!Config.EditAfterCursor && charIndex + 1 == fileContent[lineCounting].Length)
+                    if (!Config.EditAfterCursor && charIndex + 1 != fileContent[lineCounting].Length)
                     {
                         CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                        charIndex = GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                        Config.EditAfterCursor = true;
                     }
 
                     fileContent[lineCounting] = charIndex == fileContent[lineCounting].Length
