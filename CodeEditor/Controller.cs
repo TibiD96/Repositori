@@ -52,26 +52,31 @@ namespace CodeEditor
                 switch (action.KeyChar)
                 {
                     case 'A':
+                        Variables.Variants.Add((string[])fileContent.Clone());
                         CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
                         break;
 
                     case 'I':
+                        Variables.Variants.Add((string[])fileContent.Clone());
                         CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
                         break;
 
                     case 'i':
-                        Config.EditAfterCursor = true;
+                        Variables.Variants.Add((string[])fileContent.Clone());
+                        Variables.EditAfterCursor = true;
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
                         break;
 
                     case 'a':
-                        Config.EditAfterCursor = false;
+                        Variables.Variants.Add((string[])fileContent.Clone());
+                        Variables.EditAfterCursor = false;
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
                         break;
 
                     case 'o':
+                        Variables.Variants.Add((string[])fileContent.Clone());
                         CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
                         charIndex = GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
                         AddLine(
@@ -86,6 +91,7 @@ namespace CodeEditor
                         break;
 
                     case 'O':
+                        Variables.Variants.Add((string[])fileContent.Clone());
                         CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                         charIndex = GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
                         AddLine(
@@ -111,6 +117,12 @@ namespace CodeEditor
                         Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
 
                         originalFile = (string[])fileContent.Clone();
+                        break;
+
+                    case 'u':
+                        Undo(ref fileContent);
+                        Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                        CursorMovement.FileParameter(fastTravelMode, fileContent);
                         break;
                 }
 
@@ -360,11 +372,11 @@ namespace CodeEditor
 
                 default:
 
-                    if (!Config.EditAfterCursor && charIndex + 1 != fileContent[lineCounting].Length)
+                    if (!Variables.EditAfterCursor && charIndex + 1 != fileContent[lineCounting].Length)
                     {
                         CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                         charIndex = GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
-                        Config.EditAfterCursor = true;
+                        Variables.EditAfterCursor = true;
                     }
 
                     fileContent[lineCounting] = charIndex == fileContent[lineCounting].Length
@@ -681,6 +693,17 @@ namespace CodeEditor
             }
 
             return character;
+        }
+
+        private static void Undo(ref string[] fileContent)
+        {
+            if (Variables.Variants.Count == 0)
+            {
+                return;
+            }
+
+            fileContent = Variables.Variants[Variables.Variants.Count - 1];
+            Variables.Variants.Remove(Variables.Variants[Variables.Variants.Count - 1]);
         }
     }
 }
