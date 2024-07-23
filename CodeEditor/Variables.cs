@@ -4,8 +4,8 @@
     {
         public static bool EditAfterCursor { get; set; } = true;
 
-        public static List<string[]> Undo { get; } = new List<string[]>();
+        public static Stack<Stack<(int, string)>> Undo { get; } = new Stack<Stack<(int, string)>>();
 
-        public static List<string[]> Redo { get; } = new List<string[]>();
+        public static Stack<Stack<(int, string)>> Redo { get; } = new Stack<Stack<(int, string)>>();
     }
 }
