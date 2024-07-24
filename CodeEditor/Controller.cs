@@ -53,30 +53,40 @@ namespace CodeEditor
                 {
                     case 'A':
                         Variables.Undo.Push(new Stack<(int, string)>());
+                        Variables.InfoToShow.Push((lineCounting, startingLine, startingColumn));
+                        Variables.CursorPosition.Push((horizontalPosition, verticalPosition));
                         CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
                         break;
 
                     case 'I':
                         Variables.Undo.Push(new Stack<(int, string)>());
+                        Variables.InfoToShow.Push((lineCounting, startingLine, startingColumn));
+                        Variables.CursorPosition.Push((horizontalPosition, verticalPosition));
                         CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
                         break;
 
                     case 'i':
                         Variables.Undo.Push(new Stack<(int, string)>());
+                        Variables.InfoToShow.Push((lineCounting, startingLine, startingColumn));
+                        Variables.CursorPosition.Push((horizontalPosition, verticalPosition));
                         Variables.EditAfterCursor = true;
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
                         break;
 
                     case 'a':
                         Variables.Undo.Push(new Stack<(int, string)>());
+                        Variables.InfoToShow.Push((lineCounting, startingLine, startingColumn));
+                        Variables.CursorPosition.Push((horizontalPosition, verticalPosition));
                         Variables.EditAfterCursor = false;
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
                         break;
 
                     case 'o':
                         Variables.Undo.Push(new Stack<(int, string)>());
+                        Variables.InfoToShow.Push((lineCounting, startingLine, startingColumn));
+                        Variables.CursorPosition.Push((horizontalPosition, verticalPosition));
                         CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
                         charIndex = GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
                         AddLine(
@@ -92,6 +102,8 @@ namespace CodeEditor
 
                     case 'O':
                         Variables.Undo.Push(new Stack<(int, string)>());
+                        Variables.InfoToShow.Push((lineCounting, startingLine, startingColumn));
+                        Variables.CursorPosition.Push((horizontalPosition, verticalPosition));
                         CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                         charIndex = GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
                         AddLine(
@@ -120,8 +132,9 @@ namespace CodeEditor
                         break;
 
                     case 'u':
-                        Undo(ref fileContent, lineCounting);
+                        Undo(ref fileContent, ref lineCounting, ref startingColumn, ref startingLine, ref horizontalPosition, ref verticalPosition);
                         Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                        Console.SetCursorPosition(horizontalPosition, verticalPosition);
                         CursorMovement.FileParameter(fastTravelMode, fileContent);
                         break;
 
@@ -703,7 +716,7 @@ namespace CodeEditor
             return character;
         }
 
-        private static void Undo(ref string[] fileContent, int lineCounting)
+        private static void Undo(ref string[] fileContent, ref int lineCounting, ref int startingColumn, ref int startingLine, ref int horizontalPosition, ref int verticalPosition)
         {
             if (Variables.Undo.Count == 0)
             {
@@ -716,6 +729,14 @@ namespace CodeEditor
             {
                 fileContent[lineNumber] = oldContent;
             }
+
+            lineCounting = Variables.InfoToShow.Peek().Item1;
+            startingLine = Variables.InfoToShow.Peek().Item2;
+            startingColumn = Variables.InfoToShow.Peek().Item3;
+            Variables.InfoToShow.Pop();
+            horizontalPosition = Variables.CursorPosition.Peek().Item1;
+            verticalPosition = Variables.CursorPosition.Peek().Item2;
+            Variables.CursorPosition.Pop();
         }
 
        /* private static void Redo(ref string[] fileContent)
