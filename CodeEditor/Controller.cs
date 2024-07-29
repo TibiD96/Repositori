@@ -53,40 +53,40 @@ namespace CodeEditor
                 {
                     case 'A':
                         Variables.Undo.Push(new Stack<(int, string)>());
-                        Variables.InfoToShow.Push((lineCounting, startingLine, startingColumn));
-                        Variables.CursorPosition.Push((horizontalPosition, verticalPosition));
+                        Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+                        Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
                         CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
                         break;
 
                     case 'I':
                         Variables.Undo.Push(new Stack<(int, string)>());
-                        Variables.InfoToShow.Push((lineCounting, startingLine, startingColumn));
-                        Variables.CursorPosition.Push((horizontalPosition, verticalPosition));
+                        Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+                        Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
                         CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
                         break;
 
                     case 'i':
                         Variables.Undo.Push(new Stack<(int, string)>());
-                        Variables.InfoToShow.Push((lineCounting, startingLine, startingColumn));
-                        Variables.CursorPosition.Push((horizontalPosition, verticalPosition));
+                        Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+                        Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
                         Variables.EditAfterCursor = true;
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
                         break;
 
                     case 'a':
                         Variables.Undo.Push(new Stack<(int, string)>());
-                        Variables.InfoToShow.Push((lineCounting, startingLine, startingColumn));
-                        Variables.CursorPosition.Push((horizontalPosition, verticalPosition));
+                        Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+                        Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
                         Variables.EditAfterCursor = false;
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
                         break;
 
                     case 'o':
                         Variables.Undo.Push(new Stack<(int, string)>());
-                        Variables.InfoToShow.Push((lineCounting, startingLine, startingColumn));
-                        Variables.CursorPosition.Push((horizontalPosition, verticalPosition));
+                        Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+                        Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
                         CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
                         charIndex = GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
                         AddLine(
@@ -102,8 +102,8 @@ namespace CodeEditor
 
                     case 'O':
                         Variables.Undo.Push(new Stack<(int, string)>());
-                        Variables.InfoToShow.Push((lineCounting, startingLine, startingColumn));
-                        Variables.CursorPosition.Push((horizontalPosition, verticalPosition));
+                        Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+                        Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
                         CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                         charIndex = GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
                         AddLine(
@@ -138,11 +138,12 @@ namespace CodeEditor
                         CursorMovement.FileParameter(fastTravelMode, fileContent);
                         break;
 
-                    /*case '\u0012':
-                        Redo(ref fileContent);
+                    case '\u0012':
+                        Redo(ref fileContent, ref lineCounting, ref startingColumn, ref startingLine, ref horizontalPosition, ref verticalPosition);
                         Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                        Console.SetCursorPosition(horizontalPosition, verticalPosition);
                         CursorMovement.FileParameter(fastTravelMode, fileContent);
-                        break;*/
+                        break;
                 }
 
                 if (action.Key != ConsoleKey.I)
@@ -723,32 +724,52 @@ namespace CodeEditor
                 return;
             }
 
-            Variables.Redo.Push(Variables.Undo.Peek());
+            Variables.Redo.Push(new Stack<(int, string)>());
+            Variables.InfoToShowRedo.Push((lineCounting, startingLine, startingColumn));
+            Variables.CursorPositionRedo.Push((horizontalPosition, verticalPosition));
+
             var undoInfo = Variables.Undo.Pop();
             foreach (var (lineNumber, oldContent) in undoInfo)
             {
+                Variables.Redo.Peek().Push((lineNumber, fileContent[lineNumber]));
                 fileContent[lineNumber] = oldContent;
             }
 
-            lineCounting = Variables.InfoToShow.Peek().Item1;
-            startingLine = Variables.InfoToShow.Peek().Item2;
-            startingColumn = Variables.InfoToShow.Peek().Item3;
-            Variables.InfoToShow.Pop();
-            horizontalPosition = Variables.CursorPosition.Peek().Item1;
-            verticalPosition = Variables.CursorPosition.Peek().Item2;
-            Variables.CursorPosition.Pop();
+            lineCounting = Variables.InfoToShowUndo.Peek().Item1;
+            startingLine = Variables.InfoToShowUndo.Peek().Item2;
+            startingColumn = Variables.InfoToShowUndo.Peek().Item3;
+            Variables.InfoToShowUndo.Pop();
+            horizontalPosition = Variables.CursorPositionUndo.Peek().Item1;
+            verticalPosition = Variables.CursorPositionUndo.Peek().Item2;
+            Variables.CursorPositionUndo.Pop();
         }
 
-       /* private static void Redo(ref string[] fileContent)
+        private static void Redo(ref string[] fileContent, ref int lineCounting, ref int startingColumn, ref int startingLine, ref int horizontalPosition, ref int verticalPosition)
         {
             if (Variables.Redo.Count == 0)
             {
                 return;
             }
 
-            Variables.Undo.Add((string[])fileContent.Clone());
-            fileContent = Variables.Redo[Variables.Redo.Count - 1];
-            Variables.Redo.Remove(Variables.Redo[Variables.Redo.Count - 1]);
-        }*/
+            Variables.Undo.Push(new Stack<(int, string)>());
+            Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+            Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
+
+            var redoInfo = Variables.Redo.Pop();
+
+            foreach (var (lineNumber, newContent) in redoInfo)
+            {
+                Variables.Undo.Peek().Push((lineNumber, fileContent[lineNumber]));
+                fileContent[lineNumber] = newContent;
+            }
+
+            lineCounting = Variables.InfoToShowRedo.Peek().Item1;
+            startingLine = Variables.InfoToShowRedo.Peek().Item2;
+            startingColumn = Variables.InfoToShowRedo.Peek().Item3;
+            Variables.InfoToShowRedo.Pop();
+            horizontalPosition = Variables.CursorPositionRedo.Peek().Item1;
+            verticalPosition = Variables.CursorPositionRedo.Peek().Item2;
+            Variables.CursorPositionRedo.Pop();
+        }
     }
 }
