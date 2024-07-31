@@ -15,5 +15,7 @@
         public static Stack<(int, int, int)> InfoToShowRedo { get; } = new Stack<(int, int, int)>();
 
         public static Stack<(int, int)> CursorPositionRedo { get; } = new Stack<(int, int)>();
+
+        public static Stack<Stack<bool>> UndoDeleteLine { get; } = new Stack<Stack<bool>>();
     }
 }

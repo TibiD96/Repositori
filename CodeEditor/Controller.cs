@@ -53,6 +53,7 @@ namespace CodeEditor
                 {
                     case 'A':
                         Variables.Undo.Push(new Stack<(int, string)>());
+                        Variables.UndoDeleteLine.Push(new Stack<bool>());
                         Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
                         Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
                         CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
@@ -61,6 +62,7 @@ namespace CodeEditor
 
                     case 'I':
                         Variables.Undo.Push(new Stack<(int, string)>());
+                        Variables.UndoDeleteLine.Push(new Stack<bool>());
                         Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
                         Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
                         CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
@@ -69,6 +71,7 @@ namespace CodeEditor
 
                     case 'i':
                         Variables.Undo.Push(new Stack<(int, string)>());
+                        Variables.UndoDeleteLine.Push(new Stack<bool>());
                         Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
                         Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
                         Variables.EditAfterCursor = true;
@@ -77,6 +80,7 @@ namespace CodeEditor
 
                     case 'a':
                         Variables.Undo.Push(new Stack<(int, string)>());
+                        Variables.UndoDeleteLine.Push(new Stack<bool>());
                         Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
                         Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
                         Variables.EditAfterCursor = false;
@@ -85,6 +89,7 @@ namespace CodeEditor
 
                     case 'o':
                         Variables.Undo.Push(new Stack<(int, string)>());
+                        Variables.UndoDeleteLine.Push(new Stack<bool>());
                         Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
                         Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
                         CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
@@ -102,6 +107,7 @@ namespace CodeEditor
 
                     case 'O':
                         Variables.Undo.Push(new Stack<(int, string)>());
+                        Variables.UndoDeleteLine.Push(new Stack<bool>());
                         Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
                         Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
                         CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
@@ -393,6 +399,7 @@ namespace CodeEditor
                 default:
 
                     Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
+                    Variables.UndoDeleteLine.Peek().Push(false);
 
                     if (!Variables.EditAfterCursor && charIndex + 1 != fileContent[lineCounting].Length)
                     {
@@ -425,6 +432,8 @@ namespace CodeEditor
 
             if (charIndex >= 0)
             {
+                Variables.UndoDeleteLine.Peek().Push(false);
+                Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
                 fileContent[lineCounting] = fileContent[lineCounting].Remove(charIndex, 1);
                 CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                 Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
@@ -434,17 +443,24 @@ namespace CodeEditor
             {
                 if (lineCounting > 0)
                 {
+                    Variables.UndoDeleteLine.Peek().Push(true);
                     string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting - 1, lineCounting - 1, Convert.ToString(fileContent.Length)) + " ";
                     int indexOfLastChar = fileContent[lineCounting - 1].Length - 1 + lineIndex.Length;
                     if (fileContent[lineCounting].Length > 0)
                     {
+                        Variables.Undo.Peek().Push((lineCounting - 1, fileContent[lineCounting - 1]));
                         fileContent[lineCounting - 1] = fileContent[lineCounting - 1] + fileContent[lineCounting];
                     }
 
                     for (int i = lineCounting; i < fileContent.Length - 1; i++)
                     {
+                        Variables.Undo.Peek().Push((i, fileContent[i]));
                         fileContent[i] = fileContent[i + 1];
+                        Variables.UndoDeleteLine.Peek().Push(false);
                     }
+
+                    Variables.Undo.Peek().Push((fileContent.Length - 1, fileContent[fileContent.Length - 1]));
+                    Variables.UndoDeleteLine.Peek().Push(false);
 
                     string[] newfileContent = fileContent.Take(fileContent.Length - 1).ToArray();
 
@@ -729,6 +745,20 @@ namespace CodeEditor
             Variables.CursorPositionRedo.Push((horizontalPosition, verticalPosition));
 
             var undoInfo = Variables.Undo.Pop();
+            var deletedLines = Variables.UndoDeleteLine.Pop();
+            if (deletedLines.Contains(true))
+            {
+                int deletedLinesNumber = deletedLines.Count(value => value);
+                string[] undoContent = new string[fileContent.Length + deletedLinesNumber];
+
+                for (int i = 0; i < fileContent.Length; i++)
+                {
+                    undoContent[i] = fileContent[i];
+                }
+
+                fileContent = (string[])undoContent.Clone();
+            }
+
             foreach (var (lineNumber, oldContent) in undoInfo)
             {
                 Variables.Redo.Peek().Push((lineNumber, fileContent[lineNumber]));
