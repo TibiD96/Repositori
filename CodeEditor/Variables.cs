@@ -17,5 +17,11 @@
         public static Stack<(int, int)> CursorPositionRedo { get; } = new Stack<(int, int)>();
 
         public static Stack<Stack<bool>> UndoDeleteLine { get; } = new Stack<Stack<bool>>();
+
+        public static Stack<Stack<bool>> UndoAddLine { get; } = new Stack<Stack<bool>>();
+
+        public static Stack<Stack<bool>> RedoDeleteLine { get; } = new Stack<Stack<bool>>();
+
+        public static Stack<Stack<bool>> RedoAddLine { get; } = new Stack<Stack<bool>>();
     }
 }

@@ -744,8 +744,9 @@ namespace CodeEditor
             Variables.InfoToShowRedo.Push((lineCounting, startingLine, startingColumn));
             Variables.CursorPositionRedo.Push((horizontalPosition, verticalPosition));
 
-            var undoInfo = Variables.Undo.Pop();
             var deletedLines = Variables.UndoDeleteLine.Pop();
+            Variables.RedoDeleteLine.Push(deletedLines);
+
             if (deletedLines.Contains(true))
             {
                 int deletedLinesNumber = deletedLines.Count(value => value);
@@ -753,16 +754,24 @@ namespace CodeEditor
 
                 for (int i = 0; i < fileContent.Length; i++)
                 {
+                    Variables.Redo.Peek().Push((i, fileContent[i]));
                     undoContent[i] = fileContent[i];
                 }
 
                 fileContent = (string[])undoContent.Clone();
-            }
 
-            foreach (var (lineNumber, oldContent) in undoInfo)
+                foreach (var (lineNumber, oldContent) in Variables.Undo.Pop())
+                {
+                    fileContent[lineNumber] = oldContent;
+                }
+            }
+            else
             {
-                Variables.Redo.Peek().Push((lineNumber, fileContent[lineNumber]));
-                fileContent[lineNumber] = oldContent;
+                foreach (var (lineNumber, oldContent) in Variables.Undo.Pop())
+                {
+                    Variables.Redo.Peek().Push((lineNumber, fileContent[lineNumber]));
+                    fileContent[lineNumber] = oldContent;
+                }
             }
 
             lineCounting = Variables.InfoToShowUndo.Peek().Item1;
@@ -785,12 +794,34 @@ namespace CodeEditor
             Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
             Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
 
-            var redoInfo = Variables.Redo.Pop();
+            var deletedLines = Variables.RedoDeleteLine.Pop();
+            Variables.UndoDeleteLine.Push(deletedLines);
 
-            foreach (var (lineNumber, newContent) in redoInfo)
+            if (deletedLines.Contains(true))
             {
-                Variables.Undo.Peek().Push((lineNumber, fileContent[lineNumber]));
-                fileContent[lineNumber] = newContent;
+                int deletedLinesNumber = deletedLines.Count(value => value);
+                string[] redoContent = new string[fileContent.Length - deletedLinesNumber];
+
+                for (int i = 0; i < fileContent.Length - deletedLinesNumber; i++)
+                {
+                    Variables.Undo.Peek().Push((i, fileContent[i]));
+                    redoContent[i] = fileContent[i];
+                }
+
+                fileContent = (string[])redoContent.Clone();
+
+                foreach (var (lineNumber, newContent) in Variables.Redo.Pop())
+                {
+                    fileContent[lineNumber] = newContent;
+                }
+            }
+            else
+            {
+                foreach (var (lineNumber, newContent) in Variables.Redo.Pop())
+                {
+                    Variables.Undo.Peek().Push((lineNumber, fileContent[lineNumber]));
+                    fileContent[lineNumber] = newContent;
+                }
             }
 
             lineCounting = Variables.InfoToShowRedo.Peek().Item1;
