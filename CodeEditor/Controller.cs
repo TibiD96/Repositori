@@ -808,6 +808,8 @@ namespace CodeEditor
                     redoContent[i] = fileContent[i];
                 }
 
+                Variables.Undo.Peek().Push((fileContent.Length - 1, fileContent[fileContent.Length - 1]));
+
                 fileContent = (string[])redoContent.Clone();
 
                 foreach (var (lineNumber, newContent) in Variables.Redo.Pop())
