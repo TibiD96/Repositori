@@ -506,27 +506,31 @@ namespace CodeEditor
             string newLine = fileContent[lineCounting].TakeWhile(c => c == ' ').Aggregate("", (current, c) => current + c);
             int emptySpacesLength = newLine.Length;
 
+            Variables.UndoAddLine.Peek().Push(true);
+
             if (charIndex > 0)
             {
+                Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
                 newLine = newLine + fileContent[lineCounting].Substring(charIndex + 1);
                 fileContent[lineCounting] = fileContent[lineCounting].Substring(0, charIndex + 1);
             }
             else
             {
+                Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
                 newLine = newLine + fileContent[lineCounting];
                 fileContent[lineCounting] = fileContent[lineCounting].Remove(0);
             }
 
-            if (lineCounting < fileContent.Length - 1)
+            Array.Copy(fileContent, 0, newFileContent, 0, lineCounting + 1);
+            newFileContent[lineCounting + 1] = newLine;
+
+            if (lineCounting < fileContent.Length)
             {
-                Array.Copy(fileContent, 0, newFileContent, 0, lineCounting + 1);
-                newFileContent[lineCounting + 1] = newLine;
-                Array.Copy(fileContent, lineCounting + 1, newFileContent, lineCounting + 2, fileContent.Length - (lineCounting + 1));
-            }
-            else
-            {
-                Array.Copy(fileContent, 0, newFileContent, 0, lineCounting + 1);
-                newFileContent[lineCounting + 1] = newLine;
+                for (int i = lineCounting + 2; i < newFileContent.Length; i++)
+                {
+                    Variables.Undo.Peek().Push((i - 1, fileContent[i - 1]));
+                    newFileContent[i] = fileContent[i - 1];
+                }
             }
 
             fileContent = (string[])newFileContent.Clone();
@@ -857,21 +861,18 @@ namespace CodeEditor
 
             if (addLines.Contains(true))
             {
-                int addLinesNumber = addLines.Count(value => value);
-                string[] undoContent = new string[fileContent.Length - addLinesNumber];
-
-                for (int i = 0; i < fileContent.Length - addLinesNumber; i++)
-                {
-                    Variables.Redo.Peek().Push((i, fileContent[i]));
-                    undoContent[i] = fileContent[i];
-                }
-
-                fileContent = (string[])undoContent.Clone();
+                int addedLinesNumber = addLines.Count(value => value);
+                string[] undoContent = new string[fileContent.Length - addedLinesNumber];
 
                 foreach (var (lineNumber, oldContent) in Variables.Undo.Pop())
                 {
+                    Variables.Redo.Peek().Push((lineNumber, fileContent[lineNumber]));
                     fileContent[lineNumber] = oldContent;
                 }
+
+                Array.Copy(fileContent, 0, undoContent, 0, fileContent.Length - addedLinesNumber);
+
+                fileContent = (string[])undoContent.Clone();
             }
         }
     }
