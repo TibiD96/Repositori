@@ -508,7 +508,7 @@ namespace CodeEditor
 
             Variables.UndoAddLine.Peek().Push(true);
 
-            if (charIndex > 0)
+            if (charIndex >= 0)
             {
                 Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
                 newLine = newLine + fileContent[lineCounting].Substring(charIndex + 1);
