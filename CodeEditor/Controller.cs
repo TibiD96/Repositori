@@ -800,25 +800,9 @@ namespace CodeEditor
             var addLines = Variables.RedoAddLine.Pop();
             Variables.UndoAddLine.Push(addLines);
 
-            if (deletedLines.Contains(true))
+            if (deletedLines.Contains(true) || addLines.Contains(true))
             {
-                int deletedLinesNumber = deletedLines.Count(value => value);
-                string[] redoContent = new string[fileContent.Length - deletedLinesNumber];
-
-                for (int i = 0; i < fileContent.Length - deletedLinesNumber; i++)
-                {
-                    Variables.Undo.Peek().Push((i, fileContent[i]));
-                    redoContent[i] = fileContent[i];
-                }
-
-                Variables.Undo.Peek().Push((fileContent.Length - 1, fileContent[fileContent.Length - 1]));
-
-                fileContent = (string[])redoContent.Clone();
-
-                foreach (var (lineNumber, newContent) in Variables.Redo.Pop())
-                {
-                    fileContent[lineNumber] = newContent;
-                }
+                AddOrDeletedRedo(deletedLines, addLines, ref fileContent);
             }
             else
             {
@@ -864,6 +848,11 @@ namespace CodeEditor
                 int addedLinesNumber = addLines.Count(value => value);
                 string[] undoContent = new string[fileContent.Length - addedLinesNumber];
 
+                for (int i = undoContent.Length; i < fileContent.Length; i++)
+                {
+                    Variables.Redo.Peek().Push((i, fileContent[i]));
+                }
+
                 foreach (var (lineNumber, oldContent) in Variables.Undo.Pop())
                 {
                     Variables.Redo.Peek().Push((lineNumber, fileContent[lineNumber]));
@@ -873,6 +862,50 @@ namespace CodeEditor
                 Array.Copy(fileContent, 0, undoContent, 0, fileContent.Length - addedLinesNumber);
 
                 fileContent = (string[])undoContent.Clone();
+            }
+        }
+
+        private static void AddOrDeletedRedo(Stack<bool> deletedLines, Stack<bool> addLines, ref string[] fileContent)
+        {
+            if (deletedLines.Contains(true))
+            {
+                int deletedLinesNumber = deletedLines.Count(value => value);
+                string[] redoContent = new string[fileContent.Length - deletedLinesNumber];
+
+                for (int i = 0; i < fileContent.Length - deletedLinesNumber; i++)
+                {
+                    Variables.Undo.Peek().Push((i, fileContent[i]));
+                    redoContent[i] = fileContent[i];
+                }
+
+                Variables.Undo.Peek().Push((fileContent.Length - 1, fileContent[fileContent.Length - 1]));
+
+                fileContent = (string[])redoContent.Clone();
+
+                foreach (var (lineNumber, newContent) in Variables.Redo.Pop())
+                {
+                    fileContent[lineNumber] = newContent;
+                }
+            }
+
+            if (addLines.Contains(true))
+            {
+                int addedLinesNumber = addLines.Count(value => value);
+                string[] redoContent = new string[fileContent.Length + addedLinesNumber];
+
+                for (int i = 0; i < fileContent.Length; i++)
+                {
+                    Variables.Undo.Peek().Push((i, fileContent[i]));
+                    redoContent[i] = fileContent[i];
+                }
+
+                fileContent = (string[])redoContent.Clone();
+
+                foreach (var (lineNumber, newContent) in Variables.Redo.Pop())
+                {
+                    Variables.Undo.Peek().Push((lineNumber, fileContent[lineNumber]));
+                    fileContent[lineNumber] = newContent;
+                }
             }
         }
     }
