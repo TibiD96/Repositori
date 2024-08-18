@@ -187,6 +187,7 @@ namespace CodeEditor
         {
             char? character = ' ';
             int oldVerticalPosition = verticalPosition;
+            ConsoleKey newAction;
 
             if (verticalPosition > Console.WindowHeight - 3)
             {
@@ -275,6 +276,19 @@ namespace CodeEditor
                         CursorMovement.MarkLine(lineCounting, key);
 
                         break;
+                }
+            }
+
+            if (action.Modifiers == ConsoleModifiers.Control)
+            {
+                if (action.Key == ConsoleKey.U)
+                {
+                    CursorMovement.PageUpBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn);
+                }
+
+                if (action.Key == ConsoleKey.D)
+                {
+                    CursorMovement.PageDownBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn);
                 }
             }
 
