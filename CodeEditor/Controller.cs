@@ -187,7 +187,6 @@ namespace CodeEditor
         {
             char? character = ' ';
             int oldVerticalPosition = verticalPosition;
-            ConsoleKey newAction;
 
             if (verticalPosition > Console.WindowHeight - 3)
             {
@@ -277,18 +276,18 @@ namespace CodeEditor
 
                         break;
                 }
-            }
 
-            if (action.Modifiers == ConsoleModifiers.Control)
-            {
-                if (action.Key == ConsoleKey.U)
+                if (action.Modifiers == ConsoleModifiers.Control)
                 {
-                    CursorMovement.PageUpBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn);
-                }
+                    if (action.Key == ConsoleKey.U)
+                    {
+                        CursorMovement.PageUpBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn);
+                    }
 
-                if (action.Key == ConsoleKey.D)
-                {
-                    CursorMovement.PageDownBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn);
+                    if (action.Key == ConsoleKey.D)
+                    {
+                        CursorMovement.PageDownBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn);
+                    }
                 }
             }
 
@@ -305,6 +304,8 @@ namespace CodeEditor
 
                 CursorMovement.GoToMarkedLine(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, key);
             }
+
+            CursorMovement.GoToEndOrBeginingOfFile(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, action);
         }
 
         private static void EditMode(

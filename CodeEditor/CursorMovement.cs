@@ -411,6 +411,27 @@
             }
         }
 
+        public static void GoToEndOrBeginingOfFile(ref int lineCounting, int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, ConsoleKeyInfo action)
+        {
+            if (action.KeyChar == 'G')
+            {
+                lineCounting = fileContent.Length - 1;
+                verticalPosition = Console.WindowHeight - 4;
+
+                if (fileContent.Length - (Console.WindowHeight - 3) > (Console.WindowHeight - 3))
+                {
+                    startingLine = fileContent.Length - (Console.WindowHeight - 3);
+                }
+
+                string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
+                int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
+                int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+
+                Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
+            }
+        }
+
         private static void FindCharacterLow(int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn, char? character)
         {
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length));
