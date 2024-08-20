@@ -305,6 +305,11 @@ namespace CodeEditor
                 CursorMovement.GoToMarkedLine(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, key);
             }
 
+            if (action.KeyChar == 'g')
+            {
+                action = Console.ReadKey(true);
+            }
+
             CursorMovement.GoToEndOrBeginingOfFile(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, action);
         }
 
