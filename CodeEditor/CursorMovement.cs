@@ -237,7 +237,7 @@
             }
         }
 
-        public static void CaretBehaviour(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
+        public static void MoveToFirstCharacter(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
         {
             NullExcept.ArgumentNullException(fileContent);
 

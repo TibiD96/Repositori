@@ -67,7 +67,7 @@ namespace CodeEditor
                         Variables.UndoAddLine.Push(new Stack<bool>());
                         Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
                         Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
-                        CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                        CursorMovement.MoveToFirstCharacter(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                         EditMode(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, ref fileContent, originalPath);
                         break;
 
@@ -116,7 +116,7 @@ namespace CodeEditor
                         Variables.UndoAddLine.Push(new Stack<bool>());
                         Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
                         Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
-                        CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                        CursorMovement.MoveToFirstCharacter(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                         charIndex = GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
                         AddLine(
                              ref lineCounting,
@@ -293,7 +293,7 @@ namespace CodeEditor
 
             if (action.KeyChar == '^')
             {
-                CursorMovement.CaretBehaviour(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                CursorMovement.MoveToFirstCharacter(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
             }
 
             if (action.KeyChar == '\'')
