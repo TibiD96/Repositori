@@ -42,4 +42,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Lib\" />
+  </ItemGroup>
+
 </Project>
