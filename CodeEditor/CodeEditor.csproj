@@ -13,6 +13,12 @@
 		<CodeAnalysisRuleSet>juniormind.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Compile Remove="Lib\**" />
+	  <EmbeddedResource Remove="Lib\**" />
+	  <None Remove="Lib\**" />
+	</ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -43,7 +49,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Lib\" />
+    <None Update="csharp-tree-sitter.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="tree-sitter.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="tree_sitter_csharp.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
