@@ -49,6 +49,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="c-sharp.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="csharp-tree-sitter.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
