@@ -110,6 +110,302 @@ namespace CodeEditor
             public uint value_id;
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct TSNode
+        {
+            public IntPtr Id;
+            private IntPtr tree;
+            private uint context0;
+            private uint context1;
+            private uint context2;
+            private uint context3;
+
+            public void Clear()
+            {
+                Id = IntPtr.Zero;
+                tree = IntPtr.Zero;
+            }
+
+            public bool IsZero()
+            {
+                return Id == IntPtr.Zero && tree == IntPtr.Zero;
+            }
+
+            public string Type()
+            {
+                return Marshal.PtrToStringAnsi(NativeMethods.ts_node_type(this));
+            }
+
+            internal string Type(TSLanguage lang)
+            {
+                return lang.symbol_name(symbol());
+            }
+
+            public ushort symbol()
+            {
+                return NativeMethods.ts_node_symbol(this);
+            }
+
+            public uint start_offset()
+            {
+                return NativeMethods.ts_node_start_byte(this) / sizeof(ushort);
+            }
+
+            public TSPoint start_point()
+            {
+                var pt = NativeMethods.ts_node_start_point(this); return new TSPoint(pt.row, pt.column / sizeof(ushort));
+            }
+
+            public uint end_offset()
+            {
+                return NativeMethods.ts_node_end_byte(this) / sizeof(ushort);
+            }
+
+            public TSPoint end_point()
+            {
+                var pt = NativeMethods.ts_node_end_point(this); return new TSPoint(pt.row, pt.column / sizeof(ushort));
+            }
+
+            public string to_string()
+            {
+                var dat = NativeMethods.ts_node_string(this); var str = Marshal.PtrToStringAnsi(dat); ts_node_string_free(dat); return str;
+            }
+
+            public bool is_null()
+            {
+                return NativeMethods.ts_node_is_null(this);
+            }
+
+            public bool is_named()
+            {
+                return NativeMethods.ts_node_is_named(this);
+            }
+
+            public bool is_missing()
+            {
+                return NativeMethods.ts_node_is_missing(this);
+            }
+
+            public bool is_extra()
+            {
+                return NativeMethods.ts_node_is_extra(this);
+            }
+
+            public bool has_changes()
+            {
+                return NativeMethods.ts_node_has_changes(this);
+            }
+
+            public bool has_error()
+            {
+                return NativeMethods.ts_node_has_error(this);
+            }
+
+            public TSNode parent()
+            {
+                return NativeMethods.ts_node_parent(this);
+            }
+
+            public TSNodechild(uint index)
+            {
+                return NativeMethods.ts_node_child(this, index);
+            }
+
+            public IntPtr field_name_for_child(uint index)
+            {
+                return NativeMethods.ts_node_field_name_for_child(this, index);
+            }
+
+            public uint child_count()
+            {
+                return NativeMethods.ts_node_child_count(this);
+            }
+
+            public TSNode named_child(uint index)
+            {
+                return NativeMethods.ts_node_named_child(this, index);
+            }
+
+            public uint named_child_count()
+            {
+                return NativeMethods.ts_node_named_child_count(this);
+            }
+
+            public TSNode child_by_field_name(string field_name)
+            {
+                return NativeMethods.ts_node_child_by_field_name(this, field_name, (uint)field_name.Length);
+            }
+
+            public TSNode child_by_field_id(ushort fieldId)
+            {
+                return NativeMethods.ts_node_child_by_field_id(this, fieldId);
+            }
+
+            public TSNode next_sibling()
+            {
+                return NativeMethods.ts_node_next_sibling(this);
+            }
+
+            public TSNode prev_sibling()
+            {
+                return NativeMethods.ts_node_prev_sibling(this);
+            }
+
+            public TSNode next_named_sibling()
+            {
+                return NativeMethods.ts_node_next_named_sibling(this);
+            }
+
+            public TSNode prev_named_sibling()
+            {
+                return NativeMethods.ts_node_prev_named_sibling(this);
+            }
+
+            public TSNode first_child_for_offset(uint offset)
+            {
+                return NativeMethods.ts_node_first_child_for_byte(this, offset * sizeof(ushort));
+            }
+
+            public TSNode first_named_child_for_offset(uint offset)
+            {
+                return NativeMethods.ts_node_first_named_child_for_byte(this, offset * sizeof(ushort));
+            }
+
+            public TSNode descendant_for_offset_range(uint start, uint end)
+            {
+                return NativeMethods.ts_node_descendant_for_byte_range(this, start * sizeof(ushort), end * sizeof(ushort));
+            }
+
+            public TSNode descendant_for_point_range(TSPoint start, TSPoint end)
+            {
+                return NativeMethods.ts_node_descendant_for_point_range(this, start, end);
+            }
+
+            public TSNode named_descendant_for_offset_range(uint start, uint end)
+            {
+                return NativeMethods.ts_node_named_descendant_for_byte_range(this, start * sizeof(ushort), end * sizeof(ushort));
+            }
+
+            public TSNode named_descendant_for_point_range(TSPoint start, TSPoint end)
+            {
+                return NativeMethods.ts_node_named_descendant_for_point_range(this, start, end);
+            }
+
+            public bool eq(TSNode other)
+            {
+                return NativeMethods.ts_node_eq(this, other);
+            }
+
+            public string text(string data)
+            {
+                uint beg = start_offset();
+                uint end = end_offset();
+                return data.Substring((int)beg, (int)(end - beg));
+            }
+
+            private class NativeMethods
+            {
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern IntPtr ts_node_type(TSNode node);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern ushort ts_node_symbol(TSNode node);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern uint ts_node_start_byte(TSNode node);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSPoint ts_node_start_point(TSNode node);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern uint ts_node_end_byte(TSNode node);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSPoint ts_node_end_point(TSNode node);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern IntPtr ts_node_string(TSNode node);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern void ts_node_string_free(IntPtr str);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern bool ts_node_is_null(TSNode node);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern bool ts_node_is_named(TSNode node);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern bool ts_node_is_missing(TSNode node);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern bool ts_node_is_extra(TSNode node);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern bool ts_node_has_changes(TSNode node);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern bool ts_node_has_error(TSNode node);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_node_parent(TSNode node);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_node_child(TSNode node, uint index);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern IntPtr ts_node_field_name_for_child(TSNode node, uint index);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern uint ts_node_child_count(TSNode node);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_node_named_child(TSNode node, uint index);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern uint ts_node_named_child_count(TSNode node);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_node_child_by_field_name(TSNode self, [MarshalAs(UnmanagedType.LPUTF8Str)] string field_name, uint field_name_length);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_node_child_by_field_id(TSNode self, ushort fieldId);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_node_next_sibling(TSNode self);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_node_prev_sibling(TSNode self);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_node_next_named_sibling(TSNode self);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_node_prev_named_sibling(TSNode self);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_node_first_child_for_byte(TSNode self, uint byteOffset);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_node_first_named_child_for_byte(TSNode self, uint byteOffset);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_node_descendant_for_byte_range(TSNode self, uint startByte, uint endByte);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_node_descendant_for_point_range(TSNode self, TSPoint startPoint, TSPoint endPoint);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_node_named_descendant_for_byte_range(TSNode self, uint startByte, uint endByte);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_node_named_descendant_for_point_range(TSNode self, TSPoint startPoint, TSPoint endPoint);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern bool ts_node_eq(TSNode node1, TSNode node2);
+            }
+        }
+
         internal sealed class TSParser : IDisposable
         {
             public TSParser()
@@ -264,7 +560,6 @@ namespace CodeEditor
 
         internal sealed class TSLanguage : IDisposable
         {
-
             public string[] Symbols;
             public string[] Fields;
             public Dictionary<string, ushort> FieldIds;
@@ -390,7 +685,7 @@ namespace CodeEditor
             }
         }
 
-        public sealed class TSTree : IDisposable
+        internal sealed class TSTree : IDisposable
         {
             public TSTree(IntPtr ptr)
             {
@@ -406,52 +701,66 @@ namespace CodeEditor
                     return;
                 }
 
-                ts_tree_delete(Ptr);
+                NativeMethods.ts_tree_delete(Ptr);
                 Ptr = IntPtr.Zero;
             }
 
-            public TSTree copy()
+            public TSTree Copy()
             {
-                var ptr = ts_tree_copy(Ptr);
+                var ptr = NativeMethods.ts_tree_copy(Ptr);
                 return ptr != IntPtr.Zero ? new TSTree(ptr) : null;
             }
 
-            public TSNode root_node() { return ts_tree_root_node(Ptr); }
-            public TSNode root_node_with_offset(uint offsetBytes, TSPoint offsetPoint) { return ts_tree_root_node_with_offset(Ptr, offsetBytes, offsetPoint); }
-            public TSLanguage language()
+            public TSNode root_node()
             {
-                var ptr = ts_tree_language(Ptr);
+                return NativeMethods.ts_tree_root_node(Ptr);
+            }
+
+            public TSNode root_node_with_offset(uint offsetBytes, TSPoint offsetPoint)
+            {
+                return NativeMethods.ts_tree_root_node_with_offset(Ptr, offsetBytes, offsetPoint);
+            }
+
+            public TSLanguage Language()
+            {
+                var ptr = NativeMethods.ts_tree_language(Ptr);
                 return ptr != IntPtr.Zero ? new TSLanguage(ptr) : null;
             }
-            public void edit(TSInputEdit edit) { ts_tree_edit(Ptr, ref edit); }
 
-            [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
-            private static extern IntPtr ts_tree_copy(IntPtr tree);
+            public void Edit(TSInputEdit edit)
+            {
+                NativeMethods.ts_tree_edit(Ptr, ref edit);
+            }
 
-            [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
-            private static extern void ts_tree_delete(IntPtr tree);
+            private class NativeMethods
+            {
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern IntPtr ts_tree_copy(IntPtr tree);
 
-            [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
-            private static extern TSNode ts_tree_root_node(IntPtr tree);
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern void ts_tree_delete(IntPtr tree);
 
-            [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
-            private static extern TSNode ts_tree_root_node_with_offset(IntPtr tree, uint offsetBytes, TSPoint offsetPoint);
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_tree_root_node(IntPtr tree);
 
-            [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
-            private static extern IntPtr ts_tree_language(IntPtr tree);
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern TSNode ts_tree_root_node_with_offset(IntPtr tree, uint offsetBytes, TSPoint offsetPoint);
 
-            [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
-            private static extern IntPtr ts_tree_included_ranges(IntPtr tree, out uint length);
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern IntPtr ts_tree_language(IntPtr tree);
 
-            [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
-            private static extern void ts_tree_included_ranges_free(IntPtr ranges);
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern IntPtr ts_tree_included_ranges(IntPtr tree, out uint length);
 
-            [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
-            private static extern void ts_tree_edit(IntPtr tree, ref TSInputEdit edit);
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern void ts_tree_included_ranges_free(IntPtr ranges);
 
-            [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
-            private static extern IntPtr ts_tree_get_changed_ranges(IntPtr old_tree, IntPtr new_tree, out uint length);
-            #endregion
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern void ts_tree_edit(IntPtr tree, ref TSInputEdit edit);
+
+                [DllImport("tree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+                public static extern IntPtr ts_tree_get_changed_ranges(IntPtr old_tree, IntPtr new_tree, out uint length);
+            }
         }
     }
 }
