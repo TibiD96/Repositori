@@ -111,7 +111,7 @@ namespace CodeEditor
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct TSNode
+        internal struct TSNode
         {
             public IntPtr Id;
             private IntPtr tree;
@@ -136,171 +136,176 @@ namespace CodeEditor
                 return Marshal.PtrToStringAnsi(NativeMethods.ts_node_type(this));
             }
 
-            internal string Type(TSLanguage lang)
-            {
-                return lang.symbol_name(symbol());
-            }
-
-            public ushort symbol()
+            public ushort Symbol()
             {
                 return NativeMethods.ts_node_symbol(this);
             }
 
-            public uint start_offset()
+            public uint StartOffset()
             {
                 return NativeMethods.ts_node_start_byte(this) / sizeof(ushort);
             }
 
-            public TSPoint start_point()
+            public TSPoint StartPoint()
             {
-                var pt = NativeMethods.ts_node_start_point(this); return new TSPoint(pt.row, pt.column / sizeof(ushort));
+                var pt = NativeMethods.ts_node_start_point(this);
+                return new TSPoint(pt.row, pt.column / sizeof(ushort));
             }
 
-            public uint end_offset()
+            public uint EndOffset()
             {
                 return NativeMethods.ts_node_end_byte(this) / sizeof(ushort);
             }
 
-            public TSPoint end_point()
+            public TSPoint EndPoint()
             {
-                var pt = NativeMethods.ts_node_end_point(this); return new TSPoint(pt.row, pt.column / sizeof(ushort));
+                var pt = NativeMethods.ts_node_end_point(this);
+                return new TSPoint(pt.row, pt.column / sizeof(ushort));
             }
 
-            public string to_string()
+            public string ToString()
             {
-                var dat = NativeMethods.ts_node_string(this); var str = Marshal.PtrToStringAnsi(dat); ts_node_string_free(dat); return str;
+                var dat = NativeMethods.ts_node_string(this);
+                var str = Marshal.PtrToStringAnsi(dat);
+                NativeMethods.ts_node_string_free(dat);
+                return str;
             }
 
-            public bool is_null()
+            public bool IsNull()
             {
                 return NativeMethods.ts_node_is_null(this);
             }
 
-            public bool is_named()
+            public bool IsMamed()
             {
                 return NativeMethods.ts_node_is_named(this);
             }
 
-            public bool is_missing()
+            public bool IsMissing()
             {
                 return NativeMethods.ts_node_is_missing(this);
             }
 
-            public bool is_extra()
+            public bool IsExtra()
             {
                 return NativeMethods.ts_node_is_extra(this);
             }
 
-            public bool has_changes()
+            public bool HasChanges()
             {
                 return NativeMethods.ts_node_has_changes(this);
             }
 
-            public bool has_error()
+            public bool HasError()
             {
                 return NativeMethods.ts_node_has_error(this);
             }
 
-            public TSNode parent()
+            public TSNode Parent()
             {
                 return NativeMethods.ts_node_parent(this);
             }
 
-            public TSNodechild(uint index)
+            public TSNode TSNodechild(uint index)
             {
                 return NativeMethods.ts_node_child(this, index);
             }
 
-            public IntPtr field_name_for_child(uint index)
+            public IntPtr FieldNameForChild(uint index)
             {
                 return NativeMethods.ts_node_field_name_for_child(this, index);
             }
 
-            public uint child_count()
+            public uint ChildCount()
             {
                 return NativeMethods.ts_node_child_count(this);
             }
 
-            public TSNode named_child(uint index)
+            public TSNode NamedChild(uint index)
             {
                 return NativeMethods.ts_node_named_child(this, index);
             }
 
-            public uint named_child_count()
+            public uint NamedChildCount()
             {
                 return NativeMethods.ts_node_named_child_count(this);
             }
 
-            public TSNode child_by_field_name(string field_name)
+            public TSNode ChildByFieldName(string fieldName)
             {
-                return NativeMethods.ts_node_child_by_field_name(this, field_name, (uint)field_name.Length);
+                return NativeMethods.ts_node_child_by_field_name(this, fieldName, (uint)fieldName.Length);
             }
 
-            public TSNode child_by_field_id(ushort fieldId)
+            public TSNode ChildByFieldId(ushort fieldId)
             {
                 return NativeMethods.ts_node_child_by_field_id(this, fieldId);
             }
 
-            public TSNode next_sibling()
+            public TSNode NextSibling()
             {
                 return NativeMethods.ts_node_next_sibling(this);
             }
 
-            public TSNode prev_sibling()
+            public TSNode PrevSibling()
             {
                 return NativeMethods.ts_node_prev_sibling(this);
             }
 
-            public TSNode next_named_sibling()
+            public TSNode NextNamedSibling()
             {
                 return NativeMethods.ts_node_next_named_sibling(this);
             }
 
-            public TSNode prev_named_sibling()
+            public TSNode PrevNamedSibling()
             {
                 return NativeMethods.ts_node_prev_named_sibling(this);
             }
 
-            public TSNode first_child_for_offset(uint offset)
+            public TSNode FirstChildForOffset(uint offset)
             {
                 return NativeMethods.ts_node_first_child_for_byte(this, offset * sizeof(ushort));
             }
 
-            public TSNode first_named_child_for_offset(uint offset)
+            public TSNode FirstNamedChildForOffset(uint offset)
             {
                 return NativeMethods.ts_node_first_named_child_for_byte(this, offset * sizeof(ushort));
             }
 
-            public TSNode descendant_for_offset_range(uint start, uint end)
+            public TSNode DescendantForOffsetRange(uint start, uint end)
             {
                 return NativeMethods.ts_node_descendant_for_byte_range(this, start * sizeof(ushort), end * sizeof(ushort));
             }
 
-            public TSNode descendant_for_point_range(TSPoint start, TSPoint end)
+            public TSNode DescendantForPointRange(TSPoint start, TSPoint end)
             {
                 return NativeMethods.ts_node_descendant_for_point_range(this, start, end);
             }
 
-            public TSNode named_descendant_for_offset_range(uint start, uint end)
+            public TSNode NamedDescendantForOffsetRange(uint start, uint end)
             {
                 return NativeMethods.ts_node_named_descendant_for_byte_range(this, start * sizeof(ushort), end * sizeof(ushort));
             }
 
-            public TSNode named_descendant_for_point_range(TSPoint start, TSPoint end)
+            public TSNode NamedDescendantForPointRange(TSPoint start, TSPoint end)
             {
                 return NativeMethods.ts_node_named_descendant_for_point_range(this, start, end);
             }
 
-            public bool eq(TSNode other)
+            public bool Eq(TSNode other)
             {
                 return NativeMethods.ts_node_eq(this, other);
             }
 
-            public string text(string data)
+            public string Text(string data)
             {
-                uint beg = start_offset();
-                uint end = end_offset();
+                uint beg = StartOffset();
+                uint end = EndOffset();
                 return data.Substring((int)beg, (int)(end - beg));
+            }
+
+            internal string Type(TSLanguage lang)
+            {
+                return lang.Symbol_name(Symbol());
             }
 
             private class NativeMethods
