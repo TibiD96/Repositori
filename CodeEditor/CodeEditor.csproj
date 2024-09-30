@@ -55,6 +55,12 @@
     <None Update="csharp-tree-sitter.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="libtree-sitter-c_sharp.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="libtree-sitter.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="tree-sitter.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
