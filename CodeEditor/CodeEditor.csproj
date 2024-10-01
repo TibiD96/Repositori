@@ -10,7 +10,7 @@
   </PropertyGroup>
 
 	<PropertyGroup>
-		<CodeAnalysisRuleSet>juniormind.ruleset</CodeAnalysisRuleSet>
+		<CodeAnalysisRuleSet></CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -20,23 +20,7 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
-    <PackageReference Include="Roslynator.Analyzers" Version="4.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.2.0.71021">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -49,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="c-sharp.dll">
+    <None Update="libtree-sitter-c_sharp.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="csharp-tree-sitter.dll">
@@ -61,7 +45,7 @@
     <None Update="libtree-sitter.so">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="tree-sitter.dll">
+    <None Update="libtree-sitter.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="tree_sitter_csharp.dll">

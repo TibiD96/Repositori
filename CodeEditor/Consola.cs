@@ -1,7 +1,14 @@
-﻿namespace CodeEditor
+﻿using System.Runtime.InteropServices;
+
+namespace CodeEditor
 {
     public class Consola
     {
+        public static TSLanguage lang = new TSLanguage(tree_sitter_c_sharp());
+
+        [DllImport("libtree-sitter-c_sharp", CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr tree_sitter_c_sharp();
+
         public static void ShowContentOfFile(string[] file, int currentLine, bool fastTravelMode, int startingLine = 0, int startingColumn = 0)
         {
             Console.CursorVisible = false;
