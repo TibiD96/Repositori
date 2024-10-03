@@ -391,5 +391,69 @@ namespace CodeEditor
 
             Console.ResetColor();
         }
+
+        private static bool ParseTree(string path, string filetext, TSParser parser)
+        {
+            parser.set_language(Consola.lang);
+
+            using var tree = parser.parse_string(null, filetext);
+            if (tree == null)
+            {
+                return false;
+            }
+
+            using var cursor = new TSCursor(tree.root_node(), lang);
+
+            PostOrderTraverse(path, filetext, cursor);
+            return true;
+        }
+
+        private static void PostOrderTraverse(string path, String filetext, TSCursor cursor)
+        {
+            var rootCursor = cursor;
+
+            for (; ; )
+            {
+                int so = (int)cursor.current_node().start_offset();
+                int eo = (int)cursor.current_node().end_offset();
+                int sl = (int)cursor.current_node().start_point().row + 1;
+                var field = cursor.current_field();
+                var type = cursor.current_symbol();
+                bool hasChildren = cursor.goto_first_child();
+
+                var span = filetext.AsSpan(so, eo - so);
+
+                if (hasChildren)
+                {
+                    continue;
+                }
+
+                Console.Error.WriteLine("The node type is {0}, symbol is {1}", type, span.ToString());
+
+                if (cursor.goto_next_sibling())
+                {
+                    continue;
+                }
+
+                do
+                {
+                    cursor.goto_parent();
+                    int so_p = (int)cursor.current_node().start_offset();
+                    int eo_p = (int)cursor.current_node().end_offset();
+                    var type_p = cursor.current_symbol();
+                    var span_p = filetext.AsSpan(so_p, eo_p - so_p);
+
+                    Console.Error.WriteLine("The node type is {0}, symbol is {1}", type_p, span_p.ToString());
+
+                    if (rootCursor == cursor)
+                    {
+                        Console.Error.WriteLine("done!");
+                        return;
+                    }
+                } 
+
+                while (!cursor.goto_next_sibling());
+            }
+        }
     }
 }
