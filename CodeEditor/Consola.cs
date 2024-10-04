@@ -392,7 +392,7 @@ namespace CodeEditor
             Console.ResetColor();
         }
 
-        private static bool ParseTree(string path, string filetext, TSParser parser)
+        private static bool ParseTree(string filetext, TSParser parser)
         {
             parser.set_language(Consola.lang);
 
@@ -404,11 +404,11 @@ namespace CodeEditor
 
             using var cursor = new TSCursor(tree.root_node(), lang);
 
-            PostOrderTraverse(path, filetext, cursor);
+            PostOrderTraverse(filetext, cursor);
             return true;
         }
 
-        private static void PostOrderTraverse(string path, String filetext, TSCursor cursor)
+        private static void PostOrderTraverse(String filetext, TSCursor cursor)
         {
             var rootCursor = cursor;
 
@@ -454,6 +454,12 @@ namespace CodeEditor
 
                 while (!cursor.goto_next_sibling());
             }
+        }
+
+        public static bool TraverseTree(string filetext)
+        {
+            using var parser = new TSParser();
+            return ParseTree(filetext, parser);
         }
     }
 }
