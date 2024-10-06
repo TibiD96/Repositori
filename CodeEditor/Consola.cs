@@ -18,6 +18,8 @@ namespace CodeEditor
             string line;
             int currentEndColumn;
             int currentStartColumn;
+            var theme = new Theme();
+            using var parser = new TSParser();
 
             NullExcept.ArgumentNullException(file);
 
@@ -35,11 +37,13 @@ namespace CodeEditor
                 if (i < Math.Min(file.Length, startingLine + visibleAreaHight) - 1)
                 {
                     WriteIndex(lineNumber, lineIndex, currentLine, fastTravelMode);
+                    ParseTree(line.Substring(currentStartColumn, currentEndColumn), parser, theme);
                     Console.WriteLine(line.Substring(currentStartColumn, currentEndColumn));
                 }
                 else
                 {
                     WriteIndex(lineNumber, lineIndex, currentLine, fastTravelMode);
+                    ParseTree(line.Substring(currentStartColumn, currentEndColumn), parser, theme);
                     Console.Write(line.Substring(currentStartColumn, currentEndColumn));
                 }
             }
@@ -392,7 +396,7 @@ namespace CodeEditor
             Console.ResetColor();
         }
 
-        private static bool ParseTree(string filetext, TSParser parser)
+        private static bool ParseTree(string filetext, TSParser parser, Theme theme)
         {
             parser.set_language(Consola.lang);
 
@@ -404,7 +408,11 @@ namespace CodeEditor
 
             using var cursor = new TSCursor(tree.root_node(), lang);
 
-            PostOrderTraverse(filetext, cursor);
+            var rootNode = tree.root_node();
+
+           SyntaxHighlight(rootNode, filetext, theme);
+
+           // PostOrderTraverse(filetext, cursor);
             return true;
         }
 
@@ -416,8 +424,6 @@ namespace CodeEditor
             {
                 int so = (int)cursor.current_node().start_offset();
                 int eo = (int)cursor.current_node().end_offset();
-                int sl = (int)cursor.current_node().start_point().row + 1;
-                var field = cursor.current_field();
                 var type = cursor.current_symbol();
                 bool hasChildren = cursor.goto_first_child();
 
@@ -450,16 +456,119 @@ namespace CodeEditor
                         Console.Error.WriteLine("done!");
                         return;
                     }
-                } 
+                }
 
                 while (!cursor.goto_next_sibling());
             }
         }
 
-        public static bool TraverseTree(string filetext)
+        public static void SyntaxHighlight(TSNode rootNode, string code, Theme theme)
         {
-            using var parser = new TSParser();
-            return ParseTree(filetext, parser);
+            var themeColors = theme.ThemeColors;
+            var nodes = new List<HighlightedNode>();
+            AddNodes(rootNode, nodes);
+
+            nodes.Sort((a, b) => a.StartByte.CompareTo(b.StartByte));
+
+            HighlightChooser(code, nodes, themeColors);
+        }
+
+        private static void AddNodes(TSNode node, List<HighlightedNode> nodes)
+        {
+            if (node.is_zero() || node.is_null())
+                return;
+
+            string nodeType = node.type();
+
+            if (Theme.HighlightedNodeTypes.Contains(nodeType))
+            {
+                nodes.Add(new HighlightedNode
+                {
+                    Type = nodeType,
+                    StartByte = node.start_offset(),
+                    EndByte = node.end_offset()
+                });
+            }
+
+            uint childCount = node.child_count();
+            for (uint i = 0; i < childCount; i++)
+            {
+                TSNode child = node.child(i);
+                AddNodes(child, nodes);
+            }
+        }
+
+        private static void HighlightChooser(string code, List<HighlightedNode> nodes, Dictionary<string, ConsoleColor> themeColors)
+        {
+            int currentPos = 0;
+
+            foreach (var node in nodes)
+            {
+                if (node.StartByte > currentPos)
+                {
+                    string unhighlighted = code.Substring(currentPos, (int)(node.StartByte - currentPos));
+                    Console.Write(unhighlighted);
+                    currentPos += unhighlighted.Length;
+                }
+
+                string highlighted = code.Substring((int)node.StartByte, (int)(node.EndByte - node.StartByte));
+                HighlightApplier(node.Type, highlighted, themeColors);
+                currentPos = (int)node.EndByte;
+            }
+
+            if (currentPos < code.Length)
+            {
+                string remaining = code.Substring(currentPos);
+                Console.Write(remaining);
+            }
+        }
+
+        private static void HighlightApplier(string nodeType, string codeFragment, Dictionary<string, ConsoleColor> themeColors)
+        {
+
+            string themeKey = GetColorForNodeType(nodeType);
+
+            if (themeColors.TryGetValue(themeKey, out var color))
+            {
+                Console.ForegroundColor = color;
+                Console.Write(codeFragment);
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.Write(codeFragment);
+            }
+        }
+
+        private static string GetColorForNodeType(string nodeType)
+        {
+            switch (nodeType)
+            {
+                case "class_declaration":
+                case "struct_declaration":
+                case "interface_declaration":
+                case "enum_declaration":
+                    return "type";
+                case "method_declaration":
+                case "property_declaration":
+                case "function":
+                case "identifier":
+                case "type_identifier":
+                    return "function";
+                case "number_literal":
+                case "integer_literal":
+                case "float_literal":
+                    return "number";
+                case "string_literal":
+                case "verbatim_string_literal":
+                    return "string";
+                case "keyword":
+                    return "keyword";
+                case "comment":
+                    return "comment";
+                default:
+                    return "default";
+            }
         }
     }
 }

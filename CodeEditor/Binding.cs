@@ -107,6 +107,13 @@ namespace CodeEditor
         public uint value_id;
     }
 
+    public struct HighlightedNode
+    {
+        public string Type;
+        public uint StartByte;
+        public uint EndByte;
+    }
+
     public delegate void TSLogger(TSLogType logType, string message);
 
     public sealed class TSParser : IDisposable
