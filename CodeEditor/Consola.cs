@@ -410,9 +410,9 @@ namespace CodeEditor
 
             var rootNode = tree.root_node();
 
-           SyntaxHighlight(rootNode, filetext, theme);
+           //SyntaxHighlight(rootNode, filetext, theme);
 
-           // PostOrderTraverse(filetext, cursor);
+           PostOrderTraverse(filetext, cursor);
             return true;
         }
 
@@ -435,6 +435,7 @@ namespace CodeEditor
                 }
 
                 Console.Error.WriteLine("The node type is {0}, symbol is {1}", type, span.ToString());
+
 
                 if (cursor.goto_next_sibling())
                 {
@@ -476,7 +477,9 @@ namespace CodeEditor
         private static void AddNodes(TSNode node, List<HighlightedNode> nodes)
         {
             if (node.is_zero() || node.is_null())
+            {
                 return;
+            }
 
             string nodeType = node.type();
 
@@ -554,6 +557,7 @@ namespace CodeEditor
                 case "function":
                 case "identifier":
                 case "type_identifier":
+                case "for_statement":
                     return "function";
                 case "number_literal":
                 case "integer_literal":
