@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Xml.Linq;
 
 namespace CodeEditor
 {
@@ -409,14 +410,15 @@ namespace CodeEditor
             using var cursor = new TSCursor(tree.root_node(), lang);
 
             var rootNode = tree.root_node();
+            var nodes = new List<HighlightedNode>();
 
-           //SyntaxHighlight(rootNode, filetext, theme);
+            // SyntaxHighlight(rootNode, filetext, theme, cursor);
 
-           PostOrderTraverse(filetext, cursor);
+            PostOrderTraverse(filetext, cursor, nodes);
             return true;
         }
 
-        private static void PostOrderTraverse(String filetext, TSCursor cursor)
+        private static void PostOrderTraverse(String filetext, TSCursor cursor, List<HighlightedNode> nodes)
         {
             var rootCursor = cursor;
 
@@ -424,17 +426,27 @@ namespace CodeEditor
             {
                 int so = (int)cursor.current_node().start_offset();
                 int eo = (int)cursor.current_node().end_offset();
-                var type = cursor.current_symbol();
+                var nodeType = cursor.current_symbol();
                 bool hasChildren = cursor.goto_first_child();
 
-                var span = filetext.AsSpan(so, eo - so);
+                if (Theme.HighlightedNodeTypes.Contains(nodeType))
+                {
+
+                    so = (int)cursor.current_node().start_offset();
+                    eo = (int)cursor.current_node().end_offset();
+
+                    nodes.Add(new HighlightedNode
+                    {
+                        Type = nodeType,
+                        StartByte = (uint)so,
+                        EndByte = (uint)eo
+                    });
+                }
 
                 if (hasChildren)
                 {
                     continue;
                 }
-
-                Console.Error.WriteLine("The node type is {0}, symbol is {1}", type, span.ToString());
 
 
                 if (cursor.goto_next_sibling())
@@ -463,18 +475,18 @@ namespace CodeEditor
             }
         }
 
-        public static void SyntaxHighlight(TSNode rootNode, string code, Theme theme)
+        public static void SyntaxHighlight(TSNode rootNode, string code, Theme theme, TSCursor cursor)
         {
             var themeColors = theme.ThemeColors;
             var nodes = new List<HighlightedNode>();
-            AddNodes(rootNode, nodes);
+            AddNodes(rootNode, nodes, cursor, code);
 
             nodes.Sort((a, b) => a.StartByte.CompareTo(b.StartByte));
 
             HighlightChooser(code, nodes, themeColors);
         }
 
-        private static void AddNodes(TSNode node, List<HighlightedNode> nodes)
+        private static void AddNodes(TSNode node, List<HighlightedNode> nodes, TSCursor cursor, string code)
         {
             if (node.is_zero() || node.is_null())
             {
@@ -485,6 +497,14 @@ namespace CodeEditor
 
             if (Theme.HighlightedNodeTypes.Contains(nodeType))
             {
+
+                int so = (int)cursor.current_node().start_offset();
+                int eo = (int)cursor.current_node().end_offset();
+                var type = cursor.current_symbol();
+                bool hasChildren = cursor.goto_first_child();
+
+                var span = code.AsSpan(so, eo - so);
+
                 nodes.Add(new HighlightedNode
                 {
                     Type = nodeType,
@@ -497,7 +517,7 @@ namespace CodeEditor
             for (uint i = 0; i < childCount; i++)
             {
                 TSNode child = node.child(i);
-                AddNodes(child, nodes);
+                AddNodes(child, nodes, cursor, code);
             }
         }
 
