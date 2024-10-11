@@ -400,6 +400,7 @@ namespace CodeEditor
         private static bool ParseTree(string filetext, TSParser parser, Theme theme)
         {
             parser.set_language(Consola.lang);
+            var themeColors = theme.ThemeColors;
 
             using var tree = parser.parse_string(null, filetext);
             if (tree == null)
@@ -415,6 +416,7 @@ namespace CodeEditor
             // SyntaxHighlight(rootNode, filetext, theme, cursor);
 
             PostOrderTraverse(filetext, cursor, nodes);
+            HighlightChooser(filetext, nodes, themeColors);
             return true;
         }
 
@@ -479,9 +481,9 @@ namespace CodeEditor
         {
             var themeColors = theme.ThemeColors;
             var nodes = new List<HighlightedNode>();
-            AddNodes(rootNode, nodes, cursor, code);
+            //AddNodes(rootNode, nodes, cursor, code);
 
-            nodes.Sort((a, b) => a.StartByte.CompareTo(b.StartByte));
+            //nodes.Sort((a, b) => a.StartByte.CompareTo(b.StartByte));
 
             HighlightChooser(code, nodes, themeColors);
         }
