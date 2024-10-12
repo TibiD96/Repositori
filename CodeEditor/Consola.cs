@@ -413,7 +413,7 @@ namespace CodeEditor
             var rootNode = tree.root_node();
             var nodes = new List<HighlightedNode>();
 
-            // SyntaxHighlight(rootNode, filetext, theme, cursor);
+            SyntaxHighlight(rootNode, filetext, theme, cursor);
 
             PostOrderTraverse(filetext, cursor, nodes);
             HighlightChooser(filetext, nodes, themeColors);
@@ -424,18 +424,20 @@ namespace CodeEditor
         {
             var rootCursor = cursor;
 
-            for (; ; )
+            for (;;)
             {
                 int so = (int)cursor.current_node().start_offset();
                 int eo = (int)cursor.current_node().end_offset();
                 var nodeType = cursor.current_symbol();
                 bool hasChildren = cursor.goto_first_child();
+                var span = filetext.AsSpan(so, eo - so);
 
                 if (Theme.HighlightedNodeTypes.Contains(nodeType))
                 {
 
                     so = (int)cursor.current_node().start_offset();
                     eo = (int)cursor.current_node().end_offset();
+                    span = filetext.AsSpan(so, eo - so);
 
                     nodes.Add(new HighlightedNode
                     {
@@ -481,14 +483,14 @@ namespace CodeEditor
         {
             var themeColors = theme.ThemeColors;
             var nodes = new List<HighlightedNode>();
-            //AddNodes(rootNode, nodes, cursor, code);
+            AddNodes(rootNode, nodes, cursor, code, themeColors);
 
             //nodes.Sort((a, b) => a.StartByte.CompareTo(b.StartByte));
 
-            HighlightChooser(code, nodes, themeColors);
+            //HighlightChooser(code, nodes, themeColors);
         }
 
-        private static void AddNodes(TSNode node, List<HighlightedNode> nodes, TSCursor cursor, string code)
+        private static void AddNodes(TSNode node, List<HighlightedNode> nodes, TSCursor cursor, string fileContent, Dictionary<string, ConsoleColor> themeColors)
         {
             if (node.is_zero() || node.is_null())
             {
@@ -500,30 +502,38 @@ namespace CodeEditor
             if (Theme.HighlightedNodeTypes.Contains(nodeType))
             {
 
-                int so = (int)cursor.current_node().start_offset();
-                int eo = (int)cursor.current_node().end_offset();
+                uint so = node.start_offset();
+                uint eo = node.end_offset();
                 var type = cursor.current_symbol();
                 bool hasChildren = cursor.goto_first_child();
 
-                var span = code.AsSpan(so, eo - so);
+                var span = fileContent.AsSpan((int)so, (int)eo - (int)so);
 
-                nodes.Add(new HighlightedNode
+                string highlighted = fileContent.Substring((int)node.start_offset(), (int)(node.end_offset() - node.start_offset()));
+
+                HighlightApplier(nodeType, highlighted, themeColors);
+
+                /*nodes.Add(new HighlightedNode
                 {
                     Type = nodeType,
                     StartByte = node.start_offset(),
                     EndByte = node.end_offset()
-                });
+                });*/
+            }
+            else 
+            {
+
             }
 
             uint childCount = node.child_count();
             for (uint i = 0; i < childCount; i++)
             {
                 TSNode child = node.child(i);
-                AddNodes(child, nodes, cursor, code);
+                AddNodes(child, nodes, cursor, fileContent, themeColors);
             }
         }
 
-        private static void HighlightChooser(string code, List<HighlightedNode> nodes, Dictionary<string, ConsoleColor> themeColors)
+        private static void HighlightChooser(string fileText, List<HighlightedNode> nodes, Dictionary<string, ConsoleColor> themeColors)
         {
             int currentPos = 0;
 
@@ -531,19 +541,19 @@ namespace CodeEditor
             {
                 if (node.StartByte > currentPos)
                 {
-                    string unhighlighted = code.Substring(currentPos, (int)(node.StartByte - currentPos));
+                    string unhighlighted = fileText.Substring(currentPos, (int)(node.StartByte - currentPos));
                     Console.Write(unhighlighted);
                     currentPos += unhighlighted.Length;
                 }
 
-                string highlighted = code.Substring((int)node.StartByte, (int)(node.EndByte - node.StartByte));
+                string highlighted = fileText.Substring((int)node.StartByte, (int)(node.EndByte - node.StartByte));
                 HighlightApplier(node.Type, highlighted, themeColors);
                 currentPos = (int)node.EndByte;
             }
 
-            if (currentPos < code.Length)
+            if (currentPos < fileText.Length)
             {
-                string remaining = code.Substring(currentPos);
+                string remaining = fileText.Substring(currentPos);
                 Console.Write(remaining);
             }
         }
@@ -579,8 +589,9 @@ namespace CodeEditor
                 case "function":
                 case "identifier":
                 case "type_identifier":
-                case "for_statement":
-                    return "function";
+                case "for":
+                case "if":
+                    return "Statements";
                 case "number_literal":
                 case "integer_literal":
                 case "float_literal":

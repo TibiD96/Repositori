@@ -15,8 +15,8 @@ namespace CodeEditor
             ThemeColors = new Dictionary<string, ConsoleColor>
             {
                 { "keyword", ConsoleColor.DarkMagenta },
-                { "function", ConsoleColor.Blue },
-                { "type", ConsoleColor.Green },
+                { "Statements", ConsoleColor.Magenta },
+                { "Modifiers", ConsoleColor.Blue },
                 { "number", ConsoleColor.DarkYellow }
             };
         }
@@ -37,8 +37,9 @@ namespace CodeEditor
             "string_literal",
             "verbatim_string_literal",
             "keyword",
-            "if_statement",
-            "for_statement"
+            "if",
+            "for",
+            "modifier"
         };
     }
 }
