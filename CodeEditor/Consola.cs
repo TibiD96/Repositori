@@ -39,13 +39,13 @@ namespace CodeEditor
                 {
                     WriteIndex(lineNumber, lineIndex, currentLine, fastTravelMode);
                     ParseTree(line.Substring(currentStartColumn, currentEndColumn), parser, theme);
-                    Console.WriteLine(line.Substring(currentStartColumn, currentEndColumn));
+                    //Console.WriteLine(line.Substring(currentStartColumn, currentEndColumn));
                 }
                 else
                 {
                     WriteIndex(lineNumber, lineIndex, currentLine, fastTravelMode);
                     ParseTree(line.Substring(currentStartColumn, currentEndColumn), parser, theme);
-                    Console.Write(line.Substring(currentStartColumn, currentEndColumn));
+                    //Console.Write(line.Substring(currentStartColumn, currentEndColumn));
                 }
             }
 
@@ -400,9 +400,9 @@ namespace CodeEditor
         private static bool ParseTree(string filetext, TSParser parser, Theme theme)
         {
             parser.set_language(Consola.lang);
-            var themeColors = theme.ThemeColors;
 
             using var tree = parser.parse_string(null, filetext);
+
             if (tree == null)
             {
                 return false;
@@ -413,10 +413,10 @@ namespace CodeEditor
             var rootNode = tree.root_node();
             var nodes = new List<HighlightedNode>();
 
-            SyntaxHighlight(rootNode, filetext, theme, cursor);
+            SyntaxHighlight(rootNode, filetext, theme);
 
-            PostOrderTraverse(filetext, cursor, nodes);
-            HighlightChooser(filetext, nodes, themeColors);
+            //PostOrderTraverse(filetext, cursor, nodes);
+            //HighlightChooser(filetext, nodes, themeColors);
             return true;
         }
 
@@ -437,7 +437,7 @@ namespace CodeEditor
 
                     so = (int)cursor.current_node().start_offset();
                     eo = (int)cursor.current_node().end_offset();
-                    span = filetext.AsSpan(so, eo - so);
+                    var verificare = filetext.AsSpan(so, eo - so);
 
                     nodes.Add(new HighlightedNode
                     {
@@ -479,19 +479,21 @@ namespace CodeEditor
             }
         }
 
-        public static void SyntaxHighlight(TSNode rootNode, string code, Theme theme, TSCursor cursor)
+        public static void SyntaxHighlight(TSNode rootNode, string code, Theme theme)
         {
             var themeColors = theme.ThemeColors;
             var nodes = new List<HighlightedNode>();
-            AddNodes(rootNode, nodes, cursor, code, themeColors);
+            AddNodes(rootNode, nodes, code);
 
-            //nodes.Sort((a, b) => a.StartByte.CompareTo(b.StartByte));
+            nodes.Sort((a, b) => a.StartByte.CompareTo(b.StartByte));
 
-            //HighlightChooser(code, nodes, themeColors);
+            HighlightChooser(code, nodes, themeColors);
         }
 
-        private static void AddNodes(TSNode node, List<HighlightedNode> nodes, TSCursor cursor, string fileContent, Dictionary<string, ConsoleColor> themeColors)
+        private static void AddNodes(TSNode node, List<HighlightedNode> nodes, string fileContent)
         {
+            string highlighted;
+
             if (node.is_zero() || node.is_null())
             {
                 return;
@@ -499,37 +501,32 @@ namespace CodeEditor
 
             string nodeType = node.type();
 
+            uint so = node.start_offset();
+            uint eo = node.end_offset();
+
+            highlighted = fileContent.Substring((int)node.start_offset(), (int)(node.end_offset() - node.start_offset()));
+
             if (Theme.HighlightedNodeTypes.Contains(nodeType))
             {
 
-                uint so = node.start_offset();
-                uint eo = node.end_offset();
-                var type = cursor.current_symbol();
-                bool hasChildren = cursor.goto_first_child();
+                so = node.start_offset();
+                eo = node.end_offset();
 
-                var span = fileContent.AsSpan((int)so, (int)eo - (int)so);
+                highlighted = fileContent.Substring((int)node.start_offset(), (int)(node.end_offset() - node.start_offset()));
 
-                string highlighted = fileContent.Substring((int)node.start_offset(), (int)(node.end_offset() - node.start_offset()));
-
-                HighlightApplier(nodeType, highlighted, themeColors);
-
-                /*nodes.Add(new HighlightedNode
+                nodes.Add(new HighlightedNode
                 {
                     Type = nodeType,
                     StartByte = node.start_offset(),
                     EndByte = node.end_offset()
-                });*/
-            }
-            else 
-            {
-
+                });
             }
 
             uint childCount = node.child_count();
             for (uint i = 0; i < childCount; i++)
             {
                 TSNode child = node.child(i);
-                AddNodes(child, nodes, cursor, fileContent, themeColors);
+                AddNodes(child, nodes, fileContent);
             }
         }
 
@@ -583,15 +580,15 @@ namespace CodeEditor
                 case "struct_declaration":
                 case "interface_declaration":
                 case "enum_declaration":
+                case "predefined_type":
                     return "type";
                 case "method_declaration":
                 case "property_declaration":
                 case "function":
                 case "identifier":
                 case "type_identifier":
-                case "for":
-                case "if":
-                    return "Statements";
+                case "attribute":
+                    return "function";
                 case "number_literal":
                 case "integer_literal":
                 case "float_literal":
@@ -603,6 +600,11 @@ namespace CodeEditor
                     return "keyword";
                 case "comment":
                     return "comment";
+                case "preprocessor_statement":
+                    return "keyword"; 
+                case "namespace_declaration":
+                case "using_directive":
+                    return "type";
                 default:
                     return "default";
             }
