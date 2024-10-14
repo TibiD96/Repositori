@@ -39,6 +39,7 @@ namespace CodeEditor
                 {
                     WriteIndex(lineNumber, lineIndex, currentLine, fastTravelMode);
                     ParseTree(line.Substring(currentStartColumn, currentEndColumn), parser, theme);
+                    Console.WriteLine();
                     //Console.WriteLine(line.Substring(currentStartColumn, currentEndColumn));
                 }
                 else
@@ -401,7 +402,7 @@ namespace CodeEditor
         {
             parser.set_language(Consola.lang);
 
-            using var tree = parser.parse_string(null, filetext);
+            using var tree = parser.parse_string(null!, filetext);
 
             if (tree == null)
             {
@@ -576,35 +577,39 @@ namespace CodeEditor
         {
             switch (nodeType)
             {
-                case "class_declaration":
+                case "class":
                 case "struct_declaration":
                 case "interface_declaration":
                 case "enum_declaration":
                 case "predefined_type":
-                    return "type";
-                case "method_declaration":
-                case "property_declaration":
-                case "function":
-                case "identifier":
+                case "implicit_type":
+                case "modifier":
+                case "namespace":
+                case "using":
+                    return "Keywords";
                 case "type_identifier":
-                case "attribute":
-                    return "function";
+                case "if":
+                case "continue":
+                case "foreach":
+                case "for":
+                case "else":
+                case "while":
+                case "new":
+                case "return":
+                case "break":
+                case "do":
+                case "in":
+                    return "Statement";
                 case "number_literal":
                 case "integer_literal":
                 case "float_literal":
-                    return "number";
                 case "string_literal":
                 case "verbatim_string_literal":
-                    return "string";
-                case "keyword":
-                    return "keyword";
+                    return "Characters/Strings";
                 case "comment":
-                    return "comment";
-                case "preprocessor_statement":
-                    return "keyword"; 
-                case "namespace_declaration":
-                case "using_directive":
-                    return "type";
+                    return "Comments";
+                case "identifier":
+                    return "Identifiers";
                 default:
                     return "default";
             }

@@ -14,20 +14,18 @@ namespace CodeEditor
         {
             ThemeColors = new Dictionary<string, ConsoleColor>
             {
-                { "keyword", ConsoleColor.DarkMagenta },
-                { "function", ConsoleColor.Blue },
-                { "type", ConsoleColor.Green },
-                { "number", ConsoleColor.DarkYellow },
-                { "string", ConsoleColor.DarkYellow },
-                { "comment", ConsoleColor.DarkGray },
-                { "preprocessor", ConsoleColor.DarkCyan },
+                { "Statement", ConsoleColor.Magenta },
+                { "Keywords", ConsoleColor.Green },
+                { "Characters/Strings", ConsoleColor.DarkYellow },
+                { "Identifiers", ConsoleColor.Blue },
+                { "Comments", ConsoleColor.Gray},
                 { "default", ConsoleColor.White }
             };
         }
 
         public static readonly HashSet<string> HighlightedNodeTypes = new HashSet<string>
         {
-            "class_declaration",
+            "class",
             "predefined_type",
             "struct_declaration",
             "interface_declaration",
@@ -44,9 +42,22 @@ namespace CodeEditor
             "keyword",
             "comment",
             "preprocessor_statement",
-            "attribute",
             "namespace_declaration",
-            "using_directive",
+            "using",
+            "implicit_type",
+            "if",
+            "foreach",
+            "modifier",
+            "for",
+            "else",
+            "continue",
+            "while",
+            "new",
+            "return",
+            "break",
+            "do",
+            "in",
+            "namespace"
         };
     }
 }

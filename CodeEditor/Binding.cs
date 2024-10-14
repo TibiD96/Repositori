@@ -139,7 +139,7 @@ namespace CodeEditor
         public TSLanguage language()
         {
             var ptr = ts_parser_language(Ptr);
-            return ptr != IntPtr.Zero ? new TSLanguage(ptr) : null;
+            return ptr != IntPtr.Zero ? new TSLanguage(ptr) : null!;
         }
 
         public bool set_included_ranges(TSRange[] ranges)
@@ -156,7 +156,7 @@ namespace CodeEditor
         {
             var ptr = ts_parser_parse_string_encoding(Ptr, oldTree != null ? oldTree.Ptr : IntPtr.Zero,
                                                         input, (uint)input.Length * 2, TSInputEncoding.TSInputEncodingUTF16);
-            return ptr != IntPtr.Zero ? new TSTree(ptr) : null;
+            return ptr != IntPtr.Zero ? new TSTree(ptr) : null!;
         }
 
         public void reset() { ts_parser_reset(Ptr); }
@@ -165,7 +165,7 @@ namespace CodeEditor
         public void set_logger(TSLogger logger)
         {
             var code = new _TSLoggerCode(logger);
-            var data = new _TSLoggerData { Log = logger != null ? new TSLogCallback(code.LogCallback) : null };
+            var data = new _TSLoggerData { Log = logger != null ? new TSLogCallback(code.LogCallback) : null! };
             ts_parser_set_logger(Ptr, data);
         }
 
@@ -260,14 +260,14 @@ namespace CodeEditor
         public TSTree copy()
         {
             var ptr = ts_tree_copy(Ptr);
-            return ptr != IntPtr.Zero ? new TSTree(ptr) : null;
+            return ptr != IntPtr.Zero ? new TSTree(ptr) : null!;
         }
         public TSNode root_node() { return ts_tree_root_node(Ptr); }
         public TSNode root_node_with_offset(uint offsetBytes, TSPoint offsetPoint) { return ts_tree_root_node_with_offset(Ptr, offsetBytes, offsetPoint); }
         public TSLanguage language()
         {
             var ptr = ts_tree_language(Ptr);
-            return ptr != IntPtr.Zero ? new TSLanguage(ptr) : null;
+            return ptr != IntPtr.Zero ? new TSLanguage(ptr) : null!;
         }
         public void edit(TSInputEdit edit) { ts_tree_edit(Ptr, ref edit); }
 
@@ -311,14 +311,14 @@ namespace CodeEditor
 
         public void clear() { id = IntPtr.Zero; tree = IntPtr.Zero; }
         public bool is_zero() { return (id == IntPtr.Zero && tree == IntPtr.Zero); }
-        public string type() { return Marshal.PtrToStringAnsi(ts_node_type(this)); }
+        public string type() { return Marshal.PtrToStringAnsi(ts_node_type(this))!; }
         public string type(TSLanguage lang) { return lang.symbol_name(symbol()); }
         public ushort symbol() { return ts_node_symbol(this); }
         public uint start_offset() { return ts_node_start_byte(this) / sizeof(ushort); }
         public TSPoint start_point() { var pt = ts_node_start_point(this); return new TSPoint(pt.row, pt.column / sizeof(ushort)); }
         public uint end_offset() { return ts_node_end_byte(this) / sizeof(ushort); }
         public TSPoint end_point() { var pt = ts_node_end_point(this); return new TSPoint(pt.row, pt.column / sizeof(ushort)); }
-        public string to_string() { var dat = ts_node_string(this); var str = Marshal.PtrToStringAnsi(dat); ts_node_string_free(dat); return str; }
+        public string to_string() { var dat = ts_node_string(this); var str = Marshal.PtrToStringAnsi(dat); ts_node_string_free(dat); return str!; }
         public bool is_null() { return ts_node_is_null(this); }
         public bool is_named() { return ts_node_is_named(this); }
         public bool is_missing() { return ts_node_is_missing(this); }
@@ -570,9 +570,9 @@ namespace CodeEditor
         public bool is_pattern_rooted(uint patternIndex) { return ts_query_is_pattern_rooted(Ptr, patternIndex); }
         public bool is_pattern_non_local(uint patternIndex) { return ts_query_is_pattern_non_local(Ptr, patternIndex); }
         public bool is_pattern_guaranteed_at_offset(uint offset) { return ts_query_is_pattern_guaranteed_at_step(Ptr, offset / sizeof(ushort)); }
-        public string capture_name_for_id(uint id, out uint length) { return Marshal.PtrToStringAnsi(ts_query_capture_name_for_id(Ptr, id, out length)); }
+        public string capture_name_for_id(uint id, out uint length) { return Marshal.PtrToStringAnsi(ts_query_capture_name_for_id(Ptr, id, out length))!; }
         public TSQuantifier capture_quantifier_for_id(uint patternId, uint captureId) { return ts_query_capture_quantifier_for_id(Ptr, patternId, captureId); }
-        public string string_value_for_id(uint id, out uint length) { return Marshal.PtrToStringAnsi(ts_query_string_value_for_id(Ptr, id, out length)); }
+        public string string_value_for_id(uint id, out uint length) { return Marshal.PtrToStringAnsi(ts_query_string_value_for_id(Ptr, id, out length))!; }
         public void disable_capture(string captureName) { ts_query_disable_capture(Ptr, captureName, (uint)captureName.Length); }
         public void disable_pattern(uint patternIndex) { ts_query_disable_pattern(Ptr, patternIndex); }
 
@@ -714,7 +714,7 @@ namespace CodeEditor
             symbols = new String[symbol_count() + 1];
             for (ushort i = 0; i < symbols.Length; i++)
             {
-                symbols[i] = Marshal.PtrToStringAnsi(ts_language_symbol_name(Ptr, i));
+                symbols[i] = Marshal.PtrToStringAnsi(ts_language_symbol_name(Ptr, i))!;
             }
 
             fields = new String[field_count() + 1];
@@ -722,7 +722,7 @@ namespace CodeEditor
 
             for (ushort i = 0; i < fields.Length; i++)
             {
-                fields[i] = Marshal.PtrToStringAnsi(ts_language_field_name_for_id(Ptr, i));
+                fields[i] = Marshal.PtrToStringAnsi(ts_language_field_name_for_id(Ptr, i))!;
                 if (fields[i] != null)
                 {
                     fieldIds.Add(fields[i], i);
@@ -755,7 +755,7 @@ namespace CodeEditor
         public TSQuery query_new(string source, out uint error_offset, out TSQueryError error_type)
         {
             var ptr = ts_query_new(Ptr, source, (uint)source.Length, out error_offset, out error_type);
-            return ptr != IntPtr.Zero ? new TSQuery(ptr) : null;
+            return ptr != IntPtr.Zero ? new TSQuery(ptr) : null!;
         }
 
         public String[] symbols;
