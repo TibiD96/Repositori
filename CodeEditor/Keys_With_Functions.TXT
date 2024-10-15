@@ -1,0 +1,29 @@
+Keys With Functions:
+
+Up Arrow - move cursor one step upper
+Down Arrow - move cursor one step lower
+Left Arrow - move cursor one step to the left
+Right Arrow - move cursor one step to the right
+End button - move to the end of the line
+Home button - move to the start of the line
+PageUp - move the visible content upper with the same amount of the visible lines
+Page Down - move the visible content lower with the same amount of the visible lines
+W - move at the begining of the word mowing to right 
+B - move at the begining of the word mowing to left 
+F - move the cursor to the desired char
+M - mark current line
+^ - move the cursor to the first character of the line
+\ - move the cursor to the marked line
+ctrl+u - same with PageUP
+ctrl+d - same with PageDown
+gg - goes to the beginning of the file
+G -  goes to the end of file
+A - activate edit mode and add text at the end of the curent line
+a - activate edit mode and add text after the curent position of the cursor
+I - activate edit mode and add text at the beginning of the curent line
+i - activate edit mode and add text before the curent position of the cursor
+O - activate edit mode and add text before the current line
+o - activate edit mode and add text after the current line
+: - open command line where with "w" or "write" save and with "q" or "quit" quite from app but if there are modifications which you don't want to save you have to quit with "quite!" or "q!"
+u - used for undo
+ctrl+r - is used for redo
