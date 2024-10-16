@@ -118,6 +118,14 @@ namespace CodeEditor
 
     public sealed class TSParser : IDisposable
     {
+        private const string treeSitter = "libtree-sitter";
+
+        static TSParser()
+        {
+            LibraryChooser();
+        }
+
+
         private IntPtr Ptr { get; set; }
 
         public TSParser()
@@ -134,7 +142,10 @@ namespace CodeEditor
             }
         }
 
-        public bool set_language(TSLanguage language) { return ts_parser_set_language(Ptr, language.Ptr); }
+        public bool set_language(TSLanguage language) 
+        { 
+            return ts_parser_set_language(Ptr, language.Ptr); 
+        }
 
         public TSLanguage language()
         {
@@ -194,53 +205,77 @@ namespace CodeEditor
             }
         }
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_parser_new();
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_parser_delete(IntPtr parser);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_parser_set_language(IntPtr parser, IntPtr language);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_parser_language(IntPtr parser);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_parser_set_included_ranges(IntPtr parser, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] TSRange[] ranges, uint length);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)]
         private static extern TSRange[] ts_parser_included_ranges(IntPtr parser, out uint length);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_parser_parse_string(IntPtr parser, IntPtr oldTree, [MarshalAs(UnmanagedType.LPUTF8Str)] string input, uint length);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_parser_parse_string_encoding(IntPtr parser, IntPtr oldTree, [MarshalAs(UnmanagedType.LPWStr)] string input, uint length, TSInputEncoding encoding);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_parser_reset(IntPtr parser);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_parser_set_timeout_micros(IntPtr parser, ulong timeout);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern ulong ts_parser_timeout_micros(IntPtr parser);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_parser_set_cancellation_flag(IntPtr parser, ref IntPtr flag);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_parser_cancellation_flag(IntPtr parser);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_parser_set_logger(IntPtr parser, _TSLoggerData logger);
-    }
 
+        private static void LibraryChooser()
+        {
+            string treeSitterLib;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                treeSitterLib = $"{treeSitter}.dll"; ;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                treeSitterLib = $"{treeSitter}.so";
+            }
+            else
+            {
+                throw new PlatformNotSupportedException("Platform not supported.");
+            }
+        }
+    }
+    
     public sealed class TSTree : IDisposable
     {
+        private const string treeSitter = "libtree-sitter";
+
+        static TSTree()
+        {
+            LibraryChooser();
+        }
+
         internal IntPtr Ptr { get; private set; }
 
         public TSTree(IntPtr ptr)
@@ -271,32 +306,49 @@ namespace CodeEditor
         }
         public void edit(TSInputEdit edit) { ts_tree_edit(Ptr, ref edit); }
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_tree_copy(IntPtr tree);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_tree_delete(IntPtr tree);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_tree_root_node(IntPtr tree);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_tree_root_node_with_offset(IntPtr tree, uint offsetBytes, TSPoint offsetPoint);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_tree_language(IntPtr tree);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_tree_included_ranges(IntPtr tree, out uint length);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_tree_included_ranges_free(IntPtr ranges);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_tree_edit(IntPtr tree, ref TSInputEdit edit);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_tree_get_changed_ranges(IntPtr old_tree, IntPtr new_tree, out uint length);
+
+        private static void LibraryChooser()
+        {
+            string treeSitterLib;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                treeSitterLib = $"{treeSitter}.dll"; ;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                treeSitterLib = $"{treeSitter}.so";
+            }
+            else
+            {
+                throw new PlatformNotSupportedException("Platform not supported.");
+            }
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -308,6 +360,13 @@ namespace CodeEditor
         private uint context3;
         public IntPtr id;
         private IntPtr tree;
+
+        private const string treeSitter = "libtree-sitter";
+
+        static TSNode()
+        {
+            LibraryChooser();
+        }
 
         public void clear() { id = IntPtr.Zero; tree = IntPtr.Zero; }
         public bool is_zero() { return (id == IntPtr.Zero && tree == IntPtr.Zero); }
@@ -352,103 +411,120 @@ namespace CodeEditor
             return data.Substring((int)beg, (int)(end - beg));
         }
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_node_type(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern ushort ts_node_symbol(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint ts_node_start_byte(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSPoint ts_node_start_point(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint ts_node_end_byte(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSPoint ts_node_end_point(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_node_string(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_node_string_free(IntPtr str);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_node_is_null(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_node_is_named(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_node_is_missing(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_node_is_extra(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_node_has_changes(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_node_has_error(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_node_parent(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_node_child(TSNode node, uint index);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_node_field_name_for_child(TSNode node, uint index);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint ts_node_child_count(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_node_named_child(TSNode node, uint index);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint ts_node_named_child_count(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_node_child_by_field_name(TSNode self, [MarshalAs(UnmanagedType.LPUTF8Str)] string field_name, uint field_name_length);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_node_child_by_field_id(TSNode self, ushort fieldId);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_node_next_sibling(TSNode self);
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_node_prev_sibling(TSNode self);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_node_next_named_sibling(TSNode self);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_node_prev_named_sibling(TSNode self);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_node_first_child_for_byte(TSNode self, uint byteOffset);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_node_first_named_child_for_byte(TSNode self, uint byteOffset);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_node_descendant_for_byte_range(TSNode self, uint startByte, uint endByte);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_node_descendant_for_point_range(TSNode self, TSPoint startPoint, TSPoint endPoint);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_node_named_descendant_for_byte_range(TSNode self, uint startByte, uint endByte);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_node_named_descendant_for_point_range(TSNode self, TSPoint startPoint, TSPoint endPoint);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_node_eq(TSNode node1, TSNode node2);
+
+        private static void LibraryChooser()
+        {
+            string treeSitterLib;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                treeSitterLib = $"{treeSitter}.dll"; ;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                treeSitterLib = $"{treeSitter}.so";
+            }
+            else
+            {
+                throw new PlatformNotSupportedException("Platform not supported.");
+            }
+        }
     }
 
     public sealed class TSCursor : IDisposable
@@ -490,6 +566,13 @@ namespace CodeEditor
             }
         }
 
+        private const string treeSitter = "libtree-sitter";
+
+        static TSCursor()
+        {
+            LibraryChooser();
+        }
+
         public void reset(TSNode node) { ts_tree_cursor_reset(ref cursor, node); }
         public TSNode current_node() { return ts_tree_cursor_current_node(ref cursor); }
         public string current_field() { return lang.fields[current_field_id()]; }
@@ -506,41 +589,58 @@ namespace CodeEditor
         public long goto_first_child_for_point(TSPoint point) { return ts_tree_cursor_goto_first_child_for_point(ref cursor, point); }
         public TSCursor copy() { return new TSCursor(ts_tree_cursor_copy(ref cursor), lang); }
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSTreeCursor ts_tree_cursor_new(TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_tree_cursor_delete(ref TSTreeCursor cursor);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_tree_cursor_reset(ref TSTreeCursor cursor, TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSNode ts_tree_cursor_current_node(ref TSTreeCursor cursor);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_tree_cursor_current_field_name(ref TSTreeCursor cursor);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern ushort ts_tree_cursor_current_field_id(ref TSTreeCursor cursor);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_tree_cursor_goto_parent(ref TSTreeCursor cursor);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_tree_cursor_goto_next_sibling(ref TSTreeCursor cursor);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_tree_cursor_goto_first_child(ref TSTreeCursor cursor);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern long ts_tree_cursor_goto_first_child_for_byte(ref TSTreeCursor cursor, uint byteOffset);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern long ts_tree_cursor_goto_first_child_for_point(ref TSTreeCursor cursor, TSPoint point);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSTreeCursor ts_tree_cursor_copy(ref TSTreeCursor cursor);
+
+        private static void LibraryChooser()
+        {
+            string treeSitterLib;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                treeSitterLib = $"{treeSitter}.dll"; ;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                treeSitterLib = $"{treeSitter}.so";
+            }
+            else
+            {
+                throw new PlatformNotSupportedException("Platform not supported.");
+            }
+        }
 
     }
 
@@ -562,6 +662,13 @@ namespace CodeEditor
             }
         }
 
+        private const string treeSitter = "libtree-sitter";
+
+        static TSQuery()
+        {
+            LibraryChooser();
+        }
+
         public uint pattern_count() { return ts_query_pattern_count(Ptr); }
         public uint capture_count() { return ts_query_capture_count(Ptr); }
         public uint string_count() { return ts_query_string_count(Ptr); }
@@ -576,47 +683,64 @@ namespace CodeEditor
         public void disable_capture(string captureName) { ts_query_disable_capture(Ptr, captureName, (uint)captureName.Length); }
         public void disable_pattern(uint patternIndex) { ts_query_disable_pattern(Ptr, patternIndex); }
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_query_delete(IntPtr query);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint ts_query_pattern_count(IntPtr query);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint ts_query_capture_count(IntPtr query);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint ts_query_string_count(IntPtr query);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint ts_query_start_byte_for_pattern(IntPtr query, uint patternIndex);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_query_predicates_for_pattern(IntPtr query, uint patternIndex, out uint length);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_query_is_pattern_rooted(IntPtr query, uint patternIndex);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_query_is_pattern_non_local(IntPtr query, uint patternIndex);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_query_is_pattern_guaranteed_at_step(IntPtr query, uint byteOffset);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_query_capture_name_for_id(IntPtr query, uint id, out uint length);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSQuantifier ts_query_capture_quantifier_for_id(IntPtr query, uint patternId, uint captureId);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_query_string_value_for_id(IntPtr query, uint id, out uint length);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_query_disable_capture(IntPtr query, [MarshalAs(UnmanagedType.LPUTF8Str)] string captureName, uint captureNameLength);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_query_disable_pattern(IntPtr query, uint patternIndex);
+
+        private static void LibraryChooser()
+        {
+            string treeSitterLib;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                treeSitterLib = $"{treeSitter}.dll"; ;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                treeSitterLib = $"{treeSitter}.so";
+            }
+            else
+            {
+                throw new PlatformNotSupportedException("Platform not supported.");
+            }
+        }
     }
 
     public sealed class TSQueryCursor : IDisposable
@@ -640,6 +764,13 @@ namespace CodeEditor
                 ts_query_cursor_delete(Ptr);
                 Ptr = IntPtr.Zero;
             }
+        }
+
+        private const string treeSitter = "libtree-sitter";
+
+        static TSQueryCursor()
+        {
+            LibraryChooser();
         }
 
         public void exec(TSQuery query, TSNode node) { ts_query_cursor_exec(Ptr, query.Ptr, node); }
@@ -669,43 +800,67 @@ namespace CodeEditor
         public void remove_match(uint id) { ts_query_cursor_remove_match(Ptr, id); }
         public bool next_capture(out TSQueryMatch match, out uint index) { return ts_query_cursor_next_capture(Ptr, out match, out index); }
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_query_cursor_new();
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_query_cursor_delete(IntPtr cursor);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_query_cursor_exec(IntPtr cursor, IntPtr query, TSNode node);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_query_cursor_did_exceed_match_limit(IntPtr cursor);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint ts_query_cursor_match_limit(IntPtr cursor);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_query_cursor_set_match_limit(IntPtr cursor, uint limit);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_query_cursor_set_byte_range(IntPtr cursor, uint start_byte, uint end_byte);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_query_cursor_set_point_range(IntPtr cursor, TSPoint start_point, TSPoint end_point);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_query_cursor_next_match(IntPtr cursor, out TSQueryMatch match);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_query_cursor_remove_match(IntPtr cursor, uint id);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ts_query_cursor_next_capture(IntPtr cursor, out TSQueryMatch match, out uint capture_index);
+
+        private static void LibraryChooser()
+        {
+            string treeSitterLib;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                treeSitterLib = $"{treeSitter}.dll"; ;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                treeSitterLib = $"{treeSitter}.so";
+            }
+            else
+            {
+                throw new PlatformNotSupportedException("Platform not supported.");
+            }
+        }
     }
 
     public sealed class TSLanguage : IDisposable
     {
         internal IntPtr Ptr { get; private set; }
+
+        private const string treeSitter = "libtree-sitter";
+
+        static TSLanguage()
+        {
+            LibraryChooser();
+        }
 
         public TSLanguage(IntPtr ptr)
         {
@@ -770,31 +925,48 @@ namespace CodeEditor
         public ushort field_id_for_name(string str) { return ts_language_field_id_for_name(Ptr, str, (uint)str.Length); }
         public TSSymbolType symbol_type(ushort symbol) { return ts_language_symbol_type(Ptr, symbol); }
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_query_new(IntPtr language, [MarshalAs(UnmanagedType.LPUTF8Str)] string source, uint source_len, out uint error_offset, out TSQueryError error_type);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint ts_language_symbol_count(IntPtr language);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_language_symbol_name(IntPtr language, ushort symbol);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern ushort ts_language_symbol_for_name(IntPtr language, [MarshalAs(UnmanagedType.LPUTF8Str)] string str, uint length, bool is_named);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint ts_language_field_count(IntPtr language);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr ts_language_field_name_for_id(IntPtr language, ushort fieldId);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern ushort ts_language_field_id_for_name(IntPtr language, [MarshalAs(UnmanagedType.LPUTF8Str)] string str, uint length);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern TSSymbolType ts_language_symbol_type(IntPtr language, ushort symbol);
 
-        [DllImport("libtree-sitter.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(treeSitter, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint ts_language_version(IntPtr language);
+
+        private static void LibraryChooser()
+        {
+            string treeSitterLib;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                treeSitterLib = $"{treeSitter}.dll"; ;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                treeSitterLib = $"{treeSitter}.so";
+            }
+            else
+            {
+                throw new PlatformNotSupportedException("Platform not supported.");
+            }
+        }
     }
 }

@@ -5,9 +5,16 @@ namespace CodeEditor
 {
     public class Consola
     {
+        private const string grammer = "libtree-sitter-c_sharp";
+
+        static Consola()
+        {
+            LibraryChooser();
+        }
+
         public static TSLanguage lang = new TSLanguage(tree_sitter_c_sharp());
 
-        [DllImport("libtree-sitter-c_sharp", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(grammer, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr tree_sitter_c_sharp();
 
         public static void ShowContentOfFile(string[] file, int currentLine, bool fastTravelMode, int startingLine = 0, int startingColumn = 0)
@@ -612,6 +619,23 @@ namespace CodeEditor
                     return "Identifiers";
                 default:
                     return "default";
+            }
+        }
+
+        private static void LibraryChooser()
+        {
+            string treeSitterLib;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                treeSitterLib = $"{grammer}.dll"; ;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                treeSitterLib = $"{grammer}.so";
+            }
+            else
+            {
+                throw new PlatformNotSupportedException("Platform not supported.");
             }
         }
     }
