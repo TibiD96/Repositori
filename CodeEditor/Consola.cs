@@ -502,10 +502,10 @@ namespace CodeEditor
         {
             string highlighted;
 
-            if (node.is_zero() || node.is_null())
+            /*if (node.is_zero() || node.is_null())
             {
                 return;
-            }
+            }*/
 
             string nodeType = node.type();
 
