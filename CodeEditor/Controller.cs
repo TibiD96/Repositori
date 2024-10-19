@@ -20,6 +20,23 @@ namespace CodeEditor
             InFileActions(fileContent, fastTravelMode, filePathToOpen);
         }
 
+        public static int GetCursorCharIndex(int lineCounting, ref int horizontalPosition, int startingColumn, string[] fileContent)
+        {
+            bool fastTravelMode = Config.FastTravel;
+
+            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
+            int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
+
+            if (horizontalPosition >= currentEndColumn + lineIndex.Length)
+            {
+                horizontalPosition = currentEndColumn + lineIndex.Length;
+                return horizontalPosition + startingColumn - lineIndex.Length - 1;
+            }
+
+            return horizontalPosition + startingColumn - lineIndex.Length - 1;
+        }
+
         private static void GetAllFiles(ref List<string> allFiles, string directory)
         {
             allFiles.AddRange(Directory.GetFiles(directory));
@@ -99,7 +116,7 @@ namespace CodeEditor
                         Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
                         CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
                         charIndex = GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
-                        AddLine(
+                        FileContentAlteration.AddLine(
                              ref lineCounting,
                              ref horizontalPosition,
                              ref verticalPosition,
@@ -118,7 +135,7 @@ namespace CodeEditor
                         Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
                         CursorMovement.MoveToFirstCharacter(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
                         charIndex = GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
-                        AddLine(
+                        FileContentAlteration.AddLine(
                              ref lineCounting,
                              ref horizontalPosition,
                              ref verticalPosition,
@@ -155,6 +172,15 @@ namespace CodeEditor
                         Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
                         Console.SetCursorPosition(horizontalPosition, verticalPosition);
                         CursorMovement.FileParameter(fastTravelMode, fileContent);
+                        break;
+
+                    case 'd':
+                        Variables.Undo.Push(new Stack<(int, string)>());
+                        Variables.UndoDeleteLine.Push(new Stack<bool>());
+                        Variables.UndoAddLine.Push(new Stack<bool>());
+                        Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+                        Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
+                        action = Console.ReadKey(true);
                         break;
                 }
 
@@ -368,7 +394,7 @@ namespace CodeEditor
 
                 if (!arrowButton)
                 {
-                    EditText(
+                    FileContentAlteration.EditText(
                               ref lineCounting,
                               ref horizontalPosition,
                               ref verticalPosition,
@@ -384,184 +410,6 @@ namespace CodeEditor
                 action = Console.ReadKey(true);
                 arrowButton = false;
             }
-        }
-
-        private static void EditText(
-                                     ref int lineCounting,
-                                     ref int horizontalPosition,
-                                     ref int verticalPosition,
-                                     ref int startingLine,
-                                     ref int startingColumn,
-                                     ref string[] fileContent,
-                                     ConsoleKeyInfo action)
-        {
-            bool fastTravelMode = Config.FastTravel;
-            int charIndex = GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
-
-            switch (action.Key)
-            {
-                case ConsoleKey.Backspace:
-                    DeleteLine(
-                                ref lineCounting,
-                                ref horizontalPosition,
-                                ref verticalPosition,
-                                ref startingLine,
-                                ref startingColumn,
-                                ref fileContent,
-                                charIndex);
-                    break;
-
-                case ConsoleKey.Enter:
-                    AddLine(
-                             ref lineCounting,
-                             ref horizontalPosition,
-                             ref verticalPosition,
-                             ref startingLine,
-                             ref startingColumn,
-                             ref fileContent,
-                             charIndex);
-                    break;
-
-                default:
-
-                    Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
-                    Variables.UndoDeleteLine.Peek().Push(false);
-                    Variables.UndoAddLine.Peek().Push(false);
-
-                    if (!Variables.EditAfterCursor && charIndex + 1 != fileContent[lineCounting].Length)
-                    {
-                        CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                        charIndex = GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
-                        Variables.EditAfterCursor = true;
-                    }
-
-                    fileContent[lineCounting] = charIndex == fileContent[lineCounting].Length
-                        ? fileContent[lineCounting].Substring(charIndex) + action.KeyChar
-                        : fileContent[lineCounting].Substring(0, charIndex + 1) + action.KeyChar + fileContent[lineCounting].Substring(charIndex + 1);
-
-                    CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                    Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
-                    Console.SetCursorPosition(horizontalPosition, verticalPosition);
-                    break;
-            }
-        }
-
-        private static void DeleteLine(
-                                       ref int lineCounting,
-                                       ref int horizontalPosition,
-                                       ref int verticalPosition,
-                                       ref int startingLine,
-                                       ref int startingColumn,
-                                       ref string[] fileContent,
-                                       int charIndex)
-        {
-            bool fastTravelMode = Config.FastTravel;
-
-            if (charIndex >= 0)
-            {
-                Variables.UndoDeleteLine.Peek().Push(false);
-                Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
-                fileContent[lineCounting] = fileContent[lineCounting].Remove(charIndex, 1);
-                CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
-                Console.SetCursorPosition(horizontalPosition, verticalPosition);
-            }
-            else
-            {
-                if (lineCounting > 0)
-                {
-                    Variables.UndoDeleteLine.Peek().Push(true);
-                    string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting - 1, lineCounting - 1, Convert.ToString(fileContent.Length)) + " ";
-                    int indexOfLastChar = fileContent[lineCounting - 1].Length - 1 + lineIndex.Length;
-                    if (fileContent[lineCounting].Length > 0)
-                    {
-                        Variables.Undo.Peek().Push((lineCounting - 1, fileContent[lineCounting - 1]));
-                        fileContent[lineCounting - 1] = fileContent[lineCounting - 1] + fileContent[lineCounting];
-                    }
-
-                    for (int i = lineCounting; i < fileContent.Length - 1; i++)
-                    {
-                        Variables.Undo.Peek().Push((i, fileContent[i]));
-                        fileContent[i] = fileContent[i + 1];
-                        Variables.UndoDeleteLine.Peek().Push(false);
-                    }
-
-                    Variables.Undo.Peek().Push((fileContent.Length - 1, fileContent[fileContent.Length - 1]));
-                    Variables.UndoDeleteLine.Peek().Push(false);
-
-                    string[] newfileContent = fileContent.Take(fileContent.Length - 1).ToArray();
-
-                    fileContent = (string[])newfileContent.Clone();
-
-                    CursorMovement.FileParameter(fastTravelMode, fileContent);
-                    CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-
-                    lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
-
-                    startingColumn = 0;
-                    horizontalPosition = lineIndex.Length;
-
-                    while (horizontalPosition + startingColumn < indexOfLastChar + 1)
-                    {
-                        CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                    }
-
-                    Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
-                    Console.SetCursorPosition(horizontalPosition, verticalPosition);
-                }
-            }
-        }
-
-        private static void AddLine(
-                                      ref int lineCounting,
-                                      ref int horizontalPosition,
-                                      ref int verticalPosition,
-                                      ref int startingLine,
-                                      ref int startingColumn,
-                                      ref string[] fileContent,
-                                      int charIndex)
-        {
-            bool fastTravelMode = Config.FastTravel;
-            string[] newFileContent = new string[fileContent.Length + 1];
-            string newLine = fileContent[lineCounting].TakeWhile(c => c == ' ').Aggregate("", (current, c) => current + c);
-            int emptySpacesLength = newLine.Length;
-
-            Variables.UndoAddLine.Peek().Push(true);
-
-            if (charIndex >= 0)
-            {
-                Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
-                newLine = newLine + fileContent[lineCounting].Substring(charIndex + 1);
-                fileContent[lineCounting] = fileContent[lineCounting].Substring(0, charIndex + 1);
-            }
-            else
-            {
-                Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
-                newLine = newLine + fileContent[lineCounting];
-                fileContent[lineCounting] = fileContent[lineCounting].Remove(0);
-            }
-
-            Array.Copy(fileContent, 0, newFileContent, 0, lineCounting + 1);
-            newFileContent[lineCounting + 1] = newLine;
-
-            if (lineCounting < fileContent.Length)
-            {
-                for (int i = lineCounting + 2; i < newFileContent.Length; i++)
-                {
-                    Variables.Undo.Peek().Push((i - 1, fileContent[i - 1]));
-                    newFileContent[i] = fileContent[i - 1];
-                }
-            }
-
-            fileContent = (string[])newFileContent.Clone();
-
-            CursorMovement.FileParameter(fastTravelMode, fileContent);
-            CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-            string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
-            startingColumn = 0;
-            horizontalPosition = emptySpacesLength + lineIndex.Length;
-            Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
-            Console.SetCursorPosition(horizontalPosition, verticalPosition);
         }
 
         private static void CommandMode(ref bool quit, string[] fileLastVersion, string[] fileOriginalVersion, string originalPath)
@@ -661,23 +509,6 @@ namespace CodeEditor
                     File.WriteAllLines(path, fileLastVersion);
                     break;
             }
-        }
-
-        private static int GetCursorCharIndex(int lineCounting, ref int horizontalPosition, int startingColumn, string[] fileContent)
-        {
-            bool fastTravelMode = Config.FastTravel;
-
-            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-            int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
-            string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
-
-            if (horizontalPosition >= currentEndColumn + lineIndex.Length)
-            {
-                horizontalPosition = currentEndColumn + lineIndex.Length;
-                return horizontalPosition + startingColumn - lineIndex.Length - 1;
-            }
-
-            return horizontalPosition + startingColumn - lineIndex.Length - 1;
         }
 
         private static int ReadOption(int[] validOption)
