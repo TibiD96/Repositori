@@ -47,13 +47,11 @@ namespace CodeEditor
                     WriteIndex(lineNumber, lineIndex, currentLine, fastTravelMode);
                     ParseTree(line.Substring(currentStartColumn, currentEndColumn), parser, theme);
                     Console.WriteLine();
-                    //Console.WriteLine(line.Substring(currentStartColumn, currentEndColumn));
                 }
                 else
                 {
                     WriteIndex(lineNumber, lineIndex, currentLine, fastTravelMode);
                     ParseTree(line.Substring(currentStartColumn, currentEndColumn), parser, theme);
-                    //Console.Write(line.Substring(currentStartColumn, currentEndColumn));
                 }
             }
 
@@ -423,68 +421,7 @@ namespace CodeEditor
 
             SyntaxHighlight(rootNode, filetext, theme);
 
-            //PostOrderTraverse(filetext, cursor, nodes);
-            //HighlightChooser(filetext, nodes, themeColors);
             return true;
-        }
-
-        private static void PostOrderTraverse(String filetext, TSCursor cursor, List<HighlightedNode> nodes)
-        {
-            var rootCursor = cursor;
-
-            for (;;)
-            {
-                int so = (int)cursor.current_node().start_offset();
-                int eo = (int)cursor.current_node().end_offset();
-                var nodeType = cursor.current_symbol();
-                bool hasChildren = cursor.goto_first_child();
-                var span = filetext.AsSpan(so, eo - so);
-
-                if (Theme.HighlightedNodeTypes.Contains(nodeType))
-                {
-
-                    so = (int)cursor.current_node().start_offset();
-                    eo = (int)cursor.current_node().end_offset();
-                    var verificare = filetext.AsSpan(so, eo - so);
-
-                    nodes.Add(new HighlightedNode
-                    {
-                        Type = nodeType,
-                        StartByte = (uint)so,
-                        EndByte = (uint)eo
-                    });
-                }
-
-                if (hasChildren)
-                {
-                    continue;
-                }
-
-
-                if (cursor.goto_next_sibling())
-                {
-                    continue;
-                }
-
-                do
-                {
-                    cursor.goto_parent();
-                    int so_p = (int)cursor.current_node().start_offset();
-                    int eo_p = (int)cursor.current_node().end_offset();
-                    var type_p = cursor.current_symbol();
-                    var span_p = filetext.AsSpan(so_p, eo_p - so_p);
-
-                    Console.Error.WriteLine("The node type is {0}, symbol is {1}", type_p, span_p.ToString());
-
-                    if (rootCursor == cursor)
-                    {
-                        Console.Error.WriteLine("done!");
-                        return;
-                    }
-                }
-
-                while (!cursor.goto_next_sibling());
-            }
         }
 
         public static void SyntaxHighlight(TSNode rootNode, string code, Theme theme)
@@ -500,28 +437,10 @@ namespace CodeEditor
 
         private static void AddNodes(TSNode node, List<HighlightedNode> nodes, string fileContent)
         {
-            string highlighted;
-
-            /*if (node.is_zero() || node.is_null())
-            {
-                return;
-            }*/
-
             string nodeType = node.type();
-
-            uint so = node.start_offset();
-            uint eo = node.end_offset();
-
-            highlighted = fileContent.Substring((int)node.start_offset(), (int)(node.end_offset() - node.start_offset()));
 
             if (Theme.HighlightedNodeTypes.Contains(nodeType))
             {
-
-                so = node.start_offset();
-                eo = node.end_offset();
-
-                highlighted = fileContent.Substring((int)node.start_offset(), (int)(node.end_offset() - node.start_offset()));
-
                 nodes.Add(new HighlightedNode
                 {
                     Type = nodeType,
