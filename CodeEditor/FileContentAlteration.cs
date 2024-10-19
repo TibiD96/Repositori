@@ -194,6 +194,7 @@ namespace CodeEditor
                                     ref int startingColumn,
                                     ref string[] fileContent)
         {
+            bool fastTravelMode = Config.FastTravel;
             string numberOfMoves = "";
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             while (char.IsDigit(keyInfo.KeyChar))
@@ -210,6 +211,26 @@ namespace CodeEditor
             if (numberOfMoves.Length == 0)
             {
                 numberOfMoves = "1";
+            }
+
+            while (Convert.ToInt32(numberOfMoves) > 0)
+            {
+                switch (keyInfo.KeyChar)
+                {
+                    case 'l':
+                        int charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                        DeleteLine(
+                                    ref lineCounting,
+                                    ref horizontalPosition,
+                                    ref verticalPosition,
+                                    ref startingLine,
+                                    ref startingColumn,
+                                    ref fileContent,
+                                    charIndex);
+                        break;
+                }
+
+                numberOfMoves = Convert.ToString(Convert.ToInt32(numberOfMoves) - 1);
             }
         }
     }
