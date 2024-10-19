@@ -249,7 +249,7 @@
             }
 
             HomeButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
-            for (int i = 0; currentLine[i] == ' ' && i < currentLine.Length; i++)
+            for (int i = 0; i < currentLine.Length && currentLine[i] == ' '; i++)
             {
                 NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
             }

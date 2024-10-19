@@ -27,3 +27,6 @@ o - activate edit mode and add text after the current line
 : - open command line where with "w" or "write" save and with "q" or "quit" quite from app but if there are modifications which you don't want to save you have to quit with "quite!" or "q!"
 u - used for undo
 ctrl+r - is used for redo
+ESC - exit from edit mode
+Enter - in edit mode pressing enter the cursor and what is after it will go on the next line
+Backspace - in edit mode delete characters one for each pressing or keep it pressed to continuesly delete characters, if the cursor is at the beginning of the line the cursor and the informations after it will go at the end of the line above
