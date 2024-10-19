@@ -185,5 +185,32 @@ namespace CodeEditor
             Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
             Console.SetCursorPosition(horizontalPosition, verticalPosition);
         }
+
+        public static void AutoDelete(
+                                    ref int lineCounting,
+                                    ref int horizontalPosition,
+                                    ref int verticalPosition,
+                                    ref int startingLine,
+                                    ref int startingColumn,
+                                    ref string[] fileContent)
+        {
+            string numberOfMoves = "";
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            while (char.IsDigit(keyInfo.KeyChar))
+            {
+                if (keyInfo.KeyChar == '0' && numberOfMoves.Length == 0)
+                {
+                    break;
+                }
+
+                numberOfMoves = numberOfMoves + keyInfo.KeyChar;
+                keyInfo = Console.ReadKey(true);
+            }
+
+            if (numberOfMoves.Length == 0)
+            {
+                numberOfMoves = "1";
+            }
+        }
     }
 }

@@ -1,11 +1,11 @@
 Keys With Functions:
 
-Up Arrow - move cursor one step upper
-Down Arrow - move cursor one step lower
-Left Arrow - move cursor one step to the left
-Right Arrow - move cursor one step to the right
-End button - move to the end of the line
-Home button - move to the start of the line
+Up Arrow/ K - move cursor one step upper
+Down Arrow/ J - move cursor one step lower
+Left Arrow/ H - move cursor one step to the left
+Right Arrow/ L - move cursor one step to the right
+End button/ $ - move to the end of the line
+Home/ 0 button - move to the start of the line
 PageUp - move the visible content upper with the same amount of the visible lines
 Page Down - move the visible content lower with the same amount of the visible lines
 W - move at the begining of the word mowing to right 

@@ -180,7 +180,13 @@ namespace CodeEditor
                         Variables.UndoAddLine.Push(new Stack<bool>());
                         Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
                         Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
-                        action = Console.ReadKey(true);
+                        FileContentAlteration.AutoDelete(
+                              ref lineCounting,
+                              ref horizontalPosition,
+                              ref verticalPosition,
+                              ref startingLine,
+                              ref startingColumn,
+                              ref fileContent);
                         break;
                 }
 
