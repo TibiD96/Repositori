@@ -87,10 +87,10 @@
             int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
             string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
 
-            if (Console.CursorLeft == lineIndex.Length && lineCounting != 0)
+            if (Console.CursorLeft == lineIndex.Length && lineCounting >= 0)
             {
                 horizontalPosition = lineIndex.Length;
-                if (startingColumn == 0)
+                if (startingColumn == 0 && lineCounting != 0)
                 {
                     currentEndColumn = fileContent[lineCounting - 1].Length - currentStartColumn;
                     while (currentEndColumn > Console.WindowWidth - lineIndex.Length - 1)
@@ -101,6 +101,12 @@
 
                     horizontalPosition = currentEndColumn + lineIndex.Length;
                     NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                    return;
+                }
+
+                if (startingColumn == 0 && lineCounting == 0)
+                {
+                    Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
                     return;
                 }
 

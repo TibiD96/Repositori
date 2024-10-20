@@ -196,6 +196,7 @@ namespace CodeEditor
         {
             string numberOfMoves = "";
             bool fastTravelMode = Config.FastTravel;
+            int originalHorizotalPosition = horizontalPosition;
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             while (char.IsDigit(keyInfo.KeyChar))
             {
@@ -217,6 +218,7 @@ namespace CodeEditor
             switch (keyInfo.KeyChar)
             {
                 case 'l':
+
                     for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
                     {
                         charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
@@ -233,7 +235,9 @@ namespace CodeEditor
                     break;
 
                 case 'r':
+
                     CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
                     for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
                     {
                         CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
@@ -253,6 +257,7 @@ namespace CodeEditor
                     break;
 
                 case 'd':
+
                     Variables.UndoDeleteLine.Peek().Push(false);
                     Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
                     fileContent[lineCounting] = fileContent[lineCounting].Remove(0);
@@ -278,8 +283,10 @@ namespace CodeEditor
                     break;
 
                 case 'k':
-                    int originalHorizotalPosition = horizontalPosition;
+
+                    originalHorizotalPosition = horizontalPosition;
                     CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
                     for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
                     {
                         Variables.UndoDeleteLine.Peek().Push(false);
@@ -309,6 +316,42 @@ namespace CodeEditor
                     horizontalPosition = originalHorizotalPosition;
 
                     CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                    break;
+
+                case 'j':
+
+                    originalHorizotalPosition = horizontalPosition;
+
+                    for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
+                    {
+                        CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                        Variables.UndoDeleteLine.Peek().Push(false);
+                        Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
+                        fileContent[lineCounting] = fileContent[lineCounting].Remove(0);
+                        CursorMovement.HomeButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
+                        Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                        Console.SetCursorPosition(horizontalPosition, verticalPosition);
+                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+
+                        if (lineCounting == 0)
+                        {
+                            CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                        }
+
+                        DeleteLine(
+                                           ref lineCounting,
+                                           ref horizontalPosition,
+                                           ref verticalPosition,
+                                           ref startingLine,
+                                           ref startingColumn,
+                                           ref fileContent,
+                                           charIndex);
+
+                    }
+
+                    horizontalPosition = originalHorizotalPosition;
+                    Console.SetCursorPosition(horizontalPosition, verticalPosition);
 
                     break;
 
