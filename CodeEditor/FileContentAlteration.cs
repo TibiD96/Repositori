@@ -213,12 +213,13 @@ namespace CodeEditor
                 numberOfMoves = "1";
             }
 
-            while (Convert.ToInt32(numberOfMoves) > 0)
+            int charIndex;
+            switch (keyInfo.KeyChar)
             {
-                switch (keyInfo.KeyChar)
-                {
-                    case 'l':
-                        int charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                case 'l':
+                    for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
+                    {
+                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
                         DeleteLine(
                                     ref lineCounting,
                                     ref horizontalPosition,
@@ -227,10 +228,29 @@ namespace CodeEditor
                                     ref startingColumn,
                                     ref fileContent,
                                     charIndex);
-                        break;
-                }
+                    }
 
-                numberOfMoves = Convert.ToString(Convert.ToInt32(numberOfMoves) - 1);
+                    break;
+
+                case 'r':
+                    CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                    for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
+                    {
+                        CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                        DeleteLine(
+                                       ref lineCounting,
+                                       ref horizontalPosition,
+                                       ref verticalPosition,
+                                       ref startingLine,
+                                       ref startingColumn,
+                                       ref fileContent,
+                                       charIndex);
+                    }
+
+                    CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                    break;
             }
         }
     }
