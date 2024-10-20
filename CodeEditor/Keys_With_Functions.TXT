@@ -33,3 +33,6 @@ Backspace - in edit mode delete characters one for each pressing or keep it pres
 d/number/l - delete "number" characters in left direction
 d/number/r - delete "number" characters in right direction
 dd - delete the current line
+d/number/k - delete "number" lines which are above the current line
+d/number/j - delete "number" lines which are below the current line
+D - delete the characters from the cursor position til the end of the current line

@@ -196,7 +196,8 @@ namespace CodeEditor
         {
             string numberOfMoves = "";
             bool fastTravelMode = Config.FastTravel;
-            int originalHorizotalPosition = horizontalPosition;
+            int charIndex;
+            int originalHorizotalPosition;
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             while (char.IsDigit(keyInfo.KeyChar))
             {
@@ -214,7 +215,6 @@ namespace CodeEditor
                 numberOfMoves = "1";
             }
 
-            int charIndex;
             switch (keyInfo.KeyChar)
             {
                 case 'l':
@@ -356,6 +356,25 @@ namespace CodeEditor
                     break;
 
             }
+        }
+
+        public static void DeleteTilTheEnd(
+                                    ref int lineCounting,
+                                    ref int horizontalPosition,
+                                    ref int verticalPosition,
+                                    ref int startingLine,
+                                    ref int startingColumn,
+                                    ref string[] fileContent)
+        {
+            bool fastTravelMode = Config.FastTravel;
+            int charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+
+            Variables.UndoDeleteLine.Peek().Push(false);
+            Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
+            fileContent[lineCounting] = fileContent[lineCounting].Remove(charIndex + 1);
+            CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
+            Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+            Console.SetCursorPosition(horizontalPosition, verticalPosition);
         }
     }
 }

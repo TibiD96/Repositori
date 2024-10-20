@@ -188,6 +188,21 @@ namespace CodeEditor
                               ref startingColumn,
                               ref fileContent);
                         break;
+
+                    case 'D':
+                        Variables.Undo.Push(new Stack<(int, string)>());
+                        Variables.UndoDeleteLine.Push(new Stack<bool>());
+                        Variables.UndoAddLine.Push(new Stack<bool>());
+                        Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+                        Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
+                        FileContentAlteration.DeleteTilTheEnd(
+                              ref lineCounting,
+                              ref horizontalPosition,
+                              ref verticalPosition,
+                              ref startingLine,
+                              ref startingColumn,
+                              ref fileContent);
+                        break;
                 }
 
                 if (action.Key != ConsoleKey.I)
