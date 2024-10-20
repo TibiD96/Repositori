@@ -194,7 +194,6 @@ namespace CodeEditor
                                     ref int startingColumn,
                                     ref string[] fileContent)
         {
-            bool fastTravelMode = Config.FastTravel;
             string numberOfMoves = "";
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             while (char.IsDigit(keyInfo.KeyChar))
@@ -251,6 +250,36 @@ namespace CodeEditor
                     CursorMovement.NavigateLeft(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
 
                     break;
+
+                case 'd':
+                    CursorMovement.EndButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
+                    charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+
+                    for (; charIndex >= 0; )
+                    {
+                        DeleteLine(
+                                       ref lineCounting,
+                                       ref horizontalPosition,
+                                       ref verticalPosition,
+                                       ref startingLine,
+                                       ref startingColumn,
+                                       ref fileContent,
+                                       charIndex);
+
+                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                    }
+
+                    DeleteLine(
+                                       ref lineCounting,
+                                       ref horizontalPosition,
+                                       ref verticalPosition,
+                                       ref startingLine,
+                                       ref startingColumn,
+                                       ref fileContent,
+                                       charIndex);
+
+                    break;
+
             }
         }
     }
