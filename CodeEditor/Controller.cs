@@ -309,7 +309,15 @@ namespace CodeEditor
 
                         character = ReadChar(ref character);
 
-                        CursorMovement.FindCharacter(action.KeyChar, lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, character);
+                        CursorMovement.GoOnDesiredCharacter(action.KeyChar, lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, character);
+
+                        break;
+
+                    case ConsoleKey.T:
+
+                        character = ReadChar(ref character);
+
+                        CursorMovement.GoTillDesiredCharacter(action.KeyChar, lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn, character);
 
                         break;
 

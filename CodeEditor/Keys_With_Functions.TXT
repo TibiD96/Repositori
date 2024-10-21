@@ -10,7 +10,10 @@ PageUp - move the visible content upper with the same amount of the visible line
 Page Down - move the visible content lower with the same amount of the visible lines
 W - move at the begining of the word mowing to right 
 B - move at the begining of the word mowing to left 
-F - move the cursor to the desired char
+F - move the cursor to the desired char in left direction
+f - move the cursor tot the desired char in right direction
+T - move the cursor till desired char in left direction
+t - move the cursor till desired char in right direction
 M - mark current line
 ^ - move the cursor to the first character of the line
 \ - move the cursor to the marked line
