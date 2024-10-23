@@ -215,9 +215,10 @@ namespace CodeEditor
                 numberOfMoves = "1";
             }
 
-            switch (keyInfo.KeyChar)
+            switch (keyInfo.Key)
             {
-                case 'l':
+                case ConsoleKey.LeftArrow:
+                case ConsoleKey.L:
 
                     for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
                     {
@@ -234,7 +235,8 @@ namespace CodeEditor
 
                     break;
 
-                case 'r':
+                case ConsoleKey.RightArrow:
+                case ConsoleKey.R:
 
                     CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
 
@@ -256,7 +258,7 @@ namespace CodeEditor
 
                     break;
 
-                case 'd':
+                case ConsoleKey.D:
 
                     Variables.UndoDeleteLine.Peek().Push(false);
                     Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
@@ -282,7 +284,8 @@ namespace CodeEditor
 
                     break;
 
-                case 'k':
+                case ConsoleKey.UpArrow:
+                case ConsoleKey.K:
 
                     originalHorizotalPosition = horizontalPosition;
                     CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
@@ -319,7 +322,8 @@ namespace CodeEditor
 
                     break;
 
-                case 'j':
+                case ConsoleKey.DownArrow:
+                case ConsoleKey.J:
 
                     originalHorizotalPosition = horizontalPosition;
 
