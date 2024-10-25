@@ -220,7 +220,7 @@ namespace CodeEditor
                 action = ReadKey(ref numberOfMoves);
             }
 
-            Console.SetCursorPosition(0, Console.WindowWidth);
+            Console.SetCursorPosition(0, Console.WindowTop);
         }
 
         private static void Movements(

@@ -215,6 +215,11 @@ namespace CodeEditor
                 numberOfMoves = "1";
             }
 
+            if (keyInfo.KeyChar == '$')
+            {
+                keyInfo = new ConsoleKeyInfo((char)0, ConsoleKey.End, false, false, false);
+            }
+
             switch (keyInfo.Key)
             {
                 case ConsoleKey.LeftArrow:
@@ -356,6 +361,22 @@ namespace CodeEditor
 
                     horizontalPosition = originalHorizotalPosition;
                     Console.SetCursorPosition(horizontalPosition, verticalPosition);
+
+                    break;
+
+                case ConsoleKey.End:
+                    Variables.Undo.Push(new Stack<(int, string)>());
+                    Variables.UndoDeleteLine.Push(new Stack<bool>());
+                    Variables.UndoAddLine.Push(new Stack<bool>());
+                    Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+                    Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
+                    DeleteTilTheEnd(
+                          ref lineCounting,
+                          ref horizontalPosition,
+                          ref verticalPosition,
+                          ref startingLine,
+                          ref startingColumn,
+                          ref fileContent);
 
                     break;
 
