@@ -198,32 +198,11 @@ namespace CodeEditor
             bool fastTravelMode = Config.FastTravel;
             int charIndex;
             int originalHorizotalPosition;
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-            while (char.IsDigit(keyInfo.KeyChar))
-            {
-                if (keyInfo.KeyChar == '0' && numberOfMoves.Length == 0)
-                {
-                    break;
-                }
-
-                numberOfMoves = numberOfMoves + keyInfo.KeyChar;
-                keyInfo = Console.ReadKey(true);
-            }
-
-            if (numberOfMoves.Length == 0)
-            {
-                numberOfMoves = "1";
-            }
-
-            if (keyInfo.KeyChar == '$')
-            {
-                keyInfo = new ConsoleKeyInfo((char)0, ConsoleKey.End, false, false, false);
-            }
+            ConsoleKeyInfo keyInfo = Controller.ReadKey(ref numberOfMoves);
 
             switch (keyInfo.Key)
             {
                 case ConsoleKey.LeftArrow:
-                case ConsoleKey.L:
 
                     for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
                     {
@@ -241,7 +220,6 @@ namespace CodeEditor
                     break;
 
                 case ConsoleKey.RightArrow:
-                case ConsoleKey.R:
 
                     CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
 
@@ -290,7 +268,6 @@ namespace CodeEditor
                     break;
 
                 case ConsoleKey.UpArrow:
-                case ConsoleKey.K:
 
                     originalHorizotalPosition = horizontalPosition;
                     CursorMovement.NavigateUp(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
@@ -328,7 +305,6 @@ namespace CodeEditor
                     break;
 
                 case ConsoleKey.DownArrow:
-                case ConsoleKey.J:
 
                     originalHorizotalPosition = horizontalPosition;
 

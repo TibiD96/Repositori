@@ -37,6 +37,51 @@ namespace CodeEditor
             return horizontalPosition + startingColumn - lineIndex.Length - 1;
         }
 
+        public static ConsoleKeyInfo ReadKey(ref string numberOfMoves)
+        {
+            numberOfMoves = "";
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            while (char.IsDigit(keyInfo.KeyChar))
+            {
+                if (keyInfo.KeyChar == '0' && numberOfMoves.Length == 0)
+                {
+                    break;
+                }
+
+                numberOfMoves = numberOfMoves + keyInfo.KeyChar;
+                keyInfo = Console.ReadKey(true);
+            }
+
+            if (numberOfMoves.Length == 0)
+            {
+                numberOfMoves = "1";
+            }
+
+            Dictionary<ConsoleKey, ConsoleKey> keyValue = new Dictionary<ConsoleKey, ConsoleKey>()
+            {
+                { ConsoleKey.K, ConsoleKey.UpArrow },
+                { ConsoleKey.J, ConsoleKey.DownArrow },
+                { ConsoleKey.H, ConsoleKey.LeftArrow },
+                { ConsoleKey.L, ConsoleKey.RightArrow },
+                { ConsoleKey.D0, ConsoleKey.Home }
+            };
+
+            foreach (var key in keyValue)
+            {
+                if (keyInfo.Key == key.Key)
+                {
+                    return new ConsoleKeyInfo((char)0, keyValue[keyInfo.Key], false, false, false);
+                }
+            }
+
+            if (keyInfo.KeyChar == '$')
+            {
+                return new ConsoleKeyInfo((char)0, ConsoleKey.End, false, false, false);
+            }
+
+            return keyInfo;
+        }
+
         private static void GetAllFiles(ref List<string> allFiles, string directory)
         {
             allFiles.AddRange(Directory.GetFiles(directory));
@@ -563,51 +608,6 @@ namespace CodeEditor
                 Console.ResetColor();
                 return ReadOption(validOption);
             }
-        }
-
-        private static ConsoleKeyInfo ReadKey(ref string numberOfMoves)
-        {
-            numberOfMoves = "";
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-            while (char.IsDigit(keyInfo.KeyChar))
-            {
-                if (keyInfo.KeyChar == '0' && numberOfMoves.Length == 0)
-                {
-                    break;
-                }
-
-                numberOfMoves = numberOfMoves + keyInfo.KeyChar;
-                keyInfo = Console.ReadKey(true);
-            }
-
-            if (numberOfMoves.Length == 0)
-            {
-                numberOfMoves = "1";
-            }
-
-            Dictionary<ConsoleKey, ConsoleKey> keyValue = new Dictionary<ConsoleKey, ConsoleKey>()
-            {
-                { ConsoleKey.K, ConsoleKey.UpArrow },
-                { ConsoleKey.J, ConsoleKey.DownArrow },
-                { ConsoleKey.H, ConsoleKey.LeftArrow },
-                { ConsoleKey.L, ConsoleKey.RightArrow },
-                { ConsoleKey.D0, ConsoleKey.Home }
-            };
-
-            foreach (var key in keyValue)
-            {
-                if (keyInfo.Key == key.Key)
-                {
-                    return new ConsoleKeyInfo((char)0, keyValue[keyInfo.Key], false, false, false);
-                }
-            }
-
-            if (keyInfo.KeyChar == '$')
-            {
-                return new ConsoleKeyInfo((char)0, ConsoleKey.End, false, false, false);
-            }
-
-            return keyInfo;
         }
 
         private static char? ReadChar(ref char? character)
