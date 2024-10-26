@@ -356,6 +356,30 @@ namespace CodeEditor
 
                     break;
 
+                case ConsoleKey.Home:
+                    Variables.Undo.Push(new Stack<(int, string)>());
+                    Variables.UndoDeleteLine.Push(new Stack<bool>());
+                    Variables.UndoAddLine.Push(new Stack<bool>());
+                    Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+                    Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
+                    string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
+
+                    while (horizontalPosition > lineIndex.Length)
+                    {
+                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                        DeleteLine(
+                                    ref lineCounting,
+                                    ref horizontalPosition,
+                                    ref verticalPosition,
+                                    ref startingLine,
+                                    ref startingColumn,
+                                    ref fileContent,
+                                    charIndex);
+                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                    }
+
+                    break;
+
             }
         }
 
