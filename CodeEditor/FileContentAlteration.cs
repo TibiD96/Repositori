@@ -380,6 +380,41 @@ namespace CodeEditor
 
                     break;
 
+                    case ConsoleKey.PageUp:
+                    while (verticalPosition + 1 < Console.WindowHeight - 3)
+                    {
+                        CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                    }
+
+                    Variables.UndoDeleteLine.Peek().Push(false);
+                    Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
+
+                    while (verticalPosition > 0)
+                    {
+                        fileContent[lineCounting] = fileContent[lineCounting].Remove(0);
+                        CursorMovement.HomeButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
+                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+
+                        if (lineCounting == 0)
+                        {
+                            CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                        }
+
+                        DeleteLine(
+                                           ref lineCounting,
+                                           ref horizontalPosition,
+                                           ref verticalPosition,
+                                           ref startingLine,
+                                           ref startingColumn,
+                                           ref fileContent,
+                                           charIndex);
+                    }
+
+                    CursorMovement.PageUpBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn);
+
+                    break;
+
+
             }
         }
 
