@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace CodeEditor
 {
@@ -375,7 +376,6 @@ namespace CodeEditor
                                     ref startingColumn,
                                     ref fileContent,
                                     charIndex);
-                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
                     }
 
                     break;
@@ -486,7 +486,34 @@ namespace CodeEditor
                                            charIndex);
 
                     }
+
                     break;
+
+                case ConsoleKey.W:
+                    int startingChar = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                    for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
+                    {
+                        CursorMovement.MoveWordRight(keyInfo.KeyChar, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                    }
+
+                    charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+
+                    while (startingChar != charIndex)
+                    {
+                        DeleteLine(
+                                    ref lineCounting,
+                                    ref horizontalPosition,
+                                    ref verticalPosition,
+                                    ref startingLine,
+                                    ref startingColumn,
+                                    ref fileContent,
+                                    charIndex);
+                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                    }
+
+                    break;
+
 
             }
         }
