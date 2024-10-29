@@ -381,16 +381,37 @@ namespace CodeEditor
                     break;
 
                     case ConsoleKey.PageUp:
-                    while (verticalPosition + 1 < Console.WindowHeight - 3)
+                    for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
                     {
-                        CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                    }
+                        while (verticalPosition + 1 < Console.WindowHeight - 3)
+                        {
+                            CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                        }
 
-                    Variables.UndoDeleteLine.Peek().Push(false);
-                    Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
+                        Variables.UndoDeleteLine.Peek().Push(false);
+                        Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
 
-                    while (verticalPosition > 0)
-                    {
+                        while (verticalPosition > 0)
+                        {
+                            fileContent[lineCounting] = fileContent[lineCounting].Remove(0);
+                            CursorMovement.HomeButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
+                            charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+
+                            if (lineCounting == 0)
+                            {
+                                CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                            }
+
+                            DeleteLine(
+                                               ref lineCounting,
+                                               ref horizontalPosition,
+                                               ref verticalPosition,
+                                               ref startingLine,
+                                               ref startingColumn,
+                                               ref fileContent,
+                                               charIndex);
+                        }
+
                         fileContent[lineCounting] = fileContent[lineCounting].Remove(0);
                         CursorMovement.HomeButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
                         charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
@@ -408,23 +429,44 @@ namespace CodeEditor
                                            ref startingColumn,
                                            ref fileContent,
                                            charIndex);
-                    }
 
-                    CursorMovement.PageUpBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn);
+                        CursorMovement.PageUpBehaviour(ref lineCounting, horizontalPosition, verticalPosition, ref startingLine, ref startingColumn);
+                    }
 
                     break;
 
                 case ConsoleKey.PageDown:
-                    while (verticalPosition + 1 < Console.WindowHeight - 3)
+                    for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
                     {
-                        CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                    }
+                        while (verticalPosition + 1 < Console.WindowHeight - 3)
+                        {
+                            CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                        }
 
-                    Variables.UndoDeleteLine.Peek().Push(false);
-                    Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
+                        Variables.UndoDeleteLine.Peek().Push(false);
+                        Variables.Undo.Peek().Push((lineCounting, fileContent[lineCounting]));
 
-                    while (verticalPosition > 0)
-                    {
+                        while (verticalPosition > 0)
+                        {
+                            fileContent[lineCounting] = fileContent[lineCounting].Remove(0);
+                            CursorMovement.HomeButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
+                            charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+
+                            if (lineCounting == 0)
+                            {
+                                CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                            }
+
+                            DeleteLine(
+                                               ref lineCounting,
+                                               ref horizontalPosition,
+                                               ref verticalPosition,
+                                               ref startingLine,
+                                               ref startingColumn,
+                                               ref fileContent,
+                                               charIndex);
+                        }
+
                         fileContent[lineCounting] = fileContent[lineCounting].Remove(0);
                         CursorMovement.HomeButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
                         charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
@@ -442,8 +484,8 @@ namespace CodeEditor
                                            ref startingColumn,
                                            ref fileContent,
                                            charIndex);
-                    }
 
+                    }
                     break;
 
             }
