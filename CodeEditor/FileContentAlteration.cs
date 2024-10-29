@@ -199,6 +199,7 @@ namespace CodeEditor
             bool fastTravelMode = Config.FastTravel;
             int charIndex;
             int originalHorizotalPosition;
+            int startingChar;
             ConsoleKeyInfo keyInfo = Controller.ReadKey(ref numberOfMoves);
 
             switch (keyInfo.Key)
@@ -342,6 +343,7 @@ namespace CodeEditor
                     break;
 
                 case ConsoleKey.End:
+
                     Variables.Undo.Push(new Stack<(int, string)>());
                     Variables.UndoDeleteLine.Push(new Stack<bool>());
                     Variables.UndoAddLine.Push(new Stack<bool>());
@@ -358,6 +360,7 @@ namespace CodeEditor
                     break;
 
                 case ConsoleKey.Home:
+
                     Variables.Undo.Push(new Stack<(int, string)>());
                     Variables.UndoDeleteLine.Push(new Stack<bool>());
                     Variables.UndoAddLine.Push(new Stack<bool>());
@@ -381,6 +384,12 @@ namespace CodeEditor
                     break;
 
                     case ConsoleKey.PageUp:
+
+                    Variables.Undo.Push(new Stack<(int, string)>());
+                    Variables.UndoDeleteLine.Push(new Stack<bool>());
+                    Variables.UndoAddLine.Push(new Stack<bool>());
+                    Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+                    Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
                     for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
                     {
                         while (verticalPosition + 1 < Console.WindowHeight - 3)
@@ -436,6 +445,12 @@ namespace CodeEditor
                     break;
 
                 case ConsoleKey.PageDown:
+
+                    Variables.Undo.Push(new Stack<(int, string)>());
+                    Variables.UndoDeleteLine.Push(new Stack<bool>());
+                    Variables.UndoAddLine.Push(new Stack<bool>());
+                    Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+                    Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
                     for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
                     {
                         while (verticalPosition + 1 < Console.WindowHeight - 3)
@@ -490,7 +505,13 @@ namespace CodeEditor
                     break;
 
                 case ConsoleKey.W:
-                    int startingChar = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+
+                    Variables.Undo.Push(new Stack<(int, string)>());
+                    Variables.UndoDeleteLine.Push(new Stack<bool>());
+                    Variables.UndoAddLine.Push(new Stack<bool>());
+                    Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+                    Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
+                    startingChar = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
                     for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
                     {
                         CursorMovement.MoveWordRight(keyInfo.KeyChar, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
@@ -509,6 +530,46 @@ namespace CodeEditor
                                     ref startingColumn,
                                     ref fileContent,
                                     charIndex);
+                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                    }
+
+                    break;
+
+                case ConsoleKey.B:
+
+                    Variables.Undo.Push(new Stack<(int, string)>());
+                    Variables.UndoDeleteLine.Push(new Stack<bool>());
+                    Variables.UndoAddLine.Push(new Stack<bool>());
+                    Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+                    Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
+                    startingChar = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+
+                    for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
+                    {
+                        CursorMovement.MoveWordLeft(keyInfo.KeyChar, ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                    }
+
+                    int endCharIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                    charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+
+                    while (startingChar != charIndex)
+                    {
+                        CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                    }
+
+                    while (charIndex != endCharIndex)
+                    {
+                        DeleteLine(
+                                     ref lineCounting,
+                                     ref horizontalPosition,
+                                     ref verticalPosition,
+                                     ref startingLine,
+                                     ref startingColumn,
+                                     ref fileContent,
+                                     charIndex);
                         charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
                     }
 
