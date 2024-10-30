@@ -96,6 +96,20 @@ namespace CodeEditor
             return keyInfo;
         }
 
+        public static char? ReadChar(ref char? character)
+        {
+            if (character == ' ')
+            {
+                ConsoleKeyInfo baseInput = Console.ReadKey(true);
+
+                character = baseInput.KeyChar;
+
+                return character;
+            }
+
+            return character;
+        }
+
         private static void GetAllFiles(ref List<string> allFiles, string directory)
         {
             allFiles.AddRange(Directory.GetFiles(directory));
@@ -609,20 +623,6 @@ namespace CodeEditor
                 Console.ResetColor();
                 return ReadOption(validOption);
             }
-        }
-
-        private static char? ReadChar(ref char? character)
-        {
-            if (character == ' ')
-            {
-                ConsoleKeyInfo baseInput = Console.ReadKey(true);
-
-                character = baseInput.KeyChar;
-
-                return character;
-            }
-
-            return character;
         }
 
         private static void Undo(ref string[] fileContent, ref int lineCounting, ref int startingColumn, ref int startingLine, ref int horizontalPosition, ref int verticalPosition)
