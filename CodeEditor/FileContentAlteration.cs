@@ -202,6 +202,7 @@ namespace CodeEditor
             int startingChar;
             char? character = ' ';
             int endCharIndex;
+            int startingLineCounting;
             ConsoleKeyInfo keyInfo = Controller.ReadKey(ref numberOfMoves);
 
             switch (keyInfo.Key)
@@ -729,6 +730,102 @@ namespace CodeEditor
                                  ref fileContent,
                                  charIndex);
                     charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                }
+            }
+
+            if (keyInfo.KeyChar == 'g')
+            {
+                Variables.Undo.Push(new Stack<(int, string)>());
+                Variables.UndoDeleteLine.Push(new Stack<bool>());
+                Variables.UndoAddLine.Push(new Stack<bool>());
+                Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+                Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
+                startingLineCounting = lineCounting;
+                keyInfo = Console.ReadKey(true);
+
+                CursorMovement.GoToEndOrBeginingOfFile(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, keyInfo);
+
+                int endLineCounting = lineCounting;
+
+                while (startingLineCounting - 1 != lineCounting)
+                {
+                    CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+
+                }
+
+                while (lineCounting > endLineCounting)
+                {
+                    fileContent[lineCounting] = fileContent[lineCounting].Remove(0);
+                    CursorMovement.HomeButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
+                    Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                    charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+
+                    if (lineCounting == 0)
+                    {
+                        CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                    }
+
+                    DeleteLine(
+                                       ref lineCounting,
+                                       ref horizontalPosition,
+                                       ref verticalPosition,
+                                       ref startingLine,
+                                       ref startingColumn,
+                                       ref fileContent,
+                                       charIndex);
+                }
+
+                fileContent[lineCounting] = fileContent[lineCounting].Remove(0);
+                CursorMovement.HomeButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
+                Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+
+                if (lineCounting == 0)
+                {
+                    CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                }
+
+                DeleteLine(
+                                   ref lineCounting,
+                                   ref horizontalPosition,
+                                   ref verticalPosition,
+                                   ref startingLine,
+                                   ref startingColumn,
+                                   ref fileContent,
+                                   charIndex);
+            }
+
+            else if (keyInfo.KeyChar == 'G')
+            {
+                Variables.Undo.Push(new Stack<(int, string)>());
+                Variables.UndoDeleteLine.Push(new Stack<bool>());
+                Variables.UndoAddLine.Push(new Stack<bool>());
+                Variables.InfoToShowUndo.Push((lineCounting, startingLine, startingColumn));
+                Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
+                startingLineCounting = lineCounting;
+
+                CursorMovement.GoToEndOrBeginingOfFile(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn, keyInfo);
+
+                while (startingLineCounting < lineCounting)
+                {
+                    fileContent[lineCounting] = fileContent[lineCounting].Remove(0);
+                    CursorMovement.HomeButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
+                    Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                    charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+
+                    if (lineCounting == 0)
+                    {
+                        CursorMovement.NavigateDown(ref lineCounting, horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
+                    }
+
+                    DeleteLine(
+                                       ref lineCounting,
+                                       ref horizontalPosition,
+                                       ref verticalPosition,
+                                       ref startingLine,
+                                       ref startingColumn,
+                                       ref fileContent,
+                                       charIndex);
                 }
             }
         }
