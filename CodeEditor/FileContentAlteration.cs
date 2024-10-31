@@ -211,7 +211,7 @@ namespace CodeEditor
 
                     for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
                     {
-                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent) + 1;
                         DeleteLine(
                                     ref lineCounting,
                                     ref horizontalPosition,
@@ -231,7 +231,7 @@ namespace CodeEditor
                     for (int i = 1; i <= Convert.ToInt32(numberOfMoves); i++)
                     {
                         CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
+                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent) - 1;
                         DeleteLine(
                                        ref lineCounting,
                                        ref horizontalPosition,
