@@ -371,19 +371,8 @@ namespace CodeEditor
                     Variables.CursorPositionUndo.Push((horizontalPosition, verticalPosition));
 
                     startingChar = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
-                    CursorMovement.HomeButtonBehaviour(lineCounting, ref horizontalPosition, verticalPosition, startingLine, ref startingColumn);
-                    endCharIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
-                    charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
 
-                    while (startingChar > charIndex)
-                    {
-                        CursorMovement.NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent);
-                    }
-
-                    charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent) + 1;
-
-                    while (endCharIndex != charIndex)
+                    for (int i = startingChar; i >= -1; i--)
                     {
                         DeleteLine(
                                     ref lineCounting,
@@ -392,8 +381,7 @@ namespace CodeEditor
                                     ref startingLine,
                                     ref startingColumn,
                                     ref fileContent,
-                                    charIndex);
-                        charIndex = Controller.GetCursorCharIndex(lineCounting, ref horizontalPosition, startingColumn, fileContent) + 1;
+                                    i + 1);
                     }
 
                     break;
