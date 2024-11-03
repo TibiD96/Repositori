@@ -39,7 +39,7 @@ namespace CodeEditor
             {
                 line = file[i];
                 lineNumber = i;
-                string lineIndex = GenerateLineIndex(fastTravelMode, currentLine, lineNumber, maximumNumberOfLines) + " ";
+                string lineIndex = GenerateLineIndex(fastTravelMode, currentLine, lineNumber, Convert.ToString(file.Length)) + " ";
                 currentStartColumn = Math.Max(0, Math.Min(startingColumn, line.Length));
                 currentEndColumn = line.Length - currentStartColumn <= visibleAreaWidth - lineIndex.Length ? line.Length - currentStartColumn : visibleAreaWidth - lineIndex.Length;
                 if (i < Math.Min(file.Length, startingLine + visibleAreaHight) - 1)
@@ -73,14 +73,13 @@ namespace CodeEditor
         {
             NullExcept.ArgumentNullException(maximumNumberOfLines);
             string lineIndex = Convert.ToString(lineNumber);
-            int offset = maximumNumberOfLines.Length;
             if (fastTravelMode)
             {
                 if (lineNumber != currentLine)
                 {
                     lineIndex = Convert.ToString(Math.Abs(currentLine - lineNumber));
 
-                    while (maximumNumberOfLines.Length - 1 + offset - 1 != lineIndex.Length)
+                    while (maximumNumberOfLines.Length > lineIndex.Length)
                     {
                         lineIndex = " " + lineIndex;
                     }
@@ -88,7 +87,7 @@ namespace CodeEditor
                     return lineIndex;
                 }
 
-                while (maximumNumberOfLines.Length - 1 + offset - 1 != lineIndex.Length)
+                while (maximumNumberOfLines.Length > lineIndex.Length)
                 {
                     if (lineIndex.Length == maximumNumberOfLines.Length)
                     {

@@ -118,6 +118,7 @@
                 if (horizontalPosition > currentEndColumn + lineIndex.Length)
                 {
                     horizontalPosition = currentEndColumn + lineIndex.Length;
+                    horizontalPosition--;
                 }
                 else if (horizontalPosition > lineIndex.Length)
                 {

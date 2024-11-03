@@ -11,13 +11,23 @@ namespace CodeEditor
             string[] filesFromDirectory = Directory.GetFiles(currentDirectory);
             bool fastTravelMode = Config.FastTravel;
             List<string> allFiles = new List<string>();
+            int lineToShow;
 
             GetAllFiles(ref allFiles, currentDirectory);
             string filePathToOpen = FuzzySearchLogic.FuzzySearch(filesFromDirectory, allFiles.ToArray());
             string[] fileContent = File.ReadAllLines(filePathToOpen);
 
+            if (fileContent.Length > Console.WindowHeight - 4)
+            {
+                lineToShow = Console.WindowHeight - 4;
+            }
+            else
+            {
+                lineToShow = fileContent.Length - 1;
+            }
+
             Consola.ClearConsole();
-            Consola.ShowContentOfFile(fileContent, Console.WindowHeight - 4, fastTravelMode);
+            Consola.ShowContentOfFile(fileContent, lineToShow, fastTravelMode);
             InFileActions(fileContent, fastTravelMode, filePathToOpen);
         }
 
