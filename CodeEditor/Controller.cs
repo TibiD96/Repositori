@@ -35,13 +35,12 @@ namespace CodeEditor
         {
             bool fastTravelMode = Config.FastTravel;
 
-            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-            int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            (int, int) currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
             string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
 
-            if (horizontalPosition >= currentEndColumn + lineIndex.Length)
+            if (horizontalPosition >= currentStartEndColumn.Item2 + lineIndex.Length)
             {
-                horizontalPosition = currentEndColumn + lineIndex.Length;
+                horizontalPosition = currentStartEndColumn.Item2 + lineIndex.Length;
                 return horizontalPosition + startingColumn - lineIndex.Length - 1;
             }
 
@@ -234,11 +233,9 @@ namespace CodeEditor
                         CommandMode(ref quit, fileContent, originalFile, originalPath);
                         Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
 
-                        int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-                        int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ?
-                                               fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+                        (int, int) currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
                         string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
-                        Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
+                        Console.SetCursorPosition(horizontalPosition > currentStartEndColumn.Item2 + lineIndex.Length ? currentStartEndColumn.Item2 + lineIndex.Length : horizontalPosition, verticalPosition);
 
                         originalFile = (string[])fileContent.Clone();
                         break;

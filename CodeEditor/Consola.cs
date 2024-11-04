@@ -29,7 +29,7 @@ namespace CodeEditor
             var theme = new Theme();
             using var parser = new TSParser();
 
-            NullExcept.ArgumentNullException(file);
+            NullOrEmptyCases.ArgumentNullException(file);
 
             string maximumNumberOfLines = Convert.ToString(file.Length - 1);
 
@@ -71,7 +71,7 @@ namespace CodeEditor
 
         public static string GenerateLineIndex(bool fastTravelMode, int currentLine, int lineNumber, string maximumNumberOfLines)
         {
-            NullExcept.ArgumentNullException(maximumNumberOfLines);
+            NullOrEmptyCases.ArgumentNullException(maximumNumberOfLines);
             string lineIndex = Convert.ToString(lineNumber);
             if (fastTravelMode)
             {
@@ -131,9 +131,9 @@ namespace CodeEditor
 
         public static void ShowValidResults(List<string> validFiles, int numberOfValidFiles, string search, string[] totalNumberOfFiles)
         {
-            NullExcept.ArgumentNullException(validFiles);
-            NullExcept.ArgumentNullException(totalNumberOfFiles);
-            NullExcept.ArgumentNullException(search);
+            NullOrEmptyCases.ArgumentNullException(validFiles);
+            NullOrEmptyCases.ArgumentNullException(totalNumberOfFiles);
+            NullOrEmptyCases.ArgumentNullException(search);
 
             int corsorLeftPosition;
             const int searchBarDim = 4;
@@ -276,13 +276,12 @@ namespace CodeEditor
 
         public static void Status(bool editMode, int horizontalPosition, int verticalPosition, int lineCounting, int startingColumn, string[] fileContent, string originalPath)
         {
-            NullExcept.ArgumentNullException(fileContent);
+            NullOrEmptyCases.ArgumentNullException(fileContent);
 
             bool fastTravelMode = Config.FastTravel;
 
-            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-            int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
             string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
+            int currentEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent).Item2;
 
             if (horizontalPosition >= currentEndColumn + lineIndex.Length)
             {
