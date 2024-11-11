@@ -23,12 +23,11 @@
 
             lineCounting--;
             string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
-            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-            int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            (int, int) currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
 
-            if (currentStartColumn < startingColumn)
+            if (currentStartEndColumn.Item1 < startingColumn)
             {
-                startingColumn = currentStartColumn;
+                startingColumn = currentStartEndColumn.Item1;
             }
 
             if (verticalPosition == 0 && startingLine != 0)
@@ -41,7 +40,7 @@
             }
 
             Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
-            Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
+            Console.SetCursorPosition(horizontalPosition > currentStartEndColumn.Item2 + lineIndex.Length ? currentStartEndColumn.Item2 + lineIndex.Length : horizontalPosition, verticalPosition);
         }
 
         public static void NavigateDown(ref int lineCounting, int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
@@ -55,12 +54,11 @@
 
             lineCounting++;
             string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
-            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-            int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            (int, int) currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
 
-            if (currentStartColumn < startingColumn)
+            if (currentStartEndColumn.Item1 < startingColumn)
             {
-                startingColumn = currentStartColumn;
+                startingColumn = currentStartEndColumn.Item1;
             }
 
             if (verticalPosition + 1 == Console.WindowHeight - 3)
@@ -76,7 +74,7 @@
             }
 
             Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
-            Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
+            Console.SetCursorPosition(horizontalPosition > currentStartEndColumn.Item2 + lineIndex.Length ? currentStartEndColumn.Item2 + lineIndex.Length : horizontalPosition, verticalPosition);
         }
 
         public static void NavigateLeft(ref int lineCounting, ref int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn)
@@ -162,9 +160,15 @@
         {
             NullOrEmptyCases.ArgumentNullException(fileContent);
 
-            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-            int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn;
+            (int, int) currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
+            int currentEndColumn = 0;
             string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
+
+            if (fileContent.Length != 0)
+            {
+                currentEndColumn = fileContent[lineCounting].Length - currentStartEndColumn.Item1;
+            }
+
             while (currentEndColumn > Console.WindowWidth - lineIndex.Length - 1)
             {
                 startingColumn++;
@@ -364,10 +368,10 @@
         public static void GoOnDesiredCharacter(char charType, int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn, char? character)
         {
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length));
-            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-            int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            (int, int) currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
+
             Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
-            Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineNumber.Length ? currentEndColumn + lineNumber.Length : horizontalPosition, verticalPosition);
+            Console.SetCursorPosition(horizontalPosition > currentStartEndColumn.Item2 + lineNumber.Length ? currentStartEndColumn.Item2 + lineNumber.Length : horizontalPosition, verticalPosition);
 
             if (charType == 'f')
             {
@@ -382,10 +386,10 @@
         public static void GoTillDesiredCharacter(char charType, int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn, char? character)
         {
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length));
-            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-            int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            (int, int) currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
+
             Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
-            Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineNumber.Length ? currentEndColumn + lineNumber.Length : horizontalPosition, verticalPosition);
+            Console.SetCursorPosition(horizontalPosition > currentStartEndColumn.Item2 + lineNumber.Length ? currentStartEndColumn.Item2 + lineNumber.Length : horizontalPosition, verticalPosition);
 
             if (charType == 't')
             {
@@ -448,11 +452,10 @@
                 }
 
                 string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
-                int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-                int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+                (int, int) currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
 
                 Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
-                Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
+                Console.SetCursorPosition(horizontalPosition > currentStartEndColumn.Item2 + lineIndex.Length ? currentStartEndColumn.Item2 + lineIndex.Length : horizontalPosition, verticalPosition);
             }
 
             if (action.KeyChar == 'g')
@@ -462,19 +465,18 @@
                 verticalPosition = 0;
 
                 string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
-                int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-                int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+                (int, int) currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
 
                 Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
-                Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
+                Console.SetCursorPosition(horizontalPosition > currentStartEndColumn.Item2 + lineIndex.Length ? currentStartEndColumn.Item2 + lineIndex.Length : horizontalPosition, verticalPosition);
             }
         }
 
         private static void GoOnCharacterLow(int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn, char? character)
         {
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length));
-            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-            int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            (int, int) currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
+            int currentEndColumn = currentStartEndColumn.Item2;
             char currentCharacter = GetChar(lineNumber, startingColumn, lineCounting);
             int steptUntilLastCorrectPosition = 0;
 
@@ -488,8 +490,8 @@
             while (!(horizontalPosition >= currentEndColumn + lineNumber.Length || currentEndColumn == 0) && character != currentCharacter)
             {
                 NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-                currentEndColumn = fileContent[lineCounting].Length - currentStartColumn;
+                currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
+                currentEndColumn = fileContent[lineCounting].Length - currentStartEndColumn.Item1;
                 currentCharacter = GetChar(lineNumber, startingColumn, lineCounting);
                 steptUntilLastCorrectPosition++;
             }
@@ -503,8 +505,6 @@
         private static void GoOnCharacterUpper(int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn, char? character)
         {
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length));
-            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-            int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
             char currentCharacter = GetChar(lineNumber, startingColumn, lineCounting);
             int steptUntilLastCorrectPosition = 0;
 
@@ -541,8 +541,8 @@
         private static void GoTillCharacterLow(int lineCounting, ref int horizontalPosition, int verticalPosition, int startingLine, ref int startingColumn, char? character)
         {
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length));
-            int currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-            int currentEndColumn = fileContent[lineCounting].Length - currentStartColumn < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartColumn : Console.WindowWidth - 1;
+            (int, int) currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
+            int currentEndColumn = fileContent[lineCounting].Length - currentStartEndColumn.Item1 < Console.WindowWidth ? fileContent[lineCounting].Length - currentStartEndColumn.Item1 : Console.WindowWidth - 1;
             int steptUntilLastCorrectPosition = 0;
 
             if (character == GetChar(lineNumber, startingColumn + 1, lineCounting) && !(horizontalPosition >= currentEndColumn + lineNumber.Length - 1 || currentEndColumn == 0))
@@ -554,8 +554,8 @@
             while (!(horizontalPosition >= currentEndColumn + lineNumber.Length || currentEndColumn == 0) && character != GetChar(lineNumber, startingColumn + 1, lineCounting))
             {
                 NavigateRight(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
-                currentStartColumn = Math.Max(0, Math.Min(startingColumn, fileContent[lineCounting].Length));
-                currentEndColumn = fileContent[lineCounting].Length - currentStartColumn;
+                currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
+                currentEndColumn = fileContent[lineCounting].Length - currentStartEndColumn.Item1;
                 steptUntilLastCorrectPosition++;
             }
 
@@ -746,24 +746,32 @@
 
         private static char GetChar(string lineNumber, int startingColumn, int lineCounting)
         {
-            int currentEndColumn = fileContent[lineCounting].Length - 1;
+            int currentEndColumn;
             int horizontalPosition = (Console.CursorLeft + startingColumn - 1) - lineNumber.Length;
-            if (fastTravelMode)
+
+            if (fileContent.Length != 0)
             {
-                if (fileContent[Convert.ToInt32(lineNumber)] == "" || horizontalPosition > currentEndColumn)
+                currentEndColumn = fileContent[lineCounting].Length - 1;
+
+                if (fastTravelMode)
+                {
+                    if (fileContent[Convert.ToInt32(lineNumber)] == "" || horizontalPosition > currentEndColumn)
+                    {
+                        return ' ';
+                    }
+
+                    return fileContent[Convert.ToInt32(lineNumber)][(Console.CursorLeft + startingColumn - 1) - lineNumber.Length];
+                }
+
+                if (fileContent[Convert.ToInt32(lineNumber) - 1] == "" || horizontalPosition > currentEndColumn)
                 {
                     return ' ';
                 }
 
-                return fileContent[Convert.ToInt32(lineNumber)][(Console.CursorLeft + startingColumn - 1) - lineNumber.Length];
+                return fileContent[Convert.ToInt32(lineNumber) - 1][(Console.CursorLeft + startingColumn - 1) - lineNumber.Length];
             }
 
-            if (fileContent[Convert.ToInt32(lineNumber) - 1] == "" || horizontalPosition > currentEndColumn)
-            {
-                return ' ';
-            }
-
-            return fileContent[Convert.ToInt32(lineNumber) - 1][(Console.CursorLeft + startingColumn - 1) - lineNumber.Length];
+            return ' ';
         }
     }
 }
