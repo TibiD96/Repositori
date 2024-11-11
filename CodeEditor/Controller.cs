@@ -17,6 +17,12 @@ namespace CodeEditor
             string filePathToOpen = FuzzySearchLogic.FuzzySearch(filesFromDirectory, allFiles.ToArray());
             string[] fileContent = File.ReadAllLines(filePathToOpen);
 
+            if (fileContent.Length == 0)
+            {
+                fileContent = [""];
+
+            }
+
             if (fileContent.Length > Console.WindowHeight - 4)
             {
                 lineToShow = Console.WindowHeight - 4;

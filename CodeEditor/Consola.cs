@@ -24,6 +24,7 @@ namespace CodeEditor
             int visibleAreaHight = Console.WindowHeight - 3;
             int lineNumber;
             string line;
+            string lineIndex;
             int currentEndColumn;
             int currentStartColumn;
             var theme = new Theme();
@@ -35,11 +36,12 @@ namespace CodeEditor
 
             ClearConsole();
 
+
             for (int i = startingLine; i < Math.Min(file.Length, startingLine + visibleAreaHight); i++)
             {
                 line = file[i];
                 lineNumber = i;
-                string lineIndex = GenerateLineIndex(fastTravelMode, currentLine, lineNumber, Convert.ToString(file.Length)) + " ";
+                lineIndex = GenerateLineIndex(fastTravelMode, currentLine, lineNumber, Convert.ToString(file.Length)) + " ";
                 currentStartColumn = Math.Max(0, Math.Min(startingColumn, line.Length));
                 currentEndColumn = line.Length - currentStartColumn <= visibleAreaWidth - lineIndex.Length ? line.Length - currentStartColumn : visibleAreaWidth - lineIndex.Length;
                 if (i < Math.Min(file.Length, startingLine + visibleAreaHight) - 1)

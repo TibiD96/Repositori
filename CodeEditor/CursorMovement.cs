@@ -441,7 +441,7 @@
 
         public static void GoToEndOrBeginingOfFile(ref int lineCounting, int horizontalPosition, ref int verticalPosition, ref int startingLine, ref int startingColumn, ConsoleKeyInfo action)
         {
-            if (action.KeyChar == 'G')
+            if (action.KeyChar == 'G' && fileContent.Length > 0)
             {
                 lineCounting = fileContent.Length - 1;
                 verticalPosition = Console.WindowHeight - 4;
