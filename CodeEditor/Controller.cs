@@ -301,6 +301,7 @@ namespace CodeEditor
                     break;
                 }
 
+                Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
                 Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent, originalPath);
 
                 action = ReadKey(ref numberOfMoves);
