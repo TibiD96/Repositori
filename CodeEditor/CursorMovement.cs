@@ -104,12 +104,10 @@
 
                 if (startingColumn == 0 && lineCounting == 0)
                 {
-                    Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
                     return;
                 }
 
                 startingColumn--;
-                Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
             }
             else
             {
@@ -137,7 +135,6 @@
             if (horizontalPosition + 1 == Console.WindowWidth && fileContent[lineCounting].Length - currentStartEndColumn.Item1 + lineIndex.Length > Console.WindowWidth - 1)
             {
                 startingColumn++;
-                Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
                 Console.SetCursorPosition(horizontalPosition, verticalPosition);
             }
             else
