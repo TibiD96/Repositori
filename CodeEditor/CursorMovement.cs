@@ -173,7 +173,6 @@
             }
 
             horizontalPosition = currentEndColumn + lineIndex.Length;
-            Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
             Console.SetCursorPosition(horizontalPosition > currentEndColumn + lineIndex.Length ? currentEndColumn + lineIndex.Length : horizontalPosition, verticalPosition);
         }
 
@@ -184,7 +183,6 @@
             string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
             horizontalPosition = lineIndex.Length;
             startingColumn = 0;
-            Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
             Console.SetCursorPosition(horizontalPosition, verticalPosition);
         }
 
@@ -367,7 +365,6 @@
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length));
             (int, int) currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
 
-            Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
             Console.SetCursorPosition(horizontalPosition > currentStartEndColumn.Item2 + lineNumber.Length ? currentStartEndColumn.Item2 + lineNumber.Length : horizontalPosition, verticalPosition);
 
             if (charType == 'f')
@@ -385,7 +382,6 @@
             string lineNumber = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length));
             (int, int) currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
 
-            Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
             Console.SetCursorPosition(horizontalPosition > currentStartEndColumn.Item2 + lineNumber.Length ? currentStartEndColumn.Item2 + lineNumber.Length : horizontalPosition, verticalPosition);
 
             if (charType == 't')
@@ -451,7 +447,6 @@
                 string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
                 (int, int) currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
 
-                Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
                 Console.SetCursorPosition(horizontalPosition > currentStartEndColumn.Item2 + lineIndex.Length ? currentStartEndColumn.Item2 + lineIndex.Length : horizontalPosition, verticalPosition);
             }
 
@@ -464,7 +459,6 @@
                 string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
                 (int, int) currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
 
-                Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
                 Console.SetCursorPosition(horizontalPosition > currentStartEndColumn.Item2 + lineIndex.Length ? currentStartEndColumn.Item2 + lineIndex.Length : horizontalPosition, verticalPosition);
             }
         }
