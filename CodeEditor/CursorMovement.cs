@@ -5,8 +5,6 @@
         private static bool fastTravelMode;
         private static string[] fileContent = new string[0];
         private static Dictionary<char, int> markedLines = new Dictionary<char, int>();
-        private static int basestartingLine = 0;
-        private static int basestartingColumn = 0;
 
         public static void FileParameter(bool fastTravel, string[] fileLines)
         {

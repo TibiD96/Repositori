@@ -62,7 +62,7 @@ namespace CodeEditor
 
         public static void ClearConsole()
         {
-            for (int i = Console.WindowHeight - 1; i >= 0; i--)
+            for (int i = Console.WindowHeight - 3; i >= 0; i--)
             {
                 Console.SetCursorPosition(0, i);
                 Console.Write(new string(' ', Console.WindowWidth));

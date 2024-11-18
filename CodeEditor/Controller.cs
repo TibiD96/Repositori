@@ -32,7 +32,7 @@ namespace CodeEditor
                 lineToShow = fileContent.Length - 1;
             }
 
-            Consola.ClearConsole();
+            ClearConsole();
             Consola.ShowContentOfFile(fileContent, lineToShow, fastTravelMode);
             InFileActions(fileContent, fastTravelMode, filePathToOpen);
         }
@@ -123,6 +123,17 @@ namespace CodeEditor
             }
 
             return character;
+        }
+
+        public static void ClearConsole()
+        {
+            for (int i = Console.WindowHeight - 1; i >= 0; i--)
+            {
+                Console.SetCursorPosition(0, i);
+                Console.Write(new string(' ', Console.WindowWidth));
+            }
+
+            Console.SetCursorPosition(0, 0);
         }
 
         private static void GetAllFiles(ref List<string> allFiles, string directory)
@@ -803,5 +814,6 @@ namespace CodeEditor
                 }
             }
         }
+
     }
 }

@@ -7,7 +7,7 @@ namespace CodeEditor
     {
         static void Main()
         {
-            Consola.ClearConsole();
+            Controller.ClearConsole();
             Controller.OpenFile();
         }
     }
