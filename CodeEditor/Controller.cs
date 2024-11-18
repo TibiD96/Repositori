@@ -309,6 +309,7 @@ namespace CodeEditor
 
                 if (quit)
                 {
+                    ClearConsole();
                     break;
                 }
 
