@@ -33,8 +33,8 @@ ctrl+r - is used for redo
 ESC - exit from edit mode
 Enter - in edit mode pressing enter the cursor and what is after it will go on the next line
 Backspace - in edit mode delete characters one for each pressing or keep it pressed to continuesly delete characters, if the cursor is at the beginning of the line the cursor and the informations after it will go at the end of the line above
-d/number/l - delete "number" characters in left direction
-d/number/r - delete "number" characters in right direction
+d/number/l - delete "number" characters in right direction
+d/number/h - delete "number" characters in left direction
 dd - delete the current line
 d/number/k - delete "number" lines which are above the current line
 d/number/j - delete "number" lines which are below the current line

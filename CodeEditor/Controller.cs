@@ -151,6 +151,8 @@ namespace CodeEditor
             int startingLine = 0;
             int startingColumn = 0;
             string numberOfMoves = "";
+            int basestartingLine = 0;
+            int basestartingColumn = 0;
             int lineCounting = Console.CursorTop;
             int verticalPosition = Console.CursorTop;
             int horizontalPosition = Console.CursorLeft;
@@ -313,7 +315,20 @@ namespace CodeEditor
                     break;
                 }
 
-                Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                if (basestartingLine != startingLine || basestartingColumn != startingColumn)
+                {
+                    basestartingLine = startingLine;
+                    basestartingColumn = startingColumn;
+                    Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                }
+                else
+                {
+                    Console.CursorVisible = false;
+                    Console.SetCursorPosition(0, 0);
+                    Consola.WriteIndexWithoutLine(fileContent, lineCounting, fastTravelMode, startingLine);
+                    Console.CursorVisible = true;
+                }
+
                 Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent, originalPath);
 
                 action = ReadKey(ref numberOfMoves);
@@ -437,7 +452,7 @@ namespace CodeEditor
                 CursorMovement.MoveToFirstCharacter(ref lineCounting, ref horizontalPosition, ref verticalPosition, ref startingLine, ref startingColumn);
             }
 
-            if (action.KeyChar == '\'')
+            if (action.KeyChar == '\\')
             {
                 character = ReadChar(ref character);
 
