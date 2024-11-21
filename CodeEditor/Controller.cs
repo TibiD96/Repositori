@@ -5,6 +5,15 @@ namespace CodeEditor
 {
     public class Controller
     {
+        public static void Open()
+        {
+            bool fastTravelMode = Config.FastTravel;
+            string[] file = [""];
+            ClearConsole();
+            Consola.ShowContentOfFile(file, file.Length - 1, fastTravelMode);
+            InFileActions(file, fastTravelMode);
+        }
+
         public static void OpenFile()
         {
             string currentDirectory = Environment.CurrentDirectory;
@@ -146,7 +155,7 @@ namespace CodeEditor
             }
         }
 
-        private static void InFileActions(string[] fileContent, bool fastTravelMode, string originalPath)
+        private static void InFileActions(string[] fileContent, bool fastTravelMode, string originalPath = "")
         {
             int startingLine = 0;
             int startingColumn = 0;
@@ -167,6 +176,8 @@ namespace CodeEditor
 
             while (!quit)
             {
+                OpenExistingFile(action, numberOfMoves);
+
                 switch (action.KeyChar)
                 {
                     case 'A':
@@ -827,6 +838,17 @@ namespace CodeEditor
                 {
                     Variables.Undo.Peek().Push((lineNumber, fileContent[lineNumber]));
                     fileContent[lineNumber] = newContent;
+                }
+            }
+        }
+
+        private static void OpenExistingFile(ConsoleKeyInfo action, string numberOfMoves)
+        {
+            if (action.Key == ConsoleKey.Spacebar)
+            {
+                if ((ReadKey(ref numberOfMoves)).Key == ConsoleKey.F)
+                {
+                    OpenFile();
                 }
             }
         }
