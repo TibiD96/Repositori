@@ -254,11 +254,6 @@ namespace CodeEditor
             Console.SetCursorPosition(leftLane + header.Length + 1, topLane);
             Console.Write(new string('─', rightLane - leftLane - 1 - header.Length));
             Console.SetCursorPosition(leftLane, bottomLane - 3);
-            Console.Write("└");
-            Console.SetCursorPosition(rightLane, bottomLane - 3);
-            Console.Write("┘");
-            Console.SetCursorPosition(leftLane + 1, bottomLane - 3);
-            Console.Write(new string('─', rightLane - leftLane - 1));
 
             Console.SetCursorPosition(leftLane, bottomLane - 2);
             Console.Write("┌");
