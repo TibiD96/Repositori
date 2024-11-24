@@ -5,13 +5,15 @@ namespace CodeEditor
 {
     public class Controller
     {
+        private static string[] fileContent = [""];
+        private static string originalPath = "";
+
         public static void Open()
         {
             bool fastTravelMode = Config.FastTravel;
-            string[] file = [""];
             ClearConsole();
-            Consola.ShowContentOfFile(file, file.Length - 1, fastTravelMode);
-            InFileActions(file, fastTravelMode);
+            Consola.ShowContentOfFile(fileContent, fileContent.Length - 1, fastTravelMode);
+            InFileActions(fastTravelMode);
         }
 
         public static void OpenFile()
@@ -23,8 +25,8 @@ namespace CodeEditor
             int lineToShow;
 
             GetAllFiles(ref allFiles, currentDirectory);
-            string filePathToOpen = FuzzySearchLogic.FuzzySearch(filesFromDirectory, allFiles.ToArray());
-            string[] fileContent = File.ReadAllLines(filePathToOpen);
+            originalPath = FuzzySearchLogic.FuzzySearch(filesFromDirectory, allFiles.ToArray());
+            fileContent = File.ReadAllLines(originalPath);
 
             if (fileContent.Length == 0)
             {
@@ -43,7 +45,6 @@ namespace CodeEditor
 
             ClearConsole();
             Consola.ShowContentOfFile(fileContent, lineToShow, fastTravelMode);
-            InFileActions(fileContent, fastTravelMode, filePathToOpen);
         }
 
         public static int GetCursorCharIndex(int lineCounting, ref int horizontalPosition, int startingColumn, string[] fileContent)
@@ -155,7 +156,7 @@ namespace CodeEditor
             }
         }
 
-        private static void InFileActions(string[] fileContent, bool fastTravelMode, string originalPath = "")
+        private static void InFileActions(bool fastTravelMode)
         {
             int startingLine = 0;
             int startingColumn = 0;
@@ -176,7 +177,18 @@ namespace CodeEditor
 
             while (!quit)
             {
-                OpenExistingFile(action, numberOfMoves);
+
+                if (action.Key == ConsoleKey.Spacebar)
+                {
+                    if ((ReadKey(ref numberOfMoves)).Key == ConsoleKey.F)
+                    {
+                        OpenFile();
+                        lineCounting = Console.CursorTop;
+                        verticalPosition = Console.CursorTop;
+                        horizontalPosition = Console.CursorLeft;
+                        CursorMovement.FileParameter(fastTravelMode, fileContent);
+                    }
+                }
 
                 switch (action.KeyChar)
                 {
@@ -314,6 +326,7 @@ namespace CodeEditor
                               ref fileContent);
                         break;
                 }
+
 
                 if (action.Key != ConsoleKey.I)
                 {
@@ -854,17 +867,6 @@ namespace CodeEditor
                 {
                     Variables.Undo.Peek().Push((lineNumber, fileContent[lineNumber]));
                     fileContent[lineNumber] = newContent;
-                }
-            }
-        }
-
-        private static void OpenExistingFile(ConsoleKeyInfo action, string numberOfMoves)
-        {
-            if (action.Key == ConsoleKey.Spacebar)
-            {
-                if ((ReadKey(ref numberOfMoves)).Key == ConsoleKey.F)
-                {
-                    OpenFile();
                 }
             }
         }
