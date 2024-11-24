@@ -160,8 +160,8 @@ namespace CodeEditor
             int startingLine = 0;
             int startingColumn = 0;
             string numberOfMoves = "";
-            int basestartingLine = 0;
-            int basestartingColumn = 0;
+            int baseStartingLine = 0;
+            int baseStrartingColumn = 0;
             int lineCounting = Console.CursorTop;
             int verticalPosition = Console.CursorTop;
             int horizontalPosition = Console.CursorLeft;
@@ -326,10 +326,10 @@ namespace CodeEditor
                     break;
                 }
 
-                if (basestartingLine != startingLine || basestartingColumn != startingColumn)
+                if (baseStartingLine != startingLine || baseStrartingColumn != startingColumn)
                 {
-                    basestartingLine = startingLine;
-                    basestartingColumn = startingColumn;
+                    baseStartingLine = startingLine;
+                    baseStrartingColumn = startingColumn;
                     Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
                 }
                 else
@@ -492,6 +492,8 @@ namespace CodeEditor
             bool arrowButton = false;
             const bool editMode = true;
             bool fastTravelMode = Config.FastTravel;
+            int baseStartingLine = startingLine;
+            int baseStrartingColumn = startingColumn;
 
             Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent, originalPath);
 
@@ -544,6 +546,20 @@ namespace CodeEditor
                               ref fileContent,
                               action);
                     CursorMovement.FileParameter(fastTravelMode, fileContent);
+                }
+
+                if (baseStartingLine != startingLine || baseStrartingColumn != startingColumn)
+                {
+                    baseStartingLine = startingLine;
+                    baseStrartingColumn = startingColumn;
+                    Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                }
+                else
+                {
+                    Console.CursorVisible = false;
+                    Console.SetCursorPosition(0, 0);
+                    Consola.WriteIndexWithoutLine(fileContent, lineCounting, fastTravelMode, startingLine);
+                    Console.CursorVisible = true;
                 }
 
                 Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent, originalPath);

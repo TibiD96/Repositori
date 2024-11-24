@@ -321,6 +321,35 @@ namespace CodeEditor
             Console.SetCursorPosition(horizontalPosition, verticalPosition);
         }
 
+        public static void WriteIndexWithoutLine(string[] file, int currentLine, bool fastTravelMode, int startingLine)
+        {
+            string lineIndex;
+
+            for (int i = startingLine; i < Math.Min(file.Length, startingLine + Console.WindowHeight - 3); i++)
+            {
+                lineIndex = GenerateLineIndex(fastTravelMode, currentLine, i, Convert.ToString(file.Length)) + " ";
+
+                if (i == currentLine && fastTravelMode)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(lineIndex);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write(lineIndex);
+                }
+
+                if (i < Math.Min(file.Length, startingLine + Console.WindowHeight - 3) - 1)
+                {
+                    Console.WriteLine();
+                }
+
+            }
+
+            Console.ResetColor();
+        }
+
         private static void HilightChar(string file, string search)
         {
             int subSearchLength;
@@ -556,35 +585,6 @@ namespace CodeEditor
             {
                 throw new PlatformNotSupportedException("Platform not supported.");
             }
-        }
-
-        public static void WriteIndexWithoutLine(string[] file, int currentLine, bool fastTravelMode, int startingLine)
-        {
-            string lineIndex;
-
-            for (int i = startingLine; i < Math.Min(file.Length, startingLine + Console.WindowHeight - 3); i++)
-            {
-                lineIndex = GenerateLineIndex(fastTravelMode, currentLine, i, Convert.ToString(file.Length)) + " ";
-
-                if (i == currentLine && fastTravelMode)
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write(lineIndex);
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write(lineIndex);
-                }
-
-                if (i < Math.Min(file.Length, startingLine + Console.WindowHeight - 3) - 1)
-                {
-                    Console.WriteLine();
-                }
-
-            }
-
-            Console.ResetColor();
         }
     }
 }
