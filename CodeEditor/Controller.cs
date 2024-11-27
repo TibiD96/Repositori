@@ -678,6 +678,11 @@ namespace CodeEditor
 
                     File.WriteAllLines(path, fileLastVersion);
                     break;
+
+                /*case "edit":
+
+                case "e":*/
+
             }
         }
 
