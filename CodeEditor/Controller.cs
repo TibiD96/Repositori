@@ -186,6 +186,7 @@ namespace CodeEditor
                         lineCounting = Console.CursorTop;
                         verticalPosition = Console.CursorTop;
                         horizontalPosition = Console.CursorLeft;
+                        originalFile = (string[])fileContent.Clone();
                         CursorMovement.FileParameter(fastTravelMode, fileContent);
                     }
                 }
