@@ -680,9 +680,12 @@ namespace CodeEditor
                     File.WriteAllLines(path, fileLastVersion);
                     break;
 
-                /*case "edit":
+                case "edit":
 
-                case "e":*/
+                case "e":
+
+                    AutoCompletionLogic.AutoCompletion();
+                    break;
 
             }
         }
