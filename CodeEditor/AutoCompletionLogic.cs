@@ -49,6 +49,8 @@ namespace CodeEditor
             allFiles.AddRange(Directory.GetDirectories(search));
             allFiles.AddRange(Directory.GetFiles(search));
 
+            Consola.ShowValidResults(allFiles, allFiles.Count, "", allFiles.ToArray());
+
 
             while (key.Key != ConsoleKey.Enter)
             {
