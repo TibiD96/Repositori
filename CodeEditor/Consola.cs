@@ -112,7 +112,7 @@ namespace CodeEditor
             return lineIndex;
         }
 
-        public static void ShowDirectoryContent(string[] fileFromDirectory)
+        public static void ShowDirectoryContentFuzzy(string[] fileFromDirectory)
         {
             const int searchBarDim = 4;
             SearchContour();
@@ -131,7 +131,26 @@ namespace CodeEditor
             }
         }
 
-        public static void ShowValidResults(List<string> validFiles, int numberOfValidFiles, string search, string[] totalNumberOfFiles)
+        public static void ShowDirectoryContent(string[] fileFromDirectory)
+        {
+            const int searchBarDim = 4;
+            SearchContour();
+            int startingLine = Console.WindowHeight - (searchBarDim + 1);
+            if (fileFromDirectory == null)
+            {
+                return;
+            }
+
+            ClearResultsWindow();
+            for (int i = 0; i < fileFromDirectory.Length && startingLine != 0; i++)
+            {
+                Console.Write(fileFromDirectory[i]);
+                startingLine--;
+                Console.SetCursorPosition(1, startingLine);
+            }
+        }
+
+        public static void ShowValidResultsFuzzy(List<string> validFiles, int numberOfValidFiles, string search, string[] totalNumberOfFiles)
         {
             NullOrEmptyCases.ArgumentNullException(validFiles);
             NullOrEmptyCases.ArgumentNullException(totalNumberOfFiles);

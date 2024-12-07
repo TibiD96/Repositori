@@ -41,15 +41,22 @@ namespace CodeEditor
             search =  search + '\\';
 
             Console.SetCursorPosition(1, Console.WindowHeight - 2);
+            Console.Write(new string(' ', Console.WindowWidth - 2));
+            Console.SetCursorPosition(1, Console.WindowHeight - 2);
 
             Console.Write(search);
 
-            Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
-
             allFiles.AddRange(Directory.GetDirectories(search));
-            allFiles.AddRange(Directory.GetFiles(search));
 
-            Consola.ShowValidResults(allFiles, allFiles.Count, "", allFiles.ToArray());
+            for (int i = 0; i < allFiles.Count; i++)
+            {
+                allFiles[i] += '\\';
+            }
+
+            allFiles.AddRange(Directory.GetFiles(search));
+            Consola.ShowDirectoryContent(allFiles.ToArray());
+
+            Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
 
 
             while (key.Key != ConsoleKey.Enter)
@@ -74,14 +81,9 @@ namespace CodeEditor
 
         }
 
-        private static void GetAllFiles(ref List<string> allFiles, string directory)
+        private static void Completion(List<string> allFiles, string search )
         {
-            allFiles.AddRange(Directory.GetFiles(directory));
 
-            foreach (string subDirectory in Directory.GetDirectories(directory))
-            {
-                GetAllFiles(ref allFiles, subDirectory);
-            }
         }
 
     }
