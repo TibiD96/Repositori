@@ -69,21 +69,60 @@ namespace CodeEditor
                     Console.SetCursorPosition(1, Console.WindowHeight - 2);
                     Console.Write(search);
                 }
-                else if (key.Key == ConsoleKey.Tab)
-                {
 
+                if (key.Key == ConsoleKey.Tab)
+                {
+                    search = Completion(allFiles, search);
+                    Console.SetCursorPosition(1, Console.WindowHeight - 2);
+                    Console.Write(new string(' ', Console.WindowWidth - 2));
+                    Console.SetCursorPosition(1, Console.WindowHeight - 2);
+                    Console.Write(search);
+
+                    allFiles.Clear();
+
+                    allFiles.AddRange(Directory.GetDirectories(search));
+
+                    for (int i = 0; i < allFiles.Count; i++)
+                    {
+                        allFiles[i] += '\\';
+                    }
+
+                    allFiles.AddRange(Directory.GetFiles(search));
+                    Consola.ShowDirectoryContent(allFiles.ToArray());
+
+                    Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
                 }
 
-                Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
                 key = Console.ReadKey();
-                search += key.KeyChar;
+
+                if (key.Key != ConsoleKey.Tab && key.Key != ConsoleKey.Backspace)
+                {
+                    search += key.KeyChar;
+                }
             }
 
         }
 
-        private static void Completion(List<string> allFiles, string search )
+        private static string Completion(List<string> allFiles, string search)
         {
+            int posibilities = 0;
+            int indexOfCompletion = 0;
 
+            for (int i = 0; i < allFiles.Count; i++)
+            {
+                if (allFiles[i].StartsWith(search))
+                {
+                    posibilities++;
+                    indexOfCompletion = i;
+                }
+            }
+
+            if (posibilities == 1)
+            {
+                return allFiles[indexOfCompletion];
+            }
+
+            return "";
         }
 
     }
