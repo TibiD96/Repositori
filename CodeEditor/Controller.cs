@@ -684,7 +684,8 @@ namespace CodeEditor
 
                 case "e":
 
-                    AutoCompletionLogic.AutoCompletion();
+                    originalPath = AutoCompletionLogic.AutoCompletion();
+                    fileContent = File.ReadAllLines(originalPath);
                     break;
 
             }

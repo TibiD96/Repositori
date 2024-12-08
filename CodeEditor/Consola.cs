@@ -145,6 +145,12 @@ namespace CodeEditor
             for (int i = 0; i < fileFromDirectory.Length && startingLine != 0; i++)
             {
                 Console.Write(fileFromDirectory[i]);
+
+                if (Directory.Exists(fileFromDirectory[i]))
+                {
+                    Console.Write('\\');
+                }
+
                 startingLine--;
                 Console.SetCursorPosition(1, startingLine);
             }

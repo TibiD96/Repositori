@@ -6,7 +6,9 @@ namespace CodeEditor
 {
     public class AutoCompletionLogic
     {
-        public static void AutoCompletion()
+        private static string lastValidDirect = "";
+
+        public static string AutoCompletion()
         {
             Consola.ClearConsole();
             Consola.SearchContour();
@@ -20,44 +22,10 @@ namespace CodeEditor
             search += key.KeyChar;
             List<string> allFiles = new List<string>();
 
-            while (!Directory.Exists(search) && !File.Exists(search))
-            {
-                key = Console.ReadKey();
+            allFiles = FilesFromDirectory(search, allFiles);
 
-                if (key.Key == ConsoleKey.Backspace && search.Length > 0)
-                {
-                    search = search.Substring(0, search.Length - 1);
-                    Console.SetCursorPosition(1, Console.WindowHeight - 2);
-                    Console.Write(new string(' ', Console.WindowWidth - 2));
-                    Console.SetCursorPosition(1, Console.WindowHeight - 2);
-                    Console.Write(search);
-                }
-                else
-                {
-                    search += key.KeyChar;
-                }
-            }
-
-            search =  search + '\\';
-
-            Console.SetCursorPosition(1, Console.WindowHeight - 2);
-            Console.Write(new string(' ', Console.WindowWidth - 2));
-            Console.SetCursorPosition(1, Console.WindowHeight - 2);
-
-            Console.Write(search);
-
-            allFiles.AddRange(Directory.GetDirectories(search));
-
-            for (int i = 0; i < allFiles.Count; i++)
-            {
-                allFiles[i] += '\\';
-            }
-
-            allFiles.AddRange(Directory.GetFiles(search));
             Consola.ShowDirectoryContent(allFiles.ToArray());
-
             Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
-
 
             while (key.Key != ConsoleKey.Enter)
             {
@@ -68,28 +36,26 @@ namespace CodeEditor
                     Console.Write(new string(' ', Console.WindowWidth - 2));
                     Console.SetCursorPosition(1, Console.WindowHeight - 2);
                     Console.Write(search);
+
+                    allFiles.Clear();
+                    allFiles = FilesFromDirectory(search, allFiles);
+                    Consola.ShowDirectoryContent(allFiles.ToArray());
+                    Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
                 }
 
                 if (key.Key == ConsoleKey.Tab)
                 {
                     search = Completion(allFiles, search);
+
                     Console.SetCursorPosition(1, Console.WindowHeight - 2);
                     Console.Write(new string(' ', Console.WindowWidth - 2));
                     Console.SetCursorPosition(1, Console.WindowHeight - 2);
                     Console.Write(search);
 
                     allFiles.Clear();
+                    allFiles = FilesFromDirectory(search, allFiles);
 
-                    allFiles.AddRange(Directory.GetDirectories(search));
-
-                    for (int i = 0; i < allFiles.Count; i++)
-                    {
-                        allFiles[i] += '\\';
-                    }
-
-                    allFiles.AddRange(Directory.GetFiles(search));
                     Consola.ShowDirectoryContent(allFiles.ToArray());
-
                     Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
                 }
 
@@ -98,8 +64,16 @@ namespace CodeEditor
                 if (key.Key != ConsoleKey.Tab && key.Key != ConsoleKey.Backspace)
                 {
                     search += key.KeyChar;
+
+                    allFiles.Clear();
+                    allFiles = FilesFromDirectory(search, allFiles);
+
+                    Consola.ShowDirectoryContent(allFiles.ToArray());
+                    Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
                 }
             }
+
+            return '"' + search + '"';
 
         }
 
@@ -119,10 +93,28 @@ namespace CodeEditor
 
             if (posibilities == 1)
             {
+                Consola.ShowDirectoryContent(FilesFromDirectory(allFiles[indexOfCompletion], allFiles).ToArray());
                 return allFiles[indexOfCompletion];
             }
 
             return search;
+        }
+
+        private static List<string> FilesFromDirectory(string search, List<string> allFiles)
+        {
+            if (Directory.Exists(search))
+            {
+                lastValidDirect = search;
+                allFiles.AddRange(Directory.GetDirectories(search));
+                allFiles.AddRange(Directory.GetFiles(search));
+            }
+            else if (lastValidDirect != "")
+            {
+                allFiles.AddRange(Directory.GetDirectories(lastValidDirect));
+                allFiles.AddRange(Directory.GetFiles(lastValidDirect));
+            }
+
+            return allFiles;
         }
 
     }
