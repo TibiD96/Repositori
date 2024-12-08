@@ -122,7 +122,7 @@ namespace CodeEditor
                 return allFiles[indexOfCompletion];
             }
 
-            return "";
+            return search;
         }
 
     }
