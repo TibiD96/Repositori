@@ -170,7 +170,6 @@ namespace CodeEditor
             bool quit = false;
             int charIndex;
             const bool editMode = false;
-
             Consola.Status(editMode, horizontalPosition, verticalPosition, lineCounting, startingColumn, fileContent, originalPath);
             ConsoleKeyInfo action = ReadKey(ref numberOfMoves);
             CursorMovement.FileParameter(fastTravelMode, fileContent);
@@ -273,8 +272,33 @@ namespace CodeEditor
                         break;
 
                     case ':':
+                        string lastPath = originalPath;
                         CommandMode(ref quit, fileContent, originalFile, originalPath);
-                        Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+
+                        if (lastPath != originalPath)
+                        {
+                            if (fileContent.Length > Console.WindowHeight - 4)
+                            {
+                                lineCounting = Console.WindowHeight - 4;
+                            }
+                            else
+                            {
+                                lineCounting = fileContent.Length - 1;
+                            }
+
+                            ClearConsole();
+                            Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode);
+
+                            lineCounting = Console.CursorTop;
+                            verticalPosition = Console.CursorTop;
+                            horizontalPosition = Console.CursorLeft;
+                            CursorMovement.FileParameter(fastTravelMode, fileContent);
+
+                        }
+                        else
+                        {
+                            Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode, startingLine, startingColumn);
+                        }
 
                         (int, int) currentStartEndColumn = NullOrEmptyCases.CurrentEndColumn(lineCounting, startingColumn, fileContent);
                         string lineIndex = Consola.GenerateLineIndex(fastTravelMode, lineCounting, lineCounting, Convert.ToString(fileContent.Length)) + " ";
@@ -583,7 +607,7 @@ namespace CodeEditor
             }
         }
 
-        private static void CommandMode(ref bool quit, string[] fileLastVersion, string[] fileOriginalVersion, string originalPath)
+        private static void CommandMode(ref bool quit, string[] fileLastVersion, string[] fileOriginalVersion, string lastPath)
         {
             Consola.CommandModeContour();
             ConsoleKeyInfo action = Console.ReadKey(true);
@@ -621,8 +645,8 @@ namespace CodeEditor
 
                 if (action.Key == ConsoleKey.Enter)
                 {
-                    Commands(ref command, ref quit, fileLastVersion, fileOriginalVersion, originalPath);
-                    if (command.Contains('w'))
+                    Commands(ref command, ref quit, fileLastVersion, fileOriginalVersion, lastPath);
+                    if (command.Contains('w') || command.Contains('e'))
                     {
                         return;
                     }
@@ -630,22 +654,22 @@ namespace CodeEditor
             }
         }
 
-        private static void Commands(ref string command, ref bool quit, string[] fileLastVersion, string[] fileOriginalVersion, string originalPath)
+        private static void Commands(ref string command, ref bool quit, string[] fileLastVersion, string[] fileOriginalVersion, string lastPath)
         {
             const int topLane = 10;
             const int leftLane = 20;
-            string path = originalPath;
+            string path = lastPath;
 
             if (command.Contains("write") && command.Length > 5)
             {
-                path = command.Replace("write", "").Trim() + '\\' + Path.GetFileName(originalPath);
+                path = command.Replace("write", "").Trim() + '\\' + Path.GetFileName(lastPath);
                 command = command.Substring(0, 5);
             }
             else
             {
                 if (command.Contains("w") && command.Length > 5)
                 {
-                    path = command.Replace("w", "").Trim() + '\\' + Path.GetFileName(originalPath);
+                    path = command.Replace("w", "").Trim() + '\\' + Path.GetFileName(lastPath);
                     command = command.Substring(0, 1);
                 }
             }
@@ -686,6 +710,7 @@ namespace CodeEditor
 
                     originalPath = AutoCompletionLogic.AutoCompletion();
                     fileContent = File.ReadAllLines(originalPath);
+                    ClearConsole();
                     break;
 
             }

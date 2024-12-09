@@ -61,7 +61,7 @@ namespace CodeEditor
 
                 key = Console.ReadKey();
 
-                if (key.Key != ConsoleKey.Tab && key.Key != ConsoleKey.Backspace)
+                if (key.Key != ConsoleKey.Tab && key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
                 {
                     search += key.KeyChar;
 
@@ -73,7 +73,7 @@ namespace CodeEditor
                 }
             }
 
-            return '"' + search + '"';
+            return search;
 
         }
 
