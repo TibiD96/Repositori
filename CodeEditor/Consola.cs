@@ -133,12 +133,22 @@ namespace CodeEditor
 
         public static void ShowDirectoryContent(string[] fileFromDirectory)
         {
+            char slash;
             const int searchBarDim = 4;
             SearchContour();
             int startingLine = Console.WindowHeight - (searchBarDim + 1);
             if (fileFromDirectory == null)
             {
                 return;
+            }
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+               slash = '\\';
+            }
+            else
+            {
+                slash = '/';
             }
 
             ClearResultsWindow();
@@ -148,7 +158,7 @@ namespace CodeEditor
 
                 if (Directory.Exists(fileFromDirectory[i]))
                 {
-                    Console.Write('\\');
+                    Console.Write(slash);
                 }
 
                 startingLine--;

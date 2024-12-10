@@ -27,7 +27,10 @@ I - activate edit mode and add text at the beginning of the curent line
 i - activate edit mode and add text before the curent position of the cursor
 O - activate edit mode and add text before the current line
 o - activate edit mode and add text after the current line
-: - open command line where with "w" or "write" save and with "q" or "quit" quite from app but if there are modifications which you don't want to save you have to quit with "quite!" or "q!"
+: - open command line where with:
+                                 -"w" or "write" save 
+                                 -"q" or "quit" quite from app but if there are modifications which you don't want to save you have to quit with "quite!" or "q!"
+                                 -"e" or "edit" enter edit mode where the user can write the path to a file (autocompletion with TAB is supported)
 u - used for undo
 ctrl+r - is used for redo
 ESC - exit from edit mode
