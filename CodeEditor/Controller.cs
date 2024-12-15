@@ -638,6 +638,7 @@ namespace CodeEditor
                     commandToShow = command.Substring(command.Length - (rightLane - leftLane - 1));
                 }
 
+
                 Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
                 Console.Write(commandToShow);
                 Console.SetCursorPosition(commandToShow.Length + leftLane + 1, Console.CursorTop);
@@ -646,10 +647,22 @@ namespace CodeEditor
                 if (action.Key == ConsoleKey.Enter)
                 {
                     Commands(ref command, ref quit, fileLastVersion, fileOriginalVersion, lastPath);
-                    if (command.Contains('w') || command.Contains('e'))
+                    if (command.Contains('w'))
                     {
                         return;
                     }
+                }
+
+                if (action.Key == ConsoleKey.Spacebar && command.StartsWith('e'))
+                {
+
+                    commandToShow = command + action.KeyChar;
+                    Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
+                    Console.Write(commandToShow);
+                    Console.SetCursorPosition(commandToShow.Length + leftLane + 1, Console.CursorTop);
+                    Commands(ref command, ref quit, fileLastVersion, fileOriginalVersion, lastPath);
+
+                    return;
                 }
             }
         }

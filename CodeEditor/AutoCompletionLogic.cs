@@ -10,7 +10,7 @@ namespace CodeEditor
 
         public static string AutoCompletion()
         {
-            Consola.ClearConsole();
+            Consola.ClearConsole(Console.WindowHeight - 13);
             Consola.SearchContour();
             Console.SetCursorPosition(1, Console.WindowHeight - 2);
             Console.Write(new string(' ', Console.WindowWidth - 2));

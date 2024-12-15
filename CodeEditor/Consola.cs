@@ -60,15 +60,31 @@ namespace CodeEditor
             Console.CursorVisible = true;
         }
 
-        public static void ClearConsole()
+        public static void ClearConsole(int bottomLane = 0)
         {
-            for (int i = Console.WindowHeight - 3; i >= 0; i--)
-            {
-                Console.SetCursorPosition(0, i);
-                Console.Write(new string(' ', Console.WindowWidth));
-            }
+            const int topLane = 11;
+            const int leftLane = 21;
+            int rightLane = Console.WindowWidth - 20;
 
-            Console.SetCursorPosition(0, 0);
+            if (bottomLane == 0)
+            {
+                for (int i = Console.WindowHeight - 3; i >= 0; i--)
+                {
+                    Console.SetCursorPosition(0, i);
+                    Console.Write(new string(' ', Console.WindowWidth));
+                }
+
+                Console.SetCursorPosition(0, 0);
+            }
+            else
+            {
+                Console.SetCursorPosition(leftLane, topLane);
+                for(int i = bottomLane; i >= topLane; i--)
+                {
+                    Console.SetCursorPosition(leftLane, i);
+                    Console.Write(new string(' ', rightLane - leftLane));
+                }
+            }
         }
 
         public static string GenerateLineIndex(bool fastTravelMode, int currentLine, int lineNumber, string maximumNumberOfLines)
