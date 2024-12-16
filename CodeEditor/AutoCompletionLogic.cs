@@ -10,11 +10,9 @@ namespace CodeEditor
 
         public static string AutoCompletion()
         {
-            Consola.ClearConsole(Console.WindowHeight - 13);
-            Consola.SearchContour();
-            Console.SetCursorPosition(1, Console.WindowHeight - 2);
-            Console.Write(new string(' ', Console.WindowWidth - 2));
-            Console.SetCursorPosition(1, Console.WindowHeight - 2);
+            (int, int) cursoPos = Console.GetCursorPosition();
+            Consola.ClearConsole(Console.WindowHeight - 12);
+            Console.SetCursorPosition(cursoPos.Item1, cursoPos.Item2);
 
             ConsoleKeyInfo key;
             string search = "";
@@ -25,38 +23,38 @@ namespace CodeEditor
             allFiles = FilesFromDirectory(search, allFiles);
 
             Consola.ShowDirectoryContent(allFiles.ToArray());
-            Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
+            Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
 
             while (key.Key != ConsoleKey.Enter)
             {
                 if (key.Key == ConsoleKey.Backspace && search.Length > 0)
                 {
                     search = search.Substring(0, search.Length - 1);
-                    Console.SetCursorPosition(1, Console.WindowHeight - 2);
-                    Console.Write(new string(' ', Console.WindowWidth - 2));
-                    Console.SetCursorPosition(1, Console.WindowHeight - 2);
+                    Console.SetCursorPosition(cursoPos.Item1, Console.WindowHeight - 11);
+                    Console.Write(new string(' ', search.Length + 1));
+                    Console.SetCursorPosition(cursoPos.Item1, Console.WindowHeight - 11);
                     Console.Write(search);
 
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search, allFiles);
                     Consola.ShowDirectoryContent(allFiles.ToArray());
-                    Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
+                    Console.SetCursorPosition(cursoPos.Item1 + search.Length, Console.WindowHeight - 11);
                 }
 
                 if (key.Key == ConsoleKey.Tab)
                 {
                     search = Completion(allFiles, search);
 
-                    Console.SetCursorPosition(1, Console.WindowHeight - 2);
-                    Console.Write(new string(' ', Console.WindowWidth - 2));
-                    Console.SetCursorPosition(1, Console.WindowHeight - 2);
+                    Console.SetCursorPosition(cursoPos.Item1, Console.WindowHeight - 11);
+                    Console.Write(new string(' ', search.Length + 1));
+                    Console.SetCursorPosition(cursoPos.Item1, Console.WindowHeight - 11);
                     Console.Write(search);
 
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search, allFiles);
 
                     Consola.ShowDirectoryContent(allFiles.ToArray());
-                    Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
+                    Console.SetCursorPosition(cursoPos.Item1 + search.Length, Console.WindowHeight - 11);
                 }
 
                 key = Console.ReadKey();
@@ -69,7 +67,7 @@ namespace CodeEditor
                     allFiles = FilesFromDirectory(search, allFiles);
 
                     Consola.ShowDirectoryContent(allFiles.ToArray());
-                    Console.SetCursorPosition(search.Length + 1, Console.WindowHeight - 2);
+                    Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
                 }
             }
 
