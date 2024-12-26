@@ -6,7 +6,7 @@ namespace CodeEditor
 {
     public class AutoCompletionLogic
     {
-        private static string lastValidDirect = "";
+        private static string lastValidDirect = Environment.CurrentDirectory;
 
         public static string AutoCompletion()
         {
