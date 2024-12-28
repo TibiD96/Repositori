@@ -172,7 +172,7 @@ namespace CodeEditor
             ClearConsole(lastLine);
             for (int i = 0; i < fileFromDirectory.Length && curentLine != lastLine; i++)
             {
-                Console.Write(fileFromDirectory[i]);
+                Console.Write(Path.GetFileName(fileFromDirectory[i]));
 
                 if (Directory.Exists(fileFromDirectory[i]))
                 {
