@@ -11,7 +11,7 @@ namespace CodeEditor
         public static void Open()
         {
             bool fastTravelMode = Config.FastTravel;
-            ClearConsole();
+            Consola.ClearEntireConsole();
             Consola.ShowContentOfFile(fileContent, fileContent.Length - 1, fastTravelMode);
             InFileActions(fastTravelMode);
         }
@@ -43,7 +43,7 @@ namespace CodeEditor
                 lineToShow = fileContent.Length - 1;
             }
 
-            ClearConsole();
+            Consola.ClearEntireConsole();
             Consola.ShowContentOfFile(fileContent, lineToShow, fastTravelMode);
         }
 
@@ -133,17 +133,6 @@ namespace CodeEditor
             }
 
             return character;
-        }
-
-        public static void ClearConsole()
-        {
-            for (int i = Console.WindowHeight - 1; i >= 0; i--)
-            {
-                Console.SetCursorPosition(0, i);
-                Console.Write(new string(' ', Console.WindowWidth));
-            }
-
-            Console.SetCursorPosition(0, 0);
         }
 
         private static void GetAllFiles(ref List<string> allFiles, string directory)
@@ -286,7 +275,7 @@ namespace CodeEditor
                                 lineCounting = fileContent.Length - 1;
                             }
 
-                            ClearConsole();
+                            Consola.ClearEntireConsole();
                             Consola.ShowContentOfFile(fileContent, lineCounting, fastTravelMode);
 
                             lineCounting = Console.CursorTop;
@@ -360,7 +349,7 @@ namespace CodeEditor
 
                 if (quit)
                 {
-                    ClearConsole();
+                    Consola.ClearEntireConsole();
                     break;
                 }
 
@@ -662,7 +651,13 @@ namespace CodeEditor
                     Console.SetCursorPosition(commandToShow.Length + leftLane + 1, Console.CursorTop);
                     Commands(ref command, ref quit, fileLastVersion, fileOriginalVersion, lastPath);
 
-                    return;
+                    if (originalPath != "")
+                    {
+                        fileContent = File.ReadAllLines(originalPath);
+                        Consola.ClearEntireConsole();
+
+                        return;
+                    }
                 }
             }
         }
@@ -722,8 +717,7 @@ namespace CodeEditor
                 case "e":
 
                     originalPath = AutoCompletionLogic.AutoCompletion();
-                    fileContent = File.ReadAllLines(originalPath);
-                    ClearConsole();
+
                     break;
 
             }

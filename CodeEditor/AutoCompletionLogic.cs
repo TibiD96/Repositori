@@ -11,7 +11,7 @@ namespace CodeEditor
         public static string AutoCompletion()
         {
             (int, int) cursoPos = Console.GetCursorPosition();
-            Consola.ClearConsole(Console.WindowHeight - 12);
+            Consola.ClearPartOfConsole(Console.WindowHeight - 12);
             Console.SetCursorPosition(cursoPos.Item1, cursoPos.Item2);
 
             ConsoleKeyInfo key;
@@ -39,6 +39,11 @@ namespace CodeEditor
                     allFiles = FilesFromDirectory(search, allFiles);
                     Consola.ShowDirectoryContent(allFiles.ToArray());
                     Console.SetCursorPosition(cursoPos.Item1 + search.Length, Console.WindowHeight - 11);
+
+                    if (search.Length == 0)
+                    {
+                        lastValidDirect = Environment.CurrentDirectory;
+                    }
                 }
 
                 if (key.Key == ConsoleKey.Tab)
@@ -69,6 +74,11 @@ namespace CodeEditor
                     Consola.ShowDirectoryContent(allFiles.ToArray());
                     Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
                 }
+
+                if (key.Key == ConsoleKey.Backspace && search.Length == 0)
+                {
+                    return search;
+                }
             }
 
             return search;
@@ -82,7 +92,7 @@ namespace CodeEditor
 
             for (int i = 0; i < allFiles.Count; i++)
             {
-                if (allFiles[i].StartsWith(search))
+                if (Path.GetFileName(allFiles[i]).StartsWith(search) || allFiles[i].StartsWith(search))
                 {
                     posibilities++;
                     indexOfCompletion = i;
@@ -91,8 +101,18 @@ namespace CodeEditor
 
             if (posibilities == 1)
             {
+
+                if (lastValidDirect == Environment.CurrentDirectory)
+                {
+                    search = Path.GetFileName(allFiles[indexOfCompletion]);
+                }
+                else
+                {
+                    search = allFiles[indexOfCompletion];
+                }
+
                 Consola.ShowDirectoryContent(FilesFromDirectory(allFiles[indexOfCompletion], allFiles).ToArray());
-                return allFiles[indexOfCompletion];
+                return search;
             }
 
             return search;

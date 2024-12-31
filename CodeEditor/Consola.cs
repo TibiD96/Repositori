@@ -34,7 +34,7 @@ namespace CodeEditor
 
             string maximumNumberOfLines = Convert.ToString(file.Length - 1);
 
-            ClearConsole();
+            ClearPartOfConsole();
 
 
             for (int i = startingLine; i < Math.Min(file.Length, startingLine + visibleAreaHight); i++)
@@ -60,7 +60,7 @@ namespace CodeEditor
             Console.CursorVisible = true;
         }
 
-        public static void ClearConsole(int bottomLane = 0)
+        public static void ClearPartOfConsole(int bottomLane = 0)
         {
             const int topLane = 11;
             const int leftLane = 21;
@@ -87,6 +87,17 @@ namespace CodeEditor
 
                 Console.SetCursorPosition(leftLane, topLane);
             }
+        }
+
+        public static void ClearEntireConsole()
+        {
+            for (int i = Console.WindowHeight - 1; i >= 0; i--)
+            {
+                Console.SetCursorPosition(0, i);
+                Console.Write(new string(' ', Console.WindowWidth));
+            }
+
+            Console.SetCursorPosition(0, 0);
         }
 
         public static string GenerateLineIndex(bool fastTravelMode, int currentLine, int lineNumber, string maximumNumberOfLines)
@@ -169,7 +180,7 @@ namespace CodeEditor
                 slash = '/';
             }
 
-            ClearConsole(lastLine);
+            ClearPartOfConsole(lastLine);
             for (int i = 0; i < fileFromDirectory.Length && curentLine != lastLine; i++)
             {
                 Console.Write(Path.GetFileName(fileFromDirectory[i]));

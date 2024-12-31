@@ -9,7 +9,7 @@
             string search = "";
             (string, ConsoleKeyInfo) navigationResult;
 
-            Consola.ClearConsole();
+            Consola.ClearPartOfConsole();
             Consola.SearchContour();
             Consola.ShowValidResultsFuzzy(listOfValidFiles, listOfValidFiles.Count, "", allFiles.ToArray());
 
