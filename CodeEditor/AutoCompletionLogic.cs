@@ -13,6 +13,8 @@ namespace CodeEditor
             (int, int) cursoPos = Console.GetCursorPosition();
             Consola.ClearPartOfConsole(Console.WindowHeight - 12);
             Console.SetCursorPosition(cursoPos.Item1, cursoPos.Item2);
+            int left;
+            int top;
 
             ConsoleKeyInfo key;
             string search = "";
@@ -30,10 +32,8 @@ namespace CodeEditor
                 if (key.Key == ConsoleKey.Backspace && search.Length > 0)
                 {
                     search = search.Substring(0, search.Length - 1);
-                    Console.SetCursorPosition(cursoPos.Item1, Console.WindowHeight - 11);
-                    Console.Write(new string(' ', search.Length + 1));
-                    Console.SetCursorPosition(cursoPos.Item1, Console.WindowHeight - 11);
-                    Console.Write(search);
+
+                    CheckIfIsEnoughSpace(cursoPos.Item1, search);
 
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search, allFiles);
@@ -50,10 +50,7 @@ namespace CodeEditor
                 {
                     search = Completion(allFiles, search);
 
-                    Console.SetCursorPosition(cursoPos.Item1, Console.WindowHeight - 11);
-                    Console.Write(new string(' ', search.Length + 1));
-                    Console.SetCursorPosition(cursoPos.Item1, Console.WindowHeight - 11);
-                    Console.Write(search);
+                    CheckIfIsEnoughSpace(cursoPos.Item1,search);
 
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search, allFiles);
@@ -68,15 +65,20 @@ namespace CodeEditor
                 {
                     search += key.KeyChar;
 
+                    CheckIfIsEnoughSpace(cursoPos.Item1, search);
+
+                    left = Console.CursorLeft;
+                    
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search, allFiles);
 
                     Consola.ShowDirectoryContent(allFiles.ToArray());
-                    Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
+                    Console.SetCursorPosition(left, cursoPos.Item2);
                 }
 
                 if (key.Key == ConsoleKey.Backspace && search.Length == 0)
                 {
+                    Consola.ClearPartOfConsole(Console.WindowHeight - 12);
                     return search;
                 }
             }
@@ -133,6 +135,24 @@ namespace CodeEditor
             }
 
             return allFiles;
+        }
+
+        private static void CheckIfIsEnoughSpace(int startingPosition, string search)
+        {
+            int emptySpace = (Console.WindowWidth - 21) - (startingPosition + search.Length);
+
+            Console.SetCursorPosition(startingPosition, Console.WindowHeight - 11);
+            Console.Write(new string(' ', ((Console.WindowWidth - 20) - startingPosition)));
+            Console.SetCursorPosition(startingPosition, Console.WindowHeight - 11);
+
+            if (emptySpace >= 0)
+            {
+                Console.Write(search);
+            }
+            else
+            {
+                Console.Write(search[(emptySpace * -1)..]);
+            }
         }
 
     }

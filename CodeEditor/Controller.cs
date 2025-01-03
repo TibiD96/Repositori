@@ -604,6 +604,7 @@ namespace CodeEditor
             int bottomLane = Console.WindowHeight - 10;
             const int leftLane = 20;
             int rightLane = Console.WindowWidth - 20;
+            string commandToShow;
             while (!quit)
             {
                 Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
@@ -621,7 +622,8 @@ namespace CodeEditor
                     command = command + action.KeyChar;
                 }
 
-                string commandToShow = command;
+                commandToShow = command;
+
                 if (command.Length > rightLane - leftLane - 1)
                 {
                     commandToShow = command.Substring(command.Length - (rightLane - leftLane - 1));
@@ -642,9 +644,8 @@ namespace CodeEditor
                     }
                 }
 
-                if (action.Key == ConsoleKey.Spacebar && command.StartsWith('e'))
+                if (action.Key == ConsoleKey.Spacebar && (command == "e" || command == "edit"))
                 {
-
                     commandToShow = command + action.KeyChar;
                     Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
                     Console.Write(commandToShow);
@@ -658,6 +659,10 @@ namespace CodeEditor
 
                         return;
                     }
+
+                    command = command + action.KeyChar;
+
+                    action = new ConsoleKeyInfo('\0', ConsoleKey.Backspace, false, false, false);
                 }
             }
         }
