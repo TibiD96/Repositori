@@ -14,7 +14,6 @@ namespace CodeEditor
             Consola.ClearPartOfConsole(Console.WindowHeight - 12);
             Console.SetCursorPosition(cursoPos.Item1, cursoPos.Item2);
             int left;
-            int top;
 
             ConsoleKeyInfo key;
             string search = "";
@@ -24,7 +23,7 @@ namespace CodeEditor
 
             allFiles = FilesFromDirectory(search, allFiles);
 
-            Consola.ShowDirectoryContent(allFiles.ToArray());
+            Consola.ShowDirectoryContent(allFiles.ToArray(), search);
             Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
 
             while (key.Key != ConsoleKey.Enter)
@@ -35,10 +34,12 @@ namespace CodeEditor
 
                     CheckIfIsEnoughSpace(cursoPos.Item1, search);
 
+                    left = Console.CursorLeft;
+
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search, allFiles);
-                    Consola.ShowDirectoryContent(allFiles.ToArray());
-                    Console.SetCursorPosition(cursoPos.Item1 + search.Length, Console.WindowHeight - 11);
+                    Consola.ShowDirectoryContent(allFiles.ToArray(), search);
+                    Console.SetCursorPosition(left, Console.WindowHeight - 11);
 
                     if (search.Length == 0)
                     {
@@ -52,11 +53,13 @@ namespace CodeEditor
 
                     CheckIfIsEnoughSpace(cursoPos.Item1,search);
 
+                    left = Console.CursorLeft;
+
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search, allFiles);
 
-                    Consola.ShowDirectoryContent(allFiles.ToArray());
-                    Console.SetCursorPosition(cursoPos.Item1 + search.Length, Console.WindowHeight - 11);
+                    Consola.ShowDirectoryContent(allFiles.ToArray(), search);
+                    Console.SetCursorPosition(left, Console.WindowHeight - 11);
                 }
 
                 key = Console.ReadKey();
@@ -72,7 +75,7 @@ namespace CodeEditor
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search, allFiles);
 
-                    Consola.ShowDirectoryContent(allFiles.ToArray());
+                    Consola.ShowDirectoryContent(allFiles.ToArray(), search);
                     Console.SetCursorPosition(left, cursoPos.Item2);
                 }
 
@@ -113,7 +116,7 @@ namespace CodeEditor
                     search = allFiles[indexOfCompletion];
                 }
 
-                Consola.ShowDirectoryContent(FilesFromDirectory(allFiles[indexOfCompletion], allFiles).ToArray());
+                Consola.ShowDirectoryContent(FilesFromDirectory(allFiles[indexOfCompletion], allFiles).ToArray(), search);
                 return search;
             }
 

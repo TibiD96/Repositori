@@ -160,7 +160,7 @@ namespace CodeEditor
             }
         }
 
-        public static void ShowDirectoryContent(string[] fileFromDirectory)
+        public static void ShowDirectoryContent(string[] fileFromDirectory, string search)
         {
             char slash;
             int curentLine = 11;
@@ -181,17 +181,23 @@ namespace CodeEditor
             }
 
             ClearPartOfConsole(lastLine);
+
             for (int i = 0; i < fileFromDirectory.Length && curentLine != lastLine; i++)
             {
-                Console.Write(Path.GetFileName(fileFromDirectory[i]));
-
-                if (Directory.Exists(fileFromDirectory[i]))
+                if (Path.GetFileName(fileFromDirectory[i]).StartsWith(search) || fileFromDirectory[i].StartsWith(search))
                 {
-                    Console.Write(slash);
+
+                    Console.Write(Path.GetFileName(fileFromDirectory[i]));
+
+                    if (Directory.Exists(fileFromDirectory[i]))
+                    {
+                        Console.Write(slash);
+                    }
+
+                    curentLine++;
+                    Console.SetCursorPosition(leftLane, curentLine);
                 }
 
-                curentLine++;
-                Console.SetCursorPosition(leftLane, curentLine);
             }
         }
 
