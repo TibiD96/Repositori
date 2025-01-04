@@ -610,6 +610,11 @@ namespace CodeEditor
                 Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
                 Console.Write(new string(' ', rightLane - leftLane - 1));
 
+                if (action.Key == ConsoleKey.Escape)
+                {
+                    return;
+                }
+
                 if (action.Key == ConsoleKey.Backspace)
                 {
                     if (command.Length > 0)
@@ -633,6 +638,7 @@ namespace CodeEditor
                 Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
                 Console.Write(commandToShow);
                 Console.SetCursorPosition(commandToShow.Length + leftLane + 1, Console.CursorTop);
+
                 action = Console.ReadKey(true);
 
                 if (action.Key == ConsoleKey.Enter)
