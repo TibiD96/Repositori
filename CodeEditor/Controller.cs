@@ -660,6 +660,12 @@ namespace CodeEditor
                         return;
                     }
 
+                    if(quit)
+                    {
+                        quit = false;
+                        return;
+                    }
+
                     command = command + action.KeyChar;
 
                     action = new ConsoleKeyInfo('\0', ConsoleKey.Backspace, false, false, false);
@@ -721,7 +727,9 @@ namespace CodeEditor
 
                 case "e":
 
-                    originalPath = AutoCompletionLogic.AutoCompletion();
+                    (string, bool) autoCompResult = AutoCompletionLogic.AutoCompletion();
+                    originalPath = autoCompResult.Item1;
+                    quit = autoCompResult.Item2;
 
                     break;
 

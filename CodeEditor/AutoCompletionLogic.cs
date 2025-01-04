@@ -8,7 +8,7 @@ namespace CodeEditor
     {
         private static string lastValidDirect = Environment.CurrentDirectory;
 
-        public static string AutoCompletion()
+        public static (string, bool) AutoCompletion()
         {
             (int, int) cursoPos = Console.GetCursorPosition();
             Consola.ClearPartOfConsole(Console.WindowHeight - 12);
@@ -82,11 +82,16 @@ namespace CodeEditor
                 if (key.Key == ConsoleKey.Backspace && search.Length == 0)
                 {
                     Consola.ClearPartOfConsole(Console.WindowHeight - 12);
-                    return search;
+                    return (search, false);
+                }
+
+                if (key.Key == ConsoleKey.Escape)
+                {
+                    return ("", true);
                 }
             }
 
-            return search;
+            return (search, false);
 
         }
 
