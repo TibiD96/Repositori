@@ -7,22 +7,27 @@ namespace CodeEditor
     public class AutoCompletionLogic
     {
         private static string lastValidDirect = Environment.CurrentDirectory;
+        private static string search = "";
 
         public static (string, bool) AutoCompletion()
         {
             (int, int) cursoPos = Console.GetCursorPosition();
-            Consola.ClearPartOfConsole(Console.WindowHeight - 12);
-            Console.SetCursorPosition(cursoPos.Item1, cursoPos.Item2);
-            int left;
+            Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
+            int left = 0;
 
             ConsoleKeyInfo key;
-            string search = "";
             key = Console.ReadKey();
-            search += key.KeyChar;
+
+            if (key.Key != ConsoleKey.Enter)
+            {
+                search += key.KeyChar;
+            }
+
             List<string> allFiles = new List<string>();
 
             allFiles = FilesFromDirectory(search, allFiles);
 
+            Consola.ClearPartOfConsole(Console.WindowHeight - 12);
             Consola.ShowDirectoryContent(allFiles.ToArray(), search);
             Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
 
@@ -89,6 +94,12 @@ namespace CodeEditor
                 {
                     return ("", true);
                 }
+            }
+
+            if (!File.Exists(search))
+            {
+                Console.SetCursorPosition(cursoPos.Item1, cursoPos.Item2);
+                AutoCompletion();
             }
 
             return (search, false);
