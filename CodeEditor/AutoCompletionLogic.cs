@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace CodeEditor
@@ -28,7 +29,7 @@ namespace CodeEditor
             allFiles = FilesFromDirectory(search, allFiles);
 
             Consola.ClearPartOfConsole(Console.WindowHeight - 12);
-            Consola.ShowDirectoryContent(allFiles.ToArray(), search);
+            Consola.ShowDirectoryContent(allFiles.ToArray());
             Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
 
             while (key.Key != ConsoleKey.Enter)
@@ -43,7 +44,7 @@ namespace CodeEditor
 
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search, allFiles);
-                    Consola.ShowDirectoryContent(allFiles.ToArray(), search);
+                    Consola.ShowDirectoryContent(allFiles.ToArray());
                     Console.SetCursorPosition(left, Console.WindowHeight - 11);
 
                     if (search.Length == 0)
@@ -63,7 +64,7 @@ namespace CodeEditor
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search, allFiles);
 
-                    Consola.ShowDirectoryContent(allFiles.ToArray(), search);
+                    Consola.ShowDirectoryContent(allFiles.ToArray());
                     Console.SetCursorPosition(left, Console.WindowHeight - 11);
                 }
 
@@ -80,7 +81,7 @@ namespace CodeEditor
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search, allFiles);
 
-                    Consola.ShowDirectoryContent(allFiles.ToArray(), search);
+                    Consola.ShowDirectoryContent(allFiles.ToArray());
                     Console.SetCursorPosition(left, cursoPos.Item2);
                 }
 
@@ -130,9 +131,18 @@ namespace CodeEditor
                 else
                 {
                     search = allFiles[indexOfCompletion];
+
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        search += '\\';
+                    }
+                    else
+                    {
+                        search += '/';
+                    }
                 }
 
-                Consola.ShowDirectoryContent(FilesFromDirectory(allFiles[indexOfCompletion], allFiles).ToArray(), search);
+                Consola.ShowDirectoryContent(FilesFromDirectory(allFiles[indexOfCompletion], allFiles).ToArray());
                 return search;
             }
 
@@ -149,8 +159,8 @@ namespace CodeEditor
             }
             else if (lastValidDirect != "")
             {
-                allFiles.AddRange(Directory.GetDirectories(lastValidDirect));
-                allFiles.AddRange(Directory.GetFiles(lastValidDirect));
+                allFiles.AddRange(Directory.GetDirectories(lastValidDirect).Where(dir => dir.StartsWith(search)));
+                allFiles.AddRange(Directory.GetFiles(lastValidDirect).Where(file => file.StartsWith(search)));
             }
 
             return allFiles;
