@@ -160,12 +160,13 @@ namespace CodeEditor
             }
         }
 
-        public static void ShowDirectoryContent(string[] fileFromDirectory)
+        public static void ShowDirectoryContent(string[] fileFromDirectory, int startingIndex = 0, int highlighIndex = 0)
         {
             char slash;
             int curentLine = 11;
             const int leftLane = 21;
             int lastLine = Console.WindowHeight - 12;
+            int highlight = 0;
             if (fileFromDirectory == null)
             {
                 return;
@@ -182,8 +183,13 @@ namespace CodeEditor
 
             ClearPartOfConsole(lastLine);
 
-            for (int i = 0; i < fileFromDirectory.Length && curentLine != lastLine; i++)
+            for (int i = startingIndex; i < fileFromDirectory.Length && curentLine != lastLine; i++)
             {
+                if (highlight == highlighIndex)
+                {
+                    Console.BackgroundColor = ConsoleColor.Blue;
+                }
+
                 Console.Write(Path.GetFileName(fileFromDirectory[i]));
 
                 if (Directory.Exists(fileFromDirectory[i]))
@@ -193,7 +199,8 @@ namespace CodeEditor
 
                 curentLine++;
                 Console.SetCursorPosition(leftLane, curentLine);
-
+                Console.ResetColor();
+                highlight++;
             }
         }
 

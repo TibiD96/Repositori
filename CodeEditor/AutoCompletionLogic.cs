@@ -9,6 +9,9 @@ namespace CodeEditor
     {
         private static string lastValidDirect = Environment.CurrentDirectory;
         private static string search = "";
+        private static int highlightIndex = 0;
+        private static int startingIndex = 0;
+        private static int completion = 0;
 
         public static (string, bool) AutoCompletion()
         {
@@ -18,6 +21,8 @@ namespace CodeEditor
 
             ConsoleKeyInfo key;
             key = Console.ReadKey();
+
+            left = Console.CursorLeft;
 
             if (key.Key != ConsoleKey.Enter)
             {
@@ -29,7 +34,7 @@ namespace CodeEditor
             allFiles = FilesFromDirectory(search, allFiles);
 
             Consola.ClearPartOfConsole(Console.WindowHeight - 12);
-            Consola.ShowDirectoryContent(allFiles.ToArray());
+            Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
             Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
 
             while (key.Key != ConsoleKey.Enter)
@@ -44,7 +49,7 @@ namespace CodeEditor
 
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search, allFiles);
-                    Consola.ShowDirectoryContent(allFiles.ToArray());
+                    Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
                     Console.SetCursorPosition(left, Console.WindowHeight - 11);
 
                     if (search.Length == 0)
@@ -53,7 +58,7 @@ namespace CodeEditor
                     }
                 }
 
-                if (key.Key == ConsoleKey.Tab)
+                if (key.Key == ConsoleKey.Tab && key.Modifiers != ConsoleModifiers.Shift)
                 {
                     search = Completion(allFiles, search);
 
@@ -64,7 +69,7 @@ namespace CodeEditor
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search, allFiles);
 
-                    Consola.ShowDirectoryContent(allFiles.ToArray());
+                    Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
                     Console.SetCursorPosition(left, Console.WindowHeight - 11);
                 }
 
@@ -81,8 +86,14 @@ namespace CodeEditor
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search, allFiles);
 
-                    Consola.ShowDirectoryContent(allFiles.ToArray());
+                    Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
                     Console.SetCursorPosition(left, cursoPos.Item2);
+                }
+
+                if ((key.Key == ConsoleKey.Tab && key.Modifiers == ConsoleModifiers.Shift))
+                {
+                    AutocomplitinChooser(allFiles);
+                    Console.SetCursorPosition(left, Console.WindowHeight - 11);
                 }
 
                 if (key.Key == ConsoleKey.Backspace && search.Length == 0)
@@ -109,43 +120,25 @@ namespace CodeEditor
 
         private static string Completion(List<string> allFiles, string search)
         {
-            int posibilities = 0;
-            int indexOfCompletion = 0;
-
-            for (int i = 0; i < allFiles.Count; i++)
+            if (lastValidDirect == Environment.CurrentDirectory)
             {
-                if (Path.GetFileName(allFiles[i]).StartsWith(search) || allFiles[i].StartsWith(search))
+                search = Path.GetFileName(allFiles[completion]);
+            }
+            else
+            {
+                search = allFiles[completion];
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && Directory.Exists(search))
                 {
-                    posibilities++;
-                    indexOfCompletion = i;
+                    search += '\\';
+                }
+                else if (Directory.Exists(search))
+                {
+                    search += '/';
                 }
             }
 
-            if (posibilities == 1)
-            {
-
-                if (lastValidDirect == Environment.CurrentDirectory)
-                {
-                    search = Path.GetFileName(allFiles[indexOfCompletion]);
-                }
-                else
-                {
-                    search = allFiles[indexOfCompletion];
-
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        search += '\\';
-                    }
-                    else
-                    {
-                        search += '/';
-                    }
-                }
-
-                Consola.ShowDirectoryContent(FilesFromDirectory(allFiles[indexOfCompletion], allFiles).ToArray());
-                return search;
-            }
-
+            Consola.ShowDirectoryContent(allFiles.ToArray());
             return search;
         }
 
@@ -156,11 +149,18 @@ namespace CodeEditor
                 lastValidDirect = search;
                 allFiles.AddRange(Directory.GetDirectories(search));
                 allFiles.AddRange(Directory.GetFiles(search));
+                highlightIndex = 0;
+                startingIndex = 0;
+                completion = 0;
             }
             else if (lastValidDirect != "")
             {
                 allFiles.AddRange(Directory.GetDirectories(lastValidDirect).Where(dir => dir.StartsWith(search)));
                 allFiles.AddRange(Directory.GetFiles(lastValidDirect).Where(file => file.StartsWith(search)));
+                allFiles.AddRange(Directory.GetFiles(lastValidDirect).Where(file => Path.GetFileName(file).StartsWith(search)));
+                highlightIndex = 0;
+                startingIndex = 0;
+                completion = 0;
             }
 
             return allFiles;
@@ -182,6 +182,30 @@ namespace CodeEditor
             {
                 Console.Write(search[(emptySpace * -1)..]);
             }
+        }
+
+        private static void AutocomplitinChooser(List<string> allFiles)
+        {
+            if (highlightIndex < allFiles.Count)
+            {
+                highlightIndex++;
+                completion++;
+            }
+
+            if (highlightIndex == 7 && allFiles.Count > highlightIndex)
+            {
+                highlightIndex--;
+                startingIndex++;
+            }
+
+            if (completion == allFiles.Count)
+            {
+                highlightIndex = 0;
+                startingIndex = 0;
+                completion = 0;
+            }
+
+            Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
         }
 
     }
