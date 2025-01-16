@@ -12,6 +12,7 @@ namespace CodeEditor
         private static int highlightIndex = 0;
         private static int startingIndex = 0;
         private static int completion = 0;
+        private static bool quite = false;
 
         public static (string, bool) AutoCompletion()
         {
@@ -33,13 +34,13 @@ namespace CodeEditor
 
             while (key.Key != ConsoleKey.Enter)
             {
-                if (key.Key == ConsoleKey.Backspace && search.Length > 0)
+                if (key.Key == ConsoleKey.Backspace)
                 {
                     if (search.Length > 0)
                     {
                         search = search.Substring(0, search.Length - 1);
 
-                        CheckIfIsEnoughSpace(cursoPos.Item1, search);
+                        CheckIfIsEnoughSpace(cursoPos.Item1);
 
                         left = Console.CursorLeft;
 
@@ -63,7 +64,7 @@ namespace CodeEditor
                 if (key.Key == ConsoleKey.Tab)
                 {
                     AutocomplitinChooser(allFiles, key.Modifiers);
-                    CheckIfIsEnoughSpace(cursoPos.Item1, search);
+                    CheckIfIsEnoughSpace(cursoPos.Item1);
 
                     left = Console.CursorLeft;
 
@@ -72,14 +73,17 @@ namespace CodeEditor
 
                 if (key.Key == ConsoleKey.Escape)
                 {
-                    return ("", true);
+                    Console.Write("1");
+                    search = "";
+                    quite = true;
+                    return ("", quite);
                 }
 
                 if (key.Key != ConsoleKey.Tab && key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
                 {
                     search += key.KeyChar;
 
-                    CheckIfIsEnoughSpace(cursoPos.Item1, search);
+                    CheckIfIsEnoughSpace(cursoPos.Item1);
 
                     left = Console.CursorLeft;
                     
@@ -106,12 +110,12 @@ namespace CodeEditor
                 AutoCompletion();
             }
 
-            return (search, false);
+            return (search, quite);
 
         }
 
         private static void Completion(List<string> allFiles)
-        {
+            {
             if (lastValidDirect == Environment.CurrentDirectory)
             {
                 search = Path.GetFileName(allFiles[completion]);
@@ -157,7 +161,7 @@ namespace CodeEditor
             return allFiles;
         }
 
-        private static void CheckIfIsEnoughSpace(int startingPosition, string search)
+        private static void CheckIfIsEnoughSpace(int startingPosition)
         {
             int emptySpace = (Console.WindowWidth - 21) - (startingPosition + search.Length);
 
