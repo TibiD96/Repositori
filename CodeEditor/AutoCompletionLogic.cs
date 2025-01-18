@@ -19,12 +19,20 @@ namespace CodeEditor
             (int, int) cursoPos = Console.GetCursorPosition();
             Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
             ConsoleKeyInfo key;
-
+            quite = false;
+            lastValidDirect = Environment.CurrentDirectory;
             int left = Console.CursorLeft;
 
             List<string> allFiles = new List<string>();
 
-            allFiles = FilesFromDirectory(lastValidDirect, allFiles);
+            if (search == "")
+            {
+                allFiles = FilesFromDirectory(lastValidDirect, allFiles);
+            }
+            else
+            {
+                allFiles = FilesFromDirectory(search, allFiles);
+            }
 
             Consola.ClearPartOfConsole(Console.WindowHeight - 12);
             Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
@@ -75,14 +83,13 @@ namespace CodeEditor
                 {
                     Console.Write("1");
                     search = "";
+                    lastValidDirect = search;
                     quite = true;
                     return ("", quite);
                 }
 
                 if (key.Key != ConsoleKey.Tab && key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
                 {
-                    search += key.KeyChar;
-
                     CheckIfIsEnoughSpace(cursoPos.Item1);
 
                     left = Console.CursorLeft;
@@ -91,6 +98,18 @@ namespace CodeEditor
                     allFiles = FilesFromDirectory(search, allFiles);
 
                     Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
+
+                    search += key.KeyChar;
+
+                    CheckIfIsEnoughSpace(cursoPos.Item1);
+
+                    left = Console.CursorLeft;
+
+                    allFiles.Clear();
+                    allFiles = FilesFromDirectory(search, allFiles);
+
+                    Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
+
                     Console.SetCursorPosition(left, cursoPos.Item2);
                 }
 
@@ -109,8 +128,12 @@ namespace CodeEditor
                 Console.SetCursorPosition(cursoPos.Item1, cursoPos.Item2);
                 AutoCompletion();
             }
-
-            return (search, quite);
+            else
+            {
+                lastValidDirect = search;
+                search = "";
+            }
+            return (lastValidDirect, quite);
 
         }
 

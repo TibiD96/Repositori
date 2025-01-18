@@ -648,33 +648,25 @@ namespace CodeEditor
                     {
                         return;
                     }
-                }
 
-                if (action.Key == ConsoleKey.Spacebar && (command == "e" || command == "edit"))
-                {
-                    commandToShow = command + action.KeyChar;
-                    Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
-                    Console.Write(commandToShow);
-                    Console.SetCursorPosition(commandToShow.Length + leftLane + 1, Console.CursorTop);
-                    Commands(ref command, ref quit, fileLastVersion, fileOriginalVersion, lastPath);
-
-                    if (originalPath != "")
+                    if (command == "e" || command == "edit")
                     {
-                        fileContent = File.ReadAllLines(originalPath);
-                        Consola.ClearEntireConsole();
+                        if (originalPath != "")
+                        {
+                            fileContent = File.ReadAllLines(originalPath);
+                            Consola.ClearEntireConsole();
 
-                        return;
+                            return;
+                        }
+
+                        if (quit)
+                        {
+                            quit = false;
+                            return;
+                        }
+
+                        action = new ConsoleKeyInfo('\0', ConsoleKey.Backspace, false, false, false);
                     }
-
-                    if(quit)
-                    {
-                        quit = false;
-                        return;
-                    }
-
-                    command = command + action.KeyChar;
-
-                    action = new ConsoleKeyInfo('\0', ConsoleKey.Backspace, false, false, false);
                 }
             }
         }
@@ -732,11 +724,11 @@ namespace CodeEditor
                 case "edit":
 
                 case "e":
-
+                    Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
                     (string, bool) autoCompResult = AutoCompletionLogic.AutoCompletion();
                     originalPath = autoCompResult.Item1;
                     quit = autoCompResult.Item2;
-
+                    
                     break;
 
             }
