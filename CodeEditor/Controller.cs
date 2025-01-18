@@ -599,16 +599,24 @@ namespace CodeEditor
         private static void CommandMode(ref bool quit, string[] fileLastVersion, string[] fileOriginalVersion, string lastPath)
         {
             Consola.CommandModeContour();
-            ConsoleKeyInfo action = Console.ReadKey(true);
             string command = "";
             int bottomLane = Console.WindowHeight - 10;
             const int leftLane = 20;
             int rightLane = Console.WindowWidth - 20;
             string commandToShow;
+
+            Consola.ShowDirectoryContent([.. Config.Commands]);
+            Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
+            ConsoleKeyInfo action = Console.ReadKey(true);
             while (!quit)
             {
                 Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
                 Console.Write(new string(' ', rightLane - leftLane - 1));
+
+                if (action.Key == ConsoleKey.Tab)
+                {
+                    command = CommadnModeAutoCompletion.AutoCompletion(command, action);
+                }
 
                 if (action.Key == ConsoleKey.Escape)
                 {
@@ -622,7 +630,7 @@ namespace CodeEditor
                         command = command.Substring(0, command.Length - 1);
                     }
                 }
-                else if (action.Key != ConsoleKey.Enter)
+                else if (char.IsLetter((char)action.Key) || char.IsDigit((char)action.Key))
                 {
                     command = command + action.KeyChar;
                 }
