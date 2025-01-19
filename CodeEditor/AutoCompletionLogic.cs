@@ -65,6 +65,8 @@ namespace CodeEditor
                     else
                     {
                         Consola.ClearPartOfConsole(Console.WindowHeight - 12);
+                        search = "";
+                        lastValidDirect = search;
                         return (search, false);
                     }
                 }
@@ -91,8 +93,6 @@ namespace CodeEditor
                 if (key.Key != ConsoleKey.Tab && key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
                 {
                     CheckIfIsEnoughSpace(cursoPos.Item1);
-
-                    left = Console.CursorLeft;
                     
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search, allFiles);

@@ -21,7 +21,6 @@ namespace CodeEditor
             int left;
 
             Consola.ClearPartOfConsole(Console.WindowHeight - 12);
-            Consola.ShowDirectoryContent([.. Config.Commands], startingPoint, highlightPoint);
             Console.SetCursorPosition(cursoPos.Item1 + command.Length, cursoPos.Item2);
 
             AutocomplitinChooser(Config.Commands, key.Modifiers, ref command);
@@ -76,8 +75,6 @@ namespace CodeEditor
             }
 
             command = commands[curentCompletion];
-
-            Consola.ShowDirectoryContent([.. commands], startingPoint, highlightPoint);
         }
     }
 }

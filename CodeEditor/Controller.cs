@@ -605,7 +605,6 @@ namespace CodeEditor
             int rightLane = Console.WindowWidth - 20;
             string commandToShow;
 
-            Consola.ShowDirectoryContent([.. Config.Commands]);
             Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
             ConsoleKeyInfo action = Console.ReadKey(true);
             while (!quit)
@@ -647,6 +646,29 @@ namespace CodeEditor
                 Console.Write(commandToShow);
                 Console.SetCursorPosition(commandToShow.Length + leftLane + 1, Console.CursorTop);
 
+                if (command == "e" || command == "edit")
+                {
+                    Commands(ref command, ref quit, fileLastVersion, fileOriginalVersion, lastPath);
+                    if (originalPath != "")
+                    {
+                        fileContent = File.ReadAllLines(originalPath);
+                        Consola.ClearEntireConsole();
+
+                        return;
+                    }
+
+                    if (quit)
+                    {
+                        quit = false;
+                        return;
+                    }
+
+                    command = command.Substring(0, command.Length - 1);
+
+                    Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
+                    Console.Write(commandToShow);
+                }
+
                 action = Console.ReadKey(true);
 
                 if (action.Key == ConsoleKey.Enter)
@@ -655,25 +677,6 @@ namespace CodeEditor
                     if (command.Contains('w'))
                     {
                         return;
-                    }
-
-                    if (command == "e" || command == "edit")
-                    {
-                        if (originalPath != "")
-                        {
-                            fileContent = File.ReadAllLines(originalPath);
-                            Consola.ClearEntireConsole();
-
-                            return;
-                        }
-
-                        if (quit)
-                        {
-                            quit = false;
-                            return;
-                        }
-
-                        action = new ConsoleKeyInfo('\0', ConsoleKey.Backspace, false, false, false);
                     }
                 }
             }
