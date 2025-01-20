@@ -4,6 +4,6 @@
     {
         public static bool FastTravel { get; } = true;
 
-        public static List<string> Commands { get; } = ["e", "edit", "q", "quit", "q!", "quit!", "w", "write"];
+        public static List<string> Commands { get; } = ["edit", "quit", "quit!", "write"];
     }
 }

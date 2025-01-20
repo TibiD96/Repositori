@@ -27,11 +27,11 @@ namespace CodeEditor
 
             if (search == "")
             {
-                allFiles = FilesFromDirectory(lastValidDirect, allFiles);
+                allFiles = FilesFromDirectory(lastValidDirect);
             }
             else
             {
-                allFiles = FilesFromDirectory(search, allFiles);
+                allFiles = FilesFromDirectory(search);
             }
 
             Consola.ClearPartOfConsole(Console.WindowHeight - 12);
@@ -53,7 +53,7 @@ namespace CodeEditor
                         left = Console.CursorLeft;
 
                         allFiles.Clear();
-                        allFiles = FilesFromDirectory(search, allFiles);
+                        allFiles = FilesFromDirectory(search);
                         Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
                         Console.SetCursorPosition(left, Console.WindowHeight - 11);
 
@@ -93,9 +93,9 @@ namespace CodeEditor
                 if (key.Key != ConsoleKey.Tab && key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
                 {
                     CheckIfIsEnoughSpace(cursoPos.Item1);
-                    
+
                     allFiles.Clear();
-                    allFiles = FilesFromDirectory(search, allFiles);
+                    allFiles = FilesFromDirectory(search);
 
                     Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
 
@@ -106,7 +106,7 @@ namespace CodeEditor
                     left = Console.CursorLeft;
 
                     allFiles.Clear();
-                    allFiles = FilesFromDirectory(search, allFiles);
+                    allFiles = FilesFromDirectory(search);
 
                     Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
 
@@ -120,7 +120,7 @@ namespace CodeEditor
             if (!File.Exists(search))
             {
                 allFiles.Clear();
-                allFiles = FilesFromDirectory(search, allFiles);
+                allFiles = FilesFromDirectory(search);
 
                 Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
                 Console.SetCursorPosition(left, cursoPos.Item2);
@@ -135,6 +135,31 @@ namespace CodeEditor
             }
             return (lastValidDirect, quite);
 
+        }
+
+        public static List<string> FilesFromDirectory(string search)
+        {
+            List<string> files = new List<string>();
+            if (Directory.Exists(search))
+            {
+                lastValidDirect = search;
+                files.AddRange(Directory.GetDirectories(search));
+                files.AddRange(Directory.GetFiles(search));
+                highlightIndex = 0;
+                startingIndex = 0;
+                completion = 0;
+            }
+            else if (lastValidDirect != "")
+            {
+                files.AddRange(Directory.GetDirectories(lastValidDirect).Where(dir => dir.StartsWith(search)));
+                files.AddRange(Directory.GetFiles(lastValidDirect).Where(file => file.StartsWith(search)));
+                files.AddRange(Directory.GetFiles(lastValidDirect).Where(file => Path.GetFileName(file).StartsWith(search)));
+                highlightIndex = 0;
+                startingIndex = 0;
+                completion = 0;
+            }
+
+            return files;
         }
 
         private static void Completion(List<string> allFiles)
@@ -158,30 +183,6 @@ namespace CodeEditor
             }
 
             Consola.ShowDirectoryContent(allFiles.ToArray());
-        }
-
-        private static List<string> FilesFromDirectory(string search, List<string> allFiles)
-        {
-            if (Directory.Exists(search))
-            {
-                lastValidDirect = search;
-                allFiles.AddRange(Directory.GetDirectories(search));
-                allFiles.AddRange(Directory.GetFiles(search));
-                highlightIndex = 0;
-                startingIndex = 0;
-                completion = 0;
-            }
-            else if (lastValidDirect != "")
-            {
-                allFiles.AddRange(Directory.GetDirectories(lastValidDirect).Where(dir => dir.StartsWith(search)));
-                allFiles.AddRange(Directory.GetFiles(lastValidDirect).Where(file => file.StartsWith(search)));
-                allFiles.AddRange(Directory.GetFiles(lastValidDirect).Where(file => Path.GetFileName(file).StartsWith(search)));
-                highlightIndex = 0;
-                startingIndex = 0;
-                completion = 0;
-            }
-
-            return allFiles;
         }
 
         private static void CheckIfIsEnoughSpace(int startingPosition)

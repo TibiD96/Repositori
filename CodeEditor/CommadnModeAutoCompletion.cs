@@ -11,7 +11,6 @@ namespace CodeEditor
     public class CommadnModeAutoCompletion
     {
         private static int highlightPoint = 0;
-        private static int startingPoint = 0;
         private static int curentCompletion = 0;
         public static string AutoCompletion(string command, ConsoleKeyInfo key)
         {
@@ -46,7 +45,6 @@ namespace CodeEditor
                 if (highlightPoint == 7 && commands.Count > highlightPoint)
                 {
                     highlightPoint--;
-                    startingPoint++;
                 }
             }
             else
@@ -61,7 +59,6 @@ namespace CodeEditor
                 {
                     if (highlightPoint == 0 && curentCompletion > highlightPoint)
                     {
-                        startingPoint--;
                         curentCompletion--;
                     }
                 }
@@ -70,7 +67,6 @@ namespace CodeEditor
             if (curentCompletion == commands.Count)
             {
                 highlightPoint = 0;
-                startingPoint = 0;
                 curentCompletion = 0;
             }
 
