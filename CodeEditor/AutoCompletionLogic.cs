@@ -14,7 +14,7 @@ namespace CodeEditor
         private static int completion = 0;
         private static bool quite = false;
 
-        public static (string, bool) AutoCompletion()
+        public static (string, bool) AutoCompletion(ConsoleKeyInfo action = default)
         {
             (int, int) cursoPos = Console.GetCursorPosition();
             Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
@@ -23,7 +23,7 @@ namespace CodeEditor
             lastValidDirect = Environment.CurrentDirectory;
             int left = Console.CursorLeft;
 
-            List<string> allFiles = new List<string>();
+            List<string> allFiles;
 
             if (search == "")
             {
@@ -38,7 +38,14 @@ namespace CodeEditor
             Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
             Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
 
-            key = Console.ReadKey();
+            if (action == default)
+            {
+                key = Console.ReadKey();
+            }
+            else
+            {
+                key = action;
+            }
 
             while (key.Key != ConsoleKey.Enter)
             {

@@ -612,7 +612,7 @@ namespace CodeEditor
                 Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
                 Console.Write(new string(' ', rightLane - leftLane - 1));
 
-                if (action.Key == ConsoleKey.Tab)
+                if (action.Key == ConsoleKey.Tab && command != "")
                 {
                     command = CommadnModeAutoCompletion.AutoCompletion(command, action);
                 }
@@ -627,11 +627,31 @@ namespace CodeEditor
                     if (command.Length > 0)
                     {
                         command = command.Substring(0, command.Length - 1);
+
+                        List<string> validCommands = Config.Commands.Where(value => !string.IsNullOrEmpty(command) && value.StartsWith(command)).ToList();
+
+                        Consola.ClearPartOfConsole(Console.WindowHeight - 12);
+                        int left = Console.CursorLeft;
+                        for (int i = 0; i < validCommands.Count; i++)
+                        {
+                            Console.Write(validCommands[i]);
+                            Console.SetCursorPosition(left, Console.CursorTop + 1);
+                        }
                     }
                 }
                 else if (char.IsLetter((char)action.Key) || char.IsDigit((char)action.Key))
                 {
-                    command = command + action.KeyChar;
+                    command += action.KeyChar;
+
+                    List<string> validCommands = Config.Commands.Where(value => !string.IsNullOrEmpty(command) && value.StartsWith(command)).ToList();
+
+                    Consola.ClearPartOfConsole(Console.WindowHeight - 12);
+                    int left = Console.CursorLeft;
+                    for (int i = 0; i < validCommands.Count; i++)
+                    {
+                        Console.Write(validCommands[i]);
+                        Console.SetCursorPosition(left, Console.CursorTop + 1);
+                    }
                 }
 
                 commandToShow = command;
@@ -641,7 +661,6 @@ namespace CodeEditor
                     commandToShow = command.Substring(command.Length - (rightLane - leftLane - 1));
                 }
 
-                Consola.ClearPartOfConsole(Console.WindowHeight - 12);
                 Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
                 Console.Write(commandToShow);
                 Console.SetCursorPosition(commandToShow.Length + leftLane + 1, Console.CursorTop);
@@ -650,20 +669,16 @@ namespace CodeEditor
                 {
                     Consola.ShowDirectoryContent([.. (AutoCompletionLogic.FilesFromDirectory(Environment.CurrentDirectory))]);
                     Console.SetCursorPosition(leftLane + 1 + command.Length, bottomLane - 1);
-                }
 
-                action = Console.ReadKey(true);
+                    action = Console.ReadKey(true);
 
-                if (action.Key == ConsoleKey.Enter)
-                {
-                    Commands(ref command, ref quit, fileLastVersion, fileOriginalVersion, lastPath);
-                    if (command.Contains('w'))
+                    if (action.Key == ConsoleKey.Tab)
                     {
-                        return;
-                    }
+                        Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
+                        (string, bool) autoCompResult = AutoCompletionLogic.AutoCompletion(action);
+                        originalPath = autoCompResult.Item1;
+                        quit = autoCompResult.Item2;
 
-                    if (command == "e" || command == "edit")
-                    {
                         if (originalPath != "")
                         {
                             fileContent = File.ReadAllLines(originalPath);
@@ -678,10 +693,24 @@ namespace CodeEditor
                             return;
                         }
 
+                        Consola.ClearPartOfConsole(Console.WindowHeight - 12);
                         command = command.Substring(0, command.Length - 1);
-
                         Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
                         Console.Write(commandToShow);
+
+                    }
+                }
+                else
+                {
+                    action = Console.ReadKey(true);
+                }
+
+                if (action.Key == ConsoleKey.Enter)
+                {
+                    Commands(ref command, ref quit, fileLastVersion, fileOriginalVersion, lastPath);
+                    if (command.Contains('w'))
+                    {
+                        return;
                     }
                 }
             }
