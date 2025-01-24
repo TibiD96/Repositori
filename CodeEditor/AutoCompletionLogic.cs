@@ -67,6 +67,10 @@ namespace CodeEditor
                         if (search.Length == 0)
                         {
                             lastValidDirect = Environment.CurrentDirectory;
+                            allFiles.Clear();
+                            allFiles = FilesFromDirectory(lastValidDirect);
+                            Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
+                            Console.SetCursorPosition(left, Console.WindowHeight - 11);
                         }
                     }
                     else
