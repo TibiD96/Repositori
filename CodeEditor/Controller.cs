@@ -665,15 +665,14 @@ namespace CodeEditor
                 Console.Write(commandToShow);
                 Console.SetCursorPosition(commandToShow.Length + leftLane + 1, Console.CursorTop);
 
-                if (command == "e" || command == "edit")
+                action = Console.ReadKey(false);
+
+                if (action.Key == ConsoleKey.Enter)
                 {
-                    Consola.ShowDirectoryContent([.. (AutoCompletionLogic.FilesFromDirectory(Environment.CurrentDirectory))]);
-                    Console.SetCursorPosition(leftLane + 1 + command.Length, bottomLane - 1);
-
-                    action = Console.ReadKey(true);
-
-                    if (action.Key == ConsoleKey.Tab)
+                    if (command == "e" || command == "edit")
                     {
+                        Consola.ShowDirectoryContent([.. (AutoCompletionLogic.FilesFromDirectory(Environment.CurrentDirectory))]);
+                        Console.SetCursorPosition(leftLane + 1 + command.Length, bottomLane - 1);
                         Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
                         (string, bool) autoCompResult = AutoCompletionLogic.AutoCompletion(action);
                         originalPath = autoCompResult.Item1;
@@ -697,20 +696,14 @@ namespace CodeEditor
                         command = command.Substring(0, command.Length - 1);
                         Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
                         Console.Write(commandToShow);
-
                     }
-                }
-                else
-                {
-                    action = Console.ReadKey(true);
-                }
-
-                if (action.Key == ConsoleKey.Enter)
-                {
-                    Commands(ref command, ref quit, fileLastVersion, fileOriginalVersion, lastPath);
-                    if (command.Contains('w'))
+                    else
                     {
-                        return;
+                        Commands(ref command, ref quit, fileLastVersion, fileOriginalVersion, lastPath);
+                        if (command.Contains('w'))
+                        {
+                            return;
+                        }
                     }
                 }
             }
@@ -765,17 +758,6 @@ namespace CodeEditor
 
                     File.WriteAllLines(path, fileLastVersion);
                     break;
-
-                case "edit":
-
-                case "e":
-                    Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
-                    (string, bool) autoCompResult = AutoCompletionLogic.AutoCompletion();
-                    originalPath = autoCompResult.Item1;
-                    quit = autoCompResult.Item2;
-                    
-                    break;
-
             }
         }
 

@@ -97,13 +97,17 @@ namespace CodeEditor
             if (command.Length > 0 && key.Key == ConsoleKey.Backspace)
             {
                 command = command.Substring(0, command.Length - 1);
-            }   
+                if (command == "")
+                {
+                    Consola.ClearPartOfConsole(Console.WindowHeight - 11);
+                    Console.SetCursorPosition(Console.CursorLeft, Console.WindowHeight - 11);
+                }
+            }
 
             if (key.Key == ConsoleKey.Enter)
             {
                 command = commands[curentCompletion];
             }
-            //command = commands[curentCompletion];
         }
     }
 }
