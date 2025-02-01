@@ -62,7 +62,7 @@ namespace CodeEditor
 
         public static void ClearPartOfConsole(int bottomLane = 0)
         {
-            const int topLane = 11;
+            const int topLane = 2;
             const int leftLane = 21;
             int rightLane = Console.WindowWidth - 20;
 
@@ -302,8 +302,8 @@ namespace CodeEditor
 
         public static void CommandModeContour()
         {
-            const int topLane = 10;
-            int bottomLane = Console.WindowHeight - 10;
+            int topLane = 1;
+            int bottomLane = topLane + 2;
             const int leftLane = 20;
             int rightLane = Console.WindowWidth - 20;
             const string header = "Command Line";
@@ -326,6 +326,41 @@ namespace CodeEditor
             Console.Write(header);
             Console.SetCursorPosition(leftLane + header.Length + 1, topLane);
             Console.Write(new string('─', rightLane - leftLane - 1 - header.Length));
+            Console.SetCursorPosition(leftLane, bottomLane - 3);
+
+            Console.SetCursorPosition(leftLane, bottomLane);
+            Console.Write("└");
+            Console.SetCursorPosition(rightLane, bottomLane);
+            Console.Write("┘");
+            Console.SetCursorPosition(leftLane + 1, bottomLane);
+            Console.Write(new string('─', rightLane - leftLane - 1));
+
+            Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
+        }
+
+        public static void CompletionContour()
+        {
+            int topLane = 4;
+            int bottomLane = topLane + 2;
+            const int leftLane = 20;
+            int rightLane = Console.WindowWidth - 20;
+
+            for (int i = topLane; i <= bottomLane; i++)
+            {
+                Console.SetCursorPosition(leftLane, i);
+                Console.Write("│");
+                Console.SetCursorPosition(leftLane + 1, i);
+                Console.Write(new string(' ', rightLane - leftLane));
+                Console.SetCursorPosition(rightLane, i);
+                Console.Write("│");
+            }
+
+            Console.SetCursorPosition(leftLane, topLane);
+            Console.Write("┌");
+            Console.SetCursorPosition(rightLane, topLane);
+            Console.Write("┐");
+            Console.SetCursorPosition(leftLane + 1, topLane);
+            Console.Write(new string('─', rightLane - leftLane - 1));
             Console.SetCursorPosition(leftLane, bottomLane - 3);
 
             Console.SetCursorPosition(leftLane, bottomLane);
