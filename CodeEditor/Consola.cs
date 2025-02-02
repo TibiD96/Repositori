@@ -60,9 +60,8 @@ namespace CodeEditor
             Console.CursorVisible = true;
         }
 
-        public static void ClearPartOfConsole(int bottomLane = 0)
+        public static void ClearPartOfConsole(int bottomLane = 0, int topLane = 2)
         {
-            const int topLane = 2;
             const int leftLane = 21;
             int rightLane = Console.WindowWidth - 20;
 
@@ -79,7 +78,35 @@ namespace CodeEditor
             else
             {
                 Console.SetCursorPosition(leftLane, topLane);
-                for(int i = bottomLane; i >= topLane; i--)
+                for (int i = bottomLane; i >= topLane; i--)
+                {
+                    Console.SetCursorPosition(leftLane, i);
+                    Console.Write(new string(' ', rightLane - leftLane));
+                }
+
+                Console.SetCursorPosition(leftLane, topLane);
+            }
+        }
+
+        public static void ClearTabCompletion(int bottomLane = 0, int topLane = 5)
+        {
+            const int leftLane = 21;
+            int rightLane = Console.WindowWidth - 20;
+
+            if (bottomLane == 0)
+            {
+                for (int i = Console.WindowHeight - 3; i >= 0; i--)
+                {
+                    Console.SetCursorPosition(0, i);
+                    Console.Write(new string(' ', Console.WindowWidth));
+                }
+
+                Console.SetCursorPosition(0, 0);
+            }
+            else
+            {
+                Console.SetCursorPosition(leftLane, topLane);
+                for (int i = bottomLane; i >= topLane; i--)
                 {
                     Console.SetCursorPosition(leftLane, i);
                     Console.Write(new string(' ', rightLane - leftLane));
@@ -338,12 +365,17 @@ namespace CodeEditor
             Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
         }
 
-        public static void CompletionContour()
+        public static void CompletionContour(int variants = 0)
         {
             int topLane = 4;
-            int bottomLane = topLane + 2;
+            int bottomLane = topLane + variants + 1;
             const int leftLane = 20;
             int rightLane = Console.WindowWidth - 20;
+
+            if (bottomLane > Console.WindowHeight)
+            {
+                bottomLane = Console.WindowHeight - 1;
+            }
 
             for (int i = topLane; i <= bottomLane; i++)
             {
@@ -370,7 +402,7 @@ namespace CodeEditor
             Console.SetCursorPosition(leftLane + 1, bottomLane);
             Console.Write(new string('─', rightLane - leftLane - 1));
 
-            Console.SetCursorPosition(leftLane + 1, bottomLane - 1);
+            Console.SetCursorPosition(leftLane + 1, topLane + 1);
         }
 
         public static void Status(bool editMode, int horizontalPosition, int verticalPosition, int lineCounting, int startingColumn, string[] fileContent, string originalPath)

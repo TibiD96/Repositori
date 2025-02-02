@@ -16,10 +16,8 @@ namespace CodeEditor
         public static string AutoCompletion(string command, ConsoleKeyInfo key)
         {
             (int, int) cursoPos = Console.GetCursorPosition();
-            List<string> validCommands = Config.Commands.Where(value => !string.IsNullOrEmpty(command) && value.StartsWith(command)).ToList();
-            Console.SetCursorPosition(cursoPos.Item1 + command.Length, cursoPos.Item2);
-
-            Consola.ClearPartOfConsole(Console.WindowHeight - 12);
+            List<string> validCommands = Config.Commands.Where(value => value.StartsWith(command)).ToList();
+            Console.SetCursorPosition(cursoPos.Item1, cursoPos.Item2);
 
             AutocomplitinChooser(validCommands, key.Modifiers, ref command, Console.CursorLeft);
 
@@ -31,11 +29,27 @@ namespace CodeEditor
 
         private static void AutocomplitinChooser(List<string> commands, ConsoleModifiers modifier, ref string command, int left)
         {
+            int commandArea = 2;
+            ConsoleKeyInfo key;
+            for (int i = 0; i < commands.Count; i++)
+            {
+                if (i == highlightPoint)
+                {
+                    Console.BackgroundColor = ConsoleColor.Blue;
+                }
 
-            ConsoleKeyInfo key = new('\t', ConsoleKey.Tab, false, false, false);
+                Console.Write(commands[i]);
+                Console.ResetColor();
+                Console.SetCursorPosition(left, Console.CursorTop + 1);
+            }
+
+            Console.SetCursorPosition(Console.CursorLeft, 2);
+            Console.Write(command);
+            key = Console.ReadKey();
+
             while (key.Key == ConsoleKey.Tab)
             {
-                Consola.ClearPartOfConsole(Console.WindowHeight - 12);
+                Consola.ClearTabCompletion(commands.Count + 1);
                 if (modifier != ConsoleModifiers.Shift)
                 {
                     if (highlightPoint < commands.Count)
@@ -84,7 +98,7 @@ namespace CodeEditor
                     Console.SetCursorPosition(left, Console.CursorTop + 1);
                 }
 
-                Console.SetCursorPosition(Console.CursorLeft, Console.WindowHeight - 11);
+                Console.SetCursorPosition(Console.CursorLeft, 2);
                 Console.Write(command);
                 key = Console.ReadKey();
             }
@@ -99,8 +113,8 @@ namespace CodeEditor
                 command = command.Substring(0, command.Length - 1);
                 if (command == "")
                 {
-                    Consola.ClearPartOfConsole(Console.WindowHeight - 11);
-                    Console.SetCursorPosition(Console.CursorLeft, Console.WindowHeight - 11);
+                    Consola.ClearPartOfConsole(commandArea);
+                    Console.SetCursorPosition(Console.CursorLeft, commandArea);
                 }
             }
 
