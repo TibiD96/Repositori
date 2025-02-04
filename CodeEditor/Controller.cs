@@ -649,7 +649,7 @@ namespace CodeEditor
                     commandToShow = command.Substring(command.Length - (rightLane - leftLane - 1));
                 }
 
-                Consola.ClearPartOfConsole(commandArea);
+                Consola.ClearPartOfConsole(commandArea, commandArea, leftLane + 1);
                 Console.SetCursorPosition(leftLane + 1, commandArea);
                 Console.Write(commandToShow);
                 Console.SetCursorPosition(commandToShow.Length + leftLane + 1, Console.CursorTop);
@@ -944,15 +944,29 @@ namespace CodeEditor
 
         private static string TabCompletion(string command, ConsoleKeyInfo action, List<string> validCommands)
         {
-            int commandArea = 2;
+            const int startingCompletionContour = 4;
+            const int left = 21;
 
             if (Config.TabCompletion)
             {
                 validCommands = Config.Commands.Where(value => value.StartsWith(command)).ToList();
-                Consola.ClearPartOfConsole(commandArea);
                 Consola.CompletionContour(validCommands.Count);
 
-                return CommadnModeAutoCompletion.AutoCompletion(command, action);
+                command = CommadnModeAutoCompletion.AutoCompletion(command, action);
+
+                Consola.ClearPartOfConsole(startingCompletionContour + validCommands.Count + 1, startingCompletionContour, left - 1, 1);
+                validCommands = Config.Commands.Where(value => value.StartsWith(command)).ToList();
+                Consola.CompletionContour(validCommands.Count);
+
+                Console.BackgroundColor = ConsoleColor.Blue;
+                for (int i = 0; i < validCommands.Count; i++)
+                {
+                    Console.Write(validCommands[i]);
+                    Console.ResetColor();
+                    Console.SetCursorPosition(left, Console.CursorTop + 1);
+                }
+
+                return command;
             }
 
             return command;

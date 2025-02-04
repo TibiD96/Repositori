@@ -60,10 +60,9 @@ namespace CodeEditor
             Console.CursorVisible = true;
         }
 
-        public static void ClearPartOfConsole(int bottomLane = 0, int topLane = 2)
+        public static void ClearPartOfConsole(int bottomLane = 0, int topLane = 2, int leftLane = 20, int rightLaneOffset = 0)
         {
-            const int leftLane = 21;
-            int rightLane = Console.WindowWidth - 20;
+            int rightLane = Console.WindowWidth - 20 + rightLaneOffset;
 
             if (bottomLane == 0)
             {
