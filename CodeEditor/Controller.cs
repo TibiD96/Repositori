@@ -626,7 +626,6 @@ namespace CodeEditor
                 if (action.Key == ConsoleKey.Escape)
                 {
                     Config.TabCompletion = false;
-                    Console.Write('a');
                     return;
                 }
 
@@ -657,7 +656,7 @@ namespace CodeEditor
                 Console.Write(commandToShow);
                 Console.SetCursorPosition(commandToShow.Length + leftLane + 1, Console.CursorTop);
 
-                action = Console.ReadKey(false);
+                action = Console.ReadKey(true);
 
                 if (action.Key == ConsoleKey.Enter)
                 {
