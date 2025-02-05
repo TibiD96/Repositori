@@ -15,6 +15,8 @@ namespace CodeEditor
         private static int curentCompletion = 0;
         public static string AutoCompletion(string command, ConsoleKeyInfo key)
         {
+            highlightPoint = 0;
+            curentCompletion = 0;
             (int, int) cursoPos = Console.GetCursorPosition();
             List<string> validCommands = Config.Commands.Where(value => value.StartsWith(command)).ToList();
             Console.SetCursorPosition(cursoPos.Item1, cursoPos.Item2);

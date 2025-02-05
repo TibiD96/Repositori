@@ -60,7 +60,7 @@ namespace CodeEditor
             Console.CursorVisible = true;
         }
 
-        public static void ClearPartOfConsole(int bottomLane = 0, int topLane = 2, int leftLane = 20, int rightLaneOffset = 0)
+        public static void ClearPartOfConsole(int bottomLane = 0, int topLane = 2, int leftLane = 21, int rightLaneOffset = 0)
         {
             int rightLane = Console.WindowWidth - 20 + rightLaneOffset;
 
@@ -371,37 +371,42 @@ namespace CodeEditor
             const int leftLane = 20;
             int rightLane = Console.WindowWidth - 20;
 
-            if (bottomLane > Console.WindowHeight)
+            if (variants > 0)
             {
-                bottomLane = Console.WindowHeight - 1;
+                if (bottomLane > Console.WindowHeight)
+                {
+                    bottomLane = Console.WindowHeight - 1;
+                }
+
+                for (int i = topLane; i <= bottomLane; i++)
+                {
+                    Console.SetCursorPosition(leftLane, i);
+                    Console.Write("│");
+                    Console.SetCursorPosition(leftLane + 1, i);
+                    Console.Write(new string(' ', rightLane - leftLane));
+                    Console.SetCursorPosition(rightLane, i);
+                    Console.Write("│");
+                }
+
+                Console.SetCursorPosition(leftLane, topLane);
+                Console.Write("┌");
+                Console.SetCursorPosition(rightLane, topLane);
+                Console.Write("┐");
+                Console.SetCursorPosition(leftLane + 1, topLane);
+                Console.Write(new string('─', rightLane - leftLane - 1));
+                Console.SetCursorPosition(leftLane, bottomLane - 3);
+
+                Console.SetCursorPosition(leftLane, bottomLane);
+                Console.Write("└");
+                Console.SetCursorPosition(rightLane, bottomLane);
+                Console.Write("┘");
+                Console.SetCursorPosition(leftLane + 1, bottomLane);
+                Console.Write(new string('─', rightLane - leftLane - 1));
+
             }
-
-            for (int i = topLane; i <= bottomLane; i++)
-            {
-                Console.SetCursorPosition(leftLane, i);
-                Console.Write("│");
-                Console.SetCursorPosition(leftLane + 1, i);
-                Console.Write(new string(' ', rightLane - leftLane));
-                Console.SetCursorPosition(rightLane, i);
-                Console.Write("│");
-            }
-
-            Console.SetCursorPosition(leftLane, topLane);
-            Console.Write("┌");
-            Console.SetCursorPosition(rightLane, topLane);
-            Console.Write("┐");
-            Console.SetCursorPosition(leftLane + 1, topLane);
-            Console.Write(new string('─', rightLane - leftLane - 1));
-            Console.SetCursorPosition(leftLane, bottomLane - 3);
-
-            Console.SetCursorPosition(leftLane, bottomLane);
-            Console.Write("└");
-            Console.SetCursorPosition(rightLane, bottomLane);
-            Console.Write("┘");
-            Console.SetCursorPosition(leftLane + 1, bottomLane);
-            Console.Write(new string('─', rightLane - leftLane - 1));
 
             Console.SetCursorPosition(leftLane + 1, topLane + 1);
+
         }
 
         public static void Status(bool editMode, int horizontalPosition, int verticalPosition, int lineCounting, int startingColumn, string[] fileContent, string originalPath)

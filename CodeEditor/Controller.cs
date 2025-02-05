@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Numerics;
 using static System.Collections.Specialized.BitVector32;
 
 namespace CodeEditor
@@ -612,7 +613,7 @@ namespace CodeEditor
             ConsoleKeyInfo action = Console.ReadKey(true);
             while (!quit)
             {
-                Consola.ClearPartOfConsole(startingCompletionContour + validCommands.Count + 1, startingCompletionContour);
+                Consola.ClearPartOfConsole(startingCompletionContour + validCommands.Count + 1, startingCompletionContour, leftLane, 1);
                 validCommands = Config.Commands.Where(value => value.StartsWith(command)).ToList();
                 Console.SetCursorPosition(leftLane + 1, commandArea);
                 Console.Write(new string(' ', rightLane - leftLane - 1));
@@ -625,6 +626,7 @@ namespace CodeEditor
                 if (action.Key == ConsoleKey.Escape)
                 {
                     Config.TabCompletion = false;
+                    Console.Write('a');
                     return;
                 }
 
@@ -641,6 +643,7 @@ namespace CodeEditor
                 }
 
                 command = TabCompletion(command, action, validCommands);
+                validCommands = Config.Commands.Where(value => value.StartsWith(command)).ToList();
 
                 commandToShow = command;
 
@@ -649,7 +652,7 @@ namespace CodeEditor
                     commandToShow = command.Substring(command.Length - (rightLane - leftLane - 1));
                 }
 
-                Consola.ClearPartOfConsole(commandArea, commandArea, leftLane + 1);
+                Consola.ClearPartOfConsole(commandArea, commandArea);
                 Console.SetCursorPosition(leftLane + 1, commandArea);
                 Console.Write(commandToShow);
                 Console.SetCursorPosition(commandToShow.Length + leftLane + 1, Console.CursorTop);
@@ -952,21 +955,27 @@ namespace CodeEditor
                 validCommands = Config.Commands.Where(value => value.StartsWith(command)).ToList();
                 Consola.CompletionContour(validCommands.Count);
 
+                Console.SetCursorPosition(left, startingCompletionContour + 1);
+
                 command = CommadnModeAutoCompletion.AutoCompletion(command, action);
 
                 Consola.ClearPartOfConsole(startingCompletionContour + validCommands.Count + 1, startingCompletionContour, left - 1, 1);
                 validCommands = Config.Commands.Where(value => value.StartsWith(command)).ToList();
-                Consola.CompletionContour(validCommands.Count);
 
-                Console.BackgroundColor = ConsoleColor.Blue;
-                for (int i = 0; i < validCommands.Count; i++)
+                if (validCommands.Count > 0)
                 {
-                    Console.Write(validCommands[i]);
-                    Console.ResetColor();
-                    Console.SetCursorPosition(left, Console.CursorTop + 1);
+                    Consola.CompletionContour(validCommands.Count);
+
+                    Console.BackgroundColor = ConsoleColor.Blue;
+                    for (int i = 0; i < validCommands.Count; i++)
+                    {
+                        Console.Write(validCommands[i]);
+                        Console.ResetColor();
+                        Console.SetCursorPosition(left, Console.CursorTop + 1);
+                    }
                 }
 
-                return command;
+                    return command;
             }
 
             return command;
