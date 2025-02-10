@@ -664,8 +664,8 @@ namespace CodeEditor
 
                     if (command == "e" || command == "edit")
                     {
-                        Consola.ShowDirectoryContent([.. (AutoCompletionLogic.FilesFromDirectory(Environment.CurrentDirectory))]);
-                        Console.SetCursorPosition(leftLane + 1 + command.Length, commandArea - 1);
+                        //Consola.ShowDirectoryContent([.. (AutoCompletionLogic.FilesFromDirectory(Environment.CurrentDirectory))]);
+                        //Console.SetCursorPosition(leftLane + 1 + command.Length, commandArea - 1);
                         Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
                         (string, bool) autoCompResult = AutoCompletionLogic.AutoCompletion(action);
                         originalPath = autoCompResult.Item1;
