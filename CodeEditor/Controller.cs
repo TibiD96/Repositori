@@ -666,7 +666,9 @@ namespace CodeEditor
                     {
                         //Consola.ShowDirectoryContent([.. (AutoCompletionLogic.FilesFromDirectory(Environment.CurrentDirectory))]);
                         //Console.SetCursorPosition(leftLane + 1 + command.Length, commandArea - 1);
-                        Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
+                        Consola.ClearPartOfConsole(startingCompletionContour + validCommands.Count + 1, startingCompletionContour, leftLane, 1);
+                        Console.SetCursorPosition(commandToShow.Length + leftLane + 2, commandArea);
+                        //Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
                         (string, bool) autoCompResult = AutoCompletionLogic.AutoCompletion(action);
                         originalPath = autoCompResult.Item1;
                         quit = autoCompResult.Item2;

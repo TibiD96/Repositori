@@ -34,7 +34,7 @@ namespace CodeEditor
                 allFiles = FilesFromDirectory(search);
             }
 
-            Consola.ClearPartOfConsole(Console.WindowHeight - 12);
+            //Consola.ClearPartOfConsole(Console.WindowHeight - 12);
             Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
             Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
 
@@ -84,6 +84,7 @@ namespace CodeEditor
 
                 if (key.Key == ConsoleKey.Tab)
                 {
+                    Config.TabCompletion = true;
                     AutocomplitinChooser(allFiles, key.Modifiers);
                     CheckIfIsEnoughSpace(cursoPos.Item1);
 
@@ -199,10 +200,11 @@ namespace CodeEditor
         private static void CheckIfIsEnoughSpace(int startingPosition)
         {
             int emptySpace = (Console.WindowWidth - 21) - (startingPosition + search.Length);
+            const int commandArea = 2;
 
-            Console.SetCursorPosition(startingPosition, Console.WindowHeight - 11);
+            Console.SetCursorPosition(startingPosition, commandArea);
             Console.Write(new string(' ', ((Console.WindowWidth - 20) - startingPosition)));
-            Console.SetCursorPosition(startingPosition, Console.WindowHeight - 11);
+            Console.SetCursorPosition(startingPosition, commandArea);
 
             if (emptySpace >= 0)
             {

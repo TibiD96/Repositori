@@ -193,40 +193,44 @@ namespace CodeEditor
             const int leftLane = 21;
             int lastLine = Console.WindowHeight - 12;
             int highlight = 0;
-            if (fileFromDirectory == null)
-            {
-                return;
-            }
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (Config.TabCompletion)
             {
-               slash = '\\';
-            }
-            else
-            {
-                slash = '/';
-            }
-
-            ClearPartOfConsole(lastLine);
-
-            for (int i = startingIndex; i < fileFromDirectory.Length && curentLine != lastLine; i++)
-            {
-                if (highlight == highlighIndex)
+                if (fileFromDirectory == null)
                 {
-                    Console.BackgroundColor = ConsoleColor.Blue;
+                    return;
                 }
 
-                Console.Write(Path.GetFileName(fileFromDirectory[i]));
-
-                if (Directory.Exists(fileFromDirectory[i]))
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    Console.Write(slash);
+                    slash = '\\';
+                }
+                else
+                {
+                    slash = '/';
                 }
 
-                curentLine++;
-                Console.SetCursorPosition(leftLane, curentLine);
-                Console.ResetColor();
-                highlight++;
+                ClearPartOfConsole(lastLine);
+
+                for (int i = startingIndex; i < fileFromDirectory.Length && curentLine != lastLine; i++)
+                {
+                    if (highlight == highlighIndex)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Blue;
+                    }
+
+                    Console.Write(Path.GetFileName(fileFromDirectory[i]));
+
+                    if (Directory.Exists(fileFromDirectory[i]))
+                    {
+                        Console.Write(slash);
+                    }
+
+                    curentLine++;
+                    Console.SetCursorPosition(leftLane, curentLine);
+                    Console.ResetColor();
+                    highlight++;
+                }
             }
         }
 
