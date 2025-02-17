@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using System.Xml.Linq;
 
 namespace CodeEditor
 {
@@ -186,12 +185,11 @@ namespace CodeEditor
             }
         }
 
-        public static void ShowDirectoryContent(string[] fileFromDirectory, int startingIndex = 0, int highlighIndex = 0)
+        public static void ShowDirectoryContent(string[] fileFromDirectory, int lastLine = 12, int startingIndex = 0, int highlighIndex = 0)
         {
             char slash;
-            int curentLine = 11;
+            int curentLine = 5;
             const int leftLane = 21;
-            int lastLine = Console.WindowHeight - 12;
             int highlight = 0;
 
             if (Config.TabCompletion)
@@ -210,7 +208,7 @@ namespace CodeEditor
                     slash = '/';
                 }
 
-                ClearPartOfConsole(lastLine);
+                ClearTabCompletion(lastLine - 1);
 
                 for (int i = startingIndex; i < fileFromDirectory.Length && curentLine != lastLine; i++)
                 {

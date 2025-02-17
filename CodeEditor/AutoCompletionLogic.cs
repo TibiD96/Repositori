@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace CodeEditor
@@ -22,6 +20,7 @@ namespace CodeEditor
             quite = false;
             lastValidDirect = Environment.CurrentDirectory;
             int left = Console.CursorLeft;
+            int commandArea = 2;
 
             List<string> allFiles;
 
@@ -34,8 +33,6 @@ namespace CodeEditor
                 allFiles = FilesFromDirectory(search);
             }
 
-            //Consola.ClearPartOfConsole(Console.WindowHeight - 12);
-            Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
             Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
 
             if (action == default)
@@ -90,7 +87,7 @@ namespace CodeEditor
 
                     left = Console.CursorLeft;
 
-                    Console.SetCursorPosition(left, Console.WindowHeight - 11);
+                    Console.SetCursorPosition(left, commandArea);
                 }
 
                 if (key.Key == ConsoleKey.Escape)
@@ -178,7 +175,7 @@ namespace CodeEditor
             {
             if (lastValidDirect == Environment.CurrentDirectory)
             {
-                search = Path.GetFileName(allFiles[completion]);
+                search = Path.GetFileName(allFiles[completion - 1]);
             }
             else
             {
@@ -193,8 +190,6 @@ namespace CodeEditor
                     search += '/';
                 }
             }
-
-            Consola.ShowDirectoryContent(allFiles.ToArray());
         }
 
         private static void CheckIfIsEnoughSpace(int startingPosition)
@@ -275,7 +270,7 @@ namespace CodeEditor
 
             Completion(allFiles);
 
-            Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
+            Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex - 1);
         }
 
     }
