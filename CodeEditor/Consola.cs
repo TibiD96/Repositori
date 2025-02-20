@@ -192,6 +192,11 @@ namespace CodeEditor
             const int leftLane = 21;
             int highlight = 0;
 
+            if (startingIndex < 0)
+            {
+                startingIndex++;
+            }
+
             if (Config.TabCompletion)
             {
                 if (fileFromDirectory == null)

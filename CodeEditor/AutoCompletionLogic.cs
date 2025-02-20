@@ -7,7 +7,7 @@ namespace CodeEditor
     {
         private static string lastValidDirect = Environment.CurrentDirectory;
         private static string search = "";
-        private static int highlightIndex = 0;
+        private static int highlightIndex = -1;
         private static int startingIndex = 0;
         private static int completion = 0;
         private static bool quite = false;
@@ -154,7 +154,7 @@ namespace CodeEditor
                 lastValidDirect = search;
                 files.AddRange(Directory.GetDirectories(search));
                 files.AddRange(Directory.GetFiles(search));
-                highlightIndex = 0;
+                highlightIndex = -1;
                 startingIndex = 0;
                 completion = 0;
             }
@@ -163,7 +163,7 @@ namespace CodeEditor
                 files.AddRange(Directory.GetDirectories(lastValidDirect).Where(dir => dir.StartsWith(search)));
                 files.AddRange(Directory.GetFiles(lastValidDirect).Where(file => file.StartsWith(search)));
                 files.AddRange(Directory.GetFiles(lastValidDirect).Where(file => Path.GetFileName(file).StartsWith(search)));
-                highlightIndex = 0;
+                highlightIndex = -1;
                 startingIndex = 0;
                 completion = 0;
             }
@@ -175,7 +175,14 @@ namespace CodeEditor
             {
             if (lastValidDirect == Environment.CurrentDirectory)
             {
-                search = Path.GetFileName(allFiles[completion - 1]);
+                if (completion > 0)
+                {
+                    search = Path.GetFileName(allFiles[completion - 1]);
+                }
+                else
+                {
+                    search = Path.GetFileName(allFiles[completion]);
+                }
             }
             else
             {
@@ -250,13 +257,12 @@ namespace CodeEditor
                     highlightIndex--;
                     completion--;
                 }
-
                 else 
                 {
-                    if (highlightIndex == 0 && completion > highlightIndex)
+                    if (highlightIndex == 0 && completion > highlightIndex && completion > 1)
                     {
-                        startingIndex--;
                         completion--;
+                        startingIndex--;
                     }
                 }
             }
@@ -265,12 +271,12 @@ namespace CodeEditor
             {
                 highlightIndex = 0;
                 startingIndex = 0;
-                completion = 0;
+                completion = 1;
             }
 
             Completion(allFiles);
 
-            Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex - 1);
+            Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
         }
 
     }
