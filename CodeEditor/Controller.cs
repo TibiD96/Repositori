@@ -682,9 +682,8 @@ namespace CodeEditor
                             return;
                         }
 
-                        Consola.ClearPartOfConsole(Console.WindowHeight - 12);
-                        command = command.Substring(0, command.Length - 1);
-                        Console.SetCursorPosition(leftLane + 1, commandArea - 1);
+                        command = command.Substring(0, command.Length);
+                        Console.SetCursorPosition(leftLane + 1, commandArea);
                         Console.Write(commandToShow);
                     }
                     else

@@ -11,6 +11,8 @@ namespace CodeEditor
         private static int startingIndex = 0;
         private static int completion = 0;
         private static bool quite = false;
+        private static int startingCompletionContour = 4;
+        private static int complitionContourHight = 7;
 
         public static (string, bool) AutoCompletion(ConsoleKeyInfo action = default)
         {
@@ -58,7 +60,7 @@ namespace CodeEditor
 
                         allFiles.Clear();
                         allFiles = FilesFromDirectory(search);
-                        Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
+                        Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
                         Console.SetCursorPosition(left, cursoPos.Item2);
 
                         if (search.Length == 0)
@@ -66,15 +68,16 @@ namespace CodeEditor
                             lastValidDirect = Environment.CurrentDirectory;
                             allFiles.Clear();
                             allFiles = FilesFromDirectory(lastValidDirect);
-                            Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
+                            Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
                             Console.SetCursorPosition(left, cursoPos.Item2);
                         }
                     }
                     else
                     {
-                        Consola.ClearPartOfConsole(Console.WindowHeight - 12);
+                        Consola.ClearPartOfConsole(Console.WindowHeight - 12, commandArea + 2, 20,1);
                         search = "";
                         lastValidDirect = search;
+                        Config.TabCompletion = false;
                         return (search, false);
                     }
                 }
@@ -106,7 +109,7 @@ namespace CodeEditor
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search);
 
-                    Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
+                    Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
 
                     search += key.KeyChar;
 
@@ -117,7 +120,7 @@ namespace CodeEditor
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search);
 
-                    Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
+                    Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
 
                     Console.SetCursorPosition(left, cursoPos.Item2);
                 }
@@ -131,7 +134,7 @@ namespace CodeEditor
                 allFiles.Clear();
                 allFiles = FilesFromDirectory(search);
 
-                Consola.ShowDirectoryContent(allFiles.ToArray(), startingIndex, highlightIndex);
+                Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
                 Console.SetCursorPosition(left, cursoPos.Item2);
 
                 Console.SetCursorPosition(cursoPos.Item1, cursoPos.Item2);
@@ -220,10 +223,8 @@ namespace CodeEditor
 
         private static void AutocomplitinChooser(List<string> allFiles, ConsoleModifiers modifier)
         {
-            const int startingCompletionContour = 4;
             const int left = 21;
             const int commandArea = 2;
-            int complitionContourHight = 7;
 
             if (allFiles.Count < highlightIndex)
             {
