@@ -189,7 +189,14 @@ namespace CodeEditor
             }
             else
             {
-                search = allFiles[completion];
+                if (completion > 0)
+                {
+                    search = allFiles[completion - 1];
+                }
+                else
+                {
+                    search = allFiles[completion];
+                }
 
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && Directory.Exists(search))
                 {
@@ -268,16 +275,24 @@ namespace CodeEditor
                 }
             }
 
-            if (completion == allFiles.Count)
+            if (completion > allFiles.Count)
             {
                 highlightIndex = 0;
                 startingIndex = 0;
+                completion = 0;
+
+                Completion(allFiles);
+
+                Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
+
                 completion = 1;
             }
+            else
+            {
+                Completion(allFiles);
 
-            Completion(allFiles);
-
-            Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
+                Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
+            }
         }
 
     }
