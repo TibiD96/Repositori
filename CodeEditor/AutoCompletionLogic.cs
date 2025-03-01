@@ -134,6 +134,18 @@ namespace CodeEditor
                 allFiles.Clear();
                 allFiles = FilesFromDirectory(search);
 
+                if (Config.TabCompletion)
+                {
+                    Consola.ClearPartOfConsole(startingCompletionContour + complitionContourHight + 1, startingCompletionContour, 20, 1);
+
+                    if (allFiles.Count < complitionContourHight)
+                    {
+                        complitionContourHight = allFiles.Count;
+                    }
+
+                    Consola.CompletionContour(complitionContourHight);
+                }
+
                 Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
                 Console.SetCursorPosition(left, cursoPos.Item2);
 
@@ -233,7 +245,7 @@ namespace CodeEditor
             const int left = 21;
             const int commandArea = 2;
 
-            if (allFiles.Count < highlightIndex)
+            if (allFiles.Count < complitionContourHight)
             {
                 complitionContourHight = allFiles.Count;
             }
@@ -252,7 +264,7 @@ namespace CodeEditor
                     completion++;
                 }
 
-                if (highlightIndex == 7 && allFiles.Count > highlightIndex)
+                if (highlightIndex == complitionContourHight && allFiles.Count > highlightIndex)
                 {
                     highlightIndex--;
                     startingIndex++;
