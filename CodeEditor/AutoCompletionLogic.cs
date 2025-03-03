@@ -63,12 +63,12 @@ namespace CodeEditor
 
                         Consola.ClearPartOfConsole(startingCompletionContour + complitionContourHight + 1, startingCompletionContour, 20, 1);
 
-                        if (allFiles.Count < complitionContourHight)
+                       /* if (allFiles.Count < complitionContourHight)
                         {
                             complitionContourHight = allFiles.Count;
                         }
 
-                        Consola.CompletionContour(complitionContourHight);
+                        Consola.CompletionContour(complitionContourHight);*/
 
                         Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
                         Console.SetCursorPosition(left, cursoPos.Item2);
@@ -82,12 +82,12 @@ namespace CodeEditor
 
                             Consola.ClearPartOfConsole(startingCompletionContour + complitionContourHight + 1, startingCompletionContour, 20, 1);
 
-                            if (allFiles.Count < complitionContourHight)
+                            /*if (allFiles.Count < complitionContourHight)
                             {
                                 complitionContourHight = allFiles.Count;
                             }
 
-                            Consola.CompletionContour(complitionContourHight);
+                            Consola.CompletionContour(complitionContourHight);*/
 
                             Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
                             Console.SetCursorPosition(left, cursoPos.Item2);
@@ -112,6 +112,8 @@ namespace CodeEditor
                     left = Console.CursorLeft;
 
                     Console.SetCursorPosition(left, commandArea);
+
+                    Config.TabCompletion = false;
                 }
 
                 if (key.Key == ConsoleKey.Escape)
@@ -133,14 +135,14 @@ namespace CodeEditor
 
                     Consola.ClearPartOfConsole(startingCompletionContour + complitionContourHight + 1, startingCompletionContour, 20, 1);
 
-                    if (allFiles.Count < complitionContourHight)
+                    /*if (allFiles.Count < complitionContourHight)
                     {
                         complitionContourHight = allFiles.Count;
                     }
 
                     Consola.CompletionContour(complitionContourHight);
 
-                    Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
+                    Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);*/
 
                     search += key.KeyChar;
 
@@ -153,14 +155,14 @@ namespace CodeEditor
 
                     Consola.ClearPartOfConsole(startingCompletionContour + complitionContourHight + 1, startingCompletionContour, 20, 1);
 
-                    if (allFiles.Count < complitionContourHight)
+                    /*if (allFiles.Count < complitionContourHight)
                     {
                         complitionContourHight = allFiles.Count;
                     }
 
                     Consola.CompletionContour(complitionContourHight);
 
-                    Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
+                    Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);*/
 
                     Console.SetCursorPosition(left, cursoPos.Item2);
                 }
@@ -174,7 +176,9 @@ namespace CodeEditor
                 allFiles.Clear();
                 allFiles = FilesFromDirectory(search);
 
-                if (Config.TabCompletion)
+                Consola.ClearPartOfConsole(startingCompletionContour + complitionContourHight + 1, startingCompletionContour, 20, 1);
+
+                /*if (Config.TabCompletion)
                 {
                     Consola.ClearPartOfConsole(startingCompletionContour + complitionContourHight + 1, startingCompletionContour, 20, 1);
 
@@ -186,7 +190,7 @@ namespace CodeEditor
                     Consola.CompletionContour(complitionContourHight);
                 }
 
-                Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
+                Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);*/
                 Console.SetCursorPosition(left, cursoPos.Item2);
 
                 Console.SetCursorPosition(cursoPos.Item1, cursoPos.Item2);
@@ -227,36 +231,39 @@ namespace CodeEditor
         }
 
         private static void Completion(List<string> allFiles)
+        {
+            if (allFiles.Count > 0)
             {
-            if (lastValidDirect == Environment.CurrentDirectory)
-            {
-                if (completion > 0)
+                if (lastValidDirect == Environment.CurrentDirectory)
                 {
-                    search = Path.GetFileName(allFiles[completion - 1]);
+                    if (completion > 0)
+                    {
+                        search = Path.GetFileName(allFiles[completion - 1]);
+                    }
+                    else
+                    {
+                        search = Path.GetFileName(allFiles[completion]);
+                    }
                 }
                 else
                 {
-                    search = Path.GetFileName(allFiles[completion]);
-                }
-            }
-            else
-            {
-                if (completion > 0)
-                {
-                    search = allFiles[completion - 1];
-                }
-                else
-                {
-                    search = allFiles[completion];
-                }
+                    if (completion > 0)
+                    {
+                        search = allFiles[completion - 1];
+                    }
+                    else
+                    {
+                        search = allFiles[completion];
+                    }
 
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && Directory.Exists(search))
-                {
-                    search += '\\';
-                }
-                else if (Directory.Exists(search))
-                {
-                    search += '/';
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && Directory.Exists(search))
+                    {
+                        search += '\\';
+                    }
+                    else if (Directory.Exists(search))
+                    {
+                        search += '/';
+                    }
                 }
             }
         }
