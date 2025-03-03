@@ -60,14 +60,35 @@ namespace CodeEditor
 
                         allFiles.Clear();
                         allFiles = FilesFromDirectory(search);
+
+                        Consola.ClearPartOfConsole(startingCompletionContour + complitionContourHight + 1, startingCompletionContour, 20, 1);
+
+                        if (allFiles.Count < complitionContourHight)
+                        {
+                            complitionContourHight = allFiles.Count;
+                        }
+
+                        Consola.CompletionContour(complitionContourHight);
+
                         Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
                         Console.SetCursorPosition(left, cursoPos.Item2);
 
                         if (search.Length == 0)
                         {
+                            complitionContourHight = 7;
                             lastValidDirect = Environment.CurrentDirectory;
                             allFiles.Clear();
                             allFiles = FilesFromDirectory(lastValidDirect);
+
+                            Consola.ClearPartOfConsole(startingCompletionContour + complitionContourHight + 1, startingCompletionContour, 20, 1);
+
+                            if (allFiles.Count < complitionContourHight)
+                            {
+                                complitionContourHight = allFiles.Count;
+                            }
+
+                            Consola.CompletionContour(complitionContourHight);
+
                             Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
                             Console.SetCursorPosition(left, cursoPos.Item2);
                         }
@@ -104,10 +125,20 @@ namespace CodeEditor
 
                 if (key.Key != ConsoleKey.Tab && key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
                 {
+                    complitionContourHight = 7;
                     CheckIfIsEnoughSpace(cursoPos.Item1);
 
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search);
+
+                    Consola.ClearPartOfConsole(startingCompletionContour + complitionContourHight + 1, startingCompletionContour, 20, 1);
+
+                    if (allFiles.Count < complitionContourHight)
+                    {
+                        complitionContourHight = allFiles.Count;
+                    }
+
+                    Consola.CompletionContour(complitionContourHight);
 
                     Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
 
@@ -119,6 +150,15 @@ namespace CodeEditor
 
                     allFiles.Clear();
                     allFiles = FilesFromDirectory(search);
+
+                    Consola.ClearPartOfConsole(startingCompletionContour + complitionContourHight + 1, startingCompletionContour, 20, 1);
+
+                    if (allFiles.Count < complitionContourHight)
+                    {
+                        complitionContourHight = allFiles.Count;
+                    }
+
+                    Consola.CompletionContour(complitionContourHight);
 
                     Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
 
@@ -305,6 +345,8 @@ namespace CodeEditor
 
                 Consola.ShowDirectoryContent(allFiles.ToArray(), startingCompletionContour + complitionContourHight + 1, startingIndex, highlightIndex);
             }
+
+            complitionContourHight = 7;
         }
 
     }
