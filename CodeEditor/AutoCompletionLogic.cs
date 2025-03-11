@@ -14,8 +14,9 @@ namespace CodeEditor
         private static int startingCompletionContour = 4;
         private static int complitionContourHight = 7;
 
-        public static (string, bool) AutoCompletion(ConsoleKeyInfo action = default)
+        public static (string, bool) AutoCompletion(string searching, ConsoleKeyInfo action = default)
         {
+            search = searching;
             (int, int) cursoPos = Console.GetCursorPosition();
             Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
             ConsoleKeyInfo key;
@@ -149,7 +150,7 @@ namespace CodeEditor
                 Console.SetCursorPosition(left, cursoPos.Item2);
 
                 Console.SetCursorPosition(cursoPos.Item1, cursoPos.Item2);
-                AutoCompletion();
+                AutoCompletion(search);
             }
             else
             {

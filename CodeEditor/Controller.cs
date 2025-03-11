@@ -606,6 +606,7 @@ namespace CodeEditor
             int rightLane = Console.WindowWidth - 20;
             string commandToShow;
             List<string> validCommands = [];
+            string[] words;
 
             Console.SetCursorPosition(leftLane + 1, commandArea);
             ConsoleKeyInfo action = Console.ReadKey(true);
@@ -619,6 +620,38 @@ namespace CodeEditor
                 if (action.Key == ConsoleKey.Tab)
                 {
                     Config.TabCompletion = true;
+
+                    words = command.Split(' ');
+
+                    if (words[0] == "e" || words[0] == "edit")
+                    {
+                        commandToShow = command;
+                        Consola.ClearPartOfConsole(startingCompletionContour + validCommands.Count + 1, startingCompletionContour, leftLane, 1);
+                        Console.SetCursorPosition(commandToShow.Length + leftLane + 2, commandArea);
+                        action = new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false);
+                        (string, bool) autoCompResult = AutoCompletionLogic.AutoCompletion(words[1], action);
+                        originalPath = autoCompResult.Item1;
+                        quit = autoCompResult.Item2;
+
+                        if (originalPath != "")
+                        {
+                            fileContent = File.ReadAllLines(originalPath);
+                            Consola.ClearEntireConsole();
+
+                            return;
+                        }
+
+                        if (quit)
+                        {
+                            quit = false;
+                            return;
+                        }
+
+                        command = command.Substring(0, command.Length);
+                        Console.SetCursorPosition(leftLane + 1, commandArea);
+                        Console.Write(commandToShow);
+                    }
+
                 }
 
                 if (action.Key == ConsoleKey.Escape)
@@ -634,7 +667,7 @@ namespace CodeEditor
                         command = command.Substring(0, command.Length - 1);
                     }
                 }
-                else if (char.IsLetter((char)action.Key) || char.IsDigit((char)action.Key))
+                else if (char.IsLetter((char)action.Key) || char.IsDigit((char)action.Key) || action.Key == ConsoleKey.Spacebar)
                 {
                     command += action.KeyChar;
                 }
@@ -660,7 +693,9 @@ namespace CodeEditor
                 {
                     Config.TabCompletion = false;
 
-                    if (command == "e" || command == "edit")
+                    /*words = command.Split(' ');
+
+                    if (words[0] == "e" || words[0] == "edit")
                     {
                         Consola.ClearPartOfConsole(startingCompletionContour + validCommands.Count + 1, startingCompletionContour, leftLane, 1);
                         Console.SetCursorPosition(commandToShow.Length + leftLane + 2, commandArea);
@@ -687,13 +722,13 @@ namespace CodeEditor
                         Console.Write(commandToShow);
                     }
                     else
-                    {
+                    {*/
                         Commands(ref command, ref quit, fileLastVersion, fileOriginalVersion, lastPath);
                         if (command.Contains('w'))
                         {
                             return;
                         }
-                    }
+                    //}
                 }
             }
         }
