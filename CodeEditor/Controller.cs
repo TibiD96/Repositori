@@ -626,9 +626,15 @@ namespace CodeEditor
                     if (words[0] == "e" || words[0] == "edit")
                     {
                         commandToShow = command;
+
+                        Consola.ClearPartOfConsole(commandArea, commandArea);
+                        Console.SetCursorPosition(leftLane + 1, commandArea);
+                        Console.Write(commandToShow);
+                        Console.SetCursorPosition(commandToShow.Length + leftLane + 1, Console.CursorTop);
+
                         Consola.ClearPartOfConsole(startingCompletionContour + validCommands.Count + 1, startingCompletionContour, leftLane, 1);
                         Console.SetCursorPosition(commandToShow.Length + leftLane + 2, commandArea);
-                        action = new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false);
+                        //action = new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false);
                         (string, bool) autoCompResult = AutoCompletionLogic.AutoCompletion(words[1], action);
                         originalPath = autoCompResult.Item1;
                         quit = autoCompResult.Item2;
