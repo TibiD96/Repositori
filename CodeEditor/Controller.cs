@@ -633,7 +633,7 @@ namespace CodeEditor
                         Console.SetCursorPosition(commandToShow.Length + leftLane + 1, Console.CursorTop);
 
                         Consola.ClearPartOfConsole(startingCompletionContour + validCommands.Count + 1, startingCompletionContour, leftLane, 1);
-                        Console.SetCursorPosition(commandToShow.Length + leftLane + 2, commandArea);
+                        Console.SetCursorPosition(commandToShow.Length + leftLane + 1, commandArea);
                         //action = new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false);
                         (string, bool) autoCompResult = AutoCompletionLogic.AutoCompletion(words[1], action);
                         originalPath = autoCompResult.Item1;

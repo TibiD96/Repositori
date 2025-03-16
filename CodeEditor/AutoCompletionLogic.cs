@@ -18,7 +18,7 @@ namespace CodeEditor
         {
             search = searching;
             (int, int) cursoPos = Console.GetCursorPosition();
-            Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
+            Console.SetCursorPosition(cursoPos.Item1, cursoPos.Item2);
             ConsoleKeyInfo key;
             quite = false;
             lastValidDirect = Environment.CurrentDirectory;
@@ -36,7 +36,7 @@ namespace CodeEditor
                 allFiles = FilesFromDirectory(search);
             }
 
-            Console.SetCursorPosition(cursoPos.Item1 + search.Length, cursoPos.Item2);
+            Console.SetCursorPosition(cursoPos.Item1, cursoPos.Item2);
 
             if (action == default)
             {
@@ -163,7 +163,14 @@ namespace CodeEditor
 
         public static List<string> FilesFromDirectory(string search)
         {
+            int index = 0;
             List<string> files = new List<string>();
+
+            for (int i = 0; i < search.Length; i++)
+            {
+
+            }
+
             if (Directory.Exists(search))
             {
                 lastValidDirect = search;
