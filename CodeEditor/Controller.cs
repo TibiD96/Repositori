@@ -673,7 +673,7 @@ namespace CodeEditor
                         command = command.Substring(0, command.Length - 1);
                     }
                 }
-                else if (char.IsLetter((char)action.Key) || char.IsDigit((char)action.Key) || action.Key == ConsoleKey.Spacebar)
+                else if (!char.IsControl(action.KeyChar))
                 {
                     command += action.KeyChar;
                 }
