@@ -1,4 +1,5 @@
 ﻿using System;
+using static System.Collections.Specialized.BitVector32;
 
 namespace CodeEditor
 {
@@ -98,7 +99,7 @@ namespace CodeEditor
                 key = Console.ReadKey();
             }
 
-            if (char.IsLetter((char)key.Key) || char.IsDigit((char)key.Key))
+            if (!char.IsControl(key.KeyChar))
             {
                 command += key.KeyChar;
             }
