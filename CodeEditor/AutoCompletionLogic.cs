@@ -166,32 +166,6 @@ namespace CodeEditor
             List<string> files = new List<string>();
             string validSearch = "";
 
-            /*for (int i = 0; i < search.Length; i++)
-            {
-                validSearch += search[i];
-                if (Directory.Exists(validSearch))
-                {
-                    files = new List<string>();
-                    lastValidDirect = validSearch;
-                    files.AddRange(Directory.GetDirectories(validSearch));
-                    files.AddRange(Directory.GetFiles(validSearch));
-                    highlightIndex = -1;
-                    startingIndex = 0;
-                    completion = 0;
-                }
-            }
-
-            if (files.Count == 0)
-            {
-                files.AddRange(Directory.GetDirectories(lastValidDirect).Where(dir => dir.StartsWith(search)));
-                files.AddRange(Directory.GetFiles(lastValidDirect).Where(file => file.StartsWith(search)));
-                files.AddRange(Directory.GetFiles(lastValidDirect).Where(file => Path.GetFileName(file).StartsWith(search)));
-                highlightIndex = -1;
-                startingIndex = 0;
-                completion = 0;
-            }*/
-
-
             if (Directory.Exists(search))
             {
                 lastValidDirect = search;

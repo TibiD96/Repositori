@@ -634,7 +634,6 @@ namespace CodeEditor
 
                         Consola.ClearPartOfConsole(startingCompletionContour + validCommands.Count + 1, startingCompletionContour, leftLane, 1);
                         Console.SetCursorPosition(commandToShow.Length + leftLane + 1, commandArea);
-                        //action = new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false);
                         (string, bool) autoCompResult = AutoCompletionLogic.AutoCompletion(words[1], action);
                         originalPath = autoCompResult.Item1;
                         quit = autoCompResult.Item2;
@@ -698,43 +697,11 @@ namespace CodeEditor
                 if (action.Key == ConsoleKey.Enter)
                 {
                     Config.TabCompletion = false;
-
-                    /*words = command.Split(' ');
-
-                    if (words[0] == "e" || words[0] == "edit")
+                    Commands(ref command, ref quit, fileLastVersion, fileOriginalVersion, lastPath);
+                    if (command.Contains('w'))
                     {
-                        Consola.ClearPartOfConsole(startingCompletionContour + validCommands.Count + 1, startingCompletionContour, leftLane, 1);
-                        Console.SetCursorPosition(commandToShow.Length + leftLane + 2, commandArea);
-                        (string, bool) autoCompResult = AutoCompletionLogic.AutoCompletion(action);
-                        originalPath = autoCompResult.Item1;
-                        quit = autoCompResult.Item2;
-
-                        if (originalPath != "")
-                        {
-                            fileContent = File.ReadAllLines(originalPath);
-                            Consola.ClearEntireConsole();
-
-                            return;
-                        }
-
-                        if (quit)
-                        {
-                            quit = false;
-                            return;
-                        }
-
-                        command = command.Substring(0, command.Length);
-                        Console.SetCursorPosition(leftLane + 1, commandArea);
-                        Console.Write(commandToShow);
+                        return;
                     }
-                    else
-                    {*/
-                        Commands(ref command, ref quit, fileLastVersion, fileOriginalVersion, lastPath);
-                        if (command.Contains('w'))
-                        {
-                            return;
-                        }
-                    //}
                 }
             }
         }
