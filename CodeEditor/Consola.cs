@@ -454,6 +454,11 @@ namespace CodeEditor
                 Console.Write("NOR " + Path.GetFileName(originalPath));
             }
 
+            Console.SetCursorPosition(5, topLane + 1);
+            Console.Write(Variables.ErrorMesage);
+
+            Variables.ErrorMesage = "";
+
             Console.SetCursorPosition((Console.WindowWidth - 1) - (horizontal.Length + vertical.Length + 1), topLane + 1);
             Console.Write(horizontal + '/' + vertical);
 

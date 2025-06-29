@@ -698,10 +698,7 @@ namespace CodeEditor
                 {
                     Config.TabCompletion = false;
                     Commands(ref command, ref quit, fileLastVersion, fileOriginalVersion, lastPath);
-                    if (command.Contains('w'))
-                    {
-                        return;
-                    }
+                    return;
                 }
             }
         }
@@ -755,6 +752,13 @@ namespace CodeEditor
 
                     File.WriteAllLines(path, fileLastVersion);
                     break;
+
+               default:
+
+                    Variables.ErrorMesage = "Command doesn't exist!";
+                    break;
+
+                    
             }
         }
 

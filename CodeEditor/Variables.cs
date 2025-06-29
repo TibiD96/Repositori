@@ -23,5 +23,7 @@
         public static Stack<Stack<bool>> RedoDeleteLine { get; } = new Stack<Stack<bool>>();
 
         public static Stack<Stack<bool>> RedoAddLine { get; } = new Stack<Stack<bool>>();
+
+        public static string ErrorMesage { get; set; } = "";
     }
 }
