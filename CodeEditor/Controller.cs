@@ -711,14 +711,14 @@ namespace CodeEditor
 
             if (command.Contains("write") && command.Length > 5)
             {
-                path = command.Replace("write", "").Trim() + '\\' + Path.GetFileName(lastPath);
+                path = command.Replace("write", "").Trim() + Path.GetFileName(lastPath);
                 command = command.Substring(0, 5);
             }
             else
             {
-                if (command.Contains("w") && command.Length > 5)
+                if (command.Split(' ')[0] == "w")
                 {
-                    path = command.Replace("w", "").Trim() + '\\' + Path.GetFileName(lastPath);
+                    path = command.Replace("w", "").Trim() + Path.GetFileName(lastPath);
                     command = command.Substring(0, 1);
                 }
             }
@@ -750,7 +750,14 @@ namespace CodeEditor
 
                 case "w":
 
-                    File.WriteAllLines(path, fileLastVersion);
+                    try
+                    {
+                        File.WriteAllLines(path, fileLastVersion);
+                    }
+                    catch 
+                    {
+                        Variables.ErrorMesage = "Add path/name for the file";
+                    }
                     break;
 
                default:
